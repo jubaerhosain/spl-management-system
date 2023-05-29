@@ -3,6 +3,7 @@ import path from "path";
 import { sequelize, models, Op } from "../database/db.js";
 import { generateHashedPassword } from "../utilities/password-utilities.js";
 import { writeCredentials } from "../utilities/file-utilities.js";
+import { Response } from "../utilities/response-format-utilities.js";
 
 export async function addStudent(req, res, next) {
     try {
@@ -17,13 +18,13 @@ export async function addStudent(req, res, next) {
         for (const i in students) {
             users[i].name = students[i].name;
             users[i].email = students[i].email;
-            users[i].password = hashedPasswords[i].hashedPassword,
-            users[i].userType = "student";
+            (users[i].password = hashedPasswords[i].hashedPassword),
+                (users[i].userType = "student");
 
             delete students[i].name;
             delete students[i].email;
 
-            users[i].Student = [students[i]]
+            users[i].Student = [students[i]];
             credentials.push({
                 name: users[i].name,
                 email: users[i].email,
@@ -31,21 +32,20 @@ export async function addStudent(req, res, next) {
             });
         }
 
-        console.log(users)
+        console.log(users);
 
         const transaction = await sequelize.transaction();
         try {
+            // add in both User and Student table
             await models.User.bulkCreate(users, {
                 include: [models.Student],
 
                 transaction: transaction,
             });
 
-            res.status(200).json({
-                message: "add student message",
-            });
-
             await transaction.commit();
+
+            res.json(Response.success("Students accounts are created successfully"));
 
             const credentialData = JSON.stringify(credentials);
             writeCredentials(new Date() + "\n" + credentialData);
@@ -56,6 +56,25 @@ export async function addStudent(req, res, next) {
         }
     } catch (err) {
         console.log(err);
-        res.send("Error");
+        res.status(500).json(Response.success("Internal Server Error"));
+    }
+}
+
+export async function updateStudent(req, res, next) {
+    try {
+        const student = req.body;
+        const { userId } = req.user;
+
+        // update to User table
+        await models.User.update(student, {
+            where: {
+                userId: userId,
+            },
+        });
+
+        res.json(Response.success("Account is updated successfully"));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.success("Internal Server Error"));
     }
 }

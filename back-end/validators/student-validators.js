@@ -28,7 +28,7 @@ const studentIdValidator = body_param("studentId")
 const rollNoValidator = body("rollNo")
     .trim()
     .matches(/^BSSE-[0-9]{4}$/)
-    .withMessage("Must be in following format: 'BSSE-1255'");
+    .withMessage("Must be in following format: '1255'");
 
 const registrationNoValidator = body("registrationNo")
     .trim()
@@ -116,9 +116,7 @@ const updateStudentByAdminValidator = [
     requiredOne,
     checkAllow(allowedFieldsForAdmin),
 
-    // Validate the individual fields
-    studentIdValidator,
-
+    // do it in previous validator
     // if it fails then roll and reg db check won't happen, increases performance
     studentIdExistence,
 

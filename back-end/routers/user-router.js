@@ -57,15 +57,6 @@ import studentRouter from "./student-router.js";
 // add admin
 userRouter.post("/admin", addAdmin);
 
-// add one or more student
-userRouter.post(
-    "/student",
-    addStudentValidator,
-    commonValidationHandler,
-    addStudentDbCheck,
-    addStudent
-);
-
 // update student profile
 userRouter.put(
     "/student",
