@@ -43,4 +43,19 @@ function checkAllow(allowedFields) {
     };
 }
 
-export { requiredOne, checkAllow };
+/**
+ * Validates if email ends with '@iit.du.ac.bd' or not
+ * @param {*} email
+ * @returns true/false
+ */
+function IITEmailValidator(email) {
+    const regex = /.+@iit\.du\.ac\.bd$/;
+
+    if (regex.test(email)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export { requiredOne, checkAllow, IITEmailValidator };

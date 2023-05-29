@@ -2,7 +2,6 @@ import createError from "http-errors";
 import { body, body_param } from "./custom-validator.js";
 import { isUnique } from "../utilities/common-utilities.js";
 
-
 // import validators
 import {
     nameValidator,
@@ -14,7 +13,6 @@ import { requiredOne, checkAllow } from "./common-validators.js";
 
 // import database checkers
 import { studentIdExistence } from "./db-checkers/student-db-checkers.js";
-
 
 // student attributes validators
 
@@ -55,13 +53,14 @@ const curriculumYearValidator = body("curriculumYear")
     .withMessage("Must be in ['1st', '2nd', '3rd', '4th']");
 
 const addStudentValidator = [
-    // Validate individual attributes
+    // validate mandatory fields
     body("students")
         .isArray()
         .withMessage("Must be an array")
         .bail()
         .isLength({ min: 1 })
         .withMessage("Cannot be empty array"),
+    body("students.*.name").trim().notEmpty().withMessage("Name cannot be empty"),
     body("students.*.email")
         .trim()
         .isEmail()
@@ -75,7 +74,7 @@ const addStudentValidator = [
     body("students.*.rollNo")
         .trim()
         .matches(/^BSSE-[0-9]{4}$/)
-        .withMessage("Must be in following format: 'BSSE-1255'"),
+        .withMessage("Must be in following format: '1255'"),
     body("students.*.registrationNo")
         .trim()
         .matches(/^[0-9]{10}$/)

@@ -3,6 +3,8 @@ import path from "path";
 import createError from "http-errors";
 import { getDirname } from "./fileUtilities.js";
 
+// move to a middleware =================================================================
+
 
 /**
  * @param {*} fileName

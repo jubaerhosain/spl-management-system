@@ -60,7 +60,7 @@ db.models.Notification = Notification(sequelize, DataTypes, Op);
 db.models.Presentation = Presentation(sequelize, DataTypes, Op);
 db.models.Mark = Mark(sequelize, DataTypes, Op);
 db.models.PresentationMark = PresentationMark(sequelize, DataTypes, Op);
-db.models.ContinuousMark = ContinuousMark(sequelize, DataTypes, Op, Sequelize);
+db.models.ContinuousMark = ContinuousMark(sequelize, DataTypes, Op);
 
 // junctions
 db.models.StudentTeam = StudentTeam(sequelize, DataTypes, Op);

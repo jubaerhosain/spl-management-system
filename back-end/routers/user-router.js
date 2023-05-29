@@ -1,6 +1,13 @@
 import express from "express";
 const userRouter = express.Router();
 
+import adminRouter from "./admin-router.js";
+
+userRouter.use("/admin", adminRouter);
+userRouter.use("/student", studentRouter);
+
+//==============================================================================================
+
 import { commonValidationHandler } from "../validators/custom-validator.js";
 
 // import validators
@@ -45,6 +52,7 @@ import {
 import { uploadAvatar } from "../middlewares/user-middlewares.js";
 import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
 import { checkSPLManager } from "../middlewares/spl-middlewares.js";
+import studentRouter from "./student-router.js";
 
 // add admin
 userRouter.post("/admin", addAdmin);
