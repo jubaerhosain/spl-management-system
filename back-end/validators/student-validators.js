@@ -14,8 +14,6 @@ import { requiredOne, checkAllow } from "./common-validators.js";
 // import database checkers
 import { studentIdExistence } from "./db-checkers/student-db-checkers.js";
 
-// student attributes validators
-
 /**
  * Validate studentId from body or param
  */
@@ -91,36 +89,6 @@ const addStudentValidator = [
         .trim()
         .isIn(["1st", "2nd", "3rd", "4th"])
         .withMessage("Must be in ['1st', '2nd', '3rd', '4th']"),
-
-    // Validate uniqueness of email, rollNo and registrationNo
-    body("students")
-        .if((value, { req }) => validationResult(req).isEmpty())
-        .custom(async (students, { req }) => {
-            // check duplicate email, rollNo and registrationNo
-            try {
-                // check duplicate email
-                const emails = students.map((student) => student.email);
-                if (!isUnique(emails)) {
-                    throw new createError(400, "Duplicate emails are not allowed");
-                }
-
-                // check duplicate roll numbers
-                const rolls = students.map((student) => student.rollNo);
-                if (!isUnique(rolls)) {
-                    throw new createError(400, "Duplicate roll numbers are not allowed");
-                }
-
-                // check duplicate registration numbers
-                const registrations = students.map((student) => student.registrationNo);
-                if (!isUnique(registrations)) {
-                    throw new createError(400, "Duplicate registration numbers are not allowed");
-                }
-            } catch (err) {
-                console.log(err);
-                const message = err.status ? err.message : "Internal server error";
-                throw new Error(message);
-            }
-        }),
 ];
 
 /**

@@ -2,10 +2,20 @@
  * Response class to format Success and Error
  */
 class Response {
-    constructor(success, message, data) {
+    // success status codes
+
+    // error status codes
+    static EMAIL_EXIST = "EMAIL_EXIST";
+    static ROLL_EXIST = "ROLL_EXIST";
+    static REG_EXIST = "REG_EXIST";
+
+    constructor(success, message, data, statusCode) {
         this.success = success;
         this.message = message;
         this.data = data;
+
+        // status code for success or error
+        this.statusCode = statusCode;
     }
 
     /**
@@ -14,8 +24,8 @@ class Response {
      * @param {*} data
      * @returns Response Object
      */
-    static success(message, data) {
-        return new Response(true, message, data);
+    static success(message, data, successCode) {
+        return new Response(true, message, data, successCode);
     }
 
     /**
@@ -24,8 +34,8 @@ class Response {
      * @param {*} data
      * @returns Response Object
      */
-    static error(message, data) {
-        return new Response(false, message, data);
+    static error(message, data, errorCode) {
+        return new Response(false, message, data, errorCode);
     }
 }
 
