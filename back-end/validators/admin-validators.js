@@ -1,5 +1,4 @@
-import { body_param, body } from "./custom-validator.js";
-import { IITEmailValidator } from "./common-validators.js";
+import { body } from "./custom-validator.js";
 import createHttpError from "http-errors";
 import { models } from "../database/db.js";
 
@@ -10,12 +9,8 @@ const addAdminValidator = [
         .isEmail()
         .withMessage("Invalid email format")
         .bail()
-        .custom((email) => {
-            if (!IITEmailValidator(email)) {
-                throw new Error("Must be end with @iit.du.ac.bd");
-            }
-            return true;
-        })
+        .matches(/.+@iit\.du\.ac\.bd$/)
+        .withMessage("Must be end with @iit.du.ac.bd")
         .bail()
         .custom(async (email) => {
             try {
