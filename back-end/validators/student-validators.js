@@ -73,7 +73,7 @@ const addStudentValidator = [
         .withMessage("Must end with @iit.du.ac.bd"),
     body("students.*.rollNo")
         .trim()
-        .matches(/^BSSE-[0-9]{4}$/)
+        .matches(/^[0-9]{4}$/)
         .withMessage("Must be in following format: '1255'"),
     body("students.*.registrationNo")
         .trim()
