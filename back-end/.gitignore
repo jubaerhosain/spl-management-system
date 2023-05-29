@@ -1,14 +1,7 @@
 node_modules/
 .vscode
-test.js
-test1.js
-sequelize.tmp.js
 public/
 test/
-
 config/
 .env
-
-temp_data/
-
 

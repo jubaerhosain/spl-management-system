@@ -13,9 +13,6 @@ export default (sequelize, DataTypes) => {
         designation: {
             type: DataTypes.STRING(30),
         },
-        rank: {
-            type: DataTypes.INTEGER,
-        },
         available: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
@@ -41,7 +38,7 @@ export default (sequelize, DataTypes) => {
 
         // Teacher - SPL [one to many] as Committee Head
         Teacher.hasMany(models.SPL, {
-            as: "LedSPLs",
+            as: "LeadedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "committeeHead",
@@ -58,7 +55,7 @@ export default (sequelize, DataTypes) => {
         // Student - Teacher [many to many] as Supervisor
         Teacher.belongsToMany(models.Student, {
             as: "SupervisedStudents",
-            through: models.StudentSupervisor,
+            through: models.StudentTeacher_Supervisor,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -82,7 +79,7 @@ export default (sequelize, DataTypes) => {
         // Student - Teacher [many to many] as Request Receiver
         Teacher.belongsToMany(models.Student, {
             as: "RequestedStudents",
-            through: models.StudentRequest,
+            through: models.StudentTeacher_Request,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -91,7 +88,7 @@ export default (sequelize, DataTypes) => {
         // Team - Teacher [many to many] as Request Receiver
         Teacher.belongsToMany(models.Team, {
             as: "RequestedTeams",
-            through: models.TeamRequest,
+            through: models.TeamTeacher_Request,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",

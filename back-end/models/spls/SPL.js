@@ -39,6 +39,7 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true,
+            comment: "Indicates current SPL is running or not",
         },
     });
 
@@ -79,14 +80,7 @@ export default (sequelize, DataTypes) => {
         // SPL - Teacher [many to many]
         SPL.belongsToMany(models.Teacher, {
             as: "PresentationEvaluators",
-            through: models.SPLEvaluator,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "splId",
-        });
-
-        // SPL - SPLCommittee [one to one]
-        SPL.hasOne(models.SPLCommittee, {
+            through: models.TeacherSPL_PresentationEvaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",

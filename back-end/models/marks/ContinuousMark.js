@@ -1,6 +1,6 @@
 "use strict";
 
-export default (sequelize, DataTypes, Op, Sequelize) => {
+export default (sequelize, DataTypes, Op) => {
     const ContinuousMark = sequelize.define("ContinuousMarks", {
         continuousMarkId: {
             type: DataTypes.INTEGER,
@@ -16,14 +16,18 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
                 key: "markId",
             },
         },
-        date: {
-            type: DataTypes.DATEONLY,
+        week: {
+            type: DataTypes.STRING(10),
             primaryKey: true,
-            defaultValue: Sequelize.NOW,
+            validate: {
+                is: /^Week [1-9]{1,2}$/,
+            },
+            comment: "Week format 'Week 2'",
         },
         mark: {
             type: DataTypes.FLOAT,
             allowNull: false,
+            defaultValue: 0,
         },
     });
 

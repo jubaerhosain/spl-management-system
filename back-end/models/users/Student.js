@@ -11,13 +11,13 @@ export default (sequelize, DataTypes, Op) => {
             },
         },
         rollNo: {
-            type: DataTypes.STRING(9),
+            type: DataTypes.STRING(4),
             allowNull: false,
             unique: true,
             validate: {
-                is: /^BSSE-[0-9]{4}$/,
+                is: /^[0-9]{4}$/,
             },
-            comment: "Roll format: 'BSSE-1255'",
+            comment: "Roll format: '1255'",
         },
         registrationNo: {
             type: DataTypes.STRING(10),
@@ -44,11 +44,11 @@ export default (sequelize, DataTypes, Op) => {
             comment: "Admission session of the students. Format: '2018-19'",
         },
         curriculumYear: {
-            type: DataTypes.STRING(3),
+            type: DataTypes.STRING(5),
             validate: {
-                isIn: [["1st", "2nd", "3rd", "4th"]],
+                isIn: [["1st", "2nd", "3rd", "4th", "none"]],
             },
-            comment: "NULL will be treated as unenrolled",
+            comment: "'none' will be treated as unenrolled",
         },
     });
 
@@ -71,7 +71,7 @@ export default (sequelize, DataTypes, Op) => {
         // Student - Teacher [many to many]
         Student.belongsToMany(models.Teacher, {
             as: "Supervisors",
-            through: models.StudentSupervisor,
+            through: models.StudentTeacher_Supervisor,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",
@@ -100,11 +100,10 @@ export default (sequelize, DataTypes, Op) => {
             foreignKey: "studentId",
         });
 
-        // As Request Sender
-        // Student - Teacher [many to many]
+        // Student - Teacher [many to many] as Request Sender
         Student.belongsToMany(models.Teacher, {
             as: "RequestedTeachers",
-            through: models.StudentRequest,
+            through: models.StudentTeacher_Request,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",

@@ -18,6 +18,7 @@ export default (sequelize, DataTypes) => {
         teamName: {
             type: DataTypes.STRING(40),
             allowNull: false,
+            comment: "Team belongs to same SPL cannot have duplicate names",
         },
     });
 
@@ -38,11 +39,10 @@ export default (sequelize, DataTypes) => {
             foreignKey: "teamId",
         });
 
-        // As Request Sender
-        // Team - Teacher [many to many]
+        // Team - Teacher [many to many] as Request Sender
         Team.belongsToMany(models.Teacher, {
             as: "RequestedTeachers",
-            through: models.TeamRequest,
+            through: models.TeamTeacher_Request,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teamId",

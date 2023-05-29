@@ -80,14 +80,6 @@ export default (sequelize, DataTypes, Op) => {
             onUpdate: "CASCADE",
             foreignKey: "receiverId",
         });
-
-        // User - InterestedField [many to many]
-        User.belongsToMany(models.InterestedField, {
-            through: models.UserField,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "userId",
-        });
     };
 
     return User;

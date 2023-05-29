@@ -35,6 +35,7 @@ export default (sequelize, DataTypes) => {
         mark: {
             type: DataTypes.FLOAT,
             allowNull: false,
+            defaultValue: 0,
         },
     });
 
