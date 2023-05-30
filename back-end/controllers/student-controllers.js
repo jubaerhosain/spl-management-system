@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import { sequelize, models, Op } from "../database/db.js";
 import { generateHashedPassword } from "../utilities/password-utilities.js";
 import { writeCredentials } from "../utilities/file-utilities.js";
@@ -32,7 +30,7 @@ export async function addStudent(req, res, next) {
             });
         }
 
-        console.log(users);
+        // console.log(users);
 
         const transaction = await sequelize.transaction();
         try {
@@ -56,7 +54,9 @@ export async function addStudent(req, res, next) {
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.success("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
@@ -75,6 +75,8 @@ export async function updateStudent(req, res, next) {
         res.json(Response.success("Account is updated successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.success("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }

@@ -3,7 +3,7 @@ const studentRouter = express.Router();
 
 import { commonValidationHandler } from "../validators/custom-validator.js";
 import { addStudentValidator, updateStudentValidator } from "../validators/student-validators.js";
-import { addStudent } from "../controllers/student-controllers.js";
+import { addStudent, updateStudent } from "../controllers/student-controllers.js";
 import {
     checkAddStudentUniqueness,
     checkAddStudentExistence,
@@ -28,7 +28,14 @@ studentRouter.put(
         };
     },
     updateStudentValidator,
-    commonValidationHandler
+    commonValidationHandler,
+    updateStudent
 );
+
+// update student profile by admin
+studentRouter.put("/:studentId", (req, res, next) => {
+    // checkStudentIdExistence
+});
+
 
 export default studentRouter;

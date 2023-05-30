@@ -28,18 +28,28 @@ const availableValidator = body("available").trim().isBoolean().withMessage("Mus
 
 const addTeacherValidator = [
     // check array or not and make array elements unique
-    body("emails")
+    body("teachers")
         .isArray()
         .withMessage("Must be an array")
         .bail()
         .isLength({ min: 1 })
-        .withMessage("Cannot be empty array")
-        .custom((emails, { req }) => {
-            makeUnique(req.body.emails);
-            return true;
-        }),
+        .withMessage("Cannot be empty array"),
 
-    emailArrayValidator,
+    body("teachers.*.name").trim().notEmpty().withMessage("Name cannot be empty"),
+    body("teachers.*.email")
+        .trim()
+        .isEmail()
+        .withMessage("Invalid email format")
+        .bail()
+        .isLength({ max: 50 })
+        .withMessage("Must be at most 50 characters")
+        .bail()
+        .matches(/.+@iit\.du\.ac\.bd$/)
+        .withMessage("Must end with @iit.du.ac.bd"),
+    body("teachers.*.designation")
+        .trim()
+        .isLength({ min: 2, max: 50 })
+        .withMessage("Must be between 2 to 50 characters"),
 ];
 
 /**

@@ -2,12 +2,11 @@ import { models, Op } from "../database/db.js";
 import { Response } from "../utilities/response-format-utilities.js";
 import { isUnique } from "../utilities/common-utilities.js";
 
-
 /**
  * Checks uniqueness of email, rollNo and registrationNo
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
  */
 export async function checkAddStudentUniqueness(req, res, next) {
     try {
@@ -34,7 +33,9 @@ export async function checkAddStudentUniqueness(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
@@ -63,8 +64,8 @@ export async function checkAddStudentExistence(req, res, next) {
             res.status(400).json(
                 Response.error(
                     "Following emails are already exists",
+                    Response.EMAIL_EXIST,
                     existedEmails.map((student) => student.email),
-                    Response.EMAIL_EXIST
                 )
             );
             return;
@@ -85,8 +86,8 @@ export async function checkAddStudentExistence(req, res, next) {
             res.status(400).json(
                 Response.error(
                     "Following roll numbers are already exists",
+                    Response.ROLL_EXIST,
                     existedRolls.map((student) => student.rollNo),
-                    Response.ROLL_EXIST
                 )
             );
             return;
@@ -107,8 +108,8 @@ export async function checkAddStudentExistence(req, res, next) {
             res.status(400).json(
                 Response.error(
                     "Following registration numbers are already exists.",
+                    Response.REG_EXIST,
                     existedRegs.map((student) => student.registrationNo),
-                    Response.REG_EXIST
                 )
             );
             return;
@@ -117,6 +118,8 @@ export async function checkAddStudentExistence(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }

@@ -1,41 +1,53 @@
+class MyError {
+    constructor(message, errorCode, data) {
+        this.success = false;
+        this.message = message;
+        this.errorCode = errorCode;
+        this.data = data;
+    }
+}
+
+class MySuccess {
+    constructor(message, data, successCode) {
+        this.success = true;
+        this.message = message;
+        this.data = data;
+        this.successCode = successCode;
+    }
+}
+
 /**
  * Response class to format Success and Error
  */
 class Response {
     // success status codes
 
-    // error status codes
+    // error codes
     static EMAIL_EXIST = "EMAIL_EXIST";
     static ROLL_EXIST = "ROLL_EXIST";
     static REG_EXIST = "REG_EXIST";
-
-    constructor(success, message, data, statusCode) {
-        this.success = success;
-        this.message = message;
-        this.data = data;
-
-        // status code for success or error
-        this.statusCode = statusCode;
-    }
+    static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 
     /**
      * Success response with this.success = true
      * @param {*} message
      * @param {*} data
-     * @returns Response Object
+     * @param {*} successCode
+     * @returns MySuccess Object
      */
     static success(message, data, successCode) {
-        return new Response(true, message, data, successCode);
+        return new MySuccess(message, data, successCode);
     }
 
     /**
      * Error response with this.success = false
      * @param {*} message
+     * @param {*} errorCode
      * @param {*} data
-     * @returns Response Object
+     * @returns MyError Object
      */
-    static error(message, data, errorCode) {
-        return new Response(false, message, data, errorCode);
+    static error(message, errorCode, data) {
+        return new MyError(false, message, errorCode, data);
     }
 }
 

@@ -2,8 +2,8 @@ import express from "express";
 const mainRouter = express.Router();
 
 // internal imports
-import { authenticationRouter } from "./auth-router.js";
-import { userRouter } from "./user-router.js";
+import authenticationRouter from "./auth-router.js";
+import userRouter from "./user-router.js";
 import { splRouter } from "./spl-router.js";
 import { committeeRouter } from "./committee-router.js";
 import { teamRouter } from "./team-router.js";
@@ -19,24 +19,24 @@ mainRouter.use("/auth", authenticationRouter);
 mainRouter.use("/user", userRouter);
 
 // spl router
-mainRouter.use("/spl", splRouter);
+// mainRouter.use("/spl", splRouter);
 
-// committee router
-mainRouter.use("/committee", committeeRouter);
+// // committee router
+// mainRouter.use("/committee", committeeRouter);
 
-// supervisor allocation router
-mainRouter.use("/supervisor-allocation", supervisorAllocationRouter);
+// // supervisor allocation router
+// mainRouter.use("/supervisor-allocation", supervisorAllocationRouter);
 
-// team related routes
-mainRouter.use("/team", teamRouter);
+// // team related routes
+// mainRouter.use("/team", teamRouter);
 
-// presentation related routes
-mainRouter.use("/presentation", presentationRouter);
+// // presentation related routes
+// mainRouter.use("/presentation", presentationRouter);
 
-// marking related routes
-mainRouter.use("/marking", markingRouter);
+// // marking related routes
+// mainRouter.use("/marking", markingRouter);
 
-// interested field
-mainRouter.use("/interested-field", interestedFieldRouter);
+// // interested field
+// mainRouter.use("/interested-field", interestedFieldRouter);
 
 export { mainRouter };

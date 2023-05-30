@@ -14,4 +14,4 @@ authenticationRouter.post("/check-login", checkAuthentication, (req, res) => {
     res.json(Response.success("Authenticated successfully", req.user));
 });
 
-export { authenticationRouter };
+export default authenticationRouter;
