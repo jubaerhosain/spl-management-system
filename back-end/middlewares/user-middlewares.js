@@ -1,4 +1,4 @@
-import { fileUploader } from "../utilities/fileUploader.js";
+import { fileUploader } from "../utilities/file-utilities.js";
 
 /**
  * Uploads avatar using multer

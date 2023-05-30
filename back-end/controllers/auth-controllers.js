@@ -1,4 +1,4 @@
-import { verifyPassword } from "../utilities/bcrypt-password-utilities.js";
+import { verifyPassword } from "../utilities/password-utilities.js";
 import { generateToken } from "../utilities/jwt-token-utilities.js";
 import { Response } from "../utilities/response-format-utilities.js";
 
@@ -36,12 +36,14 @@ async function doLogin(req, res, next) {
 
 async function doLogout(req, res, next) {
     try {
-        console.log(process.env.AUTH_COOKIE_NAME);
+        // console.log(process.env.AUTH_COOKIE_NAME);
         res.clearCookie(process.env.AUTH_COOKIE_NAME);
         res.json(Response.success("Logged out successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 

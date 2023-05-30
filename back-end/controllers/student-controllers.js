@@ -80,3 +80,30 @@ export async function updateStudent(req, res, next) {
         );
     }
 }
+
+/**
+ * Update some special fields of student by admin
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function updateStudentByAdmin(req, res, next) {
+    try {
+        const student = req.body;
+        const { studentId } = req.params;
+
+        // update to Student table
+        await models.Student.update(student, {
+            where: {
+                studentId,
+            },
+        });
+
+        res.json(Response.success("Student is updated successfully"));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
+    }
+}

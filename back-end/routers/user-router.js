@@ -5,106 +5,20 @@ import adminRouter from "./admin-router.js";
 import studentRouter from "./student-router.js";
 import teacherRouter from "./teacher-router.js";
 
-
 userRouter.use("/admin", adminRouter);
 userRouter.use("/student", studentRouter);
 userRouter.use("/teacher", teacherRouter);
 
 export default userRouter;
 
-
 //==============================================================================================
 
-// import { commonValidationHandler } from "../validators/custom-validator.js";
+import { uploadAvatar } from "../middlewares/user-middlewares.js";
+import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
+import {saveAvatar} from "../controllers/user-controllers.js";
 
-// // import validators
-// import {
-//     addStudentValidator,
-//     updateStudentValidator,
-//     updateStudentByAdminValidator,
-// } from "../validators/student-validators.js";
-
-// import { addTeacherValidator, updateTeacherValidator } from "../validators/teacher-validators.js";
-
-// // import db checker validators
-// import {
-//     addStudentDbCheck,
-//     updateStudentByAdminDbCheck,
-// } from "../validators/db-checkers/student-db-checkers.js";
-
-// import { addTeacherDbCheck } from "../validators/db-checkers/teacher-db-checkers.js";
-
-// // import controllers
-// import {
-//     addStudent,
-//     updateStudent,
-//     addTeacher,
-//     updateTeacher,
-//     updateStudentByAdmin,
-//     saveAvatar,
-//     deactivateUser,
-//     addAdmin,
-//     getUser,
-//     getAvatar,
-//     getStudentByCurriculumYear,
-//     getAllTeacher,
-//     getStudentAndSupervisor,
-//     getRequestedStudents,
-//     getStudentAsSupervisor,
-//     getStudentsForSPLManager,
-//     findCurriculumYear,
-// } from "../controllers/user-controllers.js";
-
-// // import middlewares
-// import { uploadAvatar } from "../middlewares/user-middlewares.js";
-// import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
-// import { checkSPLManager } from "../middlewares/spl-middlewares.js";
-
-// // add admin
-// userRouter.post("/admin", addAdmin);
-
-// // update student profile
-// userRouter.put(
-//     "/student",
-//     checkAuthentication,
-//     updateStudentValidator,
-//     commonValidationHandler,
-//     updateStudent
-// );
-
-// // Update some special fields of student by admin
-// userRouter.put(
-//     "/student/:studentId",
-//     (req, res, next) => {
-//         next();
-//     },
-//     updateStudentByAdminValidator,
-//     commonValidationHandler,
-//     updateStudentByAdminDbCheck,
-//     commonValidationHandler,
-//     updateStudentByAdmin
-// );
-
-// // add one or more teacher
-// userRouter.post(
-//     "/teacher",
-//     // addTeacherValidator,
-//     // commonValidationHandler,
-//     addTeacherDbCheck,
-//     addTeacher
-// );
-
-// // update teacher profile
-// userRouter.put(
-//     "/teacher",
-//     checkAuthentication,
-//     updateTeacherValidator,
-//     commonValidationHandler,
-//     updateTeacher
-// );
-
-// // upload avatar
-// userRouter.post("/avatar", checkAuthentication, uploadAvatar, saveAvatar);
+// upload avatar
+userRouter.post("/avatar", checkAuthentication, uploadAvatar, saveAvatar);
 
 // // get avatar
 // userRouter.get("/avatar/:fileName", getAvatar);
