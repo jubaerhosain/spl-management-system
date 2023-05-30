@@ -1,6 +1,4 @@
-import { createMappedError } from "../utilities/response-format-utilities.js";
-
-// Add Response instead of createError???
+import { Response, createMappedError } from "../utilities/response-format-utilities.js";
 
 /**
  * Check if at least one field is provided or not in req.body
@@ -10,13 +8,9 @@ import { createMappedError } from "../utilities/response-format-utilities.js";
  */
 async function requiredOne(req, res, next) {
     if (Object.keys(req.body).length === 0) {
-        const error = createMappedError({
-            param: "body",
-            value: "",
-            msg: "At least one field should be provided",
-            location: "body",
-        });
-        req.res.status(400).json(error);
+        req.res
+            .status(400)
+            .json(Response.error("At least one field should be provided", Response.FIELD_REQUIRED));
     } else {
         next();
     }
@@ -45,19 +39,4 @@ function checkAllow(allowedFields) {
     };
 }
 
-/**
- * Validates if email ends with '@iit.du.ac.bd' or not
- * @param {*} email
- * @returns true/false
- */
-function IITEmailValidator(email) {
-    const regex = /.+@iit\.du\.ac\.bd$/;
-
-    if (regex.test(email)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-export { requiredOne, checkAllow, IITEmailValidator };
+export { requiredOne, checkAllow };

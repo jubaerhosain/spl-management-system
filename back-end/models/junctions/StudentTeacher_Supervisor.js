@@ -18,11 +18,12 @@ export default (sequelize, DataTypes) => {
                 key: "studentId",
             },
         },
-        splName: {
-            type: DataTypes.STRING(4),
-            allowNull: false,
-            validate: {
-                isIn: [["spl1", "spl2", "spl3"]],
+        splId: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            references: {
+                model: "SPLs",
+                key: "splId",
             },
         },
     });

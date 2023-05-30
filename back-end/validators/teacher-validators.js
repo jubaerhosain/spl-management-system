@@ -10,7 +10,6 @@ import {
     phoneNumberValidator,
     genderValidator,
     detailsValidator,
-    emailArrayValidator,
 } from "./user-validators.js";
 
 // common-validators.js

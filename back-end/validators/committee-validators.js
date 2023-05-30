@@ -1,24 +1,14 @@
-import { makeUnique } from "../utilities/common-utilities.js";
-import { body_param, body } from "./custom-validator.js";
+import { isUnique, makeUnique } from "../utilities/common-utilities.js";
+import createHttpError from "http-errors";
+import { body_param, body, validationResult } from "./custom-validator.js";
 
-// import validators
-import { teacherIdValidator } from "./teacher-validators.js";
-import { IITEmailValidator } from "./user-validators.js";
-import { splNameValidator } from "./spl-validators.js";
-
-/**
- * Check if committeeId is valid or not
- */
-const committeeIdValidator = body_param("committeeId")
-    .trim()
-    .isInt()
-    .withMessage("Must be an integer");
+import { isIITEmail } from "./user-validators.js";
+import { models, Op } from "../database/db.js";
 
 /**
- * Validate splName, committeeHead email, committeeMembers email
+ * Validate committeeHead, splManager and committeeMembers email
  */
 const createCommitteeValidator = [
-    splNameValidator,
     body("committeeHead")
         .trim()
         .isEmail()
@@ -27,11 +17,63 @@ const createCommitteeValidator = [
         .isLength({ max: 50 })
         .withMessage("Must be at most 50 characters")
         .custom((email) => {
+            if (isIITEmail(email)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd'");
+        })
+        .bail()
+        .custom(async (email) => {
             try {
-                const valid = IITEmailValidator(email);
-                return true;
+                const user = await models.User.findOne({
+                    where: {
+                        email: email,
+                    },
+                    raw: true,
+                });
+
+                if (!user) {
+                    throw new createHttpError(400, "Email does not exist");
+                } else if (user.userType !== "teacher") {
+                    throw new createHttpError(400, "Committee head must be a teacher");
+                } else if (!user.active) {
+                    throw new createHttpError(400, "Account associated with email is deactivated");
+                }
             } catch (err) {
-                throw new Error(err.message);
+                console.log(err);
+                throw new Error(err.status ? err.message : "Error checking email");
+            }
+        }),
+
+    body("splManager")
+        .trim()
+        .isEmail()
+        .withMessage("Invalid email format")
+        .bail()
+        .isLength({ max: 50 })
+        .withMessage("Must be at most 50 characters")
+        .custom((email) => {
+            if (isIITEmail(email)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd'");
+        })
+        .bail()
+        .custom(async (email) => {
+            try {
+                const user = await models.User.findOne({
+                    where: {
+                        email: email,
+                    },
+                    raw: true,
+                });
+
+                if (!user) {
+                    throw new createHttpError(400, "Email does not exist");
+                } else if (user.userType !== "teacher") {
+                    throw new createHttpError(400, "SPL manager must be a teacher");
+                } else if (!user.active) {
+                    throw new createHttpError(400, "Account associated with email is deactivated");
+                }
+            } catch (err) {
+                console.log(err);
+                throw new Error(err.status ? err.message : "Error checking email");
             }
         }),
 
@@ -40,49 +82,48 @@ const createCommitteeValidator = [
         .withMessage("Must be an array")
         .isLength({ min: 1 })
         .withMessage("At least one member must be provided")
-        .custom((members, { req }) => {
-            makeUnique(req.body.committeeMembers);
-            return true;
-        }),
+        .custom((committeeMembers, { req }) => {
+            // check uniqueness
+            if (!isUnique(committeeMembers)) {
+                throw new Error("Duplicate emails are not allowed");
+            }
 
-    body("committeeMembers.*")
-        .trim()
-        .isEmail()
-        .withMessage("Invalid email format")
+            for (const email of committeeMembers) {
+                if (!isIITEmail(email)) throw new Error("All email must be valid IIT email");
+            }
+        })
         .bail()
-        .isLength({ max: 50 })
-        .withMessage("Must be at most 50 characters")
-        .bail()
-        .custom((email) => {
+        .custom(async (emails) => {
             try {
-                const valid = IITEmailValidator(email);
-                return true;
+                const users = await models.User.findAll({
+                    where: {
+                        email: {
+                            [Op.in]: emails,
+                            userType: "teacher",
+                            active: true,
+                        },
+                    },
+                    raw: true,
+                });
+
+                if (users.length !== emails.length) {
+                    throw new createHttpError(400, "Committee members must be teacher");
+                }
             } catch (err) {
-                throw new Error(err.message);
+                console.log(err);
+                throw new Error(err.status ? err.message : "Error checking email");
             }
         }),
 ];
 
-const addCommitteeHeadValidator = [committeeIdValidator, teacherIdValidator];
+const addCommitteeHeadValidator = [];
 
-const removeCommitteeHeadValidator = [committeeIdValidator];
+const removeCommitteeHeadValidator = [];
 
 const addCommitteeMemberValidator = [
-    committeeIdValidator,
-    body("members")
-        .isArray()
-        .withMessage("Must be an array")
-        .bail()
-        .isLength({ min: 1 })
-        .withMessage("Cannot be empty array")
-        .custom((members, { req }) => {
-            // make the members array unique
-            makeUnique(req.body.members);
-            return true;
-        }),
 ];
 
-const removeCommitteeMemberValidator = [committeeIdValidator, teacherIdValidator];
+const removeCommitteeMemberValidator = [];
 
 export {
     createCommitteeValidator,

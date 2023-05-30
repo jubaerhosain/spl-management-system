@@ -1,6 +1,7 @@
 /**
+ * Check if all elements of an array is unique or not
  * @param {Array} array
- * @returns {boolean} true if all elements in the array are unique
+ * @returns {boolean} true/false
  */
 function isUnique(array) {
     return new Set(array).size === array.length;

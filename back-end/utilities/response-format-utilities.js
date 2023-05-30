@@ -22,12 +22,14 @@ class MySuccess {
 class Response {
     // success status codes
 
-    // error codes
+    // error codes will be used to manipulate error data in ui
     static EMAIL_EXIST = "EMAIL_EXIST";
     static ROLL_EXIST = "ROLL_EXIST";
     static REG_EXIST = "REG_EXIST";
-    static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
     static SPL_EXIST = "SPL_EXIST";
+    static FIELD_REQUIRED = "FIELD_REQUIRED";
+    static SPL_DOES_NOT_EXIST = "SPL_DOES_NOT_EXIST";
+    static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 
     /**
      * Success response with this.success = true

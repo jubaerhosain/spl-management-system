@@ -34,8 +34,8 @@ import { checkAuthentication } from "../middlewares/common/check-auth-middleware
 
 // create team by committee head/member
 teamRouter.post(
-    "/",
-    checkSPLActivenessByName("spl2"),
+    "/:splName",
+    checkSPLActivenessByName,
     createTeamValidator,
     commonValidationHandler,
     checkCreateTeam,

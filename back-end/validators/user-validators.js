@@ -1,11 +1,11 @@
 import { body_param, body } from "./custom-validator.js";
 
 /**
- * Validates if email ends with '@iit.du.ac.bd' or not
+ * Custom function to check if email ends with '@iit.du.ac.bd' or not
  * @param {*} email
  * @returns true/false
  */
-function IITEmailValidator(email) {
+function isIITEmail(email) {
     const regex = /.+@iit\.du\.ac\.bd$/;
 
     if (regex.test(email)) {
@@ -23,22 +23,10 @@ const emailValidator = body_param("email")
     .isLength({ max: 50 })
     .withMessage("Must be at most 50 characters")
     .bail()
-    .matches(/.+@iit\.du\.ac\.bd$/)
-    .withMessage("Must be end with @iit.du.ac.bd");
-
-/**
- * Validates array of email addresses
- */
-const emailArrayValidator = body("emails.*")
-    .trim()
-    .isEmail()
-    .withMessage("Invalid email format")
-    .bail()
-    .isLength({ max: 50 })
-    .withMessage("Must be at most 50 characters")
-    .bail()
-    .matches(/.+@iit\.du\.ac\.bd$/)
-    .withMessage("Must end with @iit.du.ac.bd");
+    .custom((email) => {
+        if (isIITEmail(email)) return true;
+        throw new Error("Must be end with '@iit.du.ac.bd'");
+    });
 
 const nameValidator = body("name")
     .trim()
@@ -65,10 +53,9 @@ const detailsValidator = body("details")
 
 export {
     emailValidator,
-    emailArrayValidator,
     nameValidator,
     genderValidator,
     phoneNumberValidator,
     detailsValidator,
-    IITEmailValidator,
+    isIITEmail,
 };

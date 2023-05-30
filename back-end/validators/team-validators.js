@@ -5,7 +5,7 @@ import { models, Op } from "../database/db.js";
 
 // import necessary validators
 import { studentIdValidator } from "./student-validators.js";
-import { IITEmailValidator } from "./user-validators.js";
+import { isIITEmail } from "./user-validators.js";
 
 const teamIdValidator = body_param("teamId").trim().isInt().withMessage("Must be an integer");
 

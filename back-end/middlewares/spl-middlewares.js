@@ -67,35 +67,33 @@ async function checkAssignSPL(req, res, next) {
 }
 
 /**
- * returns a middleware function, put spl to the req if exists
+ * Reads splName from req.params \
+ * Puts spl to the req.body.spl
  */
-function checkSPLActivenessByName(splName) {
-    return async function (req, res, next) {
-        try {
-            const spl = await models.SPL.findOne({
-                where: {
-                    splName: splName,
-                    active: true,
-                },
-                raw: true,
-            });
+async function checkSPLActivenessByName(req, res, next) {
+    try {
+        const { splName } = req.body.spl;
+        const spl = await models.SPL.findOne({
+            where: {
+                splName: splName,
+                active: true,
+            },
+            raw: true,
+        });
 
-            if (!spl) {
-                res.status(400).json(
-                    Response.error(`Theres is not active ${splName.toUpperCase()}`)
-                );
-                return;
-            }
-
-            // put the spl into the req.body
-            req.body.spl = spl;
-
-            next();
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(Response.error("Internal Server Error"));
+        if (!spl) {
+            res.status(400).json(Response.error(`Theres is not active ${splName.toUpperCase()}`));
+            return;
         }
-    };
+
+        // put the spl into the req.body
+        req.body.spl = spl;
+
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal Server Error"));
+    }
 }
 
 // check if an teacher is splManager or not

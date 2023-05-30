@@ -1,9 +1,7 @@
 import express from "express";
 const committeeRouter = express.Router();
 
-
-import { checkCreateCommittee } from "../middlewares/committee-middlewares.js";
-
+import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 import { commonValidationHandler } from "../validators/custom-validator.js";
 
 import {
@@ -15,7 +13,6 @@ import {
 } from "../validators/committee-validators.js";
 
 import {
-    createCommitteeDbCheck,
     addCommitteeHeadDbCheck,
     removeCommitteeHeadDbCheck,
     addCommitteeMemberDbCheck,
@@ -33,13 +30,13 @@ import {
 // Create a committee for a specific active spl
 committeeRouter.post(
     "/:splName",
+    checkSPLActivenessByName,
     createCommitteeValidator,
     commonValidationHandler,
-    checkCreateCommittee,
     createCommittee
 );
 
-// add committee head
+// add committee head (query params ids)
 committeeRouter.post(
     "/head/:committeeId/:teacherId",
     addCommitteeHeadValidator,
