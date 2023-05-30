@@ -1,7 +1,6 @@
 import express from "express";
 const splRouter = express.Router();
 
-
 import { commonValidationHandler } from "../validators/custom-validator.js";
 
 import {
@@ -27,16 +26,15 @@ import {
     assignStudentDbCheck,
     removeStudentDbCheck,
 } from "../validators/db-checkers/spl-db-checkers.js";
-import { checkAssignSPL } from "../middlewares/spl-middlewares.js";
 
+import { checkAssignSPL, checkCreateSPL } from "../middlewares/spl-middlewares.js";
 
 // create SPL for new Academic Year
 splRouter.post(
     "/",
     createSPLValidator,
     commonValidationHandler,
-    createSPLDbCheck,
-    commonValidationHandler,
+    checkCreateSPL,
     createSPL
 );
 

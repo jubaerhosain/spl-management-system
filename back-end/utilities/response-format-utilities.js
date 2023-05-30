@@ -27,6 +27,7 @@ class Response {
     static ROLL_EXIST = "ROLL_EXIST";
     static REG_EXIST = "REG_EXIST";
     static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
+    static SPL_EXIST = "SPL_EXIST";
 
     /**
      * Success response with this.success = true

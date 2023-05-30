@@ -2,6 +2,33 @@ import { Response } from "../utilities/response-format-utilities.js";
 import { models, Op } from "../database/db.js";
 import { getCurriculumYear } from "../utilities/spl-utilities.js";
 
+async function checkCreateSPL(req, res, next) {
+    try {
+        const { splName } = req.body;
+
+        const spl = await models.SPL.findOne({
+            where: {
+                active: true,
+                splName,
+            },
+            raw: true,
+        });
+
+        if (spl) {
+            res.status(400).json(
+                Response.error(`${splName.toUpperCase()} already active`, Response.SPL_EXIST)
+            );
+        }
+
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
+    }
+}
+
 async function checkAssignSPL(req, res, next) {
     try {
         const { splName } = req.params;
@@ -99,4 +126,4 @@ async function checkSPLManager(req, res, next) {
     }
 }
 
-export { checkAssignSPL, checkSPLActivenessByName, checkSPLManager };
+export { checkCreateSPL, checkAssignSPL, checkSPLActivenessByName, checkSPLManager };

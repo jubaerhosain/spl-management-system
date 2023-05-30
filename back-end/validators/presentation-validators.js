@@ -1,7 +1,7 @@
 import { body_param, body } from "./custom-validator.js";
 import { makeUnique } from "../utilities/common-utilities.js";
 
-import { splNameValidator, splIdValidator } from "../validators/spl-validators.js";
+import { splNameValidator } from "../validators/spl-validators.js";
 import { teacherIdValidator } from "./teacher-validators.js";
 
 
@@ -27,7 +27,7 @@ const addPresentationEvaluatorValidator = [
         }),
 ];
 
-const removePresentationEvaluatorValidator = [splIdValidator, teacherIdValidator];
+const removePresentationEvaluatorValidator = [teacherIdValidator];
 
 export {
     presentationIdValidator,

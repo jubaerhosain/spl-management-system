@@ -1,5 +1,7 @@
 import { createMappedError } from "../utilities/response-format-utilities.js";
 
+// Add Response instead of createError???
+
 /**
  * Check if at least one field is provided or not in req.body
  * @param {*} req
@@ -21,9 +23,9 @@ async function requiredOne(req, res, next) {
 }
 
 /**
- * 1. Returns a middleware
- * 2. Check if provided fields in req.body are allowed or not
+ * Check if provided fields in req.body are allowed or not
  * @param {Array} allowedFields
+ * @returns Middleware
  */
 function checkAllow(allowedFields) {
     return async function (req, res, next) {

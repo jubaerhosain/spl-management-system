@@ -4,13 +4,6 @@ import { filterArray } from "../utilities/common-utilities.js";
 import { Response } from "../utilities/response-format-utilities.js";
 import { getCurriculumYear } from "../utilities/spl-utilities.js";
 
-/**
- * Create a spl for new academic year
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns
- */
 async function createSPL(req, res, next) {
     try {
         const { splName, academicYear } = req.body;
@@ -19,22 +12,17 @@ async function createSPL(req, res, next) {
             splName,
         });
 
-        res.json({
-            message: `${splName.toUpperCase()}, ${academicYear} is created successfully`,
-        });
+        res.json(
+            Response.success(`${splName.toUpperCase()}, ${academicYear} is created successfully`)
+        );
     } catch (err) {
         console.log(err);
-        const message = err.status ? err.message : "Internal server error.";
-        next(new createError(err.status || 500, message));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
-/**
- * Add spl manager for a particular spl
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
 async function addSPLManager(req, res, next) {
     try {
         const { splId, teacherId } = req.params;

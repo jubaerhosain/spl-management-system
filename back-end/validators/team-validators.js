@@ -4,7 +4,6 @@ import createHttpError from "http-errors";
 import { models, Op } from "../database/db.js";
 
 // import necessary validators
-import { splIdValidator } from "../validators/spl-validators.js";
 import { studentIdValidator } from "./student-validators.js";
 import { IITEmailValidator } from "./user-validators.js";
 

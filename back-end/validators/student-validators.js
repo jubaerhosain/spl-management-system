@@ -9,14 +9,10 @@ import {
     genderValidator,
     detailsValidator,
 } from "./user-validators.js";
+
 import { requiredOne, checkAllow } from "./common-validators.js";
 
-// import database checkers
-import { studentIdExistence } from "./db-checkers/student-db-checkers.js";
 
-/**
- * Validate studentId from body or param
- */
 const studentIdValidator = body_param("studentId")
     .trim()
     .isLength({ min: 1 })
@@ -118,7 +114,7 @@ const updateStudentByAdminValidator = [
 
     // do it in previous validator
     // if it fails then roll and reg db check won't happen, increases performance
-    studentIdExistence,
+    // studentIdExistence,
 
     rollNoValidator.optional(),
     registrationNoValidator.optional(),
