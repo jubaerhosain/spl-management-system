@@ -42,14 +42,14 @@ import {
 // Rest of the code
 
 // presentation markings
-markingRouter.post(
-    "/presentation/:presentationId/:studentId",
-    checkAuthentication,
-    addPresentationMarkValidator,
-    commonValidationHandler,
-    checkAddPresentationMark,
-    addPresentationMark
-);
+// markingRouter.post(
+//     "/presentation/:presentationId/:studentId",
+//     checkAuthentication,
+//     addPresentationMarkValidator,
+//     commonValidationHandler,
+//     checkAddPresentationMark,
+//     addPresentationMark
+// );
 
 // update presentation mark [Admin]
 markingRouter.put(

@@ -1,28 +1,24 @@
 import { param } from "./custom-validator.js";
 
-import { teamIdValidator } from "../validators/team-validators.js";
-import { teacherIdValidator } from "../validators/teacher-validators.js";
-import { studentIdValidator } from "../validators/student-validators.js";
-
 
 const randomizeSupervisorValidator = param("splName")
     .trim()
     .isIn(["spl1"])
     .withMessage("Supervisor randomization only allowed for 'spl1'");
 
-const manualTeamAllocationValidator = [teamIdValidator, teacherIdValidator];
+const manualTeamAllocationValidator = [];
 
-const manualStudentAllocationValidator = [studentIdValidator, teacherIdValidator];
+const manualStudentAllocationValidator = [];
 
-const teamRequestValidator = [teamIdValidator, teacherIdValidator];
+const teamRequestValidator = [];
 
-const acceptTeamRequestValidator = teamIdValidator;
+const acceptTeamRequestValidator = [];
 
-const studentRequestValidator = teacherIdValidator;
+const studentRequestValidator = [];
 
-const acceptStudentRequestValidator = studentIdValidator;
+const acceptStudentRequestValidator = [];
 
-const removeSupervisorValidator = [studentIdValidator, teacherIdValidator];
+const removeSupervisorValidator = [];
 
 export {
     randomizeSupervisorValidator,

@@ -4,10 +4,8 @@ import createHttpError from "http-errors";
 import { models, Op } from "../database/db.js";
 
 // import necessary validators
-import { studentIdValidator } from "./student-validators.js";
 import { isIITEmail } from "./user-validators.js";
 
-const teamIdValidator = body_param("teamId").trim().isInt().withMessage("Must be an integer");
 
 const teamNameValidator = body_param("teamName")
     .trim()
@@ -161,14 +159,13 @@ const createTeamValidator = [
         }),
 ];
 
-const updateTeamValidator = [teamIdValidator, teamNameValidator];
+const updateTeamValidator = [teamNameValidator];
 
-const addTeamMemberValidator = [teamIdValidator, teamMemberValidator];
+const addTeamMemberValidator = [teamMemberValidator];
 
-const removeTeamMemberValidator = [teamIdValidator, studentIdValidator];
+const removeTeamMemberValidator = [];
 
 export {
-    teamIdValidator,
     createTeamValidator,
     updateTeamValidator,
     addTeamMemberValidator,

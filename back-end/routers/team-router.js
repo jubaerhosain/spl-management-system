@@ -22,13 +22,11 @@ import {
 } from "../controllers/team-controllers.js";
 
 import {
-    createTeamDbCheck,
     updateTeamDbCheck,
     addTeamMemberDbCheck,
     removeTeamMemberDbCheck,
 } from "../validators/db-checkers/team-db-checkers.js";
 
-import { checkCreateTeam } from "../middlewares/team-middlewares.js";
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
 

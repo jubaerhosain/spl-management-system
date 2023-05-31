@@ -19,13 +19,15 @@ studentRouter.post(
     addStudent
 );
 
-// update student profile
+// update student profile by student
 studentRouter.put(
-    "/student",
+    "/",
     (req, res, next) => {
         req.user = {
-            userId: 1000000,
+            userId: 1032,
         };
+        console.log(req.user);
+        next();
     },
     updateStudentValidator,
     commonValidationHandler,

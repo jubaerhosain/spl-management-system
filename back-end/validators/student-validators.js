@@ -13,14 +13,6 @@ import {
 import { requiredOne, checkAllow } from "./common-validators.js";
 
 
-const studentIdValidator = body_param("studentId")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Must be provided")
-    .bail()
-    .isInt()
-    .withMessage("Must be an integer");
-
 const rollNoValidator = body("rollNo")
     .trim()
     .matches(/^BSSE-[0-9]{4}$/)
@@ -97,9 +89,9 @@ const updateStudentValidator = [
     checkAllow(allowedFieldsForStudent),
 
     // Validate the individual fields
-    phoneNumberValidator.optional(),
     nameValidator.optional(),
     genderValidator.optional(),
+    phoneNumberValidator.optional(),
     detailsValidator.optional(),
 ];
 
@@ -124,7 +116,6 @@ const updateStudentByAdminValidator = [
 ];
 
 export {
-    studentIdValidator,
     addStudentValidator,
     updateStudentValidator,
     updateStudentByAdminValidator,

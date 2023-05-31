@@ -28,6 +28,7 @@ class Response {
     static REG_EXIST = "REG_EXIST";
     static SPL_EXIST = "SPL_EXIST";
     static FIELD_REQUIRED = "FIELD_REQUIRED";
+    static FIELD_NOT_ALLOWED = "FIELD_NOT_ALLOWED";
     static SPL_DOES_NOT_EXIST = "SPL_DOES_NOT_EXIST";
     static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 

@@ -10,7 +10,7 @@ async function requiredOne(req, res, next) {
     if (Object.keys(req.body).length === 0) {
         req.res
             .status(400)
-            .json(Response.error("At least one field should be provided", Response.FIELD_REQUIRED));
+            .json(Response.error("At least one field must be provided", Response.FIELD_REQUIRED));
     } else {
         next();
     }
@@ -26,13 +26,15 @@ function checkAllow(allowedFields) {
         const providedFields = Object.keys(req.body);
         const invalidFields = providedFields.filter((field) => !allowedFields.includes(field));
         if (invalidFields.length > 0) {
-            const error = createMappedError({
-                param: "body",
-                value: invalidFields,
-                msg: "The following fields are invalid",
-                location: "body",
-            });
-            req.res.status(400).json(error);
+            req.res
+                .status(400)
+                .json(
+                    Response.error(
+                        "Following fields are not allowed",
+                        Response.FIELD_NOT_ALLOWED,
+                        invalidFields
+                    )
+                );
         } else {
             next();
         }
