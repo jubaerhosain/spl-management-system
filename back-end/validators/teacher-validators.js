@@ -10,6 +10,7 @@ import {
     phoneNumberValidator,
     genderValidator,
     detailsValidator,
+    isIITEmail,
 } from "./user-validators.js";
 
 // common-validators.js
@@ -43,8 +44,10 @@ const addTeacherValidator = [
         .isLength({ max: 50 })
         .withMessage("Must be at most 50 characters")
         .bail()
-        .matches(/.+@iit\.du\.ac\.bd$/)
-        .withMessage("Must end with @iit.du.ac.bd"),
+        .custom((email) => {
+            if (isIITEmail(email)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd");
+        }),
     body("teachers.*.designation")
         .trim()
         .isLength({ min: 2, max: 50 })

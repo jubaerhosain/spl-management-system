@@ -16,8 +16,8 @@ export async function addStudent(req, res, next) {
         for (const i in students) {
             users[i].name = students[i].name;
             users[i].email = students[i].email;
-            (users[i].password = hashedPasswords[i].hashedPassword),
-                (users[i].userType = "student");
+            users[i].password = hashedPasswords[i].hashedPassword;
+            users[i].userType = "student";
 
             delete students[i].name;
             delete students[i].email;

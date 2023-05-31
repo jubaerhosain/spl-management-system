@@ -14,8 +14,8 @@ export async function addTeacher(req, res, next) {
         for (const i in teachers) {
             users[i].name = teachers[i].name;
             users[i].email = teachers[i].email;
-            (users[i].password = hashedPasswords[i].hashedPassword),
-                (users[i].userType = "teacher");
+            users[i].password = hashedPasswords[i].hashedPassword;
+            users[i].userType = "teacher";
 
             delete teachers[i].name;
             delete teachers[i].email;
@@ -28,7 +28,7 @@ export async function addTeacher(req, res, next) {
             });
         }
 
-        console.log(users);
+        // console.log(users);
 
         const transaction = await sequelize.transaction();
         try {
