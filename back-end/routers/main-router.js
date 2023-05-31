@@ -19,7 +19,7 @@ mainRouter.use("/auth", authenticationRouter);
 mainRouter.use("/user", userRouter);
 
 // spl router
-// mainRouter.use("/spl", splRouter);
+mainRouter.use("/spl", splRouter);
 
 // // committee router
 // mainRouter.use("/committee", committeeRouter);
@@ -27,8 +27,8 @@ mainRouter.use("/user", userRouter);
 // // supervisor allocation router
 // mainRouter.use("/supervisor-allocation", supervisorAllocationRouter);
 
-// // team related routes
-// mainRouter.use("/team", teamRouter);
+// team related routes
+mainRouter.use("/team", teamRouter);
 
 // // presentation related routes
 // mainRouter.use("/presentation", presentationRouter);

@@ -34,7 +34,12 @@ import { checkAuthentication } from "../middlewares/common/check-auth-middleware
 
 // create team by committee head/member
 teamRouter.post(
-    "/:splName",
+    "/",
+    (req, res, next) => {
+        // team creation is only allowed for spl2
+        req.params.splName = "spl2";
+        next();
+    },
     checkSPLActivenessByName,
     createTeamValidator,
     commonValidationHandler,
@@ -76,14 +81,10 @@ teamRouter.delete(
 teamRouter.get("/requested", checkAuthentication, getRequestedTeams);
 
 // get team by teamMember
-teamRouter.get(
-    "/member",
-    checkAuthentication,
-    getTeamByTeamMember
-);
+teamRouter.get("/member", checkAuthentication, getTeamByTeamMember);
 
 teamRouter.get("/all", getTeamsWithMembers);
 
-teamRouter.get("/all-with-supervisor", getTeamInfoWithSuperVisor)
+teamRouter.get("/all-with-supervisor", getTeamInfoWithSuperVisor);
 
 export { teamRouter };

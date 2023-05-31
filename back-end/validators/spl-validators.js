@@ -1,5 +1,7 @@
 import { body_param, body } from "./custom-validator.js";
 import { makeUnique } from "../utilities/common-utilities.js";
+import { models } from "../database/db.js";
+import createHttpError from "http-errors";
 
 const splNameValidator = body_param("splName")
     .trim()
@@ -11,12 +13,34 @@ const academicYearValidator = body_param("academicYear")
     .matches(/^[0-9]{4}$/)
     .withMessage("Must be a 4 digit integer");
 
-const createSPLValidator = [splNameValidator, academicYearValidator];
+const createSPLValidator = [
+    splNameValidator.bail().custom(async (splName) => {
+        try {
+            const spl = await models.SPL.findOne({
+                where: {
+                    splName: splName,
+                    active: true,
+                },
+                raw: true,
+            });
+
+            if (spl) {
+                throw new createHttpError(
+                    400,
+                    `${splName.toUpperCase()}, ${spl.academicYear} is already active`
+                );
+            }
+        } catch (err) {
+            if (!err.status) console.log(err);
+            throw new Error(err.status ? err.message : "Error checking splName");
+        }
+    }),
+    academicYearValidator,
+];
 
 const addSPLManagerValidator = [];
 const removeSPLManagerValidator = [];
 
-const assignStudentValidator = splNameValidator;
 
 const removeStudentValidator = [];
 
@@ -25,6 +49,5 @@ export {
     createSPLValidator,
     addSPLManagerValidator,
     removeSPLManagerValidator,
-    assignStudentValidator,
     removeStudentValidator,
 };

@@ -7,15 +7,14 @@ import {
     createSPL,
     addSPLManager,
     removeSPLManager,
-    assignStudent,
     removeStudent,
+    assignStudentToSPL,
 } from "../controllers/spl-controllers.js";
 
 import {
     createSPLValidator,
     addSPLManagerValidator,
     removeSPLManagerValidator,
-    assignStudentValidator,
     removeStudentValidator,
 } from "../validators/spl-validators.js";
 
@@ -27,20 +26,14 @@ import {
     removeStudentDbCheck,
 } from "../validators/db-checkers/spl-db-checkers.js";
 
-import { checkAssignSPL, checkCreateSPL } from "../middlewares/spl-middlewares.js";
+import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 
 // create SPL for new Academic Year
-splRouter.post(
-    "/",
-    createSPLValidator,
-    commonValidationHandler,
-    checkCreateSPL,
-    createSPL
-);
+splRouter.post("/", createSPLValidator, commonValidationHandler, createSPL);
 
 // delete SPL [Do it manually]
 
-// add spl manager
+// add spl manager [move to committee]
 splRouter.post(
     "/manager/:splId/:teacherId",
     addSPLManagerValidator,
@@ -50,7 +43,7 @@ splRouter.post(
     addSPLManager
 );
 
-// remove spl manager
+// remove spl manager [move to committee]
 splRouter.delete(
     "/manager/:splId/",
     removeSPLManagerValidator,
@@ -60,13 +53,11 @@ splRouter.delete(
     removeSPLManager
 );
 
-// Assign one or more students of a curriculumYear to corresponding spl
+// Assign all unassigned students of a curriculumYear to corresponding SPL
 splRouter.post(
     "/assign/:splName",
-    assignStudentValidator,
-    commonValidationHandler,
-    checkAssignSPL,
-    assignStudent
+    checkSPLActivenessByName,
+    assignStudentToSPL
 );
 
 // remove student from spl

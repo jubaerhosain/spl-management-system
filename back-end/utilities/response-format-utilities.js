@@ -50,7 +50,7 @@ class Response {
      * @returns MyError Object
      */
     static error(message, errorCode, data) {
-        return new MyError(false, message, errorCode, data);
+        return new MyError(message, errorCode, data);
     }
 }
 

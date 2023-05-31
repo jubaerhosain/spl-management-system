@@ -87,12 +87,31 @@ async function removeSPLManager(req, res, next) {
  * @param {*} next
  * @returns
  */
-async function assignStudent(req, res, next) {
+async function assignStudentToSPL(req, res, next) {
     try {
-        const { studentIds } = req.body;
-        const { splId, splName } = req.spl;
+        const { splId, splName } = req.body.spl;
+        const curriculumYear = getCurriculumYear(splName);
 
-        // check already assigned or not
+        // find all active and 'curriculumYear' students
+        const students = await models.Student.findAll({
+            include: {
+                model: models.User,
+                where: {
+                    active: true,
+                },
+                required: true,
+                attributes: ["active"],
+            },
+            where: {
+                curriculumYear,
+            },
+            raw: true,
+            nest: true,
+            attributes: ["studentId"],
+        });
+        const studentIds = students.map((student) => student.studentId);
+
+        // find all assigned students to this spl
         let assignedStudents = await models.StudentSPL.findAll({
             where: {
                 splId,
@@ -104,12 +123,13 @@ async function assignStudent(req, res, next) {
         });
         assignedStudents = assignedStudents.map((student) => student.studentId);
 
+
+        // filter the unassigned students of this curriculum year
         const unassignedStudents = filterArray(studentIds, assignedStudents);
 
+
         if (unassignedStudents.length == 0) {
-            const message = `All ${getCurriculumYear(
-                splName
-            )} Year student are already assigned to ${splName.toUpperCase()}`;
+            const message = `There is no student to assign in ${splName.toUpperCase()}`;
             res.status(400).json(Response.error(message));
             return;
         }
@@ -136,19 +156,21 @@ async function assignStudent(req, res, next) {
 
             await transaction.commit();
 
-            res.status(200).json({
-                message: `${getCurriculumYear(
-                    splName
-                )} year students are successfully assigned to ${splName.toUpperCase()}`,
-            });
+            res.json(
+                Response.success(
+                    `${curriculumYear} year students are successfully assigned to ${splName.toUpperCase()}`
+                )
+            );
         } catch (error) {
             await transaction.rollback();
-            console.error("Transaction rolled back:", error);
+            console.log(error);
+            throw new Error("Internal Server Error");
         }
     } catch (err) {
         console.log(err);
-        const message = err.status ? err.message : "Internal server error";
-        next(new createError(err.status || 500, message));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
@@ -192,4 +214,11 @@ async function finalizeSPL(req, res, next) {
     }
 }
 
-export { createSPL, addSPLManager, removeSPLManager, assignStudent, removeStudent, finalizeSPL };
+export {
+    createSPL,
+    addSPLManager,
+    removeSPLManager,
+    assignStudentToSPL,
+    removeStudent,
+    finalizeSPL,
+};

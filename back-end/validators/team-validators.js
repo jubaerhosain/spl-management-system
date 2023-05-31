@@ -79,27 +79,29 @@ const createTeamValidator = [
                     },
                     raw: true,
                     nest: true,
-                    attributes: ["userId", "email", "active"],
+                    attributes: ["userId", "userType", "active"],
                 });
+
+                console.log(student);
 
                 if (!student) {
                     throw new createHttpError(400, "Email does not exist");
                 }
 
                 if (student.userType !== "student") {
-                    throw new createHttpError(400, "Team member must be student");
+                    throw new createHttpError(400, "Must be a student");
                 }
 
                 if (!student.active) {
-                    throw new createHttpError(400, "Student account is inactive");
+                    throw new createHttpError(400, "Account related to this email is inactive");
                 }
 
                 if (student.Student.curriculumYear !== "3rd") {
-                    throw new createHttpError(400, "Team member must be a 3rd year student");
+                    throw new createHttpError(400, "Must be a 3rd year student");
                 }
 
                 if (!student.Student.SPLs.splId) {
-                    throw new createHttpError(400, `Team member must be a assigned to SPL2`);
+                    throw new createHttpError(400, `Must be a assigned to SPL2`);
                 }
 
                 // check if member of another team of same SPL or not
