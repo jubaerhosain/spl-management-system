@@ -11,7 +11,7 @@ import {
 } from "./user-validators.js";
 
 import { requiredOne, checkAllow } from "./common-validators.js";
-
+import createHttpError from "http-errors";
 
 const rollNoValidator = body("rollNo")
     .trim()
@@ -60,7 +60,7 @@ const addStudentValidator = [
     body("students.*.rollNo")
         .trim()
         .matches(/^[0-9]{4}$/)
-        .withMessage("Must be in following format: '1255'"),
+        .withMessage("Must be a 4 digit number"),
     body("students.*.registrationNo")
         .trim()
         .matches(/^[0-9]{10}$/)
@@ -104,19 +104,47 @@ const updateStudentByAdminValidator = [
     requiredOne,
     checkAllow(allowedFieldsForAdmin),
 
-    // do it in previous validator
-    // if it fails then roll and reg db check won't happen, increases performance
-    // studentIdExistence,
+    rollNoValidator.optional().custom(async (rollNo) => {
+        try {
+            const roll = await models.Student.findOne({
+                where: {
+                    rollNo,
+                },
+                attributes: ["rollNo"],
+                raw: true,
+            });
 
-    rollNoValidator.optional(),
-    registrationNoValidator.optional(),
+            if (roll) {
+                throw new createHttpError(409, "Already exists");
+            }
+        } catch (err) {
+            if (err.status) console.log(err);
+            throw new Error(err.status ? err.message : "Error checking roll number");
+        }
+    }),
+
+    registrationNoValidator.optional().custom(async (registrationNo) => {
+        try {
+            const registration = await models.Student.findOne({
+                where: {
+                    registrationNo,
+                },
+                attributes: ["registrationNo"],
+                raw: true,
+            });
+
+            if (registration) {
+                throw new createHttpError(409, "Already exists");
+            }
+        } catch (err) {
+            if (err.status) console.log(err);
+            throw new Error(err.status ? err.message : "Error checking registration number");
+        }
+    }),
+
     batchValidator.optional(),
     sessionValidator.optional(),
     curriculumYearValidator.optional(),
 ];
 
-export {
-    addStudentValidator,
-    updateStudentValidator,
-    updateStudentByAdminValidator,
-};
+export { addStudentValidator, updateStudentValidator, updateStudentByAdminValidator };

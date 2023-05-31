@@ -65,7 +65,7 @@ export async function checkAddStudentExistence(req, res, next) {
                 Response.error(
                     "Following emails are already exists",
                     Response.EMAIL_EXIST,
-                    existedEmails.map((student) => student.email),
+                    existedEmails.map((student) => student.email)
                 )
             );
             return;
@@ -87,7 +87,7 @@ export async function checkAddStudentExistence(req, res, next) {
                 Response.error(
                     "Following roll numbers are already exists",
                     Response.ROLL_EXIST,
-                    existedRolls.map((student) => student.rollNo),
+                    existedRolls.map((student) => student.rollNo)
                 )
             );
             return;
@@ -109,13 +109,45 @@ export async function checkAddStudentExistence(req, res, next) {
                 Response.error(
                     "Following registration numbers are already exists.",
                     Response.REG_EXIST,
-                    existedRegs.map((student) => student.registrationNo),
+                    existedRegs.map((student) => student.registrationNo)
                 )
             );
             return;
         }
 
         next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
+    }
+}
+
+/**
+ * Reads studentId from req.params \
+ * Respond with error if not exist
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function checkStudentId(req, res, next) {
+    try {
+        const { studentId } = req.params;
+        const student = await models.Student.findOne({
+            where: {
+                where: {
+                    studentId,
+                },
+            },
+        });
+
+        if (!student) {
+            res.status(400).json(Response.error("Student not found"));
+            return;
+        } else {
+            next();
+        }
     } catch (err) {
         console.log(err);
         res.status(500).json(

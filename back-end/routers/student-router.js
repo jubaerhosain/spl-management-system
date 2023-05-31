@@ -2,11 +2,20 @@ import express from "express";
 const studentRouter = express.Router();
 
 import { commonValidationHandler } from "../validators/custom-validator.js";
-import { addStudentValidator, updateStudentValidator } from "../validators/student-validators.js";
-import { addStudent, updateStudent } from "../controllers/student-controllers.js";
+import {
+    addStudentValidator,
+    updateStudentByAdminValidator,
+    updateStudentValidator,
+} from "../validators/student-validators.js";
+import {
+    addStudent,
+    updateStudent,
+    updateStudentByAdmin,
+} from "../controllers/student-controllers.js";
 import {
     checkAddStudentUniqueness,
     checkAddStudentExistence,
+    checkStudentId,
 } from "../middlewares/student-middlewares.js";
 
 // add one or more students
@@ -35,9 +44,12 @@ studentRouter.put(
 );
 
 // update student profile by admin
-studentRouter.put("/:studentId", (req, res, next) => {
-    // checkStudentIdExistence
-});
-
+studentRouter.put(
+    "/:studentId",
+    checkStudentId,
+    updateStudentByAdminValidator,
+    commonValidationHandler,
+    updateStudentByAdmin
+);
 
 export default studentRouter;

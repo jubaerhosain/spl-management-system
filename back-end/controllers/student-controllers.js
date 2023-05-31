@@ -99,7 +99,7 @@ export async function updateStudentByAdmin(req, res, next) {
             },
         });
 
-        res.json(Response.success("Student is updated successfully"));
+        res.json(Response.success("Student account is updated successfully"));
     } catch (err) {
         console.log(err);
         res.status(500).json(
