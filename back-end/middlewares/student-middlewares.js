@@ -136,9 +136,7 @@ export async function checkStudentId(req, res, next) {
         const { studentId } = req.params;
         const student = await models.Student.findOne({
             where: {
-                where: {
-                    studentId,
-                },
+                studentId: studentId,
             },
         });
 
