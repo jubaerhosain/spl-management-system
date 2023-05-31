@@ -20,7 +20,24 @@ const teamNameValidator = body_param("teamName")
 const teamMemberValidator = [];
 
 const createTeamValidator = [
-    teamNameValidator,
+    teamNameValidator.bail().custom(async (teamName, { req }) => {
+        try {
+            const { splId } = req.body.spl;
+            const team = await models.Team.findOne({
+                where: {
+                    splId: splId,
+                    teamName: teamName,
+                },
+            });
+
+            if (team) {
+                throw new createHttpError(400, "Team name already exists in this SPL");
+            }
+        } catch (err) {
+            if (!err.status) console.error(err.message);
+            throw new Error(err.status ? err.message : "Error checking team name");
+        }
+    }),
     body("teamMembers")
         .isObject()
         .withMessage("Must be an object")
@@ -31,7 +48,9 @@ const createTeamValidator = [
                 throw new Error("At least one member must be provided");
             }
 
-            if (!isUnique(array)) {
+            // console.log(array.map(a => a[1]))
+
+            if (!isUnique(array.map((a) => a[1]))) {
                 throw new Error("Duplicate emails are not allowed");
             }
 
@@ -82,7 +101,7 @@ const createTeamValidator = [
                     attributes: ["userId", "userType", "active"],
                 });
 
-                console.log(student);
+                // console.log(student);
 
                 if (!student) {
                     throw new createHttpError(400, "Email does not exist");
@@ -115,8 +134,8 @@ const createTeamValidator = [
                         where: {
                             splId: spl.splId,
                         },
-                        attributes: ["teamName"],
-                        required: false,
+                        attributes: ["teamId", "teamName"],
+                        required: true,
                     },
                     where: {
                         studentId: student.userId,
@@ -126,8 +145,8 @@ const createTeamValidator = [
                     attributes: ["studentId"],
                 });
 
-                if (member.Teams.teamName) {
-                    throw new createHttpError(400, `Already member of ${member.Team.teamName}`);
+                if (member) {
+                    throw new createHttpError(400, `Already member of ${member.Teams.teamName}`);
                 }
 
                 // put member ids to the req

@@ -40,10 +40,9 @@ teamRouter.post(
         req.params.splName = "spl2";
         next();
     },
-    checkSPLActivenessByName,
+    checkSPLActivenessByName, 
     createTeamValidator,
     commonValidationHandler,
-    checkCreateTeam,
     createTeam
 );
 

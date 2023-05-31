@@ -14,6 +14,8 @@ async function createTeam(req, res, next) {
         const { splId } = req.body.spl;
         const { teamMemberIds, teamName } = req.body;
 
+        console.log(teamName, teamMemberIds)
+
         const transaction = await sequelize.transaction();
         try {
             // create team with spl id
@@ -33,7 +35,7 @@ async function createTeam(req, res, next) {
 
             transaction.commit();
 
-            res.json(Response.success(`Team '${teamName}' created successfully`));
+            res.json(Response.success(`'${teamName}' created successfully`));
         } catch (err) {
             await transaction.rollback();
             console.log(err);
