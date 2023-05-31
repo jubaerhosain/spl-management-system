@@ -12,29 +12,26 @@ import { Response } from "../utilities/response-format-utilities.js";
  */
 async function createCommittee(req, res, next) {
     try {
-        const { splId, splName } = req.spl;
-        const { committeeHeadId, committeeMemberIds, splManager } = req.body;
+        const { splId, splName } = req.body.spl;
+        const { committeeHeadId, committeeMemberIds, splManagerId } = req.body;
 
-        let splManagerId = await models.User.findOne({
-            where: {
-                email: splManager,
-            },
-            raw: true,
-        });
-        splManagerId = splManagerId.userId;
+        console.log(req.body);
 
-        // check if committee exists or not
-        const exist = await models.SPLCommittee.findOne({
-            where: {
-                splId: splId,
-            },
-            raw: true,
-        });
 
-        if (exist) {
-            res.status(400).json(Response.error("Committee already exists"));
-            return;
-        }
+        // check if committee exists or not. check before validation
+        // const exist = await models.SPLCommittee.findOne({
+        //     where: {
+        //         splId: splId,
+        //     },
+        //     raw: true,
+        // });
+
+        // if (exist) {
+        //     res.status(400).json(Response.error("Committee already exists"));
+        //     return;
+        // }
+
+        throw new Error("My Error");
 
         const transaction = await sequelize.transaction();
         try {
@@ -42,22 +39,15 @@ async function createCommittee(req, res, next) {
                 {
                     splId: splId,
                     committeeHead: committeeHeadId,
+                    splManager: splManagerId,
                 },
                 {
                     transaction: transaction,
                 }
             );
 
-            await models.SPL.update(
-                { splManager: splManagerId },
-                {
-                    where: {
-                        splId,
-                    },
-                    transaction: transaction,
-                }
-            );
 
+            // do from here
             const committeeMembers = [];
             for (const memberId of committeeMemberIds) {
                 committeeMembers.push({

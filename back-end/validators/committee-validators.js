@@ -21,7 +21,7 @@ const createCommitteeValidator = [
             throw new Error("Must be end with '@iit.du.ac.bd'");
         })
         .bail()
-        .custom(async (email) => {
+        .custom(async (email, { req }) => {
             try {
                 const user = await models.User.findOne({
                     where: {
@@ -37,6 +37,9 @@ const createCommitteeValidator = [
                 } else if (!user.active) {
                     throw new createHttpError(400, "Account associated with email is deactivated");
                 }
+
+                // put committeeHead id to req.body
+                req.body.committeeHeadId = user.userId;
             } catch (err) {
                 console.log(err);
                 throw new Error(err.status ? err.message : "Error checking email");
@@ -55,7 +58,7 @@ const createCommitteeValidator = [
             throw new Error("Must be end with '@iit.du.ac.bd'");
         })
         .bail()
-        .custom(async (email) => {
+        .custom(async (email, { req }) => {
             try {
                 const user = await models.User.findOne({
                     where: {
@@ -71,8 +74,11 @@ const createCommitteeValidator = [
                 } else if (!user.active) {
                     throw new createHttpError(400, "Account associated with email is deactivated");
                 }
+
+                // put splManager id to req.body
+                req.body.splManagerId = user.userId;
             } catch (err) {
-                console.log(err);
+                if (!err.status) console.log(err);
                 throw new Error(err.status ? err.message : "Error checking email");
             }
         }),
@@ -83,34 +89,52 @@ const createCommitteeValidator = [
         .isLength({ min: 1 })
         .withMessage("At least one member must be provided")
         .custom((committeeMembers, { req }) => {
-            // check uniqueness
+            console.log(committeeMembers);
             if (!isUnique(committeeMembers)) {
                 throw new Error("Duplicate emails are not allowed");
             }
+            return true;
+        }),
 
-            for (const email of committeeMembers) {
-                if (!isIITEmail(email)) throw new Error("All email must be valid IIT email");
-            }
+    body("committeeMembers.*")
+        .trim()
+        .isEmail()
+        .withMessage("Invalid email format")
+        .isLength({ max: 50 })
+        .withMessage("At most 50 characters are allowed")
+        .custom((memberEmail, { req }) => {
+            if (isIITEmail(memberEmail)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd");
         })
-        .bail()
-        .custom(async (emails) => {
+        .custom(async (email, { req }) => {
             try {
-                const users = await models.User.findAll({
+                const user = await models.User.findOne({
                     where: {
-                        email: {
-                            [Op.in]: emails,
-                            userType: "teacher",
-                            active: true,
-                        },
+                        email: email,
                     },
                     raw: true,
+                    attributes: ["userId", "userType", "active"],
                 });
 
-                if (users.length !== emails.length) {
-                    throw new createHttpError(400, "Committee members must be teacher");
+                if (!user) {
+                    throw new createHttpError(400, "Email does not exist");
                 }
+
+                if (user.userType !== "teacher") {
+                    throw new createHttpError(400, "Must be a teacher");
+                }
+
+                if (!user.active) {
+                    throw new createHttpError(400, "Account related to this email is inactive");
+                }
+
+                // put member ids to the req
+                if (!req.body.hasOwnProperty("committeeMemberIds")) {
+                    req.body.committeeMemberIds = [];
+                }
+                req.body.committeeMemberIds.push(user.userId);
             } catch (err) {
-                console.log(err);
+                if (!err.status) console.log(err);
                 throw new Error(err.status ? err.message : "Error checking email");
             }
         }),
@@ -120,8 +144,7 @@ const addCommitteeHeadValidator = [];
 
 const removeCommitteeHeadValidator = [];
 
-const addCommitteeMemberValidator = [
-];
+const addCommitteeMemberValidator = [];
 
 const removeCommitteeMemberValidator = [];
 

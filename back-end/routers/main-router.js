@@ -21,8 +21,8 @@ mainRouter.use("/user", userRouter);
 // spl router
 mainRouter.use("/spl", splRouter);
 
-// // committee router
-// mainRouter.use("/committee", committeeRouter);
+// committee router
+mainRouter.use("/committee", committeeRouter);
 
 // // supervisor allocation router
 // mainRouter.use("/supervisor-allocation", supervisorAllocationRouter);
