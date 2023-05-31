@@ -92,16 +92,30 @@ async function assignStudentToSPL(req, res, next) {
         const { splId, splName } = req.body.spl;
         const curriculumYear = getCurriculumYear(splName);
 
-        // find all active and 'curriculumYear' students
+        // find all active students of ${curriculumYear} left join with ${splName}
         const students = await models.Student.findAll({
-            include: {
-                model: models.User,
-                where: {
-                    active: true,
+            include: [
+                {
+                    model: models.User,
+                    where: {
+                        active: true,
+                    },
+                    attributes: ["active"],
+                    required: true,
                 },
-                required: true,
-                attributes: ["active"],
-            },
+                {
+                    model: models.SPL,
+                    through: {
+                        model: models.StudentSPL,
+                        attributes: [],
+                    },
+                    where: {
+                        splId: splId,
+                    },
+                    required: false,
+                    attributes: ["splId"],
+                },
+            ],
             where: {
                 curriculumYear,
             },
@@ -109,24 +123,12 @@ async function assignStudentToSPL(req, res, next) {
             nest: true,
             attributes: ["studentId"],
         });
-        const studentIds = students.map((student) => student.studentId);
 
-        // find all assigned students to this spl
-        let assignedStudents = await models.StudentSPL.findAll({
-            where: {
-                splId,
-                studentId: {
-                    [Op.in]: studentIds,
-                },
-            },
-            raw: true,
+        // console.log(students);
+
+        const unassignedStudents = students.filter((student) => {
+            return student.SPLs.splId != splId;
         });
-        assignedStudents = assignedStudents.map((student) => student.studentId);
-
-
-        // filter the unassigned students of this curriculum year
-        const unassignedStudents = filterArray(studentIds, assignedStudents);
-
 
         if (unassignedStudents.length == 0) {
             const message = `There is no student to assign in ${splName.toUpperCase()}`;
@@ -135,7 +137,10 @@ async function assignStudentToSPL(req, res, next) {
         }
 
         const studentSPL = [];
-        for (const studentId of unassignedStudents) {
+        const studentIds = unassignedStudents.map((student) => student.studentId);
+
+
+        for (const studentId of studentIds) {
             studentSPL.push({
                 studentId,
                 splId,
@@ -144,12 +149,12 @@ async function assignStudentToSPL(req, res, next) {
 
         const transaction = await sequelize.transaction();
         try {
-            // assign to spl
+            // assign to SPL
             await models.StudentSPL.bulkCreate(studentSPL, {
                 transaction: transaction,
             });
 
-            // create mark row in mark table
+            // create mark row in Mark table
             await models.Mark.bulkCreate(studentSPL, {
                 transaction: transaction,
             });
