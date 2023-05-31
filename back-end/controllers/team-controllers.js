@@ -12,9 +12,7 @@ import lodash from "lodash";
 async function createTeam(req, res, next) {
     try {
         const { splId } = req.body.spl;
-        const { retrievedMembers, teamName } = req.body;
-
-        const memberIds = retrievedMembers.map((member) => member.userId);
+        const { teamMemberIds, teamName } = req.body;
 
         const transaction = await sequelize.transaction();
         try {
@@ -29,7 +27,7 @@ async function createTeam(req, res, next) {
                 }
             );
 
-            await team.addTeamMembers(memberIds, {
+            await team.addTeamMembers(teamMemberIds, {
                 transaction: transaction,
             });
 
@@ -39,13 +37,13 @@ async function createTeam(req, res, next) {
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            const message = err.status ? err.message : "Internal server error";
-            next(new createError(err.status || 500, message));
+            throw new Error(err.message);
         }
     } catch (err) {
         console.log(err);
-        const message = err.status ? err.message : "Internal server error";
-        next(new createError(err.status || 500, message));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
@@ -294,20 +292,22 @@ async function getTeamInfoWithSuperVisor(req, res, next) {
                     model: models.StudentTeam,
                     attributes: [],
                 },
-                include: [{
-                    model: models.User,
-                },
-                {
-                    model: models.Teacher,
-                    as: "Supervisors",
-                    through: {
-                        model: models.StudentSupervisor,
-                        attributes: []
+                include: [
+                    {
+                        model: models.User,
                     },
-                    include: {
-                        model: models.User
-                    }
-                }],
+                    {
+                        model: models.Teacher,
+                        as: "Supervisors",
+                        through: {
+                            model: models.StudentSupervisor,
+                            attributes: [],
+                        },
+                        include: {
+                            model: models.User,
+                        },
+                    },
+                ],
             },
             raw: true,
             nest: true,
@@ -364,5 +364,5 @@ export {
     getRequestedTeams,
     getTeamByTeamMember,
     getTeamsWithMembers,
-    getTeamInfoWithSuperVisor
+    getTeamInfoWithSuperVisor,
 };

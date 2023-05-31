@@ -1,5 +1,5 @@
 import { body, body_param, param } from "./custom-validator.js";
-import { makeUnique } from "../utilities/common-utilities.js";
+import { isUnique, makeUnique } from "../utilities/common-utilities.js";
 import createHttpError from "http-errors";
 import { models, Op } from "../database/db.js";
 
@@ -11,6 +11,9 @@ const teamIdValidator = body_param("teamId").trim().isInt().withMessage("Must be
 
 const teamNameValidator = body_param("teamName")
     .trim()
+    .notEmpty()
+    .withMessage("Must be provided")
+    .bail()
     .matches(/^Team \d{1,2}$/)
     .withMessage("Must be in following format 'Team 1'");
 
@@ -18,18 +21,24 @@ const teamMemberValidator = [];
 
 const createTeamValidator = [
     teamNameValidator,
-    body("members")
-        .isArray()
+    body("teamMembers")
+        .isObject()
         .withMessage("Must be an object")
         .bail()
         .custom((members, { req }) => {
-            const length = Object.keys(members).length;
-            if (length == 0) {
+            const array = Object.entries(members);
+            if (array.length == 0) {
                 throw new Error("At least one member must be provided");
             }
+
+            if (!isUnique(array)) {
+                throw new Error("Duplicate emails are not allowed");
+            }
+
             return true;
         }),
-    body("members.*")
+
+    body("teamMembers.*")
         .trim()
         .isEmail()
         .withMessage("Invalid email format")
@@ -38,42 +47,35 @@ const createTeamValidator = [
         .withMessage("At most 50 characters are allowed")
         .bail()
         .custom((memberEmail, { req }) => {
-            try {
-                const valid = IITEmailValidator(memberEmail);
-                return true;
-            } catch (err) {
-                throw new Error(err.message);
-            }
+            if (isIITEmail(memberEmail)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd");
         })
         .bail()
-        .custom(async (memberEmail, { req }) => {
-            // check if the email is exist in database or not
+        .custom(async (email, { req }) => {
             try {
+                // from previous middleware
+                const { spl } = req.body;
+
                 const student = await models.User.findOne({
                     include: {
                         model: models.Student,
-                        required: true,
-                        where: {
-                            curriculumYear: "3rd",
-                        },
-                        attributes: [],
                         include: {
                             model: models.SPL,
                             through: {
                                 model: models.StudentSPL,
                                 attributes: [],
                             },
-                            required: false,
                             where: {
-                                active: true,
-                                splName: "spl2",
+                                splId: spl.splId,
                             },
-                            attributes: ["splId", "splName", "academicYear"],
+                            attributes: ["splId"],
+                            required: false,
                         },
+                        attributes: ["curriculumYear"],
+                        required: false,
                     },
                     where: {
-                        userType: "student",
-                        email: memberEmail,
+                        email: email,
                     },
                     raw: true,
                     nest: true,
@@ -84,29 +86,56 @@ const createTeamValidator = [
                     throw new createHttpError(400, "Email does not exist");
                 }
 
+                if (student.userType !== "student") {
+                    throw new createHttpError(400, "Team member must be student");
+                }
+
                 if (!student.active) {
                     throw new createHttpError(400, "Student account is inactive");
                 }
 
+                if (student.Student.curriculumYear !== "3rd") {
+                    throw new createHttpError(400, "Team member must be a 3rd year student");
+                }
+
                 if (!student.Student.SPLs.splId) {
-                    throw new createHttpError(400, `Not assigned to SPL2`);
+                    throw new createHttpError(400, `Team member must be a assigned to SPL2`);
                 }
 
-                // put spl to the req
-                // req.body.spl = student.Student.SPLs;
+                // check if member of another team of same SPL or not
+                const member = await models.Student.findOne({
+                    include: {
+                        model: models.Team,
+                        through: {
+                            model: models.StudentTeam,
+                            attributes: [],
+                        },
+                        where: {
+                            splId: spl.splId,
+                        },
+                        attributes: ["teamName"],
+                        required: false,
+                    },
+                    where: {
+                        studentId: student.userId,
+                    },
+                    raw: true,
+                    nest: true,
+                    attributes: ["studentId"],
+                });
 
-                // delete nested student
-                delete student.Student;
-
-                // put retrieved members to the req
-                if (!req.body.hasOwnProperty("retrievedMembers")) {
-                    req.body.retrievedMembers = [];
+                if (member.Teams.teamName) {
+                    throw new createHttpError(400, `Already member of ${member.Team.teamName}`);
                 }
-                req.body.retrievedMembers.push(student);
+
+                // put member ids to the req
+                if (!req.body.hasOwnProperty("teamMemberIds")) {
+                    req.body.teamMemberIds = [];
+                }
+                req.body.teamMemberIds.push(student.userId);
             } catch (err) {
                 if (!err.status) console.error(err.message);
-                const message = err.status ? err.message : "Internal Server Error";
-                throw new Error(message);
+                throw new Error(err.status ? err.message : "Error checking email");
             }
         }),
 ];
