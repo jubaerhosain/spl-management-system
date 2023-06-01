@@ -1,11 +1,5 @@
 import { param } from "./custom-validator.js";
 
-
-const randomizeSupervisorValidator = param("splName")
-    .trim()
-    .isIn(["spl1"])
-    .withMessage("Supervisor randomization only allowed for 'spl1'");
-
 const manualTeamAllocationValidator = [];
 
 const manualStudentAllocationValidator = [];
@@ -21,7 +15,6 @@ const acceptStudentRequestValidator = [];
 const removeSupervisorValidator = [];
 
 export {
-    randomizeSupervisorValidator,
     manualTeamAllocationValidator,
     teamRequestValidator,
     acceptTeamRequestValidator,

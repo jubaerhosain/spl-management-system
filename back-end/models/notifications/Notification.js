@@ -1,5 +1,6 @@
 "use strict";
 
+// talk with muktar or supervisor for that
 export default (sequelize, DataTypes) => {
     const Notification = sequelize.define("Notifications", {
         noticeId: {

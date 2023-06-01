@@ -43,7 +43,7 @@ export async function addStudent(req, res, next) {
 
             await transaction.commit();
 
-            res.json(Response.success("Students accounts are created successfully"));
+            res.json(Response.success("Student accounts are created successfully"));
 
             const credentialData = JSON.stringify(credentials);
             writeCredentials(new Date() + "\n" + credentialData);

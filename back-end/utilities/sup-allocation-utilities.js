@@ -1,13 +1,12 @@
 import lodash from "lodash";
 
 /**
- *
+ * Randomize supervisor for students
  * @param {Array} studentIds
  * @param {Array} teacherIds
- * @param {Integer} splId
- * @return {Promise<Array>} [{studentId, TeacherId, splId}]
+ * @return {Promise<Array>} [{studentId, TeacherId}]
  */
-function randomize(studentIds, teacherIds, splId) {
+function randomize(studentIds, teacherIds) {
     return new Promise(function (resolve, reject) {
         studentIds = lodash.shuffle(studentIds);
         teacherIds = lodash.shuffle(teacherIds);
@@ -17,16 +16,15 @@ function randomize(studentIds, teacherIds, splId) {
             teacherIds = teacherIds.concat(teacherIds);
         }
 
-        const studentSupervisors = [];
+        const studentTeachers = [];
         for (let i = 0; i < studentIds.length; i++) {
-            studentSupervisors.push({
+            studentTeachers.push({
                 studentId: studentIds[i],
                 teacherId: teacherIds[i],
-                splId,
             });
         }
 
-        resolve(studentSupervisors);
+        resolve(studentTeachers);
     });
 }
 

@@ -21,12 +21,6 @@ import {
     getTeamInfoWithSuperVisor,
 } from "../controllers/team-controllers.js";
 
-import {
-    updateTeamDbCheck,
-    addTeamMemberDbCheck,
-    removeTeamMemberDbCheck,
-} from "../validators/db-checkers/team-db-checkers.js";
-
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
 
@@ -49,7 +43,7 @@ teamRouter.put(
     "/:teamId",
     updateTeamValidator,
     commonValidationHandler,
-    updateTeamDbCheck,
+    // updateTeamDbCheck,
     commonValidationHandler,
     updateTeam
 );
@@ -59,7 +53,7 @@ teamRouter.put(
     "/member/:teamId",
     addTeamMemberValidator,
     commonValidationHandler,
-    addTeamMemberDbCheck,
+    // addTeamMemberDbCheck,
     commonValidationHandler,
     addTeamMember
 );
@@ -69,7 +63,7 @@ teamRouter.delete(
     "/member/:teamId/:studentId",
     removeTeamMemberValidator,
     commonValidationHandler,
-    removeTeamMemberDbCheck,
+    // removeTeamMemberDbCheck,
     commonValidationHandler,
     removeTeamMember
 );

@@ -23,19 +23,16 @@ mainRouter.use("/spl", splRouter);
 // committee router
 mainRouter.use("/committee", committeeRouter);
 
-// // supervisor allocation router
-// mainRouter.use("/supervisor-allocation", supervisorAllocationRouter);
+// supervisor allocation router
+mainRouter.use("/sup-allocation", supervisorAllocationRouter);
 
 // team related routes
 mainRouter.use("/team", teamRouter);
 
-// // presentation related routes
+// presentation related routes
 // mainRouter.use("/presentation", presentationRouter);
 
-// // marking related routes
+// marking related routes
 // mainRouter.use("/marking", markingRouter);
-
-// // interested field
-// mainRouter.use("/interested-field", interestedFieldRouter);
 
 export { mainRouter };

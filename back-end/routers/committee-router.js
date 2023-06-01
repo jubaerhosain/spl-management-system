@@ -13,13 +13,6 @@ import {
 } from "../validators/committee-validators.js";
 
 import {
-    addCommitteeHeadDbCheck,
-    removeCommitteeHeadDbCheck,
-    addCommitteeMemberDbCheck,
-    removeCommitteeMemberDbCheck,
-} from "../validators/db-checkers/committee-db-checkers.js";
-
-import {
     createCommittee,
     addCommitteeHead,
     removeCommitteeHead,
@@ -43,7 +36,7 @@ committeeRouter.post(
     "/head/:committeeId/:teacherId",
     addCommitteeHeadValidator,
     commonValidationHandler,
-    addCommitteeHeadDbCheck,
+    // addCommitteeHeadDbCheck,
     commonValidationHandler,
     addCommitteeHead
 );
@@ -53,7 +46,7 @@ committeeRouter.delete(
     "/head/:committeeId",
     removeCommitteeHeadValidator,
     commonValidationHandler,
-    removeCommitteeHeadDbCheck,
+    // removeCommitteeHeadDbCheck,
     commonValidationHandler,
     removeCommitteeHead
 );
@@ -67,7 +60,7 @@ committeeRouter.post(
     "/member/:committeeId",
     addCommitteeMemberValidator,
     commonValidationHandler,
-    addCommitteeMemberDbCheck,
+    // addCommitteeMemberDbCheck,
     commonValidationHandler,
     addCommitteeMember
 );
@@ -77,7 +70,7 @@ committeeRouter.delete(
     "/member/:committeeId/:teacherId",
     removeCommitteeMemberValidator,
     commonValidationHandler,
-    removeCommitteeMemberDbCheck,
+    // removeCommitteeMemberDbCheck,
     commonValidationHandler,
     removeCommitteeMember
 );
