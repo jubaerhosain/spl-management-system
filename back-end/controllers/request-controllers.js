@@ -9,10 +9,36 @@ import { Response } from "../utilities/response-format-utilities.js";
  */
 export async function teamRequest(req, res, next) {
     try {
-        const { teamId, teacherId } = req.params;
+        const { teamId, teacherId } = req.query;
+
+        const teacher = await models.User.findOne({
+            include: {
+                model: models.Teacher,
+                attributes: ["available"],
+                required: false,
+            },
+            where: {
+                userId: teacherId,
+                active: true,
+                userType: "teacher",
+            },
+            raw: true,
+            nest: true,
+            attributes: ["userId"],
+        });
+
+        if (!teacher) {
+            res.status(400).json(Response.error("Teacher does not exist"));
+            return;
+        }
+
+        if (!teacher.Teacher.available) {
+            res.status(400).json(Response.error("Teacher is not available"));
+            return;
+        }
 
         // check if already requested that teacher or not
-        const requested = await models.TeamRequest.findOne({
+        const requested = await models.TeamTeacher_Request.findOne({
             where: {
                 teamId,
                 teacherId,
@@ -26,17 +52,19 @@ export async function teamRequest(req, res, next) {
         }
 
         // do request to the teacher
-        await models.TeamRequest.create({
+        await models.TeamTeacher_Request.create({
             teamId,
             teacherId,
         });
 
-        // trigger a notification after the request??
+        // trigger a notification after the request
 
         res.json(Response.success("Request sent successfully"));
     } catch (err) {
         console.log(err);
-        res.status(400).json(Response.error("Internal Server Error"));
+        res.status(400).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 

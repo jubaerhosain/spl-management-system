@@ -2,13 +2,14 @@ import { Router } from "express";
 const requestRouter = Router();
 
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
-import { studentRequest } from "../controllers/request-controllers.js";
-import { authorizeStudentRequest, authorizeTeamRequest } from "../middlewares/request-middlewares.js";
+import { studentRequest, teamRequest } from "../controllers/request-controllers.js";
+import {
+    authorizeStudentRequest,
+    authorizeTeamRequest,
+} from "../middlewares/request-middlewares.js";
 
 
-// teamId, teacherId, existence and availability from param common middlewares
-
-// team requests teachers to be supervisor for spl2 
+// team requests teachers to be supervisor for spl2
 // [query parameters {teamId, teacherId}]
 requestRouter.post(
     "/team",
@@ -21,11 +22,7 @@ requestRouter.post(
         next();
     },
     authorizeTeamRequest,
-    (req, res, next) => {
-        // teacher existence/availability
-    }
-    // checkTeamRequest,
-    // teamRequest
+    teamRequest
 );
 
 // // delete team requst by student
