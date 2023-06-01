@@ -3,13 +3,6 @@ const supervisorAllocationRouter = Router();
 
 import requestRouter from "./request-router.js";
 
-import { commonValidationHandler } from "../validators/custom-validator.js";
-
-import {
-    manualTeamAllocationValidator,
-    manualStudentAllocationValidator,
-    removeSupervisorValidator,
-} from "../validators/sup-allocation-validators.js";
 
 import { checkRemoveSupervisor } from "../middlewares/sup-allocation-middlewares.js";
 

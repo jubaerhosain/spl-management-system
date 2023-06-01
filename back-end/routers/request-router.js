@@ -3,16 +3,27 @@ const requestRouter = Router();
 
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 import { studentRequest } from "../controllers/request-controllers.js";
-import { authorizeStudentRequest } from "../middlewares/request-middlewares.js";
+import { authorizeStudentRequest, authorizeTeamRequest } from "../middlewares/request-middlewares.js";
 
-// // team requests teachers to be supervisor for spl2
-// supervisorAllocationRouter.post(
-//     "/request/team/:teamId/:teacherId",
-//     teamRequestValidator,
-//     commonValidationHandler,
-//     checkTeamRequest,
-//     teamRequest
-// );
+
+// teamId, teacherId, existence and availability from param common middlewares
+
+// team requests teachers to be supervisor for spl2 
+// [query parameters {teamId, teacherId}]
+requestRouter.post(
+    "/team",
+    (req, res, next) => {
+        // authentication
+        req.user = {
+            userId: 1033,
+        };
+
+        next();
+    },
+    authorizeTeamRequest,
+    // checkTeamRequest,
+    // teamRequest
+);
 
 // // delete team requst by student
 // supervisorAllocationRouter.delete(

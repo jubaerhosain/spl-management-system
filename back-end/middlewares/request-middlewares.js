@@ -71,7 +71,54 @@ export async function authorizeStudentRequest(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
+    }
+}
+
+/**
+ * Authorize user is a member of that team or not
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function authorizeTeamRequest(req, res, next) {
+    try {
+        const { teamId, teacherId } = req.query;
+
+        // how to find 1 team id and many members [find a new query option]
+        const team = await models.Team.findAll({
+            include: {
+                model: models.Student,
+                as: "TeamMembers",
+                through: {
+                    model: models.StudentTeam,
+                    attributes: [],
+                },
+                attributes: ["studentId"],
+            },
+            where: {
+                teamId,
+            },
+            raw: true,
+            nest: true,
+            attributes: ["teamId"],
+        });
+
+        console.log(team);
+
+        if (!team) {
+            res.status(400).json(Response.error("Team does not exist"));
+            return;
+        }
+
+        console.log(teamId, teacherId);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
