@@ -2,15 +2,22 @@ import { Router } from "express";
 const requestRouter = Router();
 
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
-import { studentRequest, teamRequest } from "../controllers/request-controllers.js";
+import {
+    studentRequest,
+    teamRequest,
+    acceptStudentRequest,
+} from "../controllers/request-controllers.js";
+
 import {
     authorizeStudentRequest,
     authorizeTeamRequest,
     checkTeacherAvailability,
+    checkAcceptStudentRequest,
 } from "../middlewares/request-middlewares.js";
 
 import { teamIdValidator } from "../validators/team-validators.js";
 import { teacherIdValidator } from "../validators/teacher-validators.js";
+import { studentIdValidator } from "../validators/student-validators.js";
 import { commonValidationHandler } from "../validators/custom-validator.js";
 
 // team requests teachers to be supervisor for spl2
@@ -77,15 +84,22 @@ requestRouter.post(
 //     cancelStudentRequestByStudent
 // );
 
-// // accept student request
-// supervisorAllocationRouter.put(
-//     "/request/student/:studentId",
-//     checkAuthentication,
-//     acceptStudentRequestValidator,
-//     commonValidationHandler,
-//     checkAcceptStudentRequest,
-//     acceptStudentRequest
-// );
+// accept student request [query parameters {studentId}]
+requestRouter.put(
+    "/student",
+    // checkAuthentication,
+    (req, res, next) => {
+        req.user = {
+            userId: 1039,
+        };
+
+        next();
+    },
+    studentIdValidator,
+    commonValidationHandler,
+    checkAcceptStudentRequest,
+    acceptStudentRequest
+);
 
 // // reject student request by receiver
 // supervisorAllocationRouter.delete(

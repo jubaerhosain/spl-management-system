@@ -47,7 +47,6 @@ export async function checkTeacherAvailability(req, res, next) {
     }
 }
 
-
 /**
  * Authorize 4th year student, if able to request or not
  * @param {*} req
@@ -273,15 +272,15 @@ async function checkAcceptTeamRequest(req, res, next) {
     }
 }
 
-async function checkAcceptStudentRequest(req, res, next) {
+export async function checkAcceptStudentRequest(req, res, next) {
     try {
-        const { studentId } = req.params;
+        const { studentId } = req.query;
         const { userId } = req.user;
 
-        console.log(studentId, userId);
+        // console.log(studentId, userId);
 
         // check the student is requested or not
-        const requested = await models.StudentRequest.findOne({
+        const requested = await models.StudentTeacher_Request.findOne({
             where: {
                 studentId,
                 teacherId: userId,
@@ -290,10 +289,57 @@ async function checkAcceptStudentRequest(req, res, next) {
             raw: true,
         });
 
-        console.log(requested);
+        // console.log(requested);
 
         if (!requested) {
             res.status(400).json(Response.error("Student did not requested you"));
+            return;
+        }
+
+        // find the student's active spl3
+        const spl = await models.SPL.findOne({
+            include: {
+                model: models.Student,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                where: {
+                    studentId,
+                },
+                attributes: ["studentId"],
+            },
+            where: {
+                active: true,
+                splName: "spl3",
+            },
+            raw: true,
+            nest: true,
+        });
+
+        if (!spl) {
+            res.status(400).json(Response.error("Student is not assigned to SPL3"));
+            return;
+        }
+
+        delete spl.Students;
+
+        // console.log(spl);
+
+
+        // put spl to the req body
+        req.body.spl = spl;
+
+        // check if the student already has supervisor or not
+        const supervisor = await models.StudentTeacher_Supervisor.findOne({
+            where: {
+                splId: spl.splId,
+                studentId,
+            },
+        });
+
+        if (supervisor) {
+            res.status(500).json(Response.error("Student already has supervisor for SPL3"));
             return;
         }
 

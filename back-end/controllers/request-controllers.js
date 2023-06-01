@@ -145,58 +145,20 @@ export async function studentRequest(req, res, next) {
  */
 export async function acceptStudentRequest(req, res, next) {
     try {
-        const { studentId } = req.params;
+        const { studentId } = req.query;
         const teacherId = req.user.userId;
 
-        // find the student's active spl3
-        const spl = await models.SPL.findOne({
-            include: {
-                model: models.Student,
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                where: {
-                    studentId,
-                },
-                attributes: [],
-            },
-            where: {
-                active: true,
-                splName: "spl3",
-            },
-            attributes: ["splId"],
-            raw: true,
-            nest: true,
-        });
-
-        if (!spl) {
-            res.status(400).json(Response.error("Student is not assigned to SPL3"));
-            return;
-        }
-
-        // check if the student already has supervisor or not
-        const supervisor = await models.StudentSupervisor.findOne({
-            where: {
-                splId: spl.splId,
-                studentId,
-            },
-        });
-
-        if (supervisor) {
-            res.status(500).json(Response.error("Already has supervisor"));
-            return;
-        }
+        const { splId } = req.body.spl;
 
         // assign supervisor and delete all the requests of that student
         const transaction = await sequelize.transaction();
         try {
             // add supervisor
-            await models.StudentSupervisor.create(
+            await models.StudentTeacher_Supervisor.create(
                 {
                     studentId,
                     teacherId,
-                    splId: spl.splId,
+                    splId: splId,
                 },
                 {
                     transaction: transaction,
@@ -204,7 +166,7 @@ export async function acceptStudentRequest(req, res, next) {
             );
 
             // delete all requests of that student
-            await models.StudentRequest.destroy({
+            await models.StudentTeacher_Request.destroy({
                 where: {
                     studentId,
                 },
@@ -217,11 +179,13 @@ export async function acceptStudentRequest(req, res, next) {
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            res.status(500).json(Response.error("Internal server error"));
+            throw new Error(err.message);
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
