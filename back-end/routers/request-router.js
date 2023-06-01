@@ -15,12 +15,15 @@ requestRouter.post(
     (req, res, next) => {
         // authentication
         req.user = {
-            userId: 1033,
+            userId: 1032,
         };
 
         next();
     },
     authorizeTeamRequest,
+    (req, res, next) => {
+        // teacher existence/availability
+    }
     // checkTeamRequest,
     // teamRequest
 );

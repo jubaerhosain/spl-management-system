@@ -86,9 +86,9 @@ export async function authorizeStudentRequest(req, res, next) {
 export async function authorizeTeamRequest(req, res, next) {
     try {
         const { teamId, teacherId } = req.query;
+        const studentId = req.user.userId;
 
-        // how to find 1 team id and many members [find a new query option]
-        const team = await models.Team.findAll({
+        const team = await models.Team.findOne({
             include: {
                 model: models.Student,
                 as: "TeamMembers",
@@ -101,19 +101,41 @@ export async function authorizeTeamRequest(req, res, next) {
             where: {
                 teamId,
             },
-            raw: true,
+            // raw: true,
             nest: true,
-            attributes: ["teamId"],
+            attributes: ["teamId", "teamName", "splId"],
         });
-
-        console.log(team);
 
         if (!team) {
             res.status(400).json(Response.error("Team does not exist"));
             return;
         }
 
-        console.log(teamId, teacherId);
+        // check if student is the member of that team or not
+        const teamMemberIds = team.TeamMembers.map((teamMember) => teamMember.studentId);
+        if (!teamMemberIds.includes(studentId)) {
+            res.status(400).json(Response.error(`Your not a member of ${team.teamName}`));
+            return;
+        }
+
+        // check if already has supervisor or not
+        const supervisor = await models.StudentTeacher_Supervisor.findAll({
+            where: {
+                studentId: {
+                    [Op.in]: teamMemberIds,
+                },
+                splId: team.splId,
+            },
+            attributes: ["teacherId"],
+            raw: true,
+        });
+
+        if (supervisor.length > 0) {
+            res.status(400).json(Response.error("You already have a supervisor for SPL2"));
+            return;
+        }
+
+        next();
     } catch (err) {
         console.log(err);
         res.status(500).json(
