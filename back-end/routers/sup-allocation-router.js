@@ -25,9 +25,8 @@ import { checkAuthentication } from "../middlewares/common/check-auth-middleware
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 
 // request router setup
-supervisorAllocationRouter.use("request", requestRouter);
+supervisorAllocationRouter.use("/request", requestRouter);
 
-// return middleware for spl
 
 // randomize supervisor for students of spl1
 supervisorAllocationRouter.post(
@@ -42,40 +41,40 @@ supervisorAllocationRouter.post(
 );
 
 // allocate supervisor manually by email
-supervisorAllocationRouter.post("/assign/manually", assignManuallyByEmail);
+// supervisorAllocationRouter.post("/assign/manually", assignManuallyByEmail);
 
 // allocate supervisor manually to the team [spl2]
-supervisorAllocationRouter.post(
-    "/:splName/:teamId/:teacherId",
-    manualTeamAllocationValidator,
-    commonValidationHandler,
-    // manualTeamAllocationDbCheck,
-    commonValidationHandler,
-    manuallyAllocateTeamSupervisor
-);
+// supervisorAllocationRouter.post(
+//     "/:splName/:teamId/:teacherId",
+//     manualTeamAllocationValidator,
+//     commonValidationHandler,
+//     // manualTeamAllocationDbCheck,
+//     commonValidationHandler,
+//     manuallyAllocateTeamSupervisor
+// );
 
 // allocate supervisor manually to the individual student [spl[1/2/3]]
-supervisorAllocationRouter.post(
-    "/assign/student/:studentId/:teacherId",
-    (req, res, next) => {
-        // authentication
-        // admin or teacher
-        next();
-    },
-    manualStudentAllocationValidator,
-    commonValidationHandler,
-    // manualStudentAllocationDbCheck,
-    commonValidationHandler,
-    manuallyAllocateStudentSupervisor
-);
+// supervisorAllocationRouter.post(
+//     "/assign/student/:studentId/:teacherId",
+//     (req, res, next) => {
+//         // authentication
+//         // admin or teacher
+//         next();
+//     },
+//     manualStudentAllocationValidator,
+//     commonValidationHandler,
+//     // manualStudentAllocationDbCheck,
+//     commonValidationHandler,
+//     manuallyAllocateStudentSupervisor
+// );
 
 // remove supervisor of a student [spl[1/2/3]
-supervisorAllocationRouter.delete(
-    "/:studentId/:teacherId",
-    removeSupervisorValidator,
-    commonValidationHandler,
-    checkRemoveSupervisor,
-    removeSupervisor
-);
+// supervisorAllocationRouter.delete(
+//     "/:studentId/:teacherId",
+//     removeSupervisorValidator,
+//     commonValidationHandler,
+//     checkRemoveSupervisor,
+//     removeSupervisor
+// );
 
 export default supervisorAllocationRouter;

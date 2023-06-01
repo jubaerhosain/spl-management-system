@@ -1,9 +1,20 @@
+import { Sequelize, models, Op } from "../database/db.js";
+import { Response } from "../utilities/response-format-utilities.js";
 
-async function authorizeStudentRequest(req, res, next) {
+/**
+ * Authorize 4th year student, if able to request or not
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ */
+export async function authorizeStudentRequest(req, res, next) {
     try {
         const { userId } = req.user;
+        const { splId } = req.body.spl;
 
         // must be 4th year student and assigned to corresponding spl3
+
         const student = await models.Student.findOne({
             include: {
                 model: models.SPL,
@@ -12,47 +23,49 @@ async function authorizeStudentRequest(req, res, next) {
                     attributes: [],
                 },
                 where: {
-                    active: true,
-                    splName: "spl3",
+                    splId: splId,
                 },
-                attributes: ["splId", "splName", "academicYear"],
+                attributes: ["splId"],
                 required: false,
             },
             where: {
                 studentId: userId,
-                curriculumYear: "4th",
+                // curriculumYear: "4th",
             },
-            attributes: ["studentId"],
             nest: true,
             raw: true,
+            attributes: ["studentId", "curriculumYear"],
         });
+
+        // console.log(student);
 
         if (!student) {
             res.status(400).json(Response.error("You are not allowed to request"));
             return;
         }
 
-        // check assigned to spl3 or not
+        if (student.curriculumYear !== "4th") {
+            res.status(400).json(Response.error("Only 4th year students allowed to request"));
+            return;
+        }
+
         if (!student.SPLs.splId) {
             res.status(400).json(Response.error("You are not assigned to SPL3"));
             return;
         }
 
-        // put spl to the req
-        req.spl = student.SPLs;
-
         // check if already has supervisor or not
-        const supervisor = await models.StudentSupervisor.findOne({
+        const supervisor = await models.StudentTeacher_Supervisor.findOne({
             where: {
                 studentId: userId,
-                splId: student.SPLs.splId,
+                splId: splId,
             },
             attributes: ["teacherId"],
             raw: true,
         });
 
         if (supervisor) {
-            res.status(400).json(Response.error("Already has a supervisor"));
+            res.status(400).json(Response.error("You already have a supervisor for SPL3"));
             return;
         }
 
@@ -233,44 +246,6 @@ async function checkAcceptTeamRequest(req, res, next) {
     }
 }
 
-async function checkStudentRequest(req, res, next) {
-    try {
-        const { teacherId } = req.params;
-
-        // check teacher
-        const teacher = await models.User.findOne({
-            include: {
-                model: models.Teacher,
-                attributes: ["available"],
-                required: false,
-            },
-            where: {
-                userId: teacherId,
-                active: true,
-                userType: "teacher",
-            },
-            raw: true,
-            nest: true,
-            attributes: ["userId"],
-        });
-
-        if (!teacher) {
-            res.status(400).json(Response.error("Teacher does not exist"));
-            return;
-        }
-
-        if (!teacher.Teacher.available) {
-            res.status(400).json(Response.error("Teacher is not available"));
-            return;
-        }
-
-        next();
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
-    }
-}
-
 async function checkAcceptStudentRequest(req, res, next) {
     try {
         const { studentId } = req.params;
@@ -288,7 +263,7 @@ async function checkAcceptStudentRequest(req, res, next) {
             raw: true,
         });
 
-        console.log(requested)
+        console.log(requested);
 
         if (!requested) {
             res.status(400).json(Response.error("Student did not requested you"));

@@ -1,6 +1,10 @@
 import { Router } from "express";
 const requestRouter = Router();
 
+import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
+import { studentRequest } from "../controllers/request-controllers.js";
+import { authorizeStudentRequest } from "../middlewares/request-middlewares.js";
+
 // // team requests teachers to be supervisor for spl2
 // supervisorAllocationRouter.post(
 //     "/request/team/:teamId/:teacherId",
@@ -27,18 +31,34 @@ const requestRouter = Router();
 //     acceptTeamRequest
 // );
 
-// // student requests teachers to be supervisor for spl3
-// supervisorAllocationRouter.post(
-//     "/request/student/:teacherId",
-//     checkAuthentication,
-//     authorizeStudentRequest,
-//     studentRequestValidator,
-//     commonValidationHandler,
-//     checkStudentRequest,
-//     studentRequest
-// );
+console.log("requestRouter");
 
-// // delete student request by student
+// student requests teachers to be supervisor for spl3
+requestRouter.post(
+    "/student/:teacherId",
+    (req, res, next) => {
+        // authentication
+        req.user = {
+            userId: 1045,
+        };
+
+        next();
+    },
+
+    (req, res, next) => {
+        // student request only allowed for spl3
+        req.params.splName = "spl3";
+
+        // console.log(req.params);
+
+        next();
+    },
+    checkSPLActivenessByName,
+    authorizeStudentRequest,
+    studentRequest
+);
+
+// cancel student request by student
 // supervisorAllocationRouter.delete(
 //     "/cancel-student-request/:teacherId",
 //     checkAuthentication,

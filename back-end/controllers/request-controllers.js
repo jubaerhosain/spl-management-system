@@ -7,7 +7,7 @@ import { Response } from "../utilities/response-format-utilities.js";
  * @param {*} res
  * @param {*} next
  */
-async function teamRequest(req, res, next) {
+export async function teamRequest(req, res, next) {
     try {
         const { teamId, teacherId } = req.params;
 
@@ -47,7 +47,7 @@ async function teamRequest(req, res, next) {
  * @param {*} next
  * @returns
  */
-async function acceptTeamRequest(req, res, next) {
+export async function acceptTeamRequest(req, res, next) {
     try {
         const { teamId } = req.params;
         const { userId } = req.user;
@@ -99,19 +99,45 @@ async function acceptTeamRequest(req, res, next) {
  * @param {*} res
  * @param {*} next
  */
-async function studentRequest(req, res, next) {
+export async function studentRequest(req, res, next) {
     try {
         const { teacherId } = req.params;
         const studentId = req.user.userId;
 
+        // check teacher existence
+        const teacher = await models.User.findOne({
+            include: {
+                model: models.Teacher,
+                attributes: ["available"],
+                required: false,
+            },
+            where: {
+                userId: teacherId,
+                active: true,
+                userType: "teacher",
+            },
+            raw: true,
+            nest: true,
+            attributes: ["userId"],
+        });
+
+        if (!teacher) {
+            res.status(400).json(Response.error("Teacher does not exist"));
+            return;
+        }
+
+        if (!teacher.Teacher.available) {
+            res.status(400).json(Response.error("Teacher is not available"));
+            return;
+        }
+
         // check if already requested this teacher or not
-        const requested = await models.StudentRequest.findOne({
+        const requested = await models.StudentTeacher_Request.findOne({
             where: {
                 studentId,
                 teacherId,
             },
             raw: true,
-            attributes: ["teacherId"],
         });
 
         if (requested) {
@@ -120,17 +146,19 @@ async function studentRequest(req, res, next) {
         }
 
         // do request to the teacher
-        await models.StudentRequest.create({
+        await models.StudentTeacher_Request.create({
             studentId,
             teacherId,
         });
 
-        // trigger a notification after the request??
+        // trigger a notification after the request
 
         res.json(Response.success("Request sent successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
@@ -140,7 +168,7 @@ async function studentRequest(req, res, next) {
  * @param {*} res
  * @param {*} next
  */
-async function acceptStudentRequest(req, res, next) {
+export async function acceptStudentRequest(req, res, next) {
     try {
         const { studentId } = req.params;
         const teacherId = req.user.userId;
@@ -222,8 +250,7 @@ async function acceptStudentRequest(req, res, next) {
     }
 }
 
-
-async function rejectStudentRequest(req, res, next) {
+export async function rejectStudentRequest(req, res, next) {
     try {
         const { userId } = req.user;
         const { studentId } = req.params;
@@ -242,7 +269,7 @@ async function rejectStudentRequest(req, res, next) {
     }
 }
 
-async function rejectTeamRequest(req, res, next) {
+export async function rejectTeamRequest(req, res, next) {
     try {
         const { userId } = req.user;
         const { teamId } = req.params;
@@ -261,7 +288,7 @@ async function rejectTeamRequest(req, res, next) {
     }
 }
 
-async function cancelTeamRequestByStudent(req, res, next) {
+export async function cancelTeamRequestByStudent(req, res, next) {
     try {
         const { teamId, teacherId } = req.params;
 
@@ -279,7 +306,7 @@ async function cancelTeamRequestByStudent(req, res, next) {
     }
 }
 
-async function cancelStudentRequestByStudent(req, res, next) {
+export async function cancelStudentRequestByStudent(req, res, next) {
     try {
         const { teacherId } = req.params;
         const { userId } = req.user;
