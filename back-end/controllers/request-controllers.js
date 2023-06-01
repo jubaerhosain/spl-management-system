@@ -11,32 +11,6 @@ export async function teamRequest(req, res, next) {
     try {
         const { teamId, teacherId } = req.query;
 
-        const teacher = await models.User.findOne({
-            include: {
-                model: models.Teacher,
-                attributes: ["available"],
-                required: false,
-            },
-            where: {
-                userId: teacherId,
-                active: true,
-                userType: "teacher",
-            },
-            raw: true,
-            nest: true,
-            attributes: ["userId"],
-        });
-
-        if (!teacher) {
-            res.status(400).json(Response.error("Teacher does not exist"));
-            return;
-        }
-
-        if (!teacher.Teacher.available) {
-            res.status(400).json(Response.error("Teacher is not available"));
-            return;
-        }
-
         // check if already requested that teacher or not
         const requested = await models.TeamTeacher_Request.findOne({
             where: {
@@ -129,35 +103,8 @@ export async function acceptTeamRequest(req, res, next) {
  */
 export async function studentRequest(req, res, next) {
     try {
-        const { teacherId } = req.params;
+        const { teacherId } = req.query;
         const studentId = req.user.userId;
-
-        // check teacher existence
-        const teacher = await models.User.findOne({
-            include: {
-                model: models.Teacher,
-                attributes: ["available"],
-                required: false,
-            },
-            where: {
-                userId: teacherId,
-                active: true,
-                userType: "teacher",
-            },
-            raw: true,
-            nest: true,
-            attributes: ["userId"],
-        });
-
-        if (!teacher) {
-            res.status(400).json(Response.error("Teacher does not exist"));
-            return;
-        }
-
-        if (!teacher.Teacher.available) {
-            res.status(400).json(Response.error("Teacher is not available"));
-            return;
-        }
 
         // check if already requested this teacher or not
         const requested = await models.StudentTeacher_Request.findOne({

@@ -1,7 +1,12 @@
-import { body_param, body } from "./custom-validator.js";
+import { body_param, body_param_query, body } from "./custom-validator.js";
 import { makeUnique } from "../utilities/common-utilities.js";
 import { models } from "../database/db.js";
 import createHttpError from "http-errors";
+
+/**
+ * body, params, query
+ */
+const splIdValidator = body_param_query("splId").trim().notEmpty().withMessage("Must be provided");
 
 const splNameValidator = body_param("splName")
     .trim()
@@ -41,10 +46,10 @@ const createSPLValidator = [
 const addSPLManagerValidator = [];
 const removeSPLManagerValidator = [];
 
-
 const removeStudentValidator = [];
 
 export {
+    splIdValidator,
     splNameValidator,
     createSPLValidator,
     addSPLManagerValidator,

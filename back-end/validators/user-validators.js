@@ -1,4 +1,4 @@
-import { body_param, body } from "./custom-validator.js";
+import { body_param, body, body_param_query } from "./custom-validator.js";
 
 /**
  * Custom function to check if email ends with '@iit.du.ac.bd' or not
@@ -14,6 +14,11 @@ function isIITEmail(email) {
         return false;
     }
 }
+
+/**
+ * body, params, query
+ */
+const userIdValidator = body_param_query("userId").trim().notEmpty().withMessage("Must be provided");
 
 const emailValidator = body_param("email")
     .trim()
@@ -52,6 +57,7 @@ const detailsValidator = body("details")
     .withMessage("Must be between 10 to 2000 characters");
 
 export {
+    userIdValidator,
     emailValidator,
     nameValidator,
     genderValidator,

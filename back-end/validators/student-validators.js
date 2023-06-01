@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import { body, body_param } from "./custom-validator.js";
+import { body, body_param, body_param_query } from "./custom-validator.js";
 import { isUnique } from "../utilities/common-utilities.js";
 
 // import validators
@@ -12,6 +12,14 @@ import {
 
 import { requiredOne, checkAllow } from "./common-validators.js";
 import createHttpError from "http-errors";
+
+/**
+ * body, params, query
+ */
+const studentIdValidator = body_param_query("studentId")
+    .trim()
+    .notEmpty()
+    .withMessage("Must be provided");
 
 const rollNoValidator = body("rollNo")
     .trim()
@@ -145,4 +153,9 @@ const updateStudentByAdminValidator = [
     curriculumYearValidator.optional(),
 ];
 
-export { addStudentValidator, updateStudentValidator, updateStudentByAdminValidator };
+export {
+    studentIdValidator,
+    addStudentValidator,
+    updateStudentValidator,
+    updateStudentByAdminValidator,
+};

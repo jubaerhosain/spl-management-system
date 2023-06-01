@@ -1,10 +1,15 @@
-import { body, body_param, param } from "./custom-validator.js";
+import { body, body_param, body_param_query, param } from "./custom-validator.js";
 import { isUnique, makeUnique } from "../utilities/common-utilities.js";
 import createHttpError from "http-errors";
 import { models, Op } from "../database/db.js";
 
 // import necessary validators
 import { isIITEmail } from "./user-validators.js";
+
+/**
+ * body, params, query
+ */
+const teamIdValidator = body_param_query("teamId").trim().notEmpty().withMessage("Must be provided");
 
 
 const teamNameValidator = body_param("teamName")
@@ -166,6 +171,7 @@ const addTeamMemberValidator = [teamMemberValidator];
 const removeTeamMemberValidator = [];
 
 export {
+    teamIdValidator,
     createTeamValidator,
     updateTeamValidator,
     addTeamMemberValidator,

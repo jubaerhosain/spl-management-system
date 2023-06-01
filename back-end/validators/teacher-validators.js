@@ -1,5 +1,5 @@
 // custom-validator.js
-import { body, body_param, validationResult } from "./custom-validator.js";
+import { body, body_param, body_param_query, validationResult } from "./custom-validator.js";
 
 // common-utilities.js
 import { makeUnique } from "../utilities/common-utilities.js";
@@ -16,8 +16,13 @@ import {
 // common-validators.js
 import { requiredOne, checkAllow } from "../validators/common-validators.js";
 
-// teacher attribute validators
-const teacherIdValidator = body_param("teacherId").trim().isInt().withMessage("Must be an integer");
+/**
+ * body, params, query
+ */
+const teacherIdValidator = body_param_query("teacherId")
+    .trim()
+    .notEmpty()
+    .withMessage("Must be provided");
 
 const designationValidator = body("designation")
     .trim()

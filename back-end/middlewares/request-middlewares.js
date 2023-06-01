@@ -2,6 +2,53 @@ import { Sequelize, models, Op } from "../database/db.js";
 import { Response } from "../utilities/response-format-utilities.js";
 
 /**
+ * Checks teacher exist and available or not \
+ * Reads teacherId from req.query
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function checkTeacherAvailability(req, res, next) {
+    try {
+        const { teacherId } = req.query;
+
+        const teacher = await models.User.findOne({
+            include: {
+                model: models.Teacher,
+                attributes: ["available"],
+                required: false,
+            },
+            where: {
+                userId: teacherId,
+                active: true,
+                userType: "teacher",
+            },
+            raw: true,
+            nest: true,
+            attributes: ["userId"],
+        });
+
+        if (!teacher) {
+            res.status(400).json(Response.error("Teacher does not exist"));
+            return;
+        }
+
+        if (!teacher.Teacher.available) {
+            res.status(400).json(Response.error("Teacher is not available"));
+            return;
+        }
+
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
+    }
+}
+
+
+/**
  * Authorize 4th year student, if able to request or not
  * @param {*} req
  * @param {*} res
@@ -143,7 +190,6 @@ export async function authorizeTeamRequest(req, res, next) {
         );
     }
 }
-
 
 async function checkAcceptTeamRequest(req, res, next) {
     try {

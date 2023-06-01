@@ -6,8 +6,12 @@ import { studentRequest, teamRequest } from "../controllers/request-controllers.
 import {
     authorizeStudentRequest,
     authorizeTeamRequest,
+    checkTeacherAvailability,
 } from "../middlewares/request-middlewares.js";
 
+import { teamIdValidator } from "../validators/team-validators.js";
+import { teacherIdValidator } from "../validators/teacher-validators.js";
+import { commonValidationHandler } from "../validators/custom-validator.js";
 
 // team requests teachers to be supervisor for spl2
 // [query parameters {teamId, teacherId}]
@@ -18,10 +22,13 @@ requestRouter.post(
         req.user = {
             userId: 1032,
         };
-
         next();
     },
+    teamIdValidator,
+    teacherIdValidator,
+    commonValidationHandler,
     authorizeTeamRequest,
+    checkTeacherAvailability,
     teamRequest
 );
 
@@ -45,8 +52,9 @@ requestRouter.post(
 console.log("requestRouter");
 
 // student requests teachers to be supervisor for spl3
+// query parameters {teacherId}
 requestRouter.post(
-    "/student/:teacherId",
+    "/student",
     (req, res, next) => {
         // authentication
         req.user = {
@@ -55,7 +63,10 @@ requestRouter.post(
 
         next();
     },
+    teacherIdValidator,
+    commonValidationHandler,
     authorizeStudentRequest,
+    checkTeacherAvailability,
     studentRequest
 );
 

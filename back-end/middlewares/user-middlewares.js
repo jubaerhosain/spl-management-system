@@ -6,7 +6,7 @@ import { fileUploader } from "../utilities/file-utilities.js";
  * @param {*} res
  * @param {*} next
  */
-async function uploadAvatar(req, res, next) {
+export async function uploadAvatar(req, res, next) {
     const upload = await fileUploader(
         new String(req.user.userId),
         "avatars",
@@ -30,5 +30,3 @@ async function uploadAvatar(req, res, next) {
         }
     });
 }
-
-export { uploadAvatar };
