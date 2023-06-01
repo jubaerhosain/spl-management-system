@@ -158,4 +158,4 @@ supervisorAllocationRouter.delete(
     removeSupervisor
 );
 
-export { supervisorAllocationRouter };
+export default supervisorAllocationRouter;

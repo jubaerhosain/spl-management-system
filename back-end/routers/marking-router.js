@@ -123,4 +123,4 @@ markingRouter.get("/student/:studentId", getMarksByStudentId);
 // marks of all students by curriculum year
 markingRouter.get("/:curriculumYear", getMarksByCurriculumYear);
 
-export { markingRouter };
+export default markingRouter;

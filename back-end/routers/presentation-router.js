@@ -49,4 +49,4 @@ presentationRouter.delete(
     removePresentationEvaluator
 );
 
-export { presentationRouter };
+export default presentationRouter;

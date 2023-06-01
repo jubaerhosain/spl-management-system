@@ -84,4 +84,4 @@ teamRouter.get("/all", getTeamsWithMembers);
 
 teamRouter.get("/all-with-supervisor", getTeamInfoWithSuperVisor);
 
-export { teamRouter };
+export default teamRouter;

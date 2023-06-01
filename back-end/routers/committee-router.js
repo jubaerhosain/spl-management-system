@@ -58,6 +58,10 @@ committeeRouter.delete(
     removeCommitteeHead
 );
 
+// add spl manager
+
+// remove splManager
+
 // add one or more committee member by committee head
 committeeRouter.post(
     "/member/:committeeId",
@@ -78,4 +82,4 @@ committeeRouter.delete(
     removeCommitteeMember
 );
 
-export { committeeRouter };
+export default committeeRouter;

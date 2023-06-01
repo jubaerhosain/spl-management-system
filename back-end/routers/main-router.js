@@ -4,13 +4,12 @@ const mainRouter = express.Router();
 // internal imports
 import authenticationRouter from "./auth-router.js";
 import userRouter from "./user-router.js";
-import { splRouter } from "./spl-router.js";
-import { committeeRouter } from "./committee-router.js";
-import { teamRouter } from "./team-router.js";
-import { supervisorAllocationRouter } from "./sup-allocation-router.js";
-import { presentationRouter } from "./presentation-router.js";
-import { markingRouter } from "./marking-router.js";
-import { interestedFieldRouter } from "./interested-field-router.js";
+import splRouter from "./spl-router.js";
+import committeeRouter from "./committee-router.js";
+import teamRouter from "./team-router.js";
+import supervisorAllocationRouter from "./sup-allocation-router.js";
+import presentationRouter from "./presentation-router.js";
+import markingRouter from "./marking-router.js";
 
 // authentication routers
 mainRouter.use("/auth", authenticationRouter);
