@@ -39,21 +39,11 @@ requestRouter.post(
     (req, res, next) => {
         // authentication
         req.user = {
-            userId: 1045,
+            userId: 1044,
         };
 
         next();
     },
-
-    (req, res, next) => {
-        // student request only allowed for spl3
-        req.params.splName = "spl3";
-
-        // console.log(req.params);
-
-        next();
-    },
-    checkSPLActivenessByName,
     authorizeStudentRequest,
     studentRequest
 );

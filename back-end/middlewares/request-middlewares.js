@@ -11,10 +11,8 @@ import { Response } from "../utilities/response-format-utilities.js";
 export async function authorizeStudentRequest(req, res, next) {
     try {
         const { userId } = req.user;
-        const { splId } = req.body.spl;
 
-        // must be 4th year student and assigned to corresponding spl3
-
+        // must be 4th year student and assigned to active spl3
         const student = await models.Student.findOne({
             include: {
                 model: models.SPL,
@@ -23,9 +21,9 @@ export async function authorizeStudentRequest(req, res, next) {
                     attributes: [],
                 },
                 where: {
-                    splId: splId,
+                    splName: "spl3",
+                    active: true,
                 },
-                attributes: ["splId"],
                 required: false,
             },
             where: {
@@ -37,10 +35,8 @@ export async function authorizeStudentRequest(req, res, next) {
             attributes: ["studentId", "curriculumYear"],
         });
 
-        // console.log(student);
-
         if (!student) {
-            res.status(400).json(Response.error("You are not allowed to request"));
+            res.status(400).json(Response.error("Invalid student"));
             return;
         }
 
@@ -54,11 +50,14 @@ export async function authorizeStudentRequest(req, res, next) {
             return;
         }
 
+        // put spl to the req body
+        req.body.spl = student.SPLs.spl;
+
         // check if already has supervisor or not
         const supervisor = await models.StudentTeacher_Supervisor.findOne({
             where: {
                 studentId: userId,
-                splId: splId,
+                splId: student.SPLs.splId,
             },
             attributes: ["teacherId"],
             raw: true,
