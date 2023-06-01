@@ -190,13 +190,27 @@ export async function authorizeTeamRequest(req, res, next) {
     }
 }
 
-async function checkAcceptTeamRequest(req, res, next) {
+export async function checkAcceptTeamRequest(req, res, next) {
     try {
         const { userId } = req.user;
-        const { teamId } = req.params;
+        const { teamId } = req.query;
 
-        // check team existence
-        const team = await models.Team.findAll({
+        // check the team is requested or not
+        const requested = await models.TeamTeacher_Request.findOne({
+            where: {
+                teamId,
+                teacherId: userId,
+            },
+            raw: true,
+        });
+
+        if (!requested) {
+            res.status(400).json(Response.error("Team did not requested you"));
+            return;
+        }
+
+        // find members and spl
+        const team = await models.Team.findOne({
             include: [
                 {
                     model: models.Student,
@@ -216,31 +230,34 @@ async function checkAcceptTeamRequest(req, res, next) {
                 teamId,
             },
             nest: true,
-            raw: true,
+            // raw: true,
             attributes: ["teamId"],
         });
 
-        if (team.length == 0) {
+        if (!team) {
             res.status(400).json(Response.error("Team does not exist"));
             return;
         }
 
-        const teamMembers = team.map((team) => team.TeamMembers.studentId);
-        const { splId } = team[0].SPL;
+        // console.log(team);
+
+        const teamMembers = team.TeamMembers.map((member) => member.studentId);
+
+        // console.log(teamMembers);
 
         // put spl to the req
-        req.spl = team[0].SPL;
+        req.body.spl = team.SPL.dataValues;
 
         // put teamMembers to the req
-        req.teamMembers = teamMembers;
+        req.body.teamMemberIds = teamMembers;
 
         // check supervisor existence
-        const supervisor = await models.StudentSupervisor.findAll({
+        const supervisor = await models.StudentTeacher_Supervisor.findAll({
             where: {
                 studentId: {
                     [Op.in]: teamMembers,
                 },
-                splId,
+                splId: team.SPL.splId,
             },
             raw: true,
             attributes: ["studentId"],
@@ -248,20 +265,6 @@ async function checkAcceptTeamRequest(req, res, next) {
 
         if (supervisor.length > 0) {
             res.status(400).json(Response.error("Already have a supervisor"));
-            return;
-        }
-
-        // check the team is requested or not
-        const requested = await models.TeamRequest.findOne({
-            where: {
-                teamId,
-                teacherId: userId,
-            },
-            raw: true,
-        });
-
-        if (!requested) {
-            res.status(400).json(Response.error("Team did not requested you"));
             return;
         }
 
@@ -325,7 +328,6 @@ export async function checkAcceptStudentRequest(req, res, next) {
         delete spl.Students;
 
         // console.log(spl);
-
 
         // put spl to the req body
         req.body.spl = spl;

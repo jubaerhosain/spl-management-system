@@ -51,17 +51,19 @@ export async function teamRequest(req, res, next) {
  */
 export async function acceptTeamRequest(req, res, next) {
     try {
-        const { teamId } = req.params;
+        const { teamId } = req.query;
         const { userId } = req.user;
-        const { splId } = req.spl;
-        const { teamMembers } = req;
+        const { splId } = req.body.spl;
+        const { teamMemberIds } = req.body;
+
+        // console.log(teamMemberIds, req.body.spl)
 
         // assign supervisor and delete all the requests of that team
         const transaction = await sequelize.transaction();
         try {
-            const studentSupervisors = [];
-            for (const studentId of teamMembers) {
-                studentSupervisors.push({
+            const studentTeachers = [];
+            for (const studentId of teamMemberIds) {
+                studentTeachers.push({
                     studentId,
                     teacherId: userId,
                     splId,
@@ -69,12 +71,12 @@ export async function acceptTeamRequest(req, res, next) {
             }
 
             // add supervisor
-            await models.StudentSupervisor.bulkCreate(studentSupervisors, {
+            await models.StudentTeacher_Supervisor.bulkCreate(studentTeachers, {
                 transaction: transaction,
             });
 
             // delete all requests of that student
-            await models.TeamRequest.destroy({
+            await models.TeamTeacher_Request.destroy({
                 where: {
                     teamId: teamId,
                 },
@@ -87,11 +89,13 @@ export async function acceptTeamRequest(req, res, next) {
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            res.status(500).json(Response.error("Internal server error"));
+            throw new Error(err.message);
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 

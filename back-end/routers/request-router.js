@@ -6,6 +6,7 @@ import {
     studentRequest,
     teamRequest,
     acceptStudentRequest,
+    acceptTeamRequest,
 } from "../controllers/request-controllers.js";
 
 import {
@@ -13,6 +14,7 @@ import {
     authorizeTeamRequest,
     checkTeacherAvailability,
     checkAcceptStudentRequest,
+    checkAcceptTeamRequest,
 } from "../middlewares/request-middlewares.js";
 
 import { teamIdValidator } from "../validators/team-validators.js";
@@ -46,15 +48,22 @@ requestRouter.post(
 //     cancelTeamRequestByStudent
 // );
 
-// // accept team request
-// supervisorAllocationRouter.put(
-//     "/request/team/:teamId",
-//     checkAuthentication,
-//     acceptTeamRequestValidator,
-//     commonValidationHandler,
-//     checkAcceptTeamRequest,
-//     acceptTeamRequest
-// );
+// accept team request [query parameters {teamId}]
+requestRouter.put(
+    "/team",
+    // checkAuthentication,
+    (req, res, next) => {
+        req.user = {
+            userId: 1038,
+        };
+
+        next();
+    },
+    teamIdValidator,
+    commonValidationHandler,
+    checkAcceptTeamRequest,
+    acceptTeamRequest,
+);
 
 console.log("requestRouter");
 
