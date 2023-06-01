@@ -28,7 +28,7 @@ async function checkSPLActivenessByName(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR));
     }
 }
 
@@ -56,7 +56,7 @@ async function checkSPLManager(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR));
     }
 }
 

@@ -51,10 +51,8 @@ const addStudentValidator = [
         .trim()
         .isEmail()
         .withMessage("Invalid email format")
-        .bail()
         .isLength({ max: 50 })
         .withMessage("Must be at most 50 characters")
-        .bail()
         .matches(/.+@iit\.du\.ac\.bd$/)
         .withMessage("Must end with @iit.du.ac.bd"),
     body("students.*.rollNo")

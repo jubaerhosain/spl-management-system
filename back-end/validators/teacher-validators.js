@@ -40,10 +40,8 @@ const addTeacherValidator = [
         .trim()
         .isEmail()
         .withMessage("Invalid email format")
-        .bail()
         .isLength({ max: 50 })
         .withMessage("Must be at most 50 characters")
-        .bail()
         .custom((email) => {
             if (isIITEmail(email)) return true;
             throw new Error("Must be end with '@iit.du.ac.bd");

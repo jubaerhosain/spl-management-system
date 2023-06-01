@@ -89,7 +89,7 @@ const createCommitteeValidator = [
         .isLength({ min: 1 })
         .withMessage("At least one member must be provided")
         .custom((committeeMembers, { req }) => {
-            console.log(committeeMembers);
+            // console.log(committeeMembers);
             if (!isUnique(committeeMembers)) {
                 throw new Error("Duplicate emails are not allowed");
             }

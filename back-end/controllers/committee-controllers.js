@@ -1,6 +1,5 @@
 import createError from "http-errors";
 import { sequelize, models, Op } from "../database/db.js";
-import { sendEmail, sendMultipleEmail } from "../utilities/email-utilities.js";
 import { Response } from "../utilities/response-format-utilities.js";
 
 /**
@@ -15,48 +14,37 @@ async function createCommittee(req, res, next) {
         const { splId, splName } = req.body.spl;
         const { committeeHeadId, committeeMemberIds, splManagerId } = req.body;
 
-        console.log(req.body);
+        // console.log(req.body);
 
+        // do from here
+        const teacherSPL = [];
+        for (const memberId of committeeMemberIds) {
+            teacherSPL.push({
+                splId: splId,
+                teacherId: memberId,
+            });
+        }
 
-        // check if committee exists or not. check before validation
-        // const exist = await models.SPLCommittee.findOne({
-        //     where: {
-        //         splId: splId,
-        //     },
-        //     raw: true,
-        // });
+        console.log(teacherSPL);
 
-        // if (exist) {
-        //     res.status(400).json(Response.error("Committee already exists"));
-        //     return;
-        // }
-
-        throw new Error("My Error");
+        // throw new Error("My Error");
 
         const transaction = await sequelize.transaction();
         try {
-            const committee = await models.SPLCommittee.create(
+            await models.SPL.update(
                 {
-                    splId: splId,
                     committeeHead: committeeHeadId,
                     splManager: splManagerId,
                 },
                 {
+                    where: {
+                        splId: splId,
+                    },
                     transaction: transaction,
                 }
             );
 
-
-            // do from here
-            const committeeMembers = [];
-            for (const memberId of committeeMemberIds) {
-                committeeMembers.push({
-                    committeeId: committee.committeeId,
-                    teacherId: memberId,
-                });
-            }
-
-            await models.TeacherCommittee.bulkCreate(committeeMembers, {
+            await models.TeacherSPL_CommitteeMember.bulkCreate(teacherSPL, {
                 transaction: transaction,
             });
 
@@ -68,12 +56,13 @@ async function createCommittee(req, res, next) {
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            throw new createError(err.status || 500, err.message);
+            throw new Error(err.message);
         }
     } catch (err) {
         console.log(err);
-        const message = err.status ? err.message : "Internal server error";
-        next(new createError(err.status || 500, message));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 

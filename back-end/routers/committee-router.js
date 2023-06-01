@@ -26,11 +26,13 @@ import {
     addCommitteeMember,
     removeCommitteeMember,
 } from "../controllers/committee-controllers.js";
+import { checkSPLCommitteeCreated } from "../middlewares/committee-middlewares.js";
 
 // Create a committee for a specific active spl
 committeeRouter.post(
     "/:splName",
     checkSPLActivenessByName,
+    checkSPLCommitteeCreated,
     createCommitteeValidator,
     commonValidationHandler,
     createCommittee
