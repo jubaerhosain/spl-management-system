@@ -1,3 +1,5 @@
+import lodash from "lodash";
+
 /**
  * Check if all elements of an array is unique or not
  * @param {Array} array
@@ -5,6 +7,18 @@
  */
 function isUnique(array) {
     return new Set(array).size === array.length;
+}
+
+/**
+ *
+ * @param {Array} array
+ * @returns duplicate elements
+ */
+function findDuplicates(array) {
+    const duplicates = lodash.filter(array, (value, index, iteratee) =>
+        lodash.includes(iteratee, value, index + 1)
+    );
+    return lodash.uniq(duplicates);
 }
 
 /**
@@ -55,4 +69,12 @@ function getCurrentDate() {
     return new Date().toISOString().slice(0, 10);
 }
 
-export { isUnique, makeUnique, filterArray, clearArray, concatArray, getCurrentDate };
+export {
+    isUnique,
+    findDuplicates,
+    makeUnique,
+    filterArray,
+    clearArray,
+    concatArray,
+    getCurrentDate,
+};
