@@ -23,6 +23,7 @@ import {
 
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
+import { checkCreateTeamExistence, checkCreateTeamUniqueness } from "../middlewares/team-middlewares.js";
 
 // create team by committee head/member
 teamRouter.post(
@@ -35,6 +36,8 @@ teamRouter.post(
     checkSPLActivenessByName, 
     createTeamValidator,
     commonValidationHandler,
+    checkCreateTeamUniqueness,
+    checkCreateTeamExistence,
     createTeam
 );
 

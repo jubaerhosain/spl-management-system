@@ -32,6 +32,8 @@ class Response {
     static SPL_DOES_NOT_EXIST = "SPL_DOES_NOT_EXIST";
     static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 
+    static ARRAY_DATA = "ARRAY_DATA";
+
     /**
      * Success response with this.success = true
      * @param {*} message

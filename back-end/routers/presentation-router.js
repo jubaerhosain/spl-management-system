@@ -1,7 +1,7 @@
 import { Router } from "express";
 const presentationRouter = Router();
 
-import {commonValidationHandler} from "../validators/custom-validator.js";
+import { commonValidationHandler } from "../validators/custom-validator.js";
 
 import {
     createPresentationValidator,
@@ -20,7 +20,6 @@ import {
     checkAddPresentationEvaluator,
     checkRemovePresentationEvaluator,
 } from "../middlewares/presentation-middlewares.js";
-
 
 // create a presentation event
 presentationRouter.post(

@@ -9,8 +9,10 @@ import { isIITEmail } from "./user-validators.js";
 /**
  * body, params, query
  */
-const teamIdValidator = body_param_query("teamId").trim().notEmpty().withMessage("Must be provided");
-
+const teamIdValidator = body_param_query("teamId")
+    .trim()
+    .notEmpty()
+    .withMessage("Must be provided");
 
 const teamNameValidator = body_param("teamName")
     .trim()
@@ -22,7 +24,7 @@ const teamNameValidator = body_param("teamName")
 
 const teamMemberValidator = [];
 
-const createTeamValidator = [
+const old_create_team_validator = [
     teamNameValidator.bail().custom(async (teamName, { req }) => {
         try {
             const { splId } = req.body.spl;
@@ -161,6 +163,43 @@ const createTeamValidator = [
                 if (!err.status) console.error(err.message);
                 throw new Error(err.status ? err.message : "Error checking email");
             }
+        }),
+];
+
+const createTeamValidator = [
+    body("teams")
+        .isArray()
+        .withMessage("Teams must be an array")
+        .bail()
+        .isLength({ min: 1 })
+        .withMessage("At least one team must be provided"),
+
+    body("teams.*.teamName")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .matches(/^Team \d{1,2}$/)
+        .withMessage("Must be in following format 'Team 1'"),
+
+    body("teams.*.teamMembers")
+        .isArray()
+        .withMessage("Team members must be an array")
+        .bail()
+        .isLength({ min: 1 })
+        .withMessage("At least one member must be provided"),
+
+    body("teams.*.teamMembers.*")
+        .trim()
+        .isEmail()
+        .withMessage("Invalid email format")
+        .bail()
+        .isLength({ max: 50 })
+        .withMessage("Must be at most 50 characters")
+        .bail()
+        .custom((email) => {
+            if (isIITEmail(email)) return true;
+            throw new Error("Must be end with '@iit.du.ac.bd'");
         }),
 ];
 

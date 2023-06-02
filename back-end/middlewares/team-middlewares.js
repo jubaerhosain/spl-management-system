@@ -55,4 +55,18 @@ async function checkCreateTeam(req, res, next) {
     }
 }
 
-export { checkCreateTeam };
+/**
+ * Check uniqueness of teamName, member emails
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+export async function checkCreateTeamUniqueness(req, res, next) {
+
+}
+
+/**
+ * Check existence of teamName, member emails
+ */
+export async function checkCreateTeamExistence(req, res, next) {}
+
