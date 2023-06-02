@@ -276,6 +276,12 @@ export async function checkCreateTeamExistence(req, res, next) {
         }
 
         console.log(existedTeamMembers);
+
+        // put team members {userId, email} to the req
+        // member id is needed for creating team in controller
+        req.body.teamMemberIdAndEmails = existedStudents;
+
+        next();
     } catch (err) {
         console.log(err);
         res.status(500).json(

@@ -12,9 +12,12 @@ import lodash from "lodash";
 async function createTeam(req, res, next) {
     try {
         const { splId } = req.body.spl;
-        const { teamMemberIds, teamName } = req.body;
+        const { teamMemberIdAndEmails, teams } = req.body;
 
-        console.log(teamName, teamMemberIds)
+
+        throw new Error("My error")
+
+        console.log(teamName, teamMemberIds);
 
         const transaction = await sequelize.transaction();
         try {
