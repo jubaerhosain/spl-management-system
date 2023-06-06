@@ -44,7 +44,10 @@ export function formatFileName(fileName, extension) {
 export function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) {
     return new Promise((resolve, reject) => {
         try {
-            const uploadFolder = path.join(getDirname(import.meta.url), `../public/uploads/${subfolder}/`);
+            const uploadFolder = path.join(
+                getDirname(import.meta.url),
+                `../public/uploads/${subfolder}/`
+            );
 
             // define storage
             const storage = multer.diskStorage({
