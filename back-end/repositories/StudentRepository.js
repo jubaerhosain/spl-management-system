@@ -6,6 +6,10 @@ import { models, Op } from "../database/db.js";
  */
 async function createStudents(students) {}
 
+async function updateStudent(student) {}
+
+async function updateStudentByAdmin(student) {}
+
 async function findAllStudents() {
     let students = await models.Student.findAll({
         include: {
@@ -105,4 +109,6 @@ export default {
     findAllStudents,
     findStudentsByCurriculumYear,
     findStudentByUserId,
+    updateStudent,
+    updateStudentByAdmin,
 };
