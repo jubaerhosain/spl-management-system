@@ -3,6 +3,7 @@ import { writeCredentials } from "../utilities/file-utilities.js";
 import { Response } from "../utilities/response-format-utilities.js";
 import { generateHashedPassword } from "../utilities/password-utilities.js";
 
+// createTeacherAccount
 export async function addTeacher(req, res, next) {
     try {
         const { teachers } = req.body;

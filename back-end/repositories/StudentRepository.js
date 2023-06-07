@@ -1,14 +1,43 @@
-import { models, Op } from "../database/db.js";
+import { sequelize, models, Op } from "../database/db.js";
 
 /**
  * Create one or more student account
  * @param {Array} students
  */
-async function createStudents(students) {}
+async function createStudents(students) {
+    const transaction = await sequelize.transaction();
+    try {
+        // add in both User and Student table
+        await models.User.bulkCreate(students, {
+            include: [models.Student],
+            transaction: transaction,
+        });
 
-async function updateStudent(student) {}
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error(err.message);
+    }
+}
 
-async function updateStudentByAdmin(student) {}
+async function updateStudent(student, userId) {
+    // update to User table
+    await models.User.update(student, {
+        where: {
+            userId: userId,
+        },
+    });
+}
+
+async function updateStudentByAdmin(student, studentId) {
+    // update to Student table
+    await models.Student.update(student, {
+        where: {
+            studentId,
+        },
+    });
+}
 
 async function findAllStudents() {
     let students = await models.Student.findAll({
@@ -40,6 +69,11 @@ async function findAllStudents() {
     return students;
 }
 
+/**
+ *
+ * @param {*} curriculumYear
+ * @returns {[Promise<Student>]}
+ */
 async function findStudentsByCurriculumYear(curriculumYear) {
     let students = await models.Student.findAll({
         include: {

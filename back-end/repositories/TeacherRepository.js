@@ -1,5 +1,13 @@
 import { models, Op } from "../database/db.js";
 
+/**
+ * Create one or more teacher
+ * @param {Array} teachers
+ */
+async function createTeachers(teachers) {}
+
+async function updateTeacher(teacher, userId) {}
+
 async function findAllTeachers() {
     let teachers = await models.Teacher.findAll({
         include: {
@@ -61,6 +69,8 @@ async function findAllDeactivatedTeachers() {
 }
 
 export default {
+    createTeachers,
+    updateTeacher,
     findAllTeachers,
     findAllDeactivatedTeachers,
 };

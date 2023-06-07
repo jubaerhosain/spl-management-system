@@ -20,6 +20,8 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
             comment: "Team belongs to same SPL cannot have duplicate names",
         },
+
+        // add details field
     });
 
     Team.associate = (models) => {
