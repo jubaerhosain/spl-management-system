@@ -8,6 +8,11 @@ export function getFileName(metaUrl) {
     return __filename;
 }
 
+/**
+ * 
+ * @param {String} metaUrl import.meta.url 
+ * @returns dirname
+ */
 export function getDirectoryName(metaUrl) {
     const __dirname = path.dirname(getFileName(metaUrl));
 
