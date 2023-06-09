@@ -3,5 +3,11 @@
 @tailwind utilities;
 
 body {
-  background-color: #F0F8FF;
+  @apply bg-gray-50;
+}
+
+@layer utilities {
+  .max-w-custom {
+    max-width: 1216px;
+  }
 }
