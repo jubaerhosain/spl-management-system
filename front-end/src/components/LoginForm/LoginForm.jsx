@@ -26,7 +26,7 @@ export default function LoginForm() {
   };
 
   const handleCheckboxChange = () => {
-    setChecked(!checked);
+    setChecked((prevState) => !prevState);
   };
 
   const handleSubmit = async (e) => {
