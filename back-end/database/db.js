@@ -29,6 +29,7 @@ import Presentation from "../models/Presentation.js";
 import Mark from "../models/Mark.js";
 import PresentationMark from "../models/PresentationMark.js";
 import ContinuousMark from "../models/ContinuousMark.js";
+import OTP from "../models/OTP.js";
 
 // junction tables
 import StudentTeacher_Supervisor from "../models/junctions/StudentTeacher_Supervisor.js";
@@ -56,6 +57,7 @@ const models = {
     Mark: Mark(sequelize, DataTypes, Op),
     PresentationMark: PresentationMark(sequelize, DataTypes, Op),
     ContinuousMark: ContinuousMark(sequelize, DataTypes, Op, Sequelize),
+    OTP: OTP(sequelize, DataTypes, Op),
 
     // junctions
     StudentTeam: StudentTeam(sequelize, DataTypes, Op),

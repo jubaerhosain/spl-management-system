@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 function generateToken(obj) {
     const token = jwt.sign(obj, process.env.JWT_SECRET, {
@@ -12,4 +12,22 @@ function verifyToken(token) {
     return decoded;
 }
 
-export { generateToken, verifyToken };
+/**
+ * Expires in 5 minutes 
+ * @param {*} obj 
+ * @param {*} customSecret 
+ * @returns 
+ */
+function generateTemporaryTokenByCustomSecret(obj, customSecret) {
+    const token = jwt.sign(obj, customSecret, {
+        expiresIn: "5m",
+    });
+    return token;
+}
+
+function verifyTokenByCustomSecret(token, customSecret) {
+    const decoded = jwt.verify(token, customSecret);
+    return decoded;
+}
+
+export { generateToken, verifyToken, generateTemporaryTokenByCustomSecret, verifyTokenByCustomSecret };

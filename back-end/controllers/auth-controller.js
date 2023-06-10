@@ -1,7 +1,12 @@
 import { verifyPassword } from "../utilities/password-utilities.js";
-import { generateToken } from "../utilities/jwt-token-utilities.js";
+import {
+    generateToken,
+    generateTemporaryTokenByCustomSecret,
+    verifyTokenByCustomSecret,
+} from "../utilities/jwt-token-utilities.js";
 import { Response } from "../utilities/response-format-utilities.js";
 
+import OTPRepository from "../repositories/OTPRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 
 async function doLogin(req, res, next) {
@@ -70,6 +75,58 @@ async function doLogout(req, res, next) {
 
 async function changePassword(req, res, next) {}
 
-async function forgotPassword(req, res, next) {}
+async function generateOTP(req, res, next) {
+    try {
+        const { email } = req.body;
 
-export default { doLogin, doLogout, changePassword, forgotPassword };
+        const otp = "random otp";
+        const expiresAt = new Date(Date.now() + 60 * 1000);
+
+        // await OTPRepository.createOTP(email, otp, expiresAt);
+
+        // send mail
+
+        // send message
+
+        res.json(Response.success("An OTP has been sent to your email"));
+    } catch (err) {
+        console.log(err);
+        res.status(400).json(Response.error("Internal Server Error"));
+    }
+}
+
+async function verifyOTP(req, res, next) {
+    
+}
+
+async function resetPassword(req, res, next) {
+    try {
+        const { email, otp, newPassword } = req.body;
+        console.log(req.params);
+
+        // verify otp again
+
+        const user = await UserRepository.findByEmail(email)
+
+        if (!user) {
+            res.status(400).json(Response.error("User not found"));
+            return;
+        }
+
+        const customSecret = process.env.JWT_SECRET + user.password;
+
+        try {
+            const decoded = verifyTokenByCustomSecret(token, customSecret);
+        } catch (err) {
+            res.status(400).json(Response.error("Link is expired"));
+            return;
+        }
+
+        // do further works
+    } catch (err) {
+        console.log(err);
+        res.status(400).json(Response.error("Internal Server Error"));
+    }
+}
+
+export default { doLogin, doLogout, changePassword, generateOTP, verifyOTP, resetPassword };

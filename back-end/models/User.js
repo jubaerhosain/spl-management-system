@@ -80,6 +80,14 @@ export default (sequelize, DataTypes, Op) => {
             onUpdate: "CASCADE",
             foreignKey: "receiverId",
         });
+
+        // User - OTP [one to one]
+        User.hasOne(models.OTP, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "email",
+            sourceKey: "email",
+        });
     };
 
     return User;
