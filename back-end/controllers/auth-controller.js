@@ -56,7 +56,7 @@ async function doLogin(req, res, next) {
         res.status(200).json(Response.success("Login successful", { userType: user.userType }));
     } catch (err) {
         console.log(err);
-        res.status(400).json(Response.error("Internal Server Error"));
+        res.status(500).json(Response.error("Internal Server Error"));
     }
 }
 
@@ -73,7 +73,14 @@ async function doLogout(req, res, next) {
     }
 }
 
-async function changePassword(req, res, next) {}
+async function changePassword(req, res, next) {
+    try {
+        const { originalPassword, newPassword } = req.body;
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal Server Error"));
+    }
+}
 
 async function generateOTP(req, res, next) {
     try {
@@ -91,13 +98,11 @@ async function generateOTP(req, res, next) {
         res.json(Response.success("An OTP has been sent to your email"));
     } catch (err) {
         console.log(err);
-        res.status(400).json(Response.error("Internal Server Error"));
+        res.status(500).json(Response.error("Internal Server Error"));
     }
 }
 
-async function verifyOTP(req, res, next) {
-    
-}
+async function verifyOTP(req, res, next) {}
 
 async function resetPassword(req, res, next) {
     try {
@@ -106,7 +111,7 @@ async function resetPassword(req, res, next) {
 
         // verify otp again
 
-        const user = await UserRepository.findByEmail(email)
+        const user = await UserRepository.findByEmail(email);
 
         if (!user) {
             res.status(400).json(Response.error("User not found"));
@@ -125,7 +130,7 @@ async function resetPassword(req, res, next) {
         // do further works
     } catch (err) {
         console.log(err);
-        res.status(400).json(Response.error("Internal Server Error"));
+        res.status(500).json(Response.error("Internal Server Error"));
     }
 }
 
