@@ -4,10 +4,14 @@
 
 @layer utilities {
   .max-w-custom {
-    max-width: 1216px;
+    max-width: 1300px;
   }
 }
 
 body {
   @apply bg-gray-50;
+}
+
+.common-text-color1 {
+  @apply text-blue-900;
 }
