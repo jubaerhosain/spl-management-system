@@ -1,12 +1,10 @@
 import "./App.css";
+import { Route, Routes } from "react-router-dom";
 
 import { HomePage, LoginPage } from "@pages";
 import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
-
-import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "@contexts/AuthProvider";
-import PrivateOutlet from "@routes/PrivateOutlet";
-import PublicOutlet from "@routes/PublicOutlet";
+import { PrivateOutlet, PublicOutlet } from "@routes";
 
 function App() {
   return (
@@ -15,6 +13,7 @@ function App() {
         <Route path="/*" element={<PublicOutlet />}>
           <Route path="" element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
+          {/* <Route path="redirect" element={<h>RedirectToDashboard</h>} /> */}
         </Route>
 
         <Route path="/*" element={<PrivateOutlet />}>

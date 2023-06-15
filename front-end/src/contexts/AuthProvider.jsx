@@ -9,8 +9,8 @@ export function useAuthProvider() {
 
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState();
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [user, setUser] = useState({userType: "admin"});
 
   useEffect(() => {
     // check logged-in and get user data
