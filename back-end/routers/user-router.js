@@ -26,8 +26,8 @@ userRouter.post("/avatar", checkAuthentication, uploadAvatar, saveAvatar);
 // // deactivate the user by admin
 // userRouter.put("/deactivate/:userId", deactivateUser);
 
-// // get user by logged in
-// userRouter.get("/", checkAuthentication, getUser);
+// get user by logged in
+userRouter.get("/", checkAuthentication, getUser);
 
 // // get all students
 // // userRouter.get("/student", getAllStudent);

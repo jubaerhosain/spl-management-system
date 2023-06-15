@@ -36,6 +36,9 @@ async function checkMultipleEmailExistence(emails) {
 async function findByUserId(userId) {
     const user = await models.User.findByPk(userId, {
         raw: true,
+        attributes: {
+            exclude: ["password", "active"],
+        },
     });
     return user;
 }
@@ -44,6 +47,19 @@ async function findByUserId(userId) {
  * @param {String} email
  */
 async function findByEmail(email) {
+    const user = await models.User.findOne({
+        where: {
+            email: email,
+        },
+        raw: true,
+        attributes: {
+            exclude: ["password", "active"],
+        },
+    });
+    return user;
+}
+
+async function findByEmailWithPassword(email) {
     const user = await models.User.findOne({
         where: {
             email: email,
@@ -58,4 +74,5 @@ export default {
     checkMultipleEmailExistence,
     findByUserId,
     findByEmail,
+    findByEmailWithPassword
 };

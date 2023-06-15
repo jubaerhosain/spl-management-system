@@ -109,16 +109,29 @@ async function findStudentsByCurriculumYear(curriculumYear) {
 
 async function findStudentByUserId(userId) {
     let student = await models.Student.findOne({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
+        include: [
+            {
+                model: models.User,
+                required: true,
+                where: {
+                    active: true,
+                },
+                attributes: {
+                    exclude: ["password", "active"],
+                },
             },
-            attributes: {
-                exclude: ["password", "active"],
+            {
+                model: models.SPL,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                required: false,
+                where: {
+                    active: true,
+                },
             },
-        },
+        ],
         raw: true,
         nest: true,
         attributes: {
@@ -130,9 +143,10 @@ async function findStudentByUserId(userId) {
     });
 
     if (student) {
-        // copy the properties of the User to the teachers array
-        student = { ...student, ...student.User };
+        // copy the properties of the User to the student array
+        student = { ...student, ...student.User, ...student.SPLs };
         delete student.User;
+        delete student.SPLs;
     }
 
     return student;

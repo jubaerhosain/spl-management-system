@@ -4,12 +4,13 @@ import {
     generateTemporaryTokenByCustomSecret,
     verifyTokenByCustomSecret,
 } from "../utilities/jwt-token-utilities.js";
+
 import { Response } from "../utilities/response-format-utilities.js";
 
 import OTPRepository from "../repositories/OTPRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 
-async function doLogin(req, res, next) {
+async function doLogin(req, res) {
     try {
         const { email, password, remember } = req.body;
 
@@ -18,7 +19,7 @@ async function doLogin(req, res, next) {
             return;
         }
 
-        const user = await UserRepository.findByEmail(email);
+        const user = await UserRepository.findByEmailWithPassword(email);
 
         if (!user) {
             res.status(400).json(Response.error("Invalid email or password"));
@@ -33,27 +34,20 @@ async function doLogin(req, res, next) {
 
         // generate json web token
         const token = generateToken({
-            name: user.name,
             userId: user.userId,
+            email: user.email,
             userType: user.userType,
         });
 
         // set signed cookie
-        if (remember) {
-            res.cookie(process.env.AUTH_COOKIE_NAME, token, {
-                httpOnly: true,
-                maxAge: process.env.JWT_EXPIRY,
-                signed: true,
-            });
-        } else {
-            res.cookie(process.env.AUTH_COOKIE_NAME, token, {
-                httpOnly: true,
-                signed: true,
-            });
-        }
+        res.cookie(process.env.AUTH_COOKIE_NAME, token, {
+            httpOnly: true,
+            maxAge: remember ? process.env.JWT_EXPIRY : null,
+            signed: true,
+        });
 
         // send to the user
-        res.status(200).json(Response.success("Login successful", { userType: user.userType }));
+        res.status(200).json(Response.success("Login successful"));
     } catch (err) {
         console.log(err);
         res.status(500).json(Response.error("Internal Server Error"));

@@ -5,6 +5,9 @@ import { sequelize, models, Op } from "../database/db.js";
 import { Response } from "../utilities/response-format-utilities.js";
 import { getDirectoryName } from "../utilities/file-utilities.js";
 import { getCurriculumYear, getSPLName } from "../utilities/spl-utilities.js";
+import UserRepository from "../repositories/UserRepository.js";
+import TeacherRepository from "../repositories/TeacherRepository.js";
+import StudentRepository from "../repositories/StudentRepository.js";
 
 /**
  * Delete previous avatar if it exists and
@@ -87,74 +90,21 @@ async function deactivateUser(req, res, next) {
  * @param {*} res
  * @param {*} next
  */
-async function getUser(req, res, next) {
+async function getLoggedInUser(req, res, next) {
     try {
         // if authenticated the req.user is defined
         const { userType, userId } = req.user;
 
-        let retrievedUser = "";
+        let user = {};
         if (userType === "admin") {
-            retrievedUser = await models.User.findOne({
-                where: {
-                    userId: userId,
-                    active: true,
-                },
-                raw: true,
-                attributes: ["userId", "name", "email", "avatar"],
-            });
+            user = await UserRepository.findByUserId(userId);
         } else if (userType === "teacher") {
-            retrievedUser = await models.User.findOne({
-                include: {
-                    model: models.Teacher,
-                },
-                where: {
-                    userId: userId,
-                },
-                raw: true,
-                nest: true,
-                attributes: { exclude: ["password"] },
-            });
-
-            const teacher = retrievedUser.Teacher;
-
-            retrievedUser = { ...retrievedUser, ...teacher };
-            delete retrievedUser.Teacher;
+            user = await TeacherRepository.findByUserId(userId);
         } else if (userType === "student") {
-            retrievedUser = await models.User.findOne({
-                include: {
-                    model: models.Student,
-                    include: {
-                        model: models.SPL,
-                        through: {
-                            model: models.StudentSPL,
-                            attributes: [],
-                        },
-                        required: false,
-                        where: {
-                            active: true,
-                        },
-                    },
-                },
-
-                where: {
-                    userId: userId,
-                },
-                raw: true,
-                nest: true,
-                attributes: { exclude: ["password"] },
-            });
-
-            const student = retrievedUser.Student;
-            const spl = student.SPLs;
-
-            console.log(retrievedUser, student, spl);
-
-            retrievedUser = { ...retrievedUser, ...student, ...spl };
-            delete retrievedUser.Student;
-            delete retrievedUser.SPLs;
+            user = await StudentRepository.findStudentByUserId(userId);
         }
 
-        res.json(Response.success("User retrieved successfully", retrievedUser));
+        res.json(Response.success("User retrieved successfully", user));
     } catch (err) {
         console.log(err);
         res.status(500).json(Response.error("Internal Server Error"));
