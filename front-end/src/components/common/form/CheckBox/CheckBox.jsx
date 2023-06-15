@@ -1,4 +1,4 @@
-import styles from "../../form/Form.module.css";
+// import styles from "./Checkbox.module.css";
 
 export default function CheckBox({ children, id, ...rest }) {
   return (
@@ -7,13 +7,14 @@ export default function CheckBox({ children, id, ...rest }) {
         <input
           {...rest}
           id={id}
-          aria-describedby="remember???"
+          aria-describedby={id}
           type="checkbox"
-          className={styles.checkboxInput}
+          className="w-4 h-4 border border-blue-950 rounded bg-blue-950 focus:ring-blue-950 dark:bg-gray-700 
+          dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
         />
       </div>
       <div className="ml-3 text-sm">
-        <label htmlFor={id} className={styles.checkboxLabel}>
+        <label htmlFor={id} className="text-blue-900 dark:text-gray-300">
           {children}
         </label>
       </div>

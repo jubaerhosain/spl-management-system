@@ -6,4 +6,18 @@ const AxiosInstance = axios.create({
   withCredentials: true, // Set this to true if you want to send cookies along with requests
 });
 
-export default AxiosInstance;
+const api = {
+  get: async (url) => {
+    try {
+      const response = AxiosInstance.get(url);
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  post: () => {},
+  put: () => {},
+  delete: () => {},
+};
+
+export default api;
