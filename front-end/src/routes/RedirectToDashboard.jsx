@@ -19,7 +19,7 @@ export default function RedirectToDashboard() {
         break;
       default:
         // Handle unknown or unsupported roles
-        navigate("/");
+        navigate("/login");
     }
   }, [user, navigate]);
 

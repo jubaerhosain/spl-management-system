@@ -7,18 +7,16 @@ export function useAuthProvider() {
   return useContext(AuthContext);
 }
 
-export const AuthProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [user, setUser] = useState({userType: "admin"});
+export function AuthProvider({ children }) {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     // check logged-in and get user data
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setLoggedIn(true);
-    //   setUser({ id: 1, name: "John Doe" });
-    // }, 3000);
+    setTimeout(() => {
+      setLoading(false);
+      setUser({ userType: "teacher" });
+    }, 3000);
   });
 
   // Additional functions to handle login and logout
@@ -27,10 +25,8 @@ export const AuthProvider = ({ children }) => {
   async function logout() {}
 
   return (
-    <AuthContext.Provider
-      value={{ loading, setLoading, loggedIn, setLoggedIn, user, setUser, login, logout }}
-    >
+    <AuthContext.Provider value={{ loading, setLoading, user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}

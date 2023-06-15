@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuthProvider } from "@contexts/AuthProvider";
 
 export default function PrivateOutlet() {
-  const { loggedIn } = useAuthProvider();
+  const { user } = useAuthProvider();
 
-  return loggedIn ? <Outlet /> : <Navigate to="/login" />;
+  return user ? <Outlet /> : <Navigate to="/login" />;
 }

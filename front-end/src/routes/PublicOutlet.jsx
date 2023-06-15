@@ -3,7 +3,7 @@ import { useAuthProvider } from "@contexts/AuthProvider";
 import RedirectToDashboard from "./RedirectToDashboard";
 
 export default function PublicOutlet() {
-  const { loggedIn } = useAuthProvider();
+  const { user } = useAuthProvider();
 
-  return !loggedIn ? <Outlet /> : <RedirectToDashboard />;
+  return !user ? <Outlet /> : <RedirectToDashboard />;
 }
