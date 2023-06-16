@@ -16,12 +16,7 @@ class MySuccess {
     }
 }
 
-/**
- * Response class to format Success and Error
- */
 class Response {
-    // success status codes
-
     // error codes will be used to manipulate error data in ui
     static EMAIL_EXIST = "EMAIL_EXIST";
     static ROLL_EXIST = "ROLL_EXIST";
@@ -32,6 +27,8 @@ class Response {
     static SPL_DOES_NOT_EXIST = "SPL_DOES_NOT_EXIST";
     static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
 
+    static UNAUTHORIZED = "UNAUTHORIZED";
+    static NOT_FOUND = "NOT_FOUND";
     static ARRAY_DATA = "ARRAY_DATA";
 
     /**

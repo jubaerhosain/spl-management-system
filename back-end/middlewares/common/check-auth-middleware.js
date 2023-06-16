@@ -14,21 +14,27 @@ async function checkAuthentication(req, res, next) {
         const signedCookie = req.signedCookies[process.env.AUTH_COOKIE_NAME];
 
         // console.log(req.signedCookies);
-        console.log("Auth token", authToken);
-        console.log("Signed cookie", signedCookie);
+        // console.log("Auth token", authToken);
+        // console.log("Signed cookie", signedCookie);
 
         const token = signedCookie || authToken;
+
+        if (!token) {
+            res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
+            return;
+        }
+
         const decoded = verifyToken(token);
 
         // put decoded token into req.user
         req.user = decoded;
 
-        console.log("Authenticated user: ",decoded);
+        // console.log("Authenticated user: ", decoded);
 
         next();
     } catch (err) {
         console.log(err);
-        res.status(401).json(Response.error("Authentication failed"));
+        res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
     }
 }
 

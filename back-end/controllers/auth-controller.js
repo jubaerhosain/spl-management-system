@@ -12,7 +12,7 @@ import UserRepository from "../repositories/UserRepository.js";
 
 async function doLogin(req, res) {
     try {
-        const { email, password, remember } = req.body;
+        const { email, password, checked } = req.body;
 
         if (!email || !password) {
             res.status(400).json(Response.error("Both email and password must be provided"));
@@ -42,7 +42,7 @@ async function doLogin(req, res) {
         // set signed cookie
         res.cookie(process.env.AUTH_COOKIE_NAME, token, {
             httpOnly: true,
-            maxAge: remember ? process.env.JWT_EXPIRY : null,
+            maxAge: checked ? process.env.JWT_EXPIRY : null,
             signed: true,
         });
 

@@ -15,10 +15,10 @@ export default userRouter;
 
 import { uploadAvatar } from "../middlewares/user-middlewares.js";
 import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
-import {saveAvatar} from "../controllers/user-controllers.js";
+import UserController from "../controllers/user-controllers.js";
 
 // upload avatar
-userRouter.post("/avatar", checkAuthentication, uploadAvatar, saveAvatar);
+userRouter.post("/avatar", checkAuthentication, uploadAvatar, UserController.saveAvatar);
 
 // // get avatar
 // userRouter.get("/avatar/:fileName", getAvatar);
@@ -27,7 +27,7 @@ userRouter.post("/avatar", checkAuthentication, uploadAvatar, saveAvatar);
 // userRouter.put("/deactivate/:userId", deactivateUser);
 
 // get user by logged in
-userRouter.get("/", checkAuthentication, getUser);
+userRouter.get("/", checkAuthentication, UserController.getLoggedInUser);
 
 // // get all students
 // // userRouter.get("/student", getAllStudent);

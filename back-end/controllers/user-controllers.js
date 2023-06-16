@@ -85,7 +85,7 @@ async function deactivateUser(req, res, next) {
 }
 
 /**
- * Get a user by Logged in
+ * Get a logged in user
  * @param {*} req
  * @param {*} res
  * @param {*} next
@@ -444,10 +444,10 @@ async function findCurriculumYear(req, res, next) {
     }
 }
 
-export {
+export default {
     saveAvatar,
     deactivateUser,
-    getUser,
+    getLoggedInUser,
     getAvatar,
     getStudentByCurriculumYear,
     getAllTeacher,
