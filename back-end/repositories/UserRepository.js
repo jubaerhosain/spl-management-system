@@ -33,7 +33,7 @@ async function checkMultipleEmailExistence(emails) {
 /**
  * @param {Integer} userId
  */
-async function findByUserId(userId) {
+async function findById(userId) {
     const user = await models.User.findByPk(userId, {
         raw: true,
         attributes: {
@@ -72,7 +72,7 @@ async function findByEmailWithPassword(email) {
 export default {
     checkEmailExistence,
     checkMultipleEmailExistence,
-    findByUserId,
+    findById,
     findByEmail,
     findByEmailWithPassword
 };

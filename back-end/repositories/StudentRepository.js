@@ -4,7 +4,7 @@ import { sequelize, models, Op } from "../database/db.js";
  * Create one or more student account
  * @param {Array} students
  */
-async function createStudents(students) {
+async function create(students) {
     const transaction = await sequelize.transaction();
     try {
         // add in both User and Student table
@@ -21,7 +21,7 @@ async function createStudents(students) {
     }
 }
 
-async function updateStudent(student, userId) {
+async function update(student, userId) {
     // update to User table
     await models.User.update(student, {
         where: {
@@ -30,7 +30,7 @@ async function updateStudent(student, userId) {
     });
 }
 
-async function updateStudentByAdmin(student, studentId) {
+async function updateByAdmin(student, studentId) {
     // update to Student table
     await models.Student.update(student, {
         where: {
@@ -39,7 +39,7 @@ async function updateStudentByAdmin(student, studentId) {
     });
 }
 
-async function findAllStudents() {
+async function findAll() {
     let students = await models.Student.findAll({
         include: {
             model: models.User,
@@ -74,7 +74,7 @@ async function findAllStudents() {
  * @param {*} curriculumYear
  * @returns {[Promise<Student>]}
  */
-async function findStudentsByCurriculumYear(curriculumYear) {
+async function findAllByCurriculumYear(curriculumYear) {
     let students = await models.Student.findAll({
         include: {
             model: models.User,
@@ -107,7 +107,8 @@ async function findStudentsByCurriculumYear(curriculumYear) {
     return students;
 }
 
-async function findStudentByUserId(userId) {
+async function findById(userId) {
+    // do it find by pk
     let student = await models.Student.findOne({
         include: [
             {
@@ -153,10 +154,10 @@ async function findStudentByUserId(userId) {
 }
 
 export default {
-    createStudents,
-    findAllStudents,
-    findStudentsByCurriculumYear,
-    findStudentByUserId,
-    updateStudent,
-    updateStudentByAdmin,
+    create,
+    findAll,
+    findAllByCurriculumYear,
+    findById,
+    update,
+    updateByAdmin,
 };

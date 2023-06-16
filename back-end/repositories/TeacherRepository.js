@@ -4,11 +4,11 @@ import { models, Op } from "../database/db.js";
  * Create one or more teacher
  * @param {Array} teachers
  */
-async function createTeachers(teachers) {}
+async function create(teachers) {}
 
-async function updateTeacher(teacher, userId) {}
+async function update(teacher, userId) {}
 
-async function findAllTeachers() {
+async function findAll() {
     let teachers = await models.Teacher.findAll({
         include: {
             model: models.User,
@@ -38,7 +38,7 @@ async function findAllTeachers() {
     return teachers;
 }
 
-async function findAllDeactivatedTeachers() {
+async function findAllDeactivatedAccounts() {
     let teachers = await models.Teacher.findAll({
         include: {
             model: models.User,
@@ -68,9 +68,14 @@ async function findAllDeactivatedTeachers() {
     return teachers;
 }
 
+async function findById(userId) {
+    // do it find by pk
+}
+
 export default {
-    createTeachers,
-    updateTeacher,
-    findAllTeachers,
-    findAllDeactivatedTeachers,
+    findById,
+    create,
+    update,
+    findAll,
+    findAllDeactivatedAccounts,
 };

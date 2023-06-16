@@ -97,17 +97,19 @@ async function getLoggedInUser(req, res, next) {
 
         let user = {};
         if (userType === "admin") {
-            user = await UserRepository.findByUserId(userId);
+            user = await UserRepository.findById(userId);
         } else if (userType === "teacher") {
-            user = await TeacherRepository.findByUserId(userId);
+            user = await TeacherRepository.findById(userId);
         } else if (userType === "student") {
-            user = await StudentRepository.findStudentByUserId(userId);
+            user = await StudentRepository.findById(userId);
         }
 
         res.json(Response.success("User retrieved successfully", user));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(
+            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+        );
     }
 }
 
