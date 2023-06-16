@@ -5,13 +5,13 @@ import OTPInput from "../VerifyOTP/OTPInput";
 import SubmitButton from "../common/form/SubmitButton";
 import ResendOTP from "../VerifyOTP/ResendOTP";
 
-export default function VerifyOTPForm() {
+export default function VerifyOTPForm({ email }) {
   return (
     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
       <div className="flex flex-col items-center justify-center text-center">
         <FormHeading>Verify OTP</FormHeading>
         <div className="flex flex-row text-sm font-medium text-gray-400">
-          <p>We have sent a code to your email b**@iit.du.ac.bd</p>
+          <p>We have sent a code to {email}</p>
         </div>
       </div>
 
