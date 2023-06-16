@@ -11,12 +11,10 @@ export default function LoginForm() {
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
-    setError(false);
   };
 
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
-    setError(false);
   };
 
   const onCheck = () => {
@@ -26,13 +24,14 @@ export default function LoginForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
     const response = await login({ email, password, checked });
-    if(!response.success) {
+    if (!response.success) {
       setError(true);
-    } 
+    }
   };
 
   return (
     <FormContainer>
+        {error && <SingleError>Invalid email or password</SingleError>}
       <Title>Login to your account</Title>
       <Form onSubmit={onSubmit}>
         <div>
@@ -65,12 +64,13 @@ export default function LoginForm() {
           <CheckBox id="checkbox" checked={checked} onChange={onCheck}>
             Remember me
           </CheckBox>
-          <a href="#" className="text-sm font-medium text-blue-900 hover:underline dark:text-primary-500">
+          <a
+            href="#"
+            className="text-sm lg:ml-20 md:ml-16 sm:ml-10 font-medium text-blue-900 hover:underline dark:text-blue-500"
+          >
             Forgot password?
           </a>
         </div>
-
-        {error && <SingleError>Invalid email or password</SingleError>}
 
         <SubmitButton> Login </SubmitButton>
 

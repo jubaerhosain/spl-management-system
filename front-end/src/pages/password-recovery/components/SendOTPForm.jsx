@@ -1,26 +1,22 @@
-import Label from "../../../common/form/components/Label";
-import Input from "../../../common/form/components/Input";
-import SubmitButton from "../../../common/form/components/SubmitButton";
-import FormHeading from "../../../common/form/components/FormHeading";
-import FormContainer from "../../../common/form/components/FormContainer";
-import Form from "../../../common/form/components/Form";
+import { Label, Input, SubmitButton, Title, FormContainer, Form } from "@components/common/form";
 
 export default function SendOTPForm() {
   return (
     <FormContainer>
-      <FormHeading>Verify Email</FormHeading>
+      <Title>Verify Email</Title>
       <Form>
         <div>
           <Label htmlFor="email">Your email</Label>
           <Input
             // value={email}
-            // onChange={onEmailChange}
+            // onChange={onEmailChange} 
             required
             type="email"
             name="email"
             id="email"
             placeholder="name@iit.du.ac.bd"
           />
+          <span className="text-sm text-red-600"> Email does not exists </span>
         </div>
         <SubmitButton>Send OTP</SubmitButton>
       </Form>

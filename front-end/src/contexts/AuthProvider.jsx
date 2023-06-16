@@ -17,10 +17,8 @@ export function AuthProvider({ children }) {
     UserService.getLoggedInUser()
       .then((response) => {
         if (response.success) {
-          console.log(response.data);
           setUser(response.data);
         } else {
-          console.log(response);
           setUser(null);
         }
       })

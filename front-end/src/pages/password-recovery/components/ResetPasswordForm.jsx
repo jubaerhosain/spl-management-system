@@ -5,7 +5,7 @@ import SubmitButton from "../common/form/SubmitButton";
 
 import InputP from "../common/form/InputP";
 
-export default function ForgotPassword() {
+export default function ResetPasswordForm() {
   return (
     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
       <FormHeading> Reset Password </FormHeading>

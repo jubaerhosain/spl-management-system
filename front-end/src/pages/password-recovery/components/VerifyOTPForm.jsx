@@ -11,7 +11,7 @@ export default function VerifyOTPForm() {
       <div className="flex flex-col items-center justify-center text-center">
         <FormHeading>Verify OTP</FormHeading>
         <div className="flex flex-row text-sm font-medium text-gray-400">
-          <p>We have sent a code to your email ba**@dipainhouse.com</p>
+          <p>We have sent a code to your email b**@iit.du.ac.bd</p>
         </div>
       </div>
 

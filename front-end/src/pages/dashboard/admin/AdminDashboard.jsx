@@ -1,7 +1,7 @@
 import { useAuthProvider } from "@contexts/AuthProvider";
 
 export default function AdminDashboard() {
-  const { logout } = useAuthProvider();
+  const { logout, user } = useAuthProvider();
 
   const dashboardStyle = {
     maxWidth: "800px",
@@ -34,6 +34,7 @@ export default function AdminDashboard() {
 
   return (
     <div style={dashboardStyle}>
+      {user.email}
       <h1 style={headingStyle}>Admin Dashboard</h1>
 
       <div style={profileSectionStyle}>
