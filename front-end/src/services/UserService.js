@@ -1,13 +1,14 @@
-import axios from "axios";
-const base_url = "http://";
+import Axios from "@utils/api";
+
+async function getLoggedInUser() {
+  try {
+    const response = await Axios.get("/user");
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+}
 
 export default {
-  getUser: async (id) => {
-    try {
-      const response = await axios.get(base_url + "users" + id);
-      return response.data;
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
+  getLoggedInUser,
 };

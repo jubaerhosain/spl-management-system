@@ -18,10 +18,9 @@ export default function RedirectToDashboard() {
         navigate("/teacher");
         break;
       default:
-        // Handle unknown or unsupported roles
         navigate("/login");
     }
   }, [user, navigate]);
 
-  return null; // This component doesn't render anything
+  return null;
 }

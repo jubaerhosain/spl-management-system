@@ -1,10 +1,10 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
 
+import { Route, Routes } from "react-router-dom";
 import { HomePage, LoginPage } from "@pages";
-import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { PrivateOutlet, PublicOutlet } from "@routes";
+import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
 
 function App() {
   return (

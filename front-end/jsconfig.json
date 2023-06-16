@@ -20,7 +20,9 @@
             "@routes/*": [
                 "src/routes/*"
             ],
-            // Add more aliases as needed
+            "@services/*": [
+                "src/services/*"
+            ],
         },
         "allowJs": true
     }

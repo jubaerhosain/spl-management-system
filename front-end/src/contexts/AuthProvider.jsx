@@ -1,3 +1,5 @@
+import UserService from "@services/UserService";
+import AuthService from "@services/AuthService";
 import { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -9,24 +11,43 @@ export function useAuthProvider() {
 
 export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
+
+  const loadLoggedInUser = async () => {
+    UserService.getLoggedInUser()
+      .then((response) => {
+        if (response.success) {
+          console.log(response.data);
+          setUser(response.data);
+        } else {
+          console.log(response);
+          setUser(null);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    // check logged-in and get user data
-    setTimeout(() => {
-      setLoading(false);
-      setUser({ userType: "teacher" });
-    }, 3000);
-  });
+    loadLoggedInUser();
+  }, []);
 
-  // Additional functions to handle login and logout
+  async function login(data) {
+    const response = await AuthService.login(data);
+    if (response.success) {
+      loadLoggedInUser();
+    }
+    return response;
+  }
 
-  async function login() {}
-  async function logout() {}
+  async function logout() {
+    const response = await AuthService.logout();
+    if (response.success) {
+      setUser(null);
+    }
+    return response;
+  }
 
-  return (
-    <AuthContext.Provider value={{ loading, setLoading, user, setUser, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ loading, user, login, logout }}>{children}</AuthContext.Provider>;
 }

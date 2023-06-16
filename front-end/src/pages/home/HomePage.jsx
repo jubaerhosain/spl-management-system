@@ -1,17 +1,12 @@
 import LoginForm from "@components/LoginForm/LoginForm";
-import { useAuthProvider } from "@contexts/AuthProvider";
-import { Navigate } from "react-router-dom";
+// import { useAuthProvider } from "@contexts/AuthProvider";
 
 export default function HomePage() {
-  const { loggedIn, loading } = useAuthProvider();
+  // const { loading } = useAuthProvider();
 
-  if (loading) {
-    return <div>Loading....</div>;
-  }
-
-  if (loggedIn) {
-    return <Navigate to="/admin" />;
-  }
+  // if (loading) {
+  //   return <div>Loading....</div>;
+  // }
 
   return (
     <div className="max-w-custom flex flex-row m-auto flex-wrap items-center justify-around h-screen">
@@ -27,7 +22,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="max-w-md min-w-max flex-grow">
+      <div className="max-w-sm min-w-fit flex-grow">
         <LoginForm />
       </div>
     </div>

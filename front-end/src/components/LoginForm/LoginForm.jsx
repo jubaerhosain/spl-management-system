@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuthProvider } from "@contexts/AuthProvider";
 import { FormContainer, Form, Input, Label, SubmitButton, Title, CheckBox, SingleError } from "@common/form";
 
 export default function LoginForm() {
@@ -6,6 +7,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
   const [error, setError] = useState(false);
+  const { login } = useAuthProvider();
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -21,9 +23,12 @@ export default function LoginForm() {
     setChecked((prevState) => !prevState);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setError(true);
+    const response = await login({ email, password, checked });
+    if(!response.success) {
+      setError(true);
+    } 
   };
 
   return (

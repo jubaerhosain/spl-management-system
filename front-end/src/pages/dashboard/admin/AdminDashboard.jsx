@@ -1,4 +1,8 @@
+import { useAuthProvider } from "@contexts/AuthProvider";
+
 export default function AdminDashboard() {
+  const { logout } = useAuthProvider();
+
   const dashboardStyle = {
     maxWidth: "800px",
     margin: "0 auto",
@@ -66,6 +70,8 @@ export default function AdminDashboard() {
         <h2 style={subheadingStyle}>System Settings</h2>
         {/* System settings content here */}
       </div>
+
+      <button onClick={logout}>Logout</button>
     </div>
   );
 }
