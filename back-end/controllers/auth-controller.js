@@ -56,7 +56,6 @@ async function doLogin(req, res) {
 
 async function doLogout(req, res, next) {
     try {
-        // console.log(process.env.AUTH_COOKIE_NAME);
         res.clearCookie(process.env.AUTH_COOKIE_NAME);
         res.json(Response.success("Logged out successfully"));
     } catch (err) {
