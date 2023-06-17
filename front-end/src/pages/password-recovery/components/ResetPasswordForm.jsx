@@ -1,15 +1,7 @@
-import {
-  Title,
-  SubmitButton,
-  FormContainer,
-  Form,
-  Label,
-  Input,
-  Error,
-  PasswordInput,
-} from "@components/common/form";
-import AuthService from "@services/AuthService";
+import { FormContainer } from "@layouts";
+import { Title, SubmitButton, Form, Label, Input, Error, PasswordInput } from "@components/form";
 
+import AuthService from "@services/AuthService";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 

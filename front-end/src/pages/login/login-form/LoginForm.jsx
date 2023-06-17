@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthProvider } from "@contexts/AuthProvider";
-import { FormContainer, Form, Input, PasswordInput, Label, SubmitButton, Title, CheckBox, SingleError } from "@common/form";
-import { Link } from "react-router-dom";
+import { FormContainer } from "@layouts";
+import { Title, Form, Label, Input, PasswordInput, CheckBox, SubmitButton } from "@components/form";
+
+import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
-  const [error, setError] = useState(false);
+  const [isProcessing, setProcessing] = useState(false);
+  const [error, setError] = useState(null);
+
   const { login } = useAuthProvider();
 
   const onEmailChange = (e) => {
@@ -24,16 +30,27 @@ export default function LoginForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
     const response = await login({ email, password, checked });
-    if (!response.success) {
-      setError(true);
+
+    if (response.success) {
+      setError(null); 
+      alert(response.message);
+      navigate("/profile");
+    } else if (response.errorCode == "BAD_REQUEST") {
+      setError(response.message);
+    } else {
+      setError("An error occurred while logging in");
     }
+    setProcessing(false);
   };
 
   return (
     <FormContainer>
-      {error && <SingleError>Invalid email or password</SingleError>}
+      {error && <div className={styles.error}>{error}</div>}
+
       <Title>Login to your account</Title>
+
       <Form onSubmit={onSubmit}>
         <div>
           <Label htmlFor="email">Your email</Label>
@@ -60,22 +77,22 @@ export default function LoginForm() {
           />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className={styles.rememberAndForgotDiv}>
           <CheckBox id="checkbox" checked={checked} onChange={onCheck}>
             Remember me
           </CheckBox>
-          <Link to="/forgot-password" className="text-sm lg:ml-20 md:ml-16 sm:ml-10 font-medium text-blue-900 hover:underline dark:text-blue-500">
+          <Link to="/forgot-password" className={styles.forgotPasswordLink}>
             Forgot password?
           </Link>
         </div>
 
-        <SubmitButton> Login </SubmitButton>
+        <SubmitButton disabled={isProcessing}> Login </SubmitButton>
 
-        <p className="text-sm font-light text-blue-900 dark:text-gray-400">
-          Don&apos;t have an account yet?{" "}
-          <a href="#" className="font-medium text-blue-900 hover:underline dark:text-blue-500">
+        <p className={styles.registerDiv}>
+          <span>Don&apos;t have an account yet?</span>
+          <Link to="/register" className={styles.registerLink}>
             Register
-          </a>
+          </Link>
         </p>
       </Form>
     </FormContainer>

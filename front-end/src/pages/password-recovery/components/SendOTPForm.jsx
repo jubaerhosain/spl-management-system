@@ -1,4 +1,5 @@
-import { Label, Input, SubmitButton, Title, FormContainer, Form } from "@components/common/form";
+import { Label, Input, SubmitButton, Title, Form, Error } from "@components/form";
+import { FormContainer } from "@layouts";
 import AuthService from "@services/AuthService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -40,8 +41,8 @@ export default function SendOTPForm() {
             id="email"
             placeholder="name@iit.du.ac.bd"
           />
-          {emailError && <span className="text-sm text-red-600"> {emailError} </span>}
-          {successMessage && <div className="text-sm text-blue-900"> {successMessage} </div>}
+          {emailError && <Error> {emailError} </Error>}
+          {successMessage && <span className="text-sm text-blue-400"> {successMessage} </span>}
         </div>
         <SubmitButton>Send OTP</SubmitButton>
       </Form>

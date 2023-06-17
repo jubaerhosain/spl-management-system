@@ -9,6 +9,7 @@ import {
   VerifyOTPPage,
   ResetPasswordPage,
 } from "@pages";
+
 import { AuthProvider } from "@contexts/AuthProvider";
 import { PrivateOutlet, PublicOutlet } from "@routes";
 import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
@@ -18,9 +19,9 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/" element={<HomePage />} />
 
         <Route path="/*" element={<PublicOutlet />}>
-          <Route path="" element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="verify-otp" element={<VerifyOTPPage />} />

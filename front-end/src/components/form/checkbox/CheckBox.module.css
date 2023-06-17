@@ -1,0 +1,20 @@
+.checkboxContainer {
+  @apply flex items-start;
+}
+
+.inputDiv {
+  @apply flex items-center h-5;
+}
+
+.labelDiv {
+  @apply ml-3 text-sm;
+}
+
+.input {
+  @apply w-4 h-4 border border-blue-950 rounded bg-blue-950 focus:ring-blue-950 dark:bg-gray-700 
+    dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800;
+}
+
+.label {
+  @apply text-blue-900 dark:text-gray-300;
+}

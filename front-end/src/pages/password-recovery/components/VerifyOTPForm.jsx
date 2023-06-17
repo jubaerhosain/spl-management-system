@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 
-import {
-  Title,
-  SubmitButton,
-  FormContainer,
-  Form,
-  Label,
-  Input,
-  IndividualError,
-} from "@components/common/form";
+import { FormContainer } from "@layouts";
+import { Title, SubmitButton, Form, Label, Input, Error } from "@components/form";
 
 import ResendOTP from "./ResendOTP";
 import AuthService from "@services/AuthService";
@@ -55,7 +48,7 @@ export default function VerifyOTPForm() {
         <div>
           <Label htmlFor="otp">Enter OTP</Label>
           <Input id="otp" type="number" required value={otp} onChange={(e) => setOTP(e.target.value)} />
-          {OTPError && <IndividualError>{OTPError}</IndividualError>}
+          {OTPError && <Error>{OTPError}</Error>}
         </div>
         <div className="flex flex-col space-y-5">
           <SubmitButton>Verify</SubmitButton>

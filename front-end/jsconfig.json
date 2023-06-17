@@ -23,6 +23,9 @@
             "@services/*": [
                 "src/services/*"
             ],
+            "@layouts/*": [
+                "src/layouts/*"
+            ],
         },
         "allowJs": true
     }
