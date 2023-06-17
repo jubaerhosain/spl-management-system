@@ -20,15 +20,30 @@ async function logout() {
 
 async function sendOTP(email) {
   try {
-    if (email) return {success: true, message:"An email has been sent successfully"};
+    const response = await Axios.post("/auth/generate-otp", { email });
+    return response.data;
   } catch (err) {
-    return err.message;
+    return err.response.data;
   }
 }
 
-async function verifyOTP(email, otp) {}
+async function verifyOTP(email, otp) {
+  try {
+    const response = await Axios.post("/auth/verify-otp", { email, otp });
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+}
 
-async function resetPassword(email, otp, password) {}
+async function resetPassword(email, otp, password) {
+  try {
+    const response = await Axios.put("/auth/reset-password", { email, otp, password });
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+}
 
 export default {
   login,

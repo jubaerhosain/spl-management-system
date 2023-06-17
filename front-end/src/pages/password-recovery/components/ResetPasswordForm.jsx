@@ -1,46 +1,99 @@
-import Label from "../common/form/Label";
-import Input from "../common/form/Input";
-import FormHeading from "../common/form/FormHeading";
-import SubmitButton from "../common/form/SubmitButton";
+import {
+  Title,
+  SubmitButton,
+  FormContainer,
+  Form,
+  Label,
+  Input,
+  Error,
+  PasswordInput,
+} from "@components/common/form";
+import AuthService from "@services/AuthService";
 
-import InputP from "../common/form/InputP";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ResetPasswordForm() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, otp } = location.state || {};
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [newPasswordError, setNewPasswordError] = useState(null);
+
+  useEffect(() => {
+    if (!email) {
+      navigate("/forgot-password");
+    }
+
+    if (!otp) {
+      navigate("/verify-otp");
+    }
+  }, [email, navigate, otp]);
+
+  const onNewPasswordInput = (e) => {
+    setNewPassword(e.target.value);
+    setPasswordMatchError(false);
+    setNewPasswordError(false);
+  };
+
+  const onConfirmPasswordInput = (e) => {
+    setConfirmPassword(e.target.value);
+    setPasswordMatchError(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (newPassword.length < 8) {
+      setNewPasswordError("Password must be at least 8 character long");
+    } else if (newPassword == confirmPassword) {
+      const response = await AuthService.resetPassword(email, otp, newPassword);
+      if (response.success) {
+        alert("Password reset successfully");
+        navigate("/login");
+      } else {
+        console.log(response);
+      }
+    } else {
+      setPasswordMatchError(true);
+    }
+  };
+
   return (
-    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-      <FormHeading> Reset Password </FormHeading>
-      <form className="space-y-4 md:space-y-6">
+    <FormContainer>
+      <Title> Reset Password </Title>
+      <Form onSubmit={handleSubmit}>
         <div>
           <Label htmlFor="newPassword">New Password</Label>
-          <Input
-            // value={password}
-            // onChange={onPasswordChange}
+          <PasswordInput
+            value={newPassword}
+            onChange={onNewPasswordInput}
             required
-            type="password"
+            placeholder="New password"
             name="newPassword"
             id="newPassword"
-            placeholder="••••••••"
           />
+          {newPasswordError && <Error> {newPasswordError} </Error>}
         </div>
+
         <div>
           <Label htmlFor="confirmPassword">Confirm Password</Label>
           <Input
-            // value={password}
-            // onChange={onPasswordChange}
+            value={confirmPassword}
+            onChange={onConfirmPasswordInput}
             required
             type="password"
             name="confirmPassword"
             id="confirmPassword"
-            placeholder="••••••••"
+            placeholder="Confirm password"
           />
+          {passwordMatchError && <Error>Password doesn&apos;t match </Error>}
         </div>
         <SubmitButton>Reset</SubmitButton>
-
-        <div>
-          <Label htmlFor="i3">Confirm Password</Label>
-          <InputP id="i3" />
-        </div>
-      </form>
-    </div>
+      </Form>
+    </FormContainer>
   );
 }

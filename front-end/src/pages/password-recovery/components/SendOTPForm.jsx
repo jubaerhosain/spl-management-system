@@ -1,8 +1,11 @@
 import { Label, Input, SubmitButton, Title, FormContainer, Form } from "@components/common/form";
 import AuthService from "@services/AuthService";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function SendOTPForm({ email, setEmail, setEmailVerified }) {
+export default function SendOTPForm() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -10,9 +13,10 @@ export default function SendOTPForm({ email, setEmail, setEmailVerified }) {
     e.preventDefault();
     const response = await AuthService.sendOTP(email);
     if (response.success) {
+      setEmailError(null);
       setSuccessMessage(response.message);
       setTimeout(() => {
-        setEmailVerified(true);
+        navigate("/verify-otp", { state: { email } });
       }, 1000);
     } else if (response.errorCode === "BAD_REQUEST") {
       setEmailError(response.message);

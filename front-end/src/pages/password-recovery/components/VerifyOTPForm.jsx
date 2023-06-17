@@ -1,40 +1,68 @@
-// import React from 'react'
+import { useEffect, useState } from "react";
 
-import FormHeading from "../common/form/FormHeading";
-import OTPInput from "../VerifyOTP/OTPInput";
-import SubmitButton from "../common/form/SubmitButton";
-import ResendOTP from "../VerifyOTP/ResendOTP";
+import {
+  Title,
+  SubmitButton,
+  FormContainer,
+  Form,
+  Label,
+  Input,
+  IndividualError,
+} from "@components/common/form";
 
-export default function VerifyOTPForm({ email }) {
+import ResendOTP from "./ResendOTP";
+import AuthService from "@services/AuthService";
+
+import { useNavigate, useLocation } from "react-router-dom";
+
+export default function VerifyOTPForm() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email } = location.state || {};
+  const [otp, setOTP] = useState("");
+  const [OTPError, setOTPError] = useState(false);
+
+  useEffect(() => {
+    if (!email) {
+      navigate("/forgot-password");
+    }
+  }, [email, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await AuthService.verifyOTP(email, otp);
+    if (response.success) {
+      setTimeout(() => {
+        // navigate to the next
+        setOTPError(null);
+        navigate("/reset-password", { state: { email, otp } });
+      }, 1000);
+    } else if (response.errorCode == "BAD_REQUEST") {
+      setOTPError(response.message);
+    } else {
+      setOTPError("An error occurred while verifying OTP");
+    }
+  };
+
   return (
-    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-      <div className="flex flex-col items-center justify-center text-center">
-        <FormHeading>Verify OTP</FormHeading>
-        <div className="flex flex-row text-sm font-medium text-gray-400">
-          <p>We have sent a code to {email}</p>
+    <FormContainer>
+      <Title>Verify OTP</Title>
+      <div className="flex flex-row text-sm font-medium text-gray-400">
+        <p>We have sent a OTP to {email}</p>
+      </div>
+
+      <Form onSubmit={handleSubmit}>
+        <div>
+          <Label htmlFor="otp">Enter OTP</Label>
+          <Input id="otp" type="number" required value={otp} onChange={(e) => setOTP(e.target.value)} />
+          {OTPError && <IndividualError>{OTPError}</IndividualError>}
         </div>
-      </div>
+        <div className="flex flex-col space-y-5">
+          <SubmitButton>Verify</SubmitButton>
 
-      <div>
-        <form action="" method="post">
-          <div className="flex flex-col space-y-8">
-            <div className="flex flex-row items-center justify-around mx-auto w-full max-w-xs">
-              <OTPInput></OTPInput>
-              <OTPInput></OTPInput>
-              <OTPInput></OTPInput>
-              <OTPInput></OTPInput>
-              <OTPInput></OTPInput>
-              <OTPInput></OTPInput>
-            </div>
-
-            <div className="flex flex-col space-y-5">
-              <SubmitButton>Verify</SubmitButton>
-
-              <ResendOTP></ResendOTP>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+          <ResendOTP />
+        </div>
+      </Form>
+    </FormContainer>
   );
 }

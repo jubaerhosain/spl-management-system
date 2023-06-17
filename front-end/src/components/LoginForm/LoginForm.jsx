@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthProvider } from "@contexts/AuthProvider";
-import { FormContainer, Form, Input, Label, SubmitButton, Title, CheckBox, SingleError } from "@common/form";
+import { FormContainer, Form, Input, PasswordInput, Label, SubmitButton, Title, CheckBox, SingleError } from "@common/form";
+import { Link } from "react-router-dom";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function LoginForm() {
 
   return (
     <FormContainer>
-        {error && <SingleError>Invalid email or password</SingleError>}
+      {error && <SingleError>Invalid email or password</SingleError>}
       <Title>Login to your account</Title>
       <Form onSubmit={onSubmit}>
         <div>
@@ -49,11 +50,10 @@ export default function LoginForm() {
 
         <div>
           <Label htmlFor="password">Password</Label>
-          <Input
+          <PasswordInput
             value={password}
             onChange={onPasswordChange}
             required
-            type="password"
             name="password"
             id="password"
             placeholder="••••••••••"
@@ -64,12 +64,9 @@ export default function LoginForm() {
           <CheckBox id="checkbox" checked={checked} onChange={onCheck}>
             Remember me
           </CheckBox>
-          <a
-            href="#"
-            className="text-sm lg:ml-20 md:ml-16 sm:ml-10 font-medium text-blue-900 hover:underline dark:text-blue-500"
-          >
+          <Link to="/forgot-password" className="text-sm lg:ml-20 md:ml-16 sm:ml-10 font-medium text-blue-900 hover:underline dark:text-blue-500">
             Forgot password?
-          </a>
+          </Link>
         </div>
 
         <SubmitButton> Login </SubmitButton>

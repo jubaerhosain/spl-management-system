@@ -1,7 +1,14 @@
 import "./App.css";
 
 import { Route, Routes } from "react-router-dom";
-import { HomePage, LoginPage, NotFoundPage, ForgotPasswordPage } from "@pages";
+import {
+  HomePage,
+  LoginPage,
+  NotFoundPage,
+  ForgotPasswordPage,
+  VerifyOTPPage,
+  ResetPasswordPage,
+} from "@pages";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { PrivateOutlet, PublicOutlet } from "@routes";
 import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
@@ -15,7 +22,9 @@ function App() {
         <Route path="/*" element={<PublicOutlet />}>
           <Route path="" element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path="password-recovery" element={<ForgotPasswordPage />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="verify-otp" element={<VerifyOTPPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
         </Route>
 
         <Route path="/*" element={<PrivateOutlet />}>

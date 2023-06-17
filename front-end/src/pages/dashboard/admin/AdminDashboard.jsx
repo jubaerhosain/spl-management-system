@@ -1,7 +1,14 @@
 import { useAuthProvider } from "@contexts/AuthProvider";
+import { useEffect } from "react";
 
 export default function AdminDashboard() {
   const { logout, user } = useAuthProvider();
+
+  useEffect(() => {
+    if (!user) {
+      // redirect to login
+    }
+  });
 
   const dashboardStyle = {
     maxWidth: "800px",
