@@ -1,6 +1,6 @@
-import ResetPasswordForm from "../components/ResetPasswordForm";
+import VerifyOTPForm from "./verify-otp-form/VerifyOTPForm";
 
-export default function ResetPasswordPage() {
+export default function VerifyOTPPage() {
   return (
     <div className="max-w-custom flex m-auto flex-wrap items-center justify-around h-screen">
       <div className="max-w-sm min-w-full flex flex-col items-center justify-around">
@@ -9,7 +9,7 @@ export default function ResetPasswordPage() {
           Software Project Lab
         </a>
         <div className="w-full">
-          <ResetPasswordForm />
+          <VerifyOTPForm />
         </div>
       </div>
     </div>

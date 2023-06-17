@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import { FormContainer } from "@layouts";
 import { Title, SubmitButton, Form, Label, Input, Error } from "@components/form";
-
-import ResendOTP from "./ResendOTP";
 import AuthService from "@services/AuthService";
-
-import { useNavigate, useLocation } from "react-router-dom";
+import styles from "./VerifyOTPForm.module.css";
 
 export default function VerifyOTPForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
   const [otp, setOTP] = useState("");
-  const [OTPError, setOTPError] = useState(false);
+  const [isProcessing, setProcessing] = useState(false);
+  const [otpError, setOTPError] = useState(false);
 
   useEffect(() => {
     if (!email) {
@@ -23,6 +21,8 @@ export default function VerifyOTPForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
+
     const response = await AuthService.verifyOTP(email, otp);
     if (response.success) {
       setTimeout(() => {
@@ -35,12 +35,13 @@ export default function VerifyOTPForm() {
     } else {
       setOTPError("An error occurred while verifying OTP");
     }
+    setProcessing(false);
   };
 
   return (
     <FormContainer>
       <Title>Verify OTP</Title>
-      <div className="flex flex-row text-sm font-medium text-gray-400">
+      <div className={styles.sentOTPMessage}>
         <p>We have sent a OTP to {email}</p>
       </div>
 
@@ -48,12 +49,15 @@ export default function VerifyOTPForm() {
         <div>
           <Label htmlFor="otp">Enter OTP</Label>
           <Input id="otp" type="number" required value={otp} onChange={(e) => setOTP(e.target.value)} />
-          {OTPError && <Error>{OTPError}</Error>}
+          {otpError && <Error>{otpError}</Error>}
         </div>
         <div className="flex flex-col space-y-5">
-          <SubmitButton>Verify</SubmitButton>
+          <SubmitButton disabled={isProcessing}>Verify</SubmitButton>
 
-          <ResendOTP />
+          <div className={styles.resendOTPDiv}>
+            <p>Didn&apos;t receive code?</p>
+            <span className={styles.resendOTPButton}>Resend</span>
+          </div>
         </div>
       </Form>
     </FormContainer>

@@ -1,4 +1,4 @@
-import SendOTPForm from "../components/SendOTPForm";
+import SendOTPForm from "./send-otp-form/SendOTPForm";
 
 export default function ForgotPasswordPage() {
   return (
