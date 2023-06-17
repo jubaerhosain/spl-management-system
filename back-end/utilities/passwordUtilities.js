@@ -38,6 +38,4 @@ async function generateHashedPassword(numberOfPassword = 1) {
     return hashedPasswords;
 }
 
-export { hashPassword, verifyPassword, generateHashedPassword };
-
 export default { hashPassword, verifyPassword, generateHashedPassword };

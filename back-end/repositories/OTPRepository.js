@@ -1,6 +1,7 @@
 import { models, Op } from "../database/db.js";
 
 /**
+ * @param {String} email
  * @param {String} otp
  * @param {Date} expiresAt
  */
@@ -26,7 +27,7 @@ async function createOTP(email, otp, expiresAt) {
     }
 }
 
-async function getOTP(email) {
+async function findOTP(email) {
     const otp = await models.OTP.findOne({
         where: {
             email,
@@ -42,5 +43,5 @@ async function getOTP(email) {
 
 export default {
     createOTP,
-    getOTP,
+    findOTP,
 };

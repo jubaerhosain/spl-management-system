@@ -1,10 +1,11 @@
+import { where } from "sequelize";
 import { models, Op } from "../database/db.js";
 
 /**
  * @param {String} email
  */
 async function checkEmailExistence(email) {
-    const user = await models.findOne({
+    const user = await models.User.findOne({
         where: {
             email: email,
         },
@@ -69,10 +70,22 @@ async function findByEmailWithPassword(email) {
     return user;
 }
 
+async function resetPassword(email, password) {
+    await models.User.update(
+        { password: password },
+        {
+            where: {
+                email: email,
+            },
+        }
+    );
+}
+
 export default {
     checkEmailExistence,
     checkMultipleEmailExistence,
     findById,
     findByEmail,
-    findByEmailWithPassword
+    findByEmailWithPassword,
+    resetPassword,
 };

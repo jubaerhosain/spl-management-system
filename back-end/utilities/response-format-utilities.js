@@ -17,19 +17,13 @@ class MySuccess {
 }
 
 class Response {
-    // error codes will be used to manipulate error data in ui
-    static EMAIL_EXIST = "EMAIL_EXIST";
-    static ROLL_EXIST = "ROLL_EXIST";
-    static REG_EXIST = "REG_EXIST";
-    static SPL_EXIST = "SPL_EXIST";
-    static FIELD_REQUIRED = "FIELD_REQUIRED";
-    static FIELD_NOT_ALLOWED = "FIELD_NOT_ALLOWED";
-    static SPL_DOES_NOT_EXIST = "SPL_DOES_NOT_EXIST";
-    static INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
-
+    // to show error message in UI
     static UNAUTHORIZED = "UNAUTHORIZED";
     static NOT_FOUND = "NOT_FOUND";
     static ARRAY_DATA = "ARRAY_DATA";
+    static BAD_REQUEST = "BAD_REQUEST";
+    static VALIDATION_ERROR = "VALIDATION_ERROR";
+    static SERVER_ERROR = "SERVER_ERROR";
 
     /**
      * Success response with this.success = true
