@@ -6,7 +6,7 @@ import passwordUtilities from "../utils/passwordUtils.js";
 import OTPRepository from "../repositories/OTPRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 
-async function doLogin(req, res) {
+async function login(req, res) {
     try {
         const { email, password, checked } = req.body;
 
@@ -52,7 +52,7 @@ async function doLogin(req, res) {
     }
 }
 
-async function doLogout(req, res, next) {
+async function logout(req, res, next) {
     try {
         res.clearCookie(process.env.AUTH_COOKIE_NAME);
         res.json(Response.success("Logged out successfully"));
@@ -143,4 +143,4 @@ async function resetPassword(req, res, next) {
     }
 }
 
-export default { doLogin, doLogout, changePassword, generateOTP, verifyOTP, resetPassword };
+export default { login, logout, changePassword, generateOTP, verifyOTP, resetPassword };

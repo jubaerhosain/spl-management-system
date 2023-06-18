@@ -31,4 +31,4 @@ const loginValidator = [
     body("password").trim().notEmpty().withMessage("Password must be provided"),
 ];
 
-export { loginValidator };
+export default { loginValidator };

@@ -1,7 +1,3 @@
-// 1. check authentication
-// 2. check authorization [admin, student, teacher]
-// 3. check authorization [committee head, committee member, splmanager, presentation evaluators]
-
 import jwtUtils from "../utils/jwtUtils.js";
 import { Response } from "../utils/responseUtils.js";
 
@@ -11,7 +7,7 @@ import { Response } from "../utils/responseUtils.js";
  * @param {*} res
  * @param {*} next
  */
-async function checkAuthentication(req, res, next) {
+export async function checkAuthentication(req, res, next) {
     try {
         const bearerToken = req.headers.authorization;
         const authToken = bearerToken ? bearerToken.split(" ")[1] : null;
@@ -42,12 +38,21 @@ async function checkAuthentication(req, res, next) {
     }
 }
 
-async function isAdmin(req, res, next) {}
-async function isTeacher(req, res, next) {}
-async function isStudent(req, res, next) {}
-async function isCommitteeHead(req, res, next) {}
-async function isCommitteeMember(req, res, next) {}
-async function isSPLManager(req, res, next) {}
-async function isPresentationEvaluator(req, res, next) {}
+export async function isAdmin(req, res, next) {}
+export async function isTeacher(req, res, next) {}
+export async function isStudent(req, res, next) {}
+export async function isCommitteeHead(req, res, next) {}
+export async function isCommitteeMember(req, res, next) {}
+export async function isSPLManager(req, res, next) {}
+export async function isPresentationEvaluator(req, res, next) {}
 
-export default { checkAuthentication };
+export default {
+    checkAuthentication,
+    isAdmin,
+    isTeacher,
+    isStudent,
+    isCommitteeHead,
+    isCommitteeMember,
+    isSPLManager,
+    isPresentationEvaluator,
+};

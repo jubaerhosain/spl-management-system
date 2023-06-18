@@ -1,12 +1,12 @@
 import express from "express";
 const authRoutes = express.Router();
 
-import { checkAuthentication } from "../middlewares/common/checkAuthentication.js";
+import { checkAuthentication } from "../middlewares/authMiddleware.js";
 import { Response } from "../utils/responseUtils.js";
 import authController from "../controllers/authController.js";
 
-authRoutes.post("/login", authController.doLogin);
-authRoutes.delete("/logout", authController.doLogout);
+authRoutes.post("/login", authController.login);
+authRoutes.delete("/logout", authController.logout);
 authRoutes.put("/change-password", authController.changePassword);
 
 authRoutes.post("/generate-otp", authController.generateOTP);
