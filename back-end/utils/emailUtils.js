@@ -1,13 +1,13 @@
 "use strict";
 
 import nodemailer from "nodemailer";
-import { nodemailerConfig } from "../config/nodemailer-config.js";
+import config from "../config/config.js";
 
 const transporter = nodemailer.createTransport({
-    service: nodemailerConfig.service,
+    service: config.nodemailer.service,
     auth: {
-        user: nodemailerConfig.user,
-        pass: nodemailerConfig.password,
+        user: config.nodemailer.user,
+        pass: config.nodemailer.password,
     },
 });
 

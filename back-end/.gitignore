@@ -3,6 +3,5 @@ node_modules/
 public/
 test/
 logs/
-config/
 .env
 

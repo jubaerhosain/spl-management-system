@@ -1,20 +1,25 @@
 "use strict";
 
 import { Sequelize, Op, DataTypes } from "sequelize";
-import dbConfig from "../config/database-config.js";
+import config from "../config/config.js";
 
 // create sequelize instance
-const sequelize = new Sequelize(dbConfig.database_name, dbConfig.username, dbConfig.password, {
-    host: dbConfig.host,
-    dialect: dbConfig.dialect,
-    define: {
-        freezeTableName: true,
-        defaultScope: {
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+const sequelize = new Sequelize(
+    config.mysql.db_name,
+    config.mysql.username,
+    config.mysql.password,
+    {
+        host: config.mysql.host,
+        dialect: config.mysql.dialect,
+        define: {
+            freezeTableName: true,
+            defaultScope: {
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+            },
         },
-    },
-    logging: false,
-});
+        logging: false,
+    }
+);
 
 // =================================================================================================
 // tables
