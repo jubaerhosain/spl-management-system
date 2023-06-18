@@ -6,7 +6,7 @@ import {
     addStudentValidator,
     updateStudentByAdminValidator,
     updateStudentValidator,
-} from "../validators/student-validators.js";
+} from "../validators/studentValidators.js";
 import {
     addStudent,
     updateStudent,

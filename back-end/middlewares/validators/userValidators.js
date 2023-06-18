@@ -15,11 +15,6 @@ function isIITEmail(email) {
     }
 }
 
-/**
- * body, params, query
- */
-const userIdValidator = body_param_query("userId").trim().notEmpty().withMessage("Must be provided");
-
 const emailValidator = body_param("email")
     .trim()
     .isEmail()
@@ -56,8 +51,7 @@ const detailsValidator = body("details")
     .isLength({ min: 10, max: 2000 })
     .withMessage("Must be between 10 to 2000 characters");
 
-export {
-    userIdValidator,
+export default {
     emailValidator,
     nameValidator,
     genderValidator,
@@ -65,3 +59,5 @@ export {
     detailsValidator,
     isIITEmail,
 };
+
+

@@ -1,6 +1,6 @@
 import createError from "http-errors";
 import { body } from "express-validator";
-import { models, Op } from "../database/db.js";
+import { models, Op } from "../../database/db.js";
 
 /**
  * Check existence of interested fields in the database

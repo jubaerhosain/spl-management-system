@@ -14,7 +14,7 @@ import {
 } from "./user-validators.js";
 
 // common-validators.js
-import { requiredOne, checkAllow } from "../validators/common-validators.js";
+import { requiredOne, checkAllow } from "./common-validators.js";
 
 /**
  * body, params, query

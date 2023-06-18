@@ -8,7 +8,7 @@ import {
     phoneNumberValidator,
     genderValidator,
     detailsValidator,
-} from "./user-validators.js";
+} from "./userValidators.js";
 
 import { requiredOne, checkAllow } from "./common-validators.js";
 import createHttpError from "http-errors";
