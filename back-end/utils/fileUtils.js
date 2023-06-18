@@ -2,18 +2,18 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-export function getFileName(metaUrl) {
+function getFileName(metaUrl) {
     const __filename = fileURLToPath(metaUrl);
 
     return __filename;
 }
 
 /**
- * 
- * @param {String} metaUrl import.meta.url 
+ *
+ * @param {String} metaUrl import.meta.url
  * @returns dirname
  */
-export function getDirectoryName(metaUrl) {
+function getDirectoryName(metaUrl) {
     const __dirname = path.dirname(getFileName(metaUrl));
 
     return __dirname;
@@ -23,17 +23,17 @@ export function getDirectoryName(metaUrl) {
  * Custom function to write credentials to a file
  * @param {*} data
  */
-export function writeCredentials(data) {
+function writeCredentials(data) {
     fs.appendFileSync("credentials.txt", data + "\n\n", "utf8");
 }
 
 /**
- * Replace all spaces with hyphens
+ * Replace all spaces with hyphens and add current time
  * @param {*} fileName
  * @param {*} extension
  * @returns Formatted File Name
  */
-export function formatFileName(fileName, extension) {
+function formatFileName(fileName, extension) {
     const newFileName = fileName.toLowerCase().split(" ").join("-") + "-" + Date.now() + extension;
     return newFileName;
 }
@@ -46,7 +46,7 @@ export function formatFileName(fileName, extension) {
  * @param {*} errorMessage
  * @returns Promise of upload object
  */
-export function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) {
+function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) {
     return new Promise((resolve, reject) => {
         try {
             const uploadFolder = path.join(
@@ -85,4 +85,11 @@ export function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMe
             reject(err);
         }
     });
+}
+
+
+export default {
+    getDirectoryName,
+    writeCredentials,
+    fileUploader,
 }

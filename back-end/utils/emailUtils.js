@@ -177,4 +177,4 @@ function sendAccountCreationEmail(users) {
     });
 }
 
-export { sendEmail, sendEmailWithOTP, sendMultipleEmail, sendAccountCreationEmail };
+export default { sendEmail, sendEmailWithOTP, sendMultipleEmail, sendAccountCreationEmail };

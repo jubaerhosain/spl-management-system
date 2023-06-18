@@ -1,9 +1,9 @@
 import express from "express";
 const userRouter = express.Router();
 
-import adminRouter from "./admin-router.js";
-import studentRouter from "./student-router.js";
-import teacherRouter from "./teacher-router.js";
+import adminRouter from "./adminRouter.js";
+import studentRouter from "./studentRouter.js";
+import teacherRouter from "./teacherRouter.js";
 
 userRouter.use("/admin", adminRouter);
 userRouter.use("/student", studentRouter);

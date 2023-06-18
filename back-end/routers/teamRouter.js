@@ -22,8 +22,11 @@ import {
 } from "../controllers/team-controllers.js";
 
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
-import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
-import { checkCreateTeamExistence, checkCreateTeamUniqueness } from "../middlewares/team-middlewares.js";
+import { checkAuthentication } from "../middlewares/common/authMiddleware.js";
+import {
+    checkCreateTeamExistence,
+    checkCreateTeamUniqueness,
+} from "../middlewares/team-middlewares.js";
 
 // create team by committee head/member
 teamRouter.post(
@@ -33,7 +36,7 @@ teamRouter.post(
         req.params.splName = "spl2";
         next();
     },
-    checkSPLActivenessByName, 
+    checkSPLActivenessByName,
     createTeamValidator,
     commonValidationHandler,
     checkCreateTeamUniqueness,

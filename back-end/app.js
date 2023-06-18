@@ -7,9 +7,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // internal imports
-import { mainRouter } from "./routers/main-router.js";
-import { notFoundHandler, defaultErrorHandler } from "./middlewares/common/error-handler.js";
-import { getDirectoryName } from "./utilities/file-utilities.js";
+import mainRouter from "./routers/mainRouter.js";
+import { defaultErrorHandler } from "./middlewares/common/defaultErrorHandler.js";
+import { notFoundHandler } from "./middlewares/common/notFoundHandler.js";
+import fileUtils from "./utils/fileUtils.js";
 
 // create express app
 const app = express();
@@ -27,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // set static folder
-app.use(express.static(path.join(getDirectoryName(import.meta.url), "public")));
+app.use(express.static(path.join(fileUtils.getDirectoryName(import.meta.url), "public")));
 
 // set cookie parser middleware [set cookie secret to automatically signs with it]
 app.use(cookieParser(process.env.COOKIE_SECRET));

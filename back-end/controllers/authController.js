@@ -1,8 +1,7 @@
-import passwordUtilities from "../utilities/passwordUtilities.js";
-import jwtUtilities from "../utilities/jwtUtilities.js";
-
-import { Response } from "../utilities/response-format-utilities.js";
-import { sendEmailWithOTP } from "../utilities/email-utilities.js";
+import jwtUtilities from "../utils/jwtUtils.js";
+import emailUtils from "../utils/emailUtils.js";
+import { Response } from "../utils/responseUtils.js";
+import passwordUtilities from "../utils/passwordUtils.js";
 
 import OTPRepository from "../repositories/OTPRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
@@ -94,7 +93,7 @@ async function generateOTP(req, res, next) {
         await OTPRepository.createOTP(email, otp, expiresAt);
 
         // send mail
-        sendEmailWithOTP(email, user.name, otp);
+        emailUtils.sendEmailWithOTP(email, user.name, otp);
 
         // send message to mobile number
 

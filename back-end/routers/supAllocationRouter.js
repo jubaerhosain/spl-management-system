@@ -1,8 +1,7 @@
 import { Router } from "express";
 const supervisorAllocationRouter = Router();
 
-import requestRouter from "./request-router.js";
-
+import requestRouter from "./requestRouter.js";
 
 import { checkRemoveSupervisor } from "../middlewares/sup-allocation-middlewares.js";
 
@@ -14,12 +13,11 @@ import {
     assignManuallyByEmail,
 } from "../controllers/sup-allocation-controllers.js";
 
-import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
+import { checkAuthentication } from "../middlewares/auth/authMiddleware.js";
 import { checkSPLActivenessByName } from "../middlewares/spl-middlewares.js";
 
 // request router setup
 supervisorAllocationRouter.use("/request", requestRouter);
-
 
 // randomize supervisor for students of spl1
 supervisorAllocationRouter.post(

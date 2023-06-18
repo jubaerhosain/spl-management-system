@@ -1,5 +1,5 @@
-import { verifyToken } from "../../utilities/jwt-token-utilities.js";
-import { Response } from "../../utilities/response-format-utilities.js";
+import jwtUtils from "../../utils/jwtUtils.js";
+import { Response } from "../../utils/responseUtils.js";
 
 /**
  * Puts req.user = user
@@ -24,7 +24,7 @@ async function checkAuthentication(req, res, next) {
             return;
         }
 
-        const decoded = verifyToken(token);
+        const decoded = jwtUtils.verifyToken(token);
 
         // put decoded token into req.user
         req.user = decoded;
@@ -34,7 +34,7 @@ async function checkAuthentication(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
+        res.status(400).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
 
