@@ -3,9 +3,10 @@ const authRoutes = express.Router();
 
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
 import { Response } from "../utils/responseUtils.js";
+import authValidator from "../validators/authValidator.js";
 import authController from "../controllers/authController.js";
 
-authRoutes.post("/login", authController.login);
+authRoutes.post("/login", authValidator.loginForm, authController.login);
 authRoutes.delete("/logout", authController.logout);
 authRoutes.put("/change-password", authController.changePassword);
 

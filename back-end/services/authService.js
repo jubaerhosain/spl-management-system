@@ -33,14 +33,14 @@ async function login(email, password) {
 }
 async function logout(email, password) {}
 
-async function changePassword(userId, originalPassword, newPassword) {
+async function changePassword(userId, oldPassword, newPassword) {
     const hashedPassword = await UserRepository.findPasswordByUserId(userId);
     if (!hashedPassword) {
         throw new CustomError("User not found");
     }
 
-    const originalHash = await passwordUtils.hashPassword(originalPassword);
-    if (originalHash !== hashedPassword) {
+    const oldHash = await passwordUtils.hashPassword(oldPassword);
+    if (oldHash !== hashedPassword) {
         throw new CustomError("Password did not matched", 400);
     }
 
