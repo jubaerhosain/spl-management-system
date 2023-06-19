@@ -1,10 +1,6 @@
-import { where } from "sequelize";
 import { models, Op } from "../database/db.js";
 
-/**
- * @param {String} email
- */
-async function checkEmailExistence(email) {
+async function isEmailExists(email) {
     const user = await models.User.findOne({
         where: {
             email: email,
@@ -12,13 +8,15 @@ async function checkEmailExistence(email) {
         raw: true,
         attributes: ["email"],
     });
-    return user;
+
+    if (user) return user.email;
+    return null;
 }
 
 /**
  * @param {Array} emails
  */
-async function checkMultipleEmailExistence(emails) {
+async function findAllEmails(emails) {
     const user = await models.findAll({
         where: {
             email: {
@@ -28,7 +26,9 @@ async function checkMultipleEmailExistence(emails) {
         raw: true,
         attributes: ["email"],
     });
-    return user;
+
+    if (user) return user.map((user) => user.email);
+    return [];
 }
 
 /**
@@ -60,17 +60,30 @@ async function findByEmail(email) {
     return user;
 }
 
-async function findByEmailWithPassword(email) {
+async function findPasswordByEmail(email) {
     const user = await models.User.findOne({
         where: {
             email: email,
         },
         raw: true,
+        attributes: ["password"],
     });
-    return user;
+
+    if (user) return user.password;
+    return null;
 }
 
-async function resetPassword(email, password) {
+async function findPasswordByUserId(userId) {
+    const user = await models.User.findByPk(userId, {
+        raw: true,
+        attributes: ["password"],
+    });
+
+    if (user) return user.password;
+    return null;
+}
+
+async function updatePasswordByEmail(email, password) {
     await models.User.update(
         { password: password },
         {
@@ -81,11 +94,24 @@ async function resetPassword(email, password) {
     );
 }
 
+async function updatePasswordByUserId(userId, password) {
+    await models.User.update(
+        { password: password },
+        {
+            where: {
+                userId: userId,
+            },
+        }
+    );
+}
+
 export default {
-    checkEmailExistence,
-    checkMultipleEmailExistence,
+    isEmailExists,
+    findAllEmails,
     findById,
     findByEmail,
-    findByEmailWithPassword,
-    resetPassword,
+    findPasswordByEmail,
+    findPasswordByUserId,
+    updatePasswordByEmail,
+    updatePasswordByUserId,
 };

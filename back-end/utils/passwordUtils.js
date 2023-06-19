@@ -38,4 +38,17 @@ async function generateHashedPassword(numberOfPassword = 1) {
     return hashedPasswords;
 }
 
-export default { hashPassword, verifyPassword, generateHashedPassword };
+/**
+ * Generate a n digit otp. Default length is 6.
+ * @param {Integer} length
+ * @returns
+ */
+function generateOTP(numberOfDigit = 6) {
+    let otp = "";
+    for (let i = 0; i < numberOfDigit; i++) {
+        otp += Math.floor(Math.random() * 10);
+    }
+    return otp;
+}
+
+export default { hashPassword, verifyPassword, generateHashedPassword, generateOTP };

@@ -38,7 +38,8 @@ async function findOTP(email) {
         raw: true,
     });
 
-    return otp;
+    if (opt) return otp.otp;
+    return null;
 }
 
 export default {

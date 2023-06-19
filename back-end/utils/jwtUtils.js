@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 
 function generateToken(obj) {
-    const token = jwt.sign(obj, process.env.JWT_SECRET, {
+    const token = jwt.sign(obj, config.jwt.secret, {
         expiresIn: process.env.JWT_EXPIRY,
     });
     return token;
@@ -9,7 +10,7 @@ function generateToken(obj) {
 
 function verifyToken(token) {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, config.jwt.secret);
         return decoded;
     } catch (err) {
         return false;

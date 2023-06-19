@@ -1,60 +1,42 @@
-import jwtUtilities from "../utils/jwtUtils.js";
-import emailUtils from "../utils/emailUtils.js";
+import config from "../config/config.js";
 import { Response } from "../utils/responseUtils.js";
-import passwordUtilities from "../utils/passwordUtils.js";
-
-import OTPRepository from "../repositories/OTPRepository.js";
+import authService from "../services/authService.js";
 import UserRepository from "../repositories/UserRepository.js";
 
 async function login(req, res) {
     try {
         const { email, password, checked } = req.body;
 
+        // make a form validation
         if (!email || !password) {
-            res.status(400).json(
-                Response.error("Both email and password must be provided", Response.BAD_REQUEST)
-            );
+            res.status(400).json(Response.error("Both email and password must be provided"));
             return;
         }
 
-        const user = await UserRepository.findByEmailWithPassword(email);
+        const token = await authService.login(email, password);
 
-        if (!user) {
-            res.status(400).json(Response.error("Invalid email or password", Response.BAD_REQUEST));
-            return;
-        }
-
-        const matches = await passwordUtilities.verifyPassword(password, user.password);
-        if (!matches) {
-            res.status(400).json(Response.error("Invalid email or password", Response.BAD_REQUEST));
-            return;
-        }
-
-        // generate json web token
-        const token = jwtUtilities.generateToken({
-            userId: user.userId,
-            email: user.email,
-            userType: user.userType,
-        });
-
-        // set signed cookie
         res.cookie(process.env.AUTH_COOKIE_NAME, token, {
             httpOnly: true,
-            maxAge: checked ? process.env.JWT_EXPIRY : null,
+            maxAge: checked ? config.jwt.expiry : null,
             signed: true,
         });
 
-        // send to the user
-        res.status(200).json(Response.success("Login successful"));
+        res.json(Response.success("Login successful"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(400).json(Response.error("Invalid email or password", Response.BAD_REQUEST));
+        } else {
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
-async function logout(req, res, next) {
+async function logout(req, res) {
     try {
-        res.clearCookie(process.env.AUTH_COOKIE_NAME);
+        // do the stuffs in authService.logout if needed
+
+        res.clearCookie(config.cookie.authCookieName);
         res.json(Response.success("Logged out successfully"));
     } catch (err) {
         console.log(err);
@@ -62,40 +44,35 @@ async function logout(req, res, next) {
     }
 }
 
-async function changePassword(req, res, next) {
+async function changePassword(req, res) {
     try {
+        const { userId } = req.user;
         const { originalPassword, newPassword } = req.body;
+
+        await authService.changePassword(userId, originalPassword, newPassword);
+
+        res.json(Response.success("Password changed successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
-async function generateOTP(req, res, next) {
+async function generateOTP(req, res) {
     try {
         const { email } = req.body;
 
-        if (!email) {
-            res.status(400).json(Response.error("Email must be provided", Response.BAD_REQUEST));
-            return;
-        }
-
-        const user = await UserRepository.findByEmail(email);
-
-        if (!user) {
+        const exists = await UserRepository.isEmailExists(email);
+        if (!exists) {
             res.status(400).json(Response.error("Email does not exist", Response.BAD_REQUEST));
             return;
         }
 
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-
-        await OTPRepository.createOTP(email, otp, expiresAt);
-
-        // send mail
-        emailUtils.sendEmailWithOTP(email, user.name, otp);
-
-        // send message to mobile number
+        await authService.generateOTP(email);
 
         res.json(Response.success("An OTP has been sent to your email"));
     } catch (err) {
@@ -104,12 +81,13 @@ async function generateOTP(req, res, next) {
     }
 }
 
-async function verifyOTP(req, res, next) {
+async function verifyOTP(req, res) {
     try {
         const { email, otp } = req.body;
-        const OTP = await OTPRepository.findOTP(email);
 
-        if (OTP && otp == OTP.otp) {
+        const verified = await authService.verifyOTP(email, otp);
+
+        if (verified) {
             res.json(Response.success("OTP verified successfully"));
         } else {
             res.status(400).json(Response.error("Invalid OTP or expired", Response.BAD_REQUEST));
@@ -120,26 +98,22 @@ async function verifyOTP(req, res, next) {
     }
 }
 
-async function resetPassword(req, res, next) {
+async function resetPassword(req, res) {
     try {
         // validate password in previous middleware
 
         const { email, otp, password } = req.body;
 
-        const OTP = await OTPRepository.findOTP(email);
-
-        if (!OTP || otp != OTP.otp) {
-            res.status(400).json(Response.error("Your OTP is expired", Response.BAD_REQUEST));
-            return;
-        }
-
-        const hashedPassword = await passwordUtilities.hashPassword(password);
-        await UserRepository.resetPassword(email, hashedPassword);
+        await authService.resetPassword(email, otp, password);
 
         res.json(Response.success("Password reset successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(400).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
