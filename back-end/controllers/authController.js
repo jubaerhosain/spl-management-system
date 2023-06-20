@@ -7,12 +7,6 @@ async function login(req, res) {
     try {
         const { email, password, checked } = req.body;
 
-        // make a form validation
-        if (!email || !password) {
-            res.status(400).json(Response.error("Both email and password must be provided"));
-            return;
-        }
-
         const token = await authService.login(email, password);
 
         res.cookie(process.env.AUTH_COOKIE_NAME, token, {
@@ -71,12 +65,6 @@ async function changePassword(req, res) {
 async function generateOTP(req, res) {
     try {
         const { email } = req.body;
-
-        const exists = await UserRepository.isEmailExists(email);
-        if (!exists) {
-            res.status(400).json(Response.error("Email does not exist", Response.BAD_REQUEST));
-            return;
-        }
 
         await authService.generateOTP(email);
 

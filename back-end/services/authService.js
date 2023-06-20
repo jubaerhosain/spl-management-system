@@ -1,4 +1,5 @@
 import jwtUtils from "../utils/jwtUtils.js";
+import emailService from "./emailServices/emailService.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import OTPRepository from "../repositories/OTPRepository.js";
@@ -54,7 +55,7 @@ async function generateOTP(email) {
     await OTPRepository.createOTP(email, otp, expiresAt);
 
     // send mail to user
-    emailUtils.sendEmailWithOTP(email, user.name, otp);
+    await emailService.sendEmailWithOTP(email, user.name, otp);
 }
 
 async function verifyOTP(email, otp) {
