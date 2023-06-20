@@ -83,13 +83,13 @@ Object.entries(models).forEach(([name, model]) => {
     }
 });
 
-console.log("Number of table: ", Object.keys(models).length);
+// console.log("Number of table: ", Object.keys(models).length);
 
 // Test the connection
 sequelize
     .authenticate()
     .then(() => {
-        console.log("Connection has been established successfully.");
+        console.log("MySql connection has been established successfully.");
     })
     .catch((err) => {
         console.error("Unable to connect to the database:", err);
