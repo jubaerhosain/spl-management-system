@@ -55,19 +55,21 @@ async function generateOTP(email) {
     await OTPRepository.createOTP(email, otp, expiresAt);
 
     // send mail to user
-    await emailService.sendEmailWithOTP(email, user.name, otp);
+    await emailService.sendEmailWithOTP(email, otp);
 }
 
 async function verifyOTP(email, otp) {
-    const OTP = await OTPRepository.findOTP(email);
-    if (OTP && OTP == otp) return true;
-    return false;
+    const actualOTP = await OTPRepository.findOTP(email);
+
+    if (otp != actualOTP) {
+        throw new CustomError("Invalid OTP or expired", 400);
+    }
 }
 
 async function resetPassword(email, otp, password) {
-    const OTP = await OTPRepository.findOTP(email);
+    const actualOTP = await OTPRepository.findOTP(email);
 
-    if (!OTP || otp != OTP.otp) {
+    if (actualOTP != otp) {
         throw new CustomError("Your OTP is expired", 400);
     }
 

@@ -1,7 +1,7 @@
 import { getSignature } from "./signature.js";
 
-function getTemplate(name, otp) {
-    const html = `<p>Dear ${name},</p>
+function getTemplate(otp) {
+    const html = `<p>Dear user,</p>
 
     <p>I hope this email finds you well. We are reaching out to you to complete the account 
     verification process for your SPL account. To proceed, we kindly request that 

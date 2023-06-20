@@ -16,8 +16,8 @@ authRoutes.put(
 );
 
 authRoutes.post("/generate-otp", authValidator.generateOTPForm, authController.generateOTP);
-authRoutes.post("/verify-otp", authController.verifyOTP);
-authRoutes.put("/reset-password", authController.resetPassword);
+authRoutes.post("/verify-otp", authValidator.verifyOTPForm, authController.verifyOTP);
+authRoutes.put("/reset-password", authValidator.resetPasswordForm, authController.resetPassword);
 
 authRoutes.post("/check-login", checkAuthentication, (req, res) => {
     res.json(Response.success("Authenticated successfully", req.user));

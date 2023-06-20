@@ -38,7 +38,7 @@ async function findOTP(email) {
         raw: true,
     });
 
-    if (opt) return otp.otp;
+    if (otp) return otp.otp;
     return null;
 }
 

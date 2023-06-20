@@ -79,23 +79,27 @@ async function verifyOTP(req, res) {
     try {
         const { email, otp } = req.body;
 
-        const verified = await authService.verifyOTP(email, otp);
+        await authService.verifyOTP(email, otp);
 
-        if (verified) {
-            res.json(Response.success("OTP verified successfully"));
-        } else {
-            res.status(400).json(Response.error("Invalid OTP or expired", Response.BAD_REQUEST));
-        }
+        res.json(Response.success("OTP verified successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(
+                Response.error(err.message, Response.VALIDATION_ERROR, {
+                    otp: {
+                        msg: err.message,
+                    },
+                })
+            );
+        } else {
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
 async function resetPassword(req, res) {
     try {
-        // validate password in previous middleware
-
         const { email, otp, password } = req.body;
 
         await authService.resetPassword(email, otp, password);

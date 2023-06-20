@@ -11,6 +11,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const systemEmail = config.nodemailer.user;
+
 // =================================================================
 
 import sendOTPTemplate from "./emailTemplates/sendOTPTemplate.js";
@@ -25,10 +27,10 @@ async function sendEmail(mailOptions) {
     }
 }
 
-async function sendEmailWithOTP(receiverEmail, name, otp) {
-    const html = sendOTPTemplate.getTemplate(name, otp);
+async function sendEmailWithOTP(receiverEmail, otp) {
+    const html = sendOTPTemplate.getTemplate(otp);
     const mailOptions = {
-        from: nodemailerConfig.user,
+        from: systemEmail,
         to: receiverEmail,
         subject: "One-Time Password (OTP) for Account Verification",
         html: html,
