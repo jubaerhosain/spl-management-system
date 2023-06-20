@@ -1,6 +1,11 @@
 import UserRepository from "../../repositories/UserRepository.js";
 import CustomError from "../../utils/CustomError.js";
 
+/**
+ * Throws error if not math with regex
+ * @param {*} password 
+ * @returns 
+ */
 export const validatePassword = (password) => {
     let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&.]{8,}$/;
     if (password.length < 8) throw new Error("Password must be at least 8 characters");
@@ -14,8 +19,19 @@ export const validatePassword = (password) => {
     return true;
 };
 
+/**
+ * Check if the email is IIT email or not.
+ * @param {} email
+ * @returns
+ */
 export const validateEmail = (email) => {
-    return false;
+    const regex = /.+@iit\.du\.ac\.bd$/;
+
+    if (regex.test(email)) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 /**
