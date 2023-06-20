@@ -26,10 +26,14 @@ export async function checkAuthentication(req, res, next) {
 
         const decoded = jwtUtils.verifyToken(token);
 
+        if (!decoded) {
+            res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
+            return;
+        }
+
         // put decoded token into req.user
         req.user = decoded;
 
-        // console.log("Authenticated user: ", decoded);
 
         next();
     } catch (err) {

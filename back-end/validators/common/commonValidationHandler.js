@@ -1,4 +1,5 @@
 import { Response } from "../../utils/responseUtils.js";
+import { validationResult } from "express-validator";
 
 export async function commonValidationHandler(req, res, next) {
     const errors = validationResult(req);

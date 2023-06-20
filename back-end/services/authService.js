@@ -11,13 +11,13 @@ import CustomError from "../utils/CustomError.js";
  * @returns {Promise<Object>} jwt
  */
 async function login(email, password) {
-    const hashedPassword = await UserRepository.findPasswordByEmail(email);
+    const user = await UserRepository.findLoginInfoByEmail(email);
 
-    if (!hashedPassword) {
+    if (!user) {
         throw new CustomError("Email not found", 400);
     }
 
-    const matches = await passwordUtils.verifyPassword(password, hashedPassword);
+    const matches = await passwordUtils.verifyPassword(password, user.password);
     if (!matches) {
         throw new CustomError("Password did not match", 400);
     }
@@ -35,13 +35,10 @@ async function logout(email, password) {}
 
 async function changePassword(userId, oldPassword, newPassword) {
     const hashedPassword = await UserRepository.findPasswordByUserId(userId);
-    if (!hashedPassword) {
-        throw new CustomError("User not found");
-    }
 
-    const oldHash = await passwordUtils.hashPassword(oldPassword);
-    if (oldHash !== hashedPassword) {
-        throw new CustomError("Password did not matched", 400);
+    const matches = await passwordUtils.verifyPassword(oldPassword, hashedPassword);
+    if (!matches) {
+        throw new CustomError("Password did not match", 400);
     }
 
     const newHashedPassword = await passwordUtils.hashPassword(newPassword);

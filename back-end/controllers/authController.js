@@ -54,8 +54,14 @@ async function changePassword(req, res) {
         res.json(Response.success("Password changed successfully"));
     } catch (err) {
         console.log(err);
-        if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        if (err.status == 400) {
+            res.status(err.status).json(
+                Response.error(err.message, Response.VALIDATION_ERROR, {
+                    oldPassword: {
+                        msg: err.message,
+                    },
+                })
+            );
         } else {
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
@@ -109,7 +115,7 @@ async function resetPassword(req, res) {
         res.json(Response.success("Password reset successfully"));
     } catch (err) {
         console.log(err);
-        if (err.status) {
+        if (err.status == 400) {
             res.status(400).json(Response.error(err.message, Response.BAD_REQUEST));
         } else {
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));

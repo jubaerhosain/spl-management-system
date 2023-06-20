@@ -60,17 +60,16 @@ async function findByEmail(email) {
     return user;
 }
 
-async function findPasswordByEmail(email) {
+async function findLoginInfoByEmail(email) {
     const user = await models.User.findOne({
         where: {
             email: email,
         },
         raw: true,
-        attributes: ["password"],
+        attributes: ["userId", "email", "password", "userType"],
     });
 
-    if (user) return user.password;
-    return null;
+    return user;
 }
 
 async function findPasswordByUserId(userId) {
@@ -110,7 +109,7 @@ export default {
     findAllEmails,
     findById,
     findByEmail,
-    findPasswordByEmail,
+    findLoginInfoByEmail,
     findPasswordByUserId,
     updatePasswordByEmail,
     updatePasswordByUserId,

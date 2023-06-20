@@ -26,4 +26,4 @@ const changePasswordForm = [
     commonValidationHandler,
 ];
 
-export default { loginForm };
+export default { loginForm, changePasswordForm };

@@ -22,7 +22,7 @@ class Response {
     static NOT_FOUND = "NOT_FOUND";
     static ARRAY_DATA = "ARRAY_DATA";
     static BAD_REQUEST = "BAD_REQUEST";
-    static VALIDATION_ERROR = "VALIDATION_ERROR";
+    static VALIDATION_ERROR = "VALIDATION_ERROR"; // form validation error by express-validator
     static SERVER_ERROR = "SERVER_ERROR";
 
     /**
@@ -49,43 +49,19 @@ class Response {
 }
 
 /**
- * Create custom mapped error message like express-validator errors
+ * Create custom validation error message like
  * @param {Object} options 
  * 
  * @example
- * {
-    "errors": {
+ *  {
         "name": {
-            "value": "Jubaer-Hosain",
             "msg": "Hyphens are not allowed",
-            "param": "name",
-            "location": "body"
+        },
+        "age": {
+            msg: "Must be a number"
         }
     }
-}
  */
-function createMappedError(options) {
-    const error = {
-        errors: {},
-    };
+function createValidationError(options) {}
 
-    error.errors[options.param] = {
-        param: options.param,
-    };
-
-    if (options.value) {
-        error.errors[options.param]["value"] = options.value;
-    }
-
-    if (options.msg) {
-        error.errors[options.param]["msg"] = options.msg;
-    }
-
-    if (options.location) {
-        error.errors[options.param]["location"] = options.location;
-    }
-
-    return error;
-}
-
-export { Response, createMappedError };
+export { Response, createValidationError };
