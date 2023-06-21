@@ -17,7 +17,7 @@ async function isEmailExists(email) {
  * @param {Array} emails
  */
 async function findAllEmails(emails) {
-    const user = await models.findAll({
+    const user = await models.User.findAll({
         where: {
             email: {
                 [Op.in]: emails,
@@ -27,8 +27,8 @@ async function findAllEmails(emails) {
         attributes: ["email"],
     });
 
-    if (user) return user.map((user) => user.email);
-    return [];
+    if (user.length > 0) return user.map((user) => user.email);
+    return null;
 }
 
 /**

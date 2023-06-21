@@ -2,7 +2,7 @@ import express from "express";
 const mainRoutes = express.Router();
 
 import authRoutes from "./authRoutes.js";
-// import userRouter from "./userRouter.js";
+import userRouter from "./userRoutes.js";
 // import splRouter from "./splRouter.js";
 // import committeeRouter from "./committeeRouter.js";
 // import teamRouter from "./teamRouter.js";
@@ -12,7 +12,7 @@ import authRoutes from "./authRoutes.js";
 
 mainRoutes.use("/auth", authRoutes);
 
-// mainRouter.use("/user", userRouter);
+mainRoutes.use("/user", userRouter);
 
 // mainRouter.use("/spl", splRouter);
 

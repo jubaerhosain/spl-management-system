@@ -1,6 +1,7 @@
-import { models, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
-import { isUnique } from "../utilities/common-utilities.js";
+import UserRepository from "../repositories/UserRepository.js";
+import StudentRepository from "../repositories/StudentRepository.js";
+import { Response } from "../utils/responseUtils.js";
+import commonUtils from "../utils/commonUtils.js";
 
 /**
  * Checks uniqueness of email, rollNo and registrationNo
@@ -13,29 +14,36 @@ export async function checkAddStudentUniqueness(req, res, next) {
         const { students } = req.body;
 
         // check duplicate email
-        if (!isUnique(students.map((student) => student.email))) {
-            res.status(400).json(Response.error("Duplicate emails are not allowed"));
+        if (!commonUtils.isUnique(students.map((student) => student.email))) {
+            res.status(400).json(
+                Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
+            );
             return;
         }
 
         // check duplicate roll numbers
-        if (!isUnique(students.map((student) => student.rollNo))) {
-            res.status(400).json(Response.error("Duplicate roll numbers are not allowed"));
+        if (!commonUtils.isUnique(students.map((student) => student.rollNo))) {
+            res.status(400).json(
+                Response.error("Duplicate roll numbers are not allowed", Response.BAD_REQUEST)
+            );
             return;
         }
 
         // check duplicate registration numbers
-        if (!isUnique(students.map((student) => student.registrationNo))) {
-            res.status(400).json(Response.error("Duplicate registration numbers are not allowed"));
+        if (!commonUtils.isUnique(students.map((student) => student.registrationNo))) {
+            res.status(400).json(
+                Response.error(
+                    "Duplicate registration numbers are not allowed",
+                    Response.BAD_REQUEST
+                )
+            );
             return;
         }
 
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
 
@@ -49,107 +57,56 @@ export async function checkAddStudentExistence(req, res, next) {
     try {
         const { students } = req.body;
 
-        // check email existence
-        const existedEmails = await models.User.findAll({
-            where: {
-                email: {
-                    [Op.in]: students.map((student) => student.email),
-                },
-            },
-            raw: true,
-            attributes: ["email"],
-        });
+        const errors = [];
 
-        if (existedEmails.length > 0) {
-            res.status(400).json(
+        // check email existence
+        const emails = students.map((student) => student.email);
+        const existedEmails = await UserRepository.findAllEmails(emails);
+        if (existedEmails) {
+            errors.push(
                 Response.error(
                     "Following emails are already exists",
-                    Response.EMAIL_EXIST,
-                    existedEmails.map((student) => student.email)
+                    Response.ARRAY_DATA,
+                    existedEmails
                 )
             );
-            return;
         }
 
         // check roll numbers are exists in Student database or not
-        const existedRolls = await models.Student.findAll({
-            where: {
-                rollNo: {
-                    [Op.in]: students.map((student) => student.rollNo),
-                },
-            },
-            raw: true,
-            attributes: ["rollNo"],
-        });
-
-        if (existedRolls.length > 0) {
-            res.status(400).json(
+        const rollNumbers = students.map((student) => student.rollNo);
+        const existedRolls = await StudentRepository.findAllRollNumbers(rollNumbers);
+        if (existedRolls) {
+            errors.push(
                 Response.error(
                     "Following roll numbers are already exists",
-                    Response.ROLL_EXIST,
-                    existedRolls.map((student) => student.rollNo)
+                    Response.ARRAY_DATA,
+                    existedRolls
                 )
             );
-            return;
         }
 
         // check registration numbers are exists in database or not
-        const existedRegs = await models.Student.findAll({
-            where: {
-                registrationNo: {
-                    [Op.in]: students.map((student) => student.registrationNo),
-                },
-            },
-            raw: true,
-            attributes: ["registrationNo"],
-        });
-
-        if (existedRegs.length > 0) {
-            res.status(400).json(
+        const regNumbers = students.map((student) => student.registrationNo);
+        const existedRegs = await StudentRepository.findAllRegistrationNumbers(regNumbers);
+        if (existedRegs) {
+            errors.push(
                 Response.error(
                     "Following registration numbers are already exists.",
-                    Response.REG_EXIST,
-                    existedRegs.map((student) => student.registrationNo)
+                    Response.ARRAY_DATA,
+                    existedRegs
                 )
             );
-            return;
         }
 
-        next();
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
-    }
-}
-
-/**
- * Reads studentId from req.params \
- * Respond with error if not exist
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-export async function checkStudentId(req, res, next) {
-    try {
-        const { studentId } = req.params;
-        const student = await models.Student.findOne({
-            where: {
-                studentId: studentId,
-            },
-        });
-
-        if (!student) {
-            res.status(400).json(Response.error("Student not found"));
-            return;
+        if (errors.length > 0) {
+            res.status(400).json(
+                Response.error("Following data are already exists", Response.ARRAY_DATA, errors)
+            );
         } else {
             next();
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }

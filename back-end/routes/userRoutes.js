@@ -1,9 +1,9 @@
 import express from "express";
 const userRouter = express.Router();
 
-import adminRouter from "./adminRouter.js";
-import studentRouter from "./studentRouter.js";
-import teacherRouter from "./teacherRouter.js";
+import adminRouter from "./adminRoutes.js";
+import studentRouter from "./studentRoutes.js";
+import teacherRouter from "./teacherRoutes.js";
 
 userRouter.use("/admin", adminRouter);
 userRouter.use("/student", studentRouter);
@@ -13,12 +13,12 @@ export default userRouter;
 
 //==============================================================================================
 
-import { uploadAvatar } from "../middlewares/user-middlewares.js";
-import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
-import UserController from "../controllers/user-controllers.js";
+// import { uploadAvatar } from "../middlewares/user-middlewares.js";
+// import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
+// import UserController from "../controllers/user-controllers.js";
 
 // upload avatar
-userRouter.post("/avatar", checkAuthentication, uploadAvatar, UserController.saveAvatar);
+// userRouter.post("/avatar", checkAuthentication, uploadAvatar, UserController.saveAvatar);
 
 // // get avatar
 // userRouter.get("/avatar/:fileName", getAvatar);
@@ -27,7 +27,7 @@ userRouter.post("/avatar", checkAuthentication, uploadAvatar, UserController.sav
 // userRouter.put("/deactivate/:userId", deactivateUser);
 
 // get user by logged in
-userRouter.get("/", checkAuthentication, UserController.getLoggedInUser);
+// userRouter.get("/", checkAuthentication, UserController.getLoggedInUser);
 
 // // get all students
 // // userRouter.get("/student", getAllStudent);

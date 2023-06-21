@@ -1,45 +1,42 @@
 import UserRepository from "../../repositories/UserRepository.js";
 import CustomError from "../../utils/CustomError.js";
 
-/**
- * Throws error if not math with regex
- * @param {*} password 
- * @returns 
- */
 export const validatePassword = (password) => {
     let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&.]{8,}$/;
-    if (password.length < 8) throw new Error("Password must be at least 8 characters");
+    if (password.length < 8) throw new CustomError("Password must be at least 8 characters");
 
     let result = regex.test(password);
     if (!result)
-        throw new Error(
+        throw new CustomError(
             "Must contain at least one uppercase, lowercase, number and special character"
         );
 
     return true;
 };
 
-/**
- * Check if the email is IIT email or not.
- * @param {} email
- * @returns
- */
 export const validateEmail = (email) => {
     const regex = /.+@iit\.du\.ac\.bd$/;
 
     if (regex.test(email)) {
         return true;
     } else {
-        return false;
+        throw new CustomError("Must be end with '@iit.du.ac.bd");
     }
 };
 
-/**
- * Throws error if email does not exist
- * @param {*} email
- * @returns
- */
-export async function checkEmailExistence(email) {
+export const validatePhoneNumber = (phoneNumber) => {
+    const regex = /(^\+8801[0-9]{9}$)|(^01[0-9]{9}$)/;
+    const isValid = regex.test(phoneNumber);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new CustomError("Must be a bangladeshi number");
+    }
+};
+
+
+export const checkEmailExistence = async (email) => {
     try {
         const exists = await UserRepository.isEmailExists(email);
         if (!exists) {

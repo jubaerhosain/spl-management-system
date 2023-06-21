@@ -153,7 +153,54 @@ async function findById(userId) {
     return student;
 }
 
+/**
+ * @param {Array} rollNumbers
+ */
+async function findAllRollNumbers(rollNumbers) {
+    const students = await models.Student.findAll({
+        where: {
+            rollNo: {
+                [Op.in]: rollNumbers,
+            },
+        },
+        raw: true,
+        attributes: ["rollNo"],
+    });
+
+    console.log(students, rollNumbers);
+
+    if (students.length > 0) {
+        return students.map((student) => student.rollNo);
+    }
+    return null;
+}
+
+/**
+ *
+ * @param {Array} regNumbers
+ */
+async function findAllRegistrationNumbers(regNumbers) {
+    const students = await models.Student.findAll({
+        where: {
+            registrationNo: {
+                [Op.in]: regNumbers,
+            },
+        },
+        raw: true,
+        attributes: ["registrationNo"],
+    });
+
+    console.log(students, regNumbers);
+
+    if (students.length > 0) {
+        return students.map((student) => student.registrationNo);
+    }
+    return null;
+}
+
 export default {
+    findAllRollNumbers,
+    findAllRegistrationNumbers,
     create,
     findAll,
     findAllByCurriculumYear,

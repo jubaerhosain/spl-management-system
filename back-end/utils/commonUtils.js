@@ -1,7 +1,7 @@
 import lodash from "lodash";
 
 /**
- * Randomize supervisor for students
+ * Randomize supervisor for students [MOVE IT TO SERVICES]
  * @param {Array} studentIds
  * @param {Array} teacherIds
  * @return {Promise<Array>} [{studentId, TeacherId}]
@@ -27,8 +27,6 @@ function randomize(studentIds, teacherIds) {
         resolve(studentTeachers);
     });
 }
-
-export { randomize };
 
 
 /**
@@ -100,7 +98,7 @@ function getCurrentDate() {
     return new Date().toISOString().slice(0, 10);
 }
 
-export {
+export default {
     isUnique,
     findDuplicates,
     makeUnique,
@@ -109,29 +107,3 @@ export {
     concatArray,
     getCurrentDate,
 };
-
-/**
- * [spl1 <-> 2nd],
- * [spl2 <-> 3rd],
- * [spl3 <-> 4th],
- * @param {String} splName
- * @returns {String} curriculumYear corresponding to splName
- */
-function getCurriculumYear(splName) {
-    const curriculumYear = splName === "spl1" ? "2nd" : splName === "spl2" ? "3rd" : "4th";
-    return curriculumYear;
-}
-
-/**
- * [spl1 <-> 2nd],
- * [spl2 <-> 3rd],
- * [spl3 <-> 4th],
- * @param {*} curriculumYear
- * @returns {String} splName corresponding to curriculum year
- */
-function getSPLName(curriculumYear) {
-    const splName = curriculumYear === "2nd" ? "spl1" : curriculumYear === "3rd" ? "spl2" : "spl3";
-    return splName;
-}
-
-export { getSPLName, getCurriculumYear };

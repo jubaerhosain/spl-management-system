@@ -19,11 +19,19 @@ class MySuccess {
 class Response {
     // to show error message in UI
     static UNAUTHORIZED = "UNAUTHORIZED";
+    static FORBIDDEN = "FORBIDDEN";
     static NOT_FOUND = "NOT_FOUND";
-    static ARRAY_DATA = "ARRAY_DATA";
-    static BAD_REQUEST = "BAD_REQUEST";
-    static VALIDATION_ERROR = "VALIDATION_ERROR"; // form validation error by express-validator
     static SERVER_ERROR = "SERVER_ERROR";
+
+    // to show error message in alert dialog
+    static BAD_REQUEST = "BAD_REQUEST";
+
+
+    // form validation error by express-validator
+    static VALIDATION_ERROR = "VALIDATION_ERROR";
+
+    // if an array is send as error
+    static ARRAY_DATA = "ARRAY_DATA";
 
     /**
      * Success response with this.success = true

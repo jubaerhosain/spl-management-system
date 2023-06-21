@@ -34,7 +34,6 @@ export async function checkAuthentication(req, res, next) {
         // put decoded token into req.user
         req.user = decoded;
 
-
         next();
     } catch (err) {
         console.log(err);
@@ -42,9 +41,33 @@ export async function checkAuthentication(req, res, next) {
     }
 }
 
-export async function isAdmin(req, res, next) {}
-export async function isTeacher(req, res, next) {}
-export async function isStudent(req, res, next) {}
+export async function isAdmin(req, res, next) {
+    const user = req.user;
+    if (user.userType === "admin") {
+        next();
+    } else {
+        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+    }
+}
+
+export async function isTeacher(req, res, next) {
+    const user = req.user;
+    if (user.userType === "teacher") {
+        next();
+    } else {
+        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+    }
+}
+
+export async function isStudent(req, res, next) {
+    const user = req.user;
+    if (user.userType === "student") {
+        next();
+    } else {
+        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+    }
+}
+
 export async function isCommitteeHead(req, res, next) {}
 export async function isCommitteeMember(req, res, next) {}
 export async function isSPLManager(req, res, next) {}
