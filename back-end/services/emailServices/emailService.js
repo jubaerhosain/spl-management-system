@@ -40,8 +40,8 @@ async function sendEmailWithOTP(receiverEmail, otp) {
 }
 
 /**
- * Send email to users with credentials
- * @param {Array} users
+ * Send email to users with credentials [{email, password}]
+ * @param {Array} credentials
  * @returns
  */
 function sendAccountCreationEmail(credentials) {

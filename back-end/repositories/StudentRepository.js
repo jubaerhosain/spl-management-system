@@ -14,7 +14,7 @@ async function create(students, credentials) {
             transaction: transaction,
         });
 
-        // did this here bcz of transaction
+        // have to do here bcz of transaction
         await emailService.sendAccountCreationEmail(credentials);
 
         await transaction.commit();
