@@ -44,13 +44,13 @@ async function sendEmailWithOTP(receiverEmail, otp) {
  * @param {Array} users
  * @returns
  */
-function sendAccountCreationEmail(users) {
+function sendAccountCreationEmail(credentials) {
     return new Promise((resolve, reject) => {
-        const promises = users.map((user) => {
+        const promises = credentials.map((user) => {
             const mailOptions = {
-                from: nodemailerConfig.user,
+                from: config.nodemailer.user,
                 to: user.email,
-                subject: "Welcome to SPL Management System",
+                subject: "Welcome to SPL",
                 html: accountCreationTemplate.getTemplate(user.email, user.password),
             };
 

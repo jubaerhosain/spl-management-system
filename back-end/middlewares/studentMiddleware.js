@@ -63,39 +63,30 @@ export async function checkAddStudentExistence(req, res, next) {
         const emails = students.map((student) => student.email);
         const existedEmails = await UserRepository.findAllEmails(emails);
         if (existedEmails) {
-            errors.push(
-                Response.error(
-                    "Following emails are already exists",
-                    Response.ARRAY_DATA,
-                    existedEmails
-                )
-            );
+            errors.push({
+                message: "Following emails are already exists",
+                data: existedEmails,
+            });
         }
 
         // check roll numbers are exists in Student database or not
         const rollNumbers = students.map((student) => student.rollNo);
         const existedRolls = await StudentRepository.findAllRollNumbers(rollNumbers);
         if (existedRolls) {
-            errors.push(
-                Response.error(
-                    "Following roll numbers are already exists",
-                    Response.ARRAY_DATA,
-                    existedRolls
-                )
-            );
+            errors.push({
+                message: "Following roll numbers are already exists",
+                data: existedRolls,
+            });
         }
 
         // check registration numbers are exists in database or not
         const regNumbers = students.map((student) => student.registrationNo);
         const existedRegs = await StudentRepository.findAllRegistrationNumbers(regNumbers);
         if (existedRegs) {
-            errors.push(
-                Response.error(
-                    "Following registration numbers are already exists.",
-                    Response.ARRAY_DATA,
-                    existedRegs
-                )
-            );
+            errors.push({
+                message: "Following registration numbers are already exists.",
+                data: existedRegs,
+            });
         }
 
         if (errors.length > 0) {

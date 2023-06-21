@@ -62,7 +62,7 @@ const validateCurriculumYear = (curriculumYear) => {
     }
 };
 
-const addStudent = [
+const addStudentValidator = [
     body("students")
         .isArray()
         .withMessage("Must be an array")
@@ -187,7 +187,7 @@ const addStudent = [
 // ];
 
 export default {
-    addStudent,
+    addStudentValidator,
     // updateStudentValidator,
     // updateStudentByAdminValidator,
 };

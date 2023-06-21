@@ -3,6 +3,7 @@ const studentRouter = express.Router();
 
 import studentValidator from "../validators/studentValidator.js"
 import authMiddleware from "../middlewares/authMiddleware.js"
+import studentController from "../controllers/studentController.js"
 
 // import { commonValidationHandler } from "../validators/custom-validator.js";
 // import {
@@ -26,10 +27,8 @@ studentRouter.post(
     "/",
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
-    studentValidator.addStudent,
-    (req, res) => {
-        res.end("ENded add student");
-    }
+    studentValidator.addStudentValidator,
+    studentController.addStudent,
 );
 
 // // update student profile by student

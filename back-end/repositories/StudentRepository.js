@@ -1,10 +1,11 @@
 import { sequelize, models, Op } from "../database/db.js";
+import emailService from "../services/emailServices/emailService.js";
 
 /**
- * Create one or more student account
+ * Create one or more student account and send emails 
  * @param {Array} students
  */
-async function create(students) {
+async function create(students, credentials) {
     const transaction = await sequelize.transaction();
     try {
         // add in both User and Student table
@@ -12,6 +13,9 @@ async function create(students) {
             include: [models.Student],
             transaction: transaction,
         });
+
+        // did this here bcz of transaction
+        await emailService.sendAccountCreationEmail(credentials);
 
         await transaction.commit();
     } catch (err) {
@@ -167,8 +171,6 @@ async function findAllRollNumbers(rollNumbers) {
         attributes: ["rollNo"],
     });
 
-    console.log(students, rollNumbers);
-
     if (students.length > 0) {
         return students.map((student) => student.rollNo);
     }
@@ -189,8 +191,6 @@ async function findAllRegistrationNumbers(regNumbers) {
         raw: true,
         attributes: ["registrationNo"],
     });
-
-    console.log(students, regNumbers);
 
     if (students.length > 0) {
         return students.map((student) => student.registrationNo);

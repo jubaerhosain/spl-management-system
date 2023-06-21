@@ -1,62 +1,18 @@
 import { sequelize, models, Op } from "../database/db.js";
-import { generateHashedPassword } from "../utilities/password-utilities.js";
-import { writeCredentials } from "../utilities/file-utilities.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { Response } from "../utils/responseUtils.js";
 
-export async function addStudent(req, res, next) {
+import studentService from "../services/studentService.js";
+
+async function addStudent(req, res, next) {
     try {
         const { students } = req.body;
 
-        // console.log(students);
+        await studentService.addStudent(students);
 
-        const hashedPasswords = await generateHashedPassword(students.length);
-
-        const credentials = [];
-        const users = Array.from({ length: students.length }, () => ({}));
-        for (const i in students) {
-            users[i].name = students[i].name;
-            users[i].email = students[i].email;
-            users[i].password = hashedPasswords[i].hashedPassword;
-            users[i].userType = "student";
-
-            delete students[i].name;
-            delete students[i].email;
-
-            users[i].Student = [students[i]];
-            credentials.push({
-                name: users[i].name,
-                email: users[i].email,
-                password: hashedPasswords[i].originalPassword,
-            });
-        }
-
-        // console.log(users);
-
-        const transaction = await sequelize.transaction();
-        try {
-            // add in both User and Student table
-            await models.User.bulkCreate(users, {
-                include: [models.Student],
-
-                transaction: transaction,
-            });
-
-            await transaction.commit();
-
-            res.json(Response.success("Student accounts are created successfully"));
-
-            const credentialData = JSON.stringify(credentials);
-            writeCredentials(new Date() + "\n" + credentialData);
-        } catch (err) {
-            await transaction.rollback();
-            console.log(err);
-            throw new Error("Internal Server Error");
-        }
+        res.json(Response.success("Student accounts are created successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
 
@@ -106,4 +62,8 @@ export async function updateStudentByAdmin(req, res, next) {
             Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
         );
     }
+}
+
+export default {
+    addStudent
 }
