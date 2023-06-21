@@ -1,6 +1,6 @@
 "use strict";
 
-// talk with muktar or supervisor for that
+// talk with muktar or supervisor for that [move to the noitces check test folder txt for notices]
 export default (sequelize, DataTypes) => {
     const Notification = sequelize.define("Notifications", {
         noticeId: {
