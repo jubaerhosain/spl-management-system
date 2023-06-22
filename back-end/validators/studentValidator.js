@@ -69,11 +69,11 @@ const addStudentValidator = [
             return validateCurriculumYear(curriculumYear);
         }),
 
-    commonValidationHandler,
-
     checkAddStudentUniqueness,
 
     checkAddStudentExistence,
+    
+    commonValidationHandler,
 ];
 
 /**
@@ -122,57 +122,59 @@ const updateStudentValidator = [
 /**
  * The fields that admin are allowed to update.
  */
-// const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
+const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
 
-// const updateStudentByAdminValidator = [
-//     requiredOne,
-//     checkAllow(allowedFieldsForAdmin),
+const updateStudentByAdminValidator = [
+    requiredAtLeastOneField,
+    isFieldAllowed(allowedFieldsForAdmin),
 
-//     rollNoValidator.optional().custom(async (rollNo) => {
-//         try {
-//             const roll = await models.Student.findOne({
-//                 where: {
-//                     rollNo,
-//                 },
-//                 attributes: ["rollNo"],
-//                 raw: true,
-//             });
+    // rollNoValidator.optional().custom(async (rollNo) => {
+    //     try {
+    //         const roll = await models.Student.findOne({
+    //             where: {
+    //                 rollNo,
+    //             },
+    //             attributes: ["rollNo"],
+    //             raw: true,
+    //         });
 
-//             if (roll) {
-//                 throw new createHttpError(409, "Already exists");
-//             }
-//         } catch (err) {
-//             if (err.status) console.log(err);
-//             throw new Error(err.status ? err.message : "Error checking roll number");
-//         }
-//     }),
+    //         if (roll) {
+    //             throw new createHttpError(409, "Already exists");
+    //         }
+    //     } catch (err) {
+    //         if (err.status) console.log(err);
+    //         throw new Error(err.status ? err.message : "Error checking roll number");
+    //     }
+    // }),
 
-//     registrationNoValidator.optional().custom(async (registrationNo) => {
-//         try {
-//             const registration = await models.Student.findOne({
-//                 where: {
-//                     registrationNo,
-//                 },
-//                 attributes: ["registrationNo"],
-//                 raw: true,
-//             });
+    // registrationNoValidator.optional().custom(async (registrationNo) => {
+    //     try {
+    //         const registration = await models.Student.findOne({
+    //             where: {
+    //                 registrationNo,
+    //             },
+    //             attributes: ["registrationNo"],
+    //             raw: true,
+    //         });
 
-//             if (registration) {
-//                 throw new createHttpError(409, "Already exists");
-//             }
-//         } catch (err) {
-//             if (err.status) console.log(err);
-//             throw new Error(err.status ? err.message : "Error checking registration number");
-//         }
-//     }),
+    //         if (registration) {
+    //             throw new createHttpError(409, "Already exists");
+    //         }
+    //     } catch (err) {
+    //         if (err.status) console.log(err);
+    //         throw new Error(err.status ? err.message : "Error checking registration number");
+    //     }
+    // }),
 
-//     batchValidator.optional(),
-//     sessionValidator.optional(),
-//     curriculumYearValidator.optional(),
-// ];
+    // batchValidator.optional(),
+    // sessionValidator.optional(),
+    // curriculumYearValidator.optional(),
+
+    commonValidationHandler,
+];
 
 export default {
     addStudentValidator,
     updateStudentValidator,
-    // updateStudentByAdminValidator,
+    updateStudentByAdminValidator,
 };

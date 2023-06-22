@@ -46,9 +46,8 @@ studentRoutes.put(
     "/:studentId",
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
-    studentMiddleware.checkStudentExistence
-    // updateStudentByAdminValidator,
-    // commonValidationHandler,
+    studentMiddleware.checkStudentExistence,
+    studentValidator.updateStudentByAdminValidator
     // updateStudentByAdmin
 );
 
