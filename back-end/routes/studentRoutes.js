@@ -6,23 +6,6 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 import studentMiddleware from "../middlewares/studentMiddleware.js";
 import studentController from "../controllers/studentController.js";
 
-// import { commonValidationHandler } from "../validators/custom-validator.js";
-// import {
-//     addStudentValidator,
-//     updateStudentByAdminValidator,
-//     updateStudentValidator,
-// } from "../validators/studentValidators.js";
-// import {
-//     addStudent,
-//     updateStudent,
-//     updateStudentByAdmin,
-// } from "../controllers/student-controllers.js";
-// import {
-//     checkAddStudentUniqueness,
-//     checkAddStudentExistence,
-//     checkStudentId,
-// } from "../middlewares/student-middlewares.js";
-
 // add one or more students
 studentRoutes.post(
     "/",
