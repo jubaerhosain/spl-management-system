@@ -3,6 +3,7 @@ import passwordUtils from "../utils/passwordUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import emailService from "./emailServices/emailService.js";
 import CustomError from "../utils/CustomError.js";
+import UserRepository from "../repositories/UserRepository.js";
 
 /**
  * Add one or more students
@@ -47,6 +48,12 @@ async function addStudent(students) {
     }
 }
 
+async function updateStudent(userId, student) {
+    // update in user table [only those fields are allowed]
+    await UserRepository.updateAccount(userId, student);
+}
+
 export default {
     addStudent,
+    updateStudent,
 };

@@ -3,7 +3,7 @@ import { Response } from "../utils/responseUtils.js";
 
 import studentService from "../services/studentService.js";
 
-async function addStudent(req, res, next) {
+async function addStudent(req, res) {
     try {
         const { students } = req.body;
 
@@ -16,24 +16,17 @@ async function addStudent(req, res, next) {
     }
 }
 
-export async function updateStudent(req, res, next) {
+async function updateStudent(req, res) {
     try {
         const student = req.body;
         const { userId } = req.user;
 
-        // update to User table
-        await models.User.update(student, {
-            where: {
-                userId: userId,
-            },
-        });
+        await studentService.updateStudent(userId, student);
 
         res.json(Response.success("Account is updated successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
 
@@ -43,7 +36,7 @@ export async function updateStudent(req, res, next) {
  * @param {*} res
  * @param {*} next
  */
-export async function updateStudentByAdmin(req, res, next) {
+async function updateStudentByAdmin(req, res) {
     try {
         const student = req.body;
         const { studentId } = req.params;
@@ -65,5 +58,6 @@ export async function updateStudentByAdmin(req, res, next) {
 }
 
 export default {
-    addStudent
-}
+    addStudent,
+    updateStudent,
+};

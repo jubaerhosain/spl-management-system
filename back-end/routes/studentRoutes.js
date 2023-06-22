@@ -35,12 +35,9 @@ studentRouter.post(
 studentRouter.put(
     "/",
     authMiddleware.checkAuthentication,
-    // authMiddleware.isStudent,
+    authMiddleware.isStudent,
     studentValidator.updateStudentValidator,
-    // updateStudent
-    (req, res, next) => {
-        res.json({data: req.body});
-    }
+    studentController.updateStudent,
 );
 
 // // update student profile by admin

@@ -82,6 +82,14 @@ async function findPasswordByUserId(userId) {
     return null;
 }
 
+async function updateAccount(userId, user) {
+    await models.User.update(user, {
+        where: {
+            userId: userId,
+        },
+    });
+}
+
 async function updatePasswordByEmail(email, password) {
     await models.User.update(
         { password: password },
@@ -113,4 +121,5 @@ export default {
     findPasswordByUserId,
     updatePasswordByEmail,
     updatePasswordByUserId,
+    updateAccount,
 };
