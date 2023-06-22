@@ -1,5 +1,14 @@
 import { models, Op } from "../database/db.js";
 
+async function isTeacherExist(teacherId) {
+    const teacher = await models.Teacher.findByPk(teacherId, {
+        raw: true,
+        attributes: ["teacherId"],
+    });
+
+    if (teacher) return true;
+    return false;
+}
 /**
  * Create one or more teacher
  * @param {Array} teachers
@@ -73,6 +82,7 @@ async function findById(userId) {
 }
 
 export default {
+    isTeacherExist,
     findById,
     create,
     update,

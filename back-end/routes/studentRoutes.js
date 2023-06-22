@@ -1,9 +1,10 @@
 import express from "express";
-const studentRouter = express.Router();
+const studentRoutes = express.Router();
 
-import studentValidator from "../validators/studentValidator.js"
-import authMiddleware from "../middlewares/authMiddleware.js"
-import studentController from "../controllers/studentController.js"
+import studentValidator from "../validators/studentValidator.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
+import studentMiddleware from "../middlewares/studentMiddleware.js";
+import studentController from "../controllers/studentController.js";
 
 // import { commonValidationHandler } from "../validators/custom-validator.js";
 // import {
@@ -23,30 +24,32 @@ import studentController from "../controllers/studentController.js"
 // } from "../middlewares/student-middlewares.js";
 
 // add one or more students
-studentRouter.post(
+studentRoutes.post(
     "/",
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
     studentValidator.addStudentValidator,
-    studentController.addStudent,
+    studentController.addStudent
 );
 
 // update student profile by student
-studentRouter.put(
+studentRoutes.put(
     "/",
     authMiddleware.checkAuthentication,
     authMiddleware.isStudent,
     studentValidator.updateStudentValidator,
-    studentController.updateStudent,
+    studentController.updateStudent
 );
 
-// // update student profile by admin
-// studentRouter.put(
-//     "/:studentId",
-//     checkStudentId,
-//     updateStudentByAdminValidator,
-//     commonValidationHandler,
-//     updateStudentByAdmin
-// );
+// update student profile by admin
+studentRoutes.put(
+    "/:studentId",
+    authMiddleware.checkAuthentication,
+    authMiddleware.isAdmin,
+    studentMiddleware.checkStudentExistence
+    // updateStudentByAdminValidator,
+    // commonValidationHandler,
+    // updateStudentByAdmin
+);
 
-export default studentRouter;
+export default studentRoutes;

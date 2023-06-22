@@ -38,6 +38,7 @@ async function addStudent(students) {
             return user;
         });
 
+        // moved email service to the repository for transaction
         await StudentRepository.create(users, credentials);
 
         // write credentials to the file

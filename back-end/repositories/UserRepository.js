@@ -1,5 +1,15 @@
 import { models, Op } from "../database/db.js";
 
+async function isUserExist(userId) {
+    const user = await models.User.findByPk(userId, {
+        raw: true,
+        attributes: ["userId"],
+    });
+
+    if (user) return true;
+    return false;
+}
+
 async function isEmailExists(email) {
     const user = await models.User.findOne({
         where: {
@@ -113,6 +123,7 @@ async function updatePasswordByUserId(userId, password) {
 }
 
 export default {
+    isUserExist,
     isEmailExists,
     findAllEmails,
     findById,

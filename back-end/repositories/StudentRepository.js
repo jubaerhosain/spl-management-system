@@ -1,8 +1,18 @@
 import { sequelize, models, Op } from "../database/db.js";
 import emailService from "../services/emailServices/emailService.js";
 
+async function isStudentExist(studentId) {
+    const student = await models.Student.findByPk(studentId, {
+        raw: true,
+        attributes: ["studentId"],
+    });
+
+    if (student) return true;
+    return false;
+}
+
 /**
- * Create one or more student account and send emails 
+ * Create one or more student account and send emails
  * @param {Array} students
  */
 async function create(students, credentials) {
@@ -199,6 +209,7 @@ async function findAllRegistrationNumbers(regNumbers) {
 }
 
 export default {
+    isStudentExist,
     findAllRollNumbers,
     findAllRegistrationNumbers,
     create,
