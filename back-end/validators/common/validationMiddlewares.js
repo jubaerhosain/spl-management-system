@@ -1,7 +1,48 @@
-import UserRepository from "../repositories/UserRepository.js";
-import StudentRepository from "../repositories/StudentRepository.js";
-import { Response } from "../utils/responseUtils.js";
-import commonUtils from "../utils/commonUtils.js";
+import { Response } from "../../utils/responseUtils.js";
+import UserRepository from "../../repositories/UserRepository.js";
+import StudentRepository from "../../repositories/StudentRepository.js";
+import commonUtils from "../../utils/commonUtils.js";
+
+/**
+ * Check if at least one field is provided or not in req.body
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export function requiredAtLeastOneField(req, res, next) {
+    if (Object.keys(req.body).length === 0) {
+        res.status(400).json(
+            Response.error("At least one field must be provided", Response.BAD_REQUEST)
+        );
+    } else {
+        next();
+    }
+}
+
+/**
+ * Check if provided fields in req.body are allowed or not
+ * @param {Array} allowedFields
+ * @returns Middleware
+ */
+export function isFieldAllowed(allowedFields) {
+    return async function (req, res, next) {
+        const providedFields = Object.keys(req.body);
+        const invalidFields = providedFields.filter((field) => !allowedFields.includes(field));
+        if (invalidFields.length > 0) {
+            req.res
+                .status(400)
+                .json(
+                    Response.error(
+                        "Following fields are not allowed",
+                        Response.BAD_REQUEST,
+                        invalidFields
+                    )
+                );
+        } else {
+            next();
+        }
+    };
+}
 
 /**
  * Checks uniqueness of email, rollNo and registrationNo

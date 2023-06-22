@@ -31,20 +31,17 @@ studentRouter.post(
     studentController.addStudent,
 );
 
-// // update student profile by student
-// studentRouter.put(
-//     "/",
-//     (req, res, next) => {
-//         req.user = {
-//             userId: 1032,
-//         };
-//         console.log(req.user);
-//         next();
-//     },
-//     updateStudentValidator,
-//     commonValidationHandler,
-//     updateStudent
-// );
+// update student profile by student
+studentRouter.put(
+    "/",
+    authMiddleware.checkAuthentication,
+    // authMiddleware.isStudent,
+    studentValidator.updateStudentValidator,
+    // updateStudent
+    (req, res, next) => {
+        res.json({data: req.body});
+    }
+);
 
 // // update student profile by admin
 // studentRouter.put(

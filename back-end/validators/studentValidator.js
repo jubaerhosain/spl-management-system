@@ -1,66 +1,24 @@
 import { body } from "express-validator";
 
-import { validateEmail } from "./common/commonValidators.js";
-import { commonValidationHandler } from "./common/commonValidationHandler.js";
+import {
+    validateEmail,
+    validateName,
+    validateRollNo,
+    validateRegistrationNo,
+    validateBatch,
+    validateSession,
+    validateGender,
+    validatePhoneNumber,
+} from "./common/commonValidators.js";
 
 import {
-    checkAddStudentExistence,
     checkAddStudentUniqueness,
-} from "../middlewares/studentMiddleware.js";
+    checkAddStudentExistence,
+    requiredAtLeastOneField,
+    isFieldAllowed,
+} from "./common/validationMiddlewares.js";
 
-const validateRollNo = (rollNo) => {
-    const regex = /^[0-9]{4}$/;
-    const isValid = regex.test(rollNo);
-
-    if (isValid) {
-        return true;
-    } else {
-        throw new Error("Must be a 4 digit number");
-    }
-};
-
-const validateRegistrationNo = (registrationNo) => {
-    const regex = /^[0-9]{10}$/;
-    const isValid = regex.test(registrationNo);
-
-    if (isValid) {
-        return true;
-    } else {
-        throw new Error("Must be a 10 digit number");
-    }
-};
-
-const validateBatch = (batch) => {
-    const regex = /^[0-9]{2}$/;
-    const isValid = regex.test(batch);
-
-    if (isValid) {
-        return true;
-    } else {
-        throw new Error("Must be a 2 digit number");
-    }
-};
-
-const validateSession = (session) => {
-    const regex = /^[0-9]{4}-[0-9]{2}$/;
-    const isValid = regex.test(session);
-
-    if (isValid) {
-        return true;
-    } else {
-        throw new Error("Must be in following format: '2018-19'");
-    }
-};
-
-const validateCurriculumYear = (curriculumYear) => {
-    const options = ["1st", "2nd", "3rd", "4th"];
-
-    if (options.includes(curriculumYear)) {
-        return true;
-    } else {
-        throw new Error("Must be in ['1st', '2nd', '3rd', '4th']");
-    }
-};
+import { commonValidationHandler } from "./common/commonValidationHandler.js";
 
 const addStudentValidator = [
     body("students")
@@ -121,18 +79,45 @@ const addStudentValidator = [
 /**
  * Allowed fields to update by students
  */
-// const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
+const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
 
-// const updateStudentValidator = [
-//     requiredOne,
-//     checkAllow(allowedFieldsForStudent),
+const updateStudentValidator = [
+    requiredAtLeastOneField,
+    isFieldAllowed(allowedFieldsForStudent),
 
-//     // Validate the individual fields
-//     nameValidator.optional(),
-//     genderValidator.optional(),
-//     phoneNumberValidator.optional(),
-//     detailsValidator.optional(),
-// ];
+    // Validate the individual fields
+    body("name")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .bail()
+        .custom((name) => {
+            return validateName(name);
+        })
+        .optional(),
+
+    body("gender")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .custom((gender) => {
+            return validateGender(gender);
+        })
+        .optional(),
+
+    body("phone")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .custom((phone) => {
+            return validatePhoneNumber(phone);
+        })
+        .optional(),
+
+    body("details").trim().notEmpty().withMessage("Details must be provided").optional(),
+
+    commonValidationHandler,
+];
 
 /**
  * The fields that admin are allowed to update.
@@ -188,6 +173,6 @@ const addStudentValidator = [
 
 export default {
     addStudentValidator,
-    // updateStudentValidator,
+    updateStudentValidator,
     // updateStudentByAdminValidator,
 };

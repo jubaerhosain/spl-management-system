@@ -46,7 +46,7 @@ export async function isAdmin(req, res, next) {
     if (user.userType === "admin") {
         next();
     } else {
-        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
     }
 }
 
@@ -55,7 +55,7 @@ export async function isTeacher(req, res, next) {
     if (user.userType === "teacher") {
         next();
     } else {
-        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
     }
 }
 
@@ -64,7 +64,7 @@ export async function isStudent(req, res, next) {
     if (user.userType === "student") {
         next();
     } else {
-        req.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
     }
 }
 

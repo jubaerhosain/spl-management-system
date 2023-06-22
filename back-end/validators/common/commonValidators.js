@@ -14,6 +14,17 @@ export const validatePassword = (password) => {
     return true;
 };
 
+export const validateName = (name) => {
+    let regex = /^[ \.a-zA-Z]{3,}$/;
+    if (name.length < 3) throw new CustomError("Name must be at least 3 characters");
+
+    let result = regex.test(name);
+    if (!result) {
+        throw new CustomError("Only characters, spaces and dots are allowed");
+    }
+    return true;
+};
+
 export const validateEmail = (email) => {
     const regex = /.+@iit\.du\.ac\.bd$/;
 
@@ -35,7 +46,6 @@ export const validatePhoneNumber = (phoneNumber) => {
     }
 };
 
-
 export const checkEmailExistence = async (email) => {
     try {
         const exists = await UserRepository.isEmailExists(email);
@@ -48,4 +58,68 @@ export const checkEmailExistence = async (email) => {
         if (err.status) throw new CustomError(err.message);
         else throw new CustomError("And error occurred while checking email");
     }
-}
+};
+
+export const validateGender = (gender) => {
+    const options = ["male", "female", "other"];
+
+    if (options.includes(gender)) {
+        return true;
+    } else {
+        throw new Error("Must be in ['male', 'female', 'other']");
+    }
+};
+
+export const validateRollNo = (rollNo) => {
+    const regex = /^[0-9]{4}$/;
+    const isValid = regex.test(rollNo);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new Error("Must be a 4 digit number");
+    }
+};
+
+export const validateRegistrationNo = (registrationNo) => {
+    const regex = /^[0-9]{10}$/;
+    const isValid = regex.test(registrationNo);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new Error("Must be a 10 digit number");
+    }
+};
+
+export const validateBatch = (batch) => {
+    const regex = /^[0-9]{2}$/;
+    const isValid = regex.test(batch);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new Error("Must be a 2 digit number");
+    }
+};
+
+export const validateSession = (session) => {
+    const regex = /^[0-9]{4}-[0-9]{2}$/;
+    const isValid = regex.test(session);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new Error("Must be in following format: '2018-19'");
+    }
+};
+
+export const validateCurriculumYear = (curriculumYear) => {
+    const options = ["1st", "2nd", "3rd", "4th"];
+
+    if (options.includes(curriculumYear)) {
+        return true;
+    } else {
+        throw new Error("Must be in ['1st', '2nd', '3rd', '4th']");
+    }
+};
