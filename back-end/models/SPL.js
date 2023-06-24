@@ -1,47 +1,58 @@
 "use strict";
 
 export default (sequelize, DataTypes) => {
-    const SPL = sequelize.define("SPLs", {
-        splId: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        academicYear: {
-            type: DataTypes.STRING(4),
-            allowNull: false,
-            validate: {
-                is: /^[0-9]{4}$/,
+    const SPL = sequelize.define(
+        "SPLs",
+        {
+            splId: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            academicYear: {
+                type: DataTypes.STRING(4),
+                allowNull: false,
+                validate: {
+                    is: /^[0-9]{4}-[0-9]{2}$/,
+                },
+                comment: "Academic year of SPL. Format: '2020-21'",
+            },
+            splName: {
+                type: DataTypes.STRING(4),
+                allowNull: false,
+                validate: {
+                    isIn: [["spl1", "spl2", "spl3"]],
+                },
+            },
+            splManager: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Teachers",
+                    key: "teacherId",
+                },
+            },
+            committeeHead: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Teachers",
+                    key: "teacherId",
+                },
+            },
+            active: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+                comment: "Indicates current SPL is running or not",
             },
         },
-        splName: {
-            type: DataTypes.STRING(4),
-            allowNull: false,
-            validate: {
-                isIn: [["spl1", "spl2", "spl3"]],
+        {
+            defaultScope: {
+                where: {
+                    active: true,
+                },
             },
-        },
-        splManager: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: "Teachers",
-                key: "teacherId",
-            },
-        },
-        committeeHead: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: "Teachers",
-                key: "teacherId",
-            },
-        },
-        active: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true,
-            comment: "Indicates current SPL is running or not",
-        },
-    });
+        }
+    );
 
     SPL.associate = (models) => {
         // Teacher - SPL [one to many]

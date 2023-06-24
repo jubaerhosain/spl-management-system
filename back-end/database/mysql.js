@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
             freezeTableName: true,
             defaultScope: {
                 attributes: { exclude: ["createdAt", "updatedAt"] },
+                raw: true,
             },
         },
         logging: false,

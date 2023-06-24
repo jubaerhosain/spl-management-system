@@ -123,3 +123,24 @@ export const validateCurriculumYear = (curriculumYear) => {
         throw new Error("Must be in ['1st', '2nd', '3rd', '4th']");
     }
 };
+
+export const validateSPLName = (splName) => {
+    const options = ["spl1", "spl2", "spl3"];
+
+    if (options.includes(splName)) {
+        return true;
+    } else {
+        throw new Error("Must be in ['spl1', 'spl2', 'spl3'");
+    }
+};
+
+export const validateAcademicYear = (academicYear) => {
+    const regex = /^[0-9]{4}-[0-9]{2}$/;
+    const isValid = regex.test(academicYear);
+
+    if (isValid) {
+        return true;
+    } else {
+        throw new Error("Must be in following format: '2018-19'");
+    }
+};

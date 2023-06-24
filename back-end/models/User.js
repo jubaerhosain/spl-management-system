@@ -55,6 +55,14 @@ export default (sequelize, DataTypes, Op) => {
         },
         {
             initialAutoIncrement: 1000,
+            defaultScope: {
+                where: {
+                    active: true,
+                },
+                attributes: {
+                    exclude: ["password"],
+                },
+            },
         }
     );
 

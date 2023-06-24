@@ -1,16 +1,31 @@
 import { sequelize, models, Op } from "../database/mysql.js";
 import emailService from "../services/emailServices/emailService.js";
 
-async function isStudentExist(studentId) {
-    const student = await models.Student.findByPk(studentId, {
-        raw: true,
-        attributes: ["studentId"],
-    });
+/**
+ * Create one or more student account and send emails
+ * @param {Array} students
+ */
+async function create(students, credentials) {
+    const transaction = await sequelize.transaction();
+    try {
+        // add in both User and Student table
+        await models.User.bulkCreate(students, {
+            include: [models.Student],
+            transaction: transaction,
+        });
 
-    if (student) return true;
-    return false;
+        // have to do here bcz of transaction
+        await emailService.sendAccountCreationEmail(credentials);
+
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error(err.message);
+    }
 }
 
+// -------------------------------Checking---------------------------------
 async function isRollNoExist(rollNo) {
     const student = await models.Student.findOne({
         where: {
@@ -37,58 +52,15 @@ async function isRegistrationNoExist(registrationNo) {
     return false;
 }
 
-/**
- * Create one or more student account and send emails
- * @param {Array} students
- */
-async function create(students, credentials) {
-    const transaction = await sequelize.transaction();
-    try {
-        // add in both User and Student table
-        await models.User.bulkCreate(students, {
-            include: [models.Student],
-            transaction: transaction,
-        });
-
-        // have to do here bcz of transaction
-        await emailService.sendAccountCreationEmail(credentials);
-
-        await transaction.commit();
-    } catch (err) {
-        await transaction.rollback();
-        console.log(err);
-        throw new Error(err.message);
-    }
-}
-
-async function update(studentId, student) {
-    // update to Student table
-    await models.Student.update(student, {
-        where: {
-            studentId: studentId,
-        },
-    });
-}
-
-async function updateByAdmin(student, studentId) {
-    // update to Student table
-    await models.Student.update(student, {
-        where: {
-            studentId,
-        },
-    });
-}
+// -------------------------------Find---------------------------------
 
 async function findAll() {
-    let students = await models.Student.findAll({
+    const students = await models.Student.findAll({
         include: {
             model: models.User,
             required: true,
             where: {
                 active: true,
-            },
-            attributes: {
-                exclude: ["password", "active"],
             },
         },
         raw: true,
@@ -98,67 +70,24 @@ async function findAll() {
         },
     });
 
-    if (students.length > 0) {
-        // copy the properties of the User to the teachers array
-        for (const i in students) {
-            students[i] = { ...students[i], ...students[i].User };
-            delete students[i].User;
-        }
-    }
-
-    return students;
-}
-
-/**
- *
- * @param {*} curriculumYear
- * @returns {[Promise<Student>]}
- */
-async function findAllByCurriculumYear(curriculumYear) {
-    let students = await models.Student.findAll({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
-            },
-            attributes: {
-                exclude: ["password", "active"],
-            },
-        },
-        raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["studentId"],
-        },
-        where: {
-            curriculumYear: curriculumYear,
-        },
+    const flattened = students.map((student) => {
+        const user = { ...student, ...student.User };
+        delete user.User;
+        return user;
     });
 
-    if (students.length > 0) {
-        // copy the properties of the User to the teachers array
-        for (const i in students) {
-            students[i] = { ...students[i], ...students[i].User };
-            delete students[i].User;
-        }
-    }
-
-    return students;
+    return flattened;
 }
 
 async function findById(userId) {
     // do it find by pk
-    let student = await models.Student.findOne({
+    const student = await models.Student.findByPk(userId, {
         include: [
             {
                 model: models.User,
                 required: true,
                 where: {
                     active: true,
-                },
-                attributes: {
-                    exclude: ["password", "active"],
                 },
             },
             {
@@ -171,6 +100,7 @@ async function findById(userId) {
                 where: {
                     active: true,
                 },
+                attributes: ["splId", "splName", "academicYear"],
             },
         ],
         raw: true,
@@ -178,25 +108,47 @@ async function findById(userId) {
         attributes: {
             exclude: ["studentId"],
         },
+    });
+
+    let flattened = {};
+    if (student) {
+        flattened = { ...student, ...student.User, ...student.SPLs };
+        delete flattened.User;
+        delete flattened.SPLs;
+    }
+
+    return flattened;
+}
+
+async function findAllByCurriculumYear(curriculumYear) {
+    let students = await models.Student.findAll({
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
+            },
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["studentId"],
+        },
         where: {
-            studentId: userId,
+            curriculumYear: curriculumYear,
         },
     });
 
-    if (student) {
-        // copy the properties of the User to the student array
-        student = { ...student, ...student.User, ...student.SPLs };
-        delete student.User;
-        delete student.SPLs;
-    }
+    const flattened = students.map((student) => {
+        const user = { ...student, ...student.User };
+        delete user.User;
+        return user;
+    });
 
-    return student;
+    return flattened;
 }
 
-/**
- * @param {Array} rollNumbers
- */
-async function findAllRollNumbers(rollNumbers) {
+async function findExistedRollNumbers(rollNumbers) {
     const students = await models.Student.findAll({
         where: {
             rollNo: {
@@ -213,15 +165,11 @@ async function findAllRollNumbers(rollNumbers) {
     return null;
 }
 
-/**
- *
- * @param {Array} regNumbers
- */
-async function findAllRegistrationNumbers(regNumbers) {
+async function findExistedRegistrationNumbers(registrationNumbers) {
     const students = await models.Student.findAll({
         where: {
             registrationNo: {
-                [Op.in]: regNumbers,
+                [Op.in]: registrationNumbers,
             },
         },
         raw: true,
@@ -234,16 +182,35 @@ async function findAllRegistrationNumbers(regNumbers) {
     return null;
 }
 
+// -------------------------------Update---------------------------------
+
+async function update(studentId, student) {
+    // update to Student table
+    // await models.Student.update(student, {
+    //     where: {
+    //         studentId: studentId,
+    //     },
+    // });
+}
+
+async function updateByAdmin(student, studentId) {
+    // update to Student table
+    await models.Student.update(student, {
+        where: {
+            studentId,
+        },
+    });
+}
+
 export default {
-    isStudentExist,
+    create,
     isRollNoExist,
     isRegistrationNoExist,
-    findAllRollNumbers,
-    findAllRegistrationNumbers,
-    create,
     findAll,
-    findAllByCurriculumYear,
     findById,
+    findAllByCurriculumYear,
+    findExistedRollNumbers,
+    findExistedRegistrationNumbers,
     update,
     updateByAdmin,
 };

@@ -2,8 +2,8 @@ import express from "express";
 const mainRoutes = express.Router();
 
 import authRoutes from "./authRoutes.js";
-import userRouter from "./userRoutes.js";
-// import splRouter from "./splRouter.js";
+import userRoutes from "./userRoutes.js";
+import splRoutes from "./splRoutes.js";
 // import committeeRouter from "./committeeRouter.js";
 // import teamRouter from "./teamRouter.js";
 // import supervisorAllocationRouter from "./supAllocationRouter.js";
@@ -12,10 +12,11 @@ import userRouter from "./userRoutes.js";
 
 mainRoutes.use("/auth", authRoutes);
 
-mainRoutes.use("/user", userRouter);
+mainRoutes.use("/user", userRoutes);
 
-// mainRouter.use("/spl", splRouter);
+mainRoutes.use("/spl", splRoutes);
 
+// committtee merge with spl ??? create spl with committtee???
 // mainRouter.use("/committee", committeeRouter);
 
 // mainRouter.use("/sup-allocation", supervisorAllocationRouter);

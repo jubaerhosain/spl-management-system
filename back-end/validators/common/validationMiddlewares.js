@@ -54,7 +54,6 @@ export async function checkAddStudentUniqueness(req, res, next) {
     try {
         const { students } = req.body;
 
-        // check duplicate email
         if (!commonUtils.isUnique(students.map((student) => student.email))) {
             res.status(400).json(
                 Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
@@ -62,7 +61,6 @@ export async function checkAddStudentUniqueness(req, res, next) {
             return;
         }
 
-        // check duplicate roll numbers
         if (!commonUtils.isUnique(students.map((student) => student.rollNo))) {
             res.status(400).json(
                 Response.error("Duplicate roll numbers are not allowed", Response.BAD_REQUEST)
@@ -70,7 +68,6 @@ export async function checkAddStudentUniqueness(req, res, next) {
             return;
         }
 
-        // check duplicate registration numbers
         if (!commonUtils.isUnique(students.map((student) => student.registrationNo))) {
             res.status(400).json(
                 Response.error(
@@ -100,9 +97,8 @@ export async function checkAddStudentExistence(req, res, next) {
 
         const errors = [];
 
-        // check email existence
         const emails = students.map((student) => student.email);
-        const existedEmails = await UserRepository.findAllEmails(emails);
+        const existedEmails = await UserRepository.findExistedEmails(emails);
         if (existedEmails) {
             errors.push({
                 message: "Following emails are already exists",
@@ -110,9 +106,8 @@ export async function checkAddStudentExistence(req, res, next) {
             });
         }
 
-        // check roll numbers are exists in Student database or not
         const rollNumbers = students.map((student) => student.rollNo);
-        const existedRolls = await StudentRepository.findAllRollNumbers(rollNumbers);
+        const existedRolls = await StudentRepository.findExistedRollNumbers(rollNumbers);
         if (existedRolls) {
             errors.push({
                 message: "Following roll numbers are already exists",
@@ -120,9 +115,8 @@ export async function checkAddStudentExistence(req, res, next) {
             });
         }
 
-        // check registration numbers are exists in database or not
         const regNumbers = students.map((student) => student.registrationNo);
-        const existedRegs = await StudentRepository.findAllRegistrationNumbers(regNumbers);
+        const existedRegs = await StudentRepository.findExistedRegistrationNumbers(regNumbers);
         if (existedRegs) {
             errors.push({
                 message: "Following registration numbers are already exists.",
@@ -147,7 +141,6 @@ export async function checkAddTeacherUniqueness(req, res, next) {
     try {
         const { teachers } = req.body;
 
-        // check duplicate email
         if (!commonUtils.isUnique(teachers.map((teacher) => teacher.email))) {
             res.status(400).json(
                 Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
@@ -168,9 +161,8 @@ export async function checkAddTeacherExistence(req, res, next) {
 
         const errors = [];
 
-        // check email existence
         const emails = teachers.map((teacher) => teacher.email);
-        const existedEmails = await UserRepository.findAllEmails(emails);
+        const existedEmails = await UserRepository.findExistedEmails(emails);
         if (existedEmails) {
             errors.push({
                 message: "Following emails are already exists",

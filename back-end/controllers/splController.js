@@ -1,25 +1,41 @@
-import createError from "http-errors";
-import { models, Op, sequelize } from "../database/db.js";
-import { filterArray } from "../utilities/common-utilities.js";
-import { Response } from "../utilities/response-format-utilities.js";
-import { getCurriculumYear } from "../utilities/spl-utilities.js";
+import { models, Op, sequelize } from "../database/mysql.js";
+import { Response } from "../utils/responseUtils.js";
+// import { getCurriculumYear } from "../utilities/spl-utilities.js";
+import splService from "../services/splService.js";
 
-async function createSPL(req, res, next) {
+async function createSPLCommittee(req, res) {
     try {
-        const { splName, academicYear } = req.body;
-        await models.SPL.create({
-            academicYear,
+        const {
             splName,
-        });
+            academicYear,
+            committeeHead,
+            splManager,
+            committeeMemberOne,
+            committeeMemberTwo,
+            committeeMemberThree,
+            committeeMemberFour,
+        } = req.body;
+
+        const committeeMembers = [committeeMemberOne, committeeMemberTwo];
+        if (committeeMemberThree) committeeMembers.push(committeeMemberThree);
+        if (committeeMemberFour) committeeMembers.push(committeeMemberFour);
+
+        // make committee members unique
+
+        const committee = { splName, academicYear, committeeHead, splManager, committeeMembers };
+
+        console.log(committee);
+
+    //    await splService.createSPLCommittee(committee);
 
         res.json(
-            Response.success(`${splName.toUpperCase()}, ${academicYear} is created successfully`)
+            Response.success(
+                `${splName.toUpperCase()}, ${academicYear} committee is created successfully`
+            )
         );
     } catch (err) {
         console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
-        );
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
 
@@ -139,7 +155,6 @@ async function assignStudentToSPL(req, res, next) {
         const studentSPL = [];
         const studentIds = unassignedStudents.map((student) => student.studentId);
 
-
         for (const studentId of studentIds) {
             studentSPL.push({
                 studentId,
@@ -219,8 +234,8 @@ async function finalizeSPL(req, res, next) {
     }
 }
 
-export {
-    createSPL,
+export default {
+    createSPLCommittee,
     addSPLManager,
     removeSPLManager,
     assignStudentToSPL,

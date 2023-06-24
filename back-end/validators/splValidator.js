@@ -1,46 +1,129 @@
-import { body_param, body_param_query, body } from "./custom-validator.js";
-import { makeUnique } from "../utilities/common-utilities.js";
-import { models } from "../database/db.js";
-import createHttpError from "http-errors";
+import { body } from "express-validator";
 
-/**
- * body, params, query
- */
-const splIdValidator = body_param_query("splId").trim().notEmpty().withMessage("Must be provided");
+import { validateSPLName, validateAcademicYear } from "./common/commonValidators.js";
+import { commonValidationHandler } from "./common/commonValidationHandler.js";
+import SPLRepository from "../repositories/SPLRepository.js";
+import UserRepository from "../repositories/UserRepository.js";
+import CustomError from "../utils/CustomError.js";
 
-const splNameValidator = body_param("splName")
-    .trim()
-    .isIn(["spl1", "spl2", "spl3"])
-    .withMessage("Must be in ['spl1', 'spl2', 'spl3']");
-
-const academicYearValidator = body_param("academicYear")
-    .trim()
-    .matches(/^[0-9]{4}$/)
-    .withMessage("Must be a 4 digit integer");
-
-const createSPLValidator = [
-    splNameValidator.bail().custom(async (splName) => {
-        try {
-            const spl = await models.SPL.findOne({
-                where: {
-                    splName: splName,
-                    active: true,
-                },
-                raw: true,
-            });
-
-            if (spl) {
-                throw new createHttpError(
-                    400,
-                    `${splName.toUpperCase()}, ${spl.academicYear} is already active`
-                );
+const createSPLCommitteeValidator = [
+    body("splName")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom((splName) => {
+            return validateSPLName(splName);
+        })
+        .bail()
+        .custom(async (splName) => {
+            try {
+                const exist = await SPLRepository.isExists(splName);
+                if (exist) {
+                    throw new CustomError(`${splName.toUpperCase()} already have a committee`, 400);
+                }
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
             }
-        } catch (err) {
-            if (!err.status) console.log(err);
-            throw new Error(err.status ? err.message : "Error checking splName");
-        }
-    }),
-    academicYearValidator,
+        }),
+
+    body("academicYear")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom((academicYear) => {
+            return validateAcademicYear(academicYear);
+        }),
+
+    body("committeeHead")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom(async (committeeHead) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(committeeHead);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        }),
+
+    body("splManager")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom(async (splManager) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(splManager);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        }),
+
+    body("committeeMemberOne")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom(async (committeeMemberOne) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(committeeMemberOne);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        }),
+
+    body("committeeMemberTwo")
+        .trim()
+        .notEmpty()
+        .withMessage("Must be provided")
+        .bail()
+        .custom(async (committeeMemberTwo) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(committeeMemberTwo);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        }),
+
+    body("committeeMemberThree")
+        .trim()
+        .custom(async (committeeMemberThree) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(committeeMemberThree);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        })
+        .optional(),
+
+    body("committeeMemberFour")
+        .trim()
+        .custom(async (committeeMemberFour) => {
+            try {
+                const exist = await UserRepository.isTeacherByEmail(committeeMemberFour);
+                if (!exist) throw new CustomError("Must be a teacher email", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error ocurred while validating");
+            }
+        })
+        .optional(),
+
+    commonValidationHandler,
 ];
 
 const addSPLManagerValidator = [];
@@ -48,11 +131,6 @@ const removeSPLManagerValidator = [];
 
 const removeStudentValidator = [];
 
-export {
-    splIdValidator,
-    splNameValidator,
-    createSPLValidator,
-    addSPLManagerValidator,
-    removeSPLManagerValidator,
-    removeStudentValidator,
+export default {
+    createSPLCommitteeValidator,
 };

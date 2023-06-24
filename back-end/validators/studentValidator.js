@@ -1,4 +1,7 @@
 import { body } from "express-validator";
+import { commonValidationHandler } from "./common/commonValidationHandler.js";
+import CustomError from "../utils/CustomError.js";
+import StudentRepository from "../repositories/StudentRepository.js";
 
 import {
     validateEmail,
@@ -18,15 +21,6 @@ import {
     requiredAtLeastOneField,
     isFieldAllowed,
 } from "./common/validationMiddlewares.js";
-
-import { commonValidationHandler } from "./common/commonValidationHandler.js";
-import CustomError from "../utils/CustomError.js";
-import StudentRepository from "../repositories/StudentRepository.js";
-
-/**
- * allowedFieldsForCreatingStudentAccount
- * ['name', 'email', 'rollNo', 'registrationNo', 'batch', 'session', 'curriculumYear']
- */
 
 const addStudentValidator = [
     body("students")
@@ -95,23 +89,19 @@ const addStudentValidator = [
             return validateCurriculumYear(curriculumYear);
         }),
 
+    commonValidationHandler,
+
     checkAddStudentUniqueness,
 
     checkAddStudentExistence,
-
-    commonValidationHandler,
 ];
 
-/**
- * Allowed fields to update by students
- */
 const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
 
 const updateStudentValidator = [
     requiredAtLeastOneField,
     isFieldAllowed(allowedFieldsForStudent),
 
-    // Validate the individual fields
     body("name")
         .trim()
         .notEmpty()
@@ -145,9 +135,6 @@ const updateStudentValidator = [
     commonValidationHandler,
 ];
 
-/**
- * The fields that admin are allowed to update.
- */
 const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
 
 const updateStudentByAdminValidator = [
