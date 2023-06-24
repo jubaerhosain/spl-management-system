@@ -1,4 +1,7 @@
-import { sequelize, models, Op } from "../database/mysql.js";
+import { Response } from "../utils/responseUtils.js";
+
+import teacherService from "../services/teacherService.js";
+
 // import { writeCredentials } from "../utilities/file-utilities.js";
 // import { Response } from "../utilities/response-format-utilities.js";
 // import { generateHashedPassword } from "../utilities/password-utilities.js";
@@ -8,53 +11,13 @@ async function addTeacher(req, res) {
     try {
         const { teachers } = req.body;
 
-        const hashedPasswords = await generateHashedPassword(teachers.length);
+        await teacherService.addTeacher(teachers);
 
-        const credentials = [];
-        const users = Array.from({ length: teachers.length }, () => ({}));
-        for (const i in teachers) {
-            users[i].name = teachers[i].name;
-            users[i].email = teachers[i].email;
-            users[i].password = hashedPasswords[i].hashedPassword;
-            users[i].userType = "teacher";
-
-            delete teachers[i].name;
-            delete teachers[i].email;
-
-            users[i].Teacher = [teachers[i]];
-            credentials.push({
-                name: users[i].name,
-                email: users[i].email,
-                password: hashedPasswords[i].originalPassword,
-            });
-        }
-
-        // console.log(users);
-
-        const transaction = await sequelize.transaction();
-        try {
-            // add in both User and Teacher table
-            await models.User.bulkCreate(users, {
-                include: [models.Teacher],
-
-                transaction: transaction,
-            });
-
-            await transaction.commit();
-
-            res.json(Response.success("Teacher accounts are created successfully"));
-
-            const credentialData = JSON.stringify(credentials);
-            writeCredentials(new Date() + "\n" + credentialData);
-        } catch (err) {
-            await transaction.rollback();
-            console.log(err);
-            throw new Error("Internal Server Error");
-        }
+        res.json(Response.success("Teacher accounts are created successfully"));
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            Response.error("Internal Server Error", Response.SERVER_ERROR)
         );
     }
 }
@@ -93,7 +56,7 @@ async function updateTeacher(req, res) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            Response.error("Internal Server Error", Response.SERVER_ERROR)
         );
     }
 }

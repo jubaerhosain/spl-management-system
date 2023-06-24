@@ -1,4 +1,5 @@
-import { models, Op } from "../database/mysql.js";
+import { models, sequelize, Op } from "../database/mysql.js";
+import emailService from "../services/emailServices/emailService.js";
 
 async function isTeacherExist(teacherId) {
     const teacher = await models.Teacher.findByPk(teacherId, {
@@ -9,11 +10,30 @@ async function isTeacherExist(teacherId) {
     if (teacher) return true;
     return false;
 }
+
 /**
  * Create one or more teacher
  * @param {Array} teachers
  */
-async function create(teachers) {}
+async function create(teachers, credentials) {
+    const transaction = await sequelize.transaction();
+    try {
+        // add in both User and Teacher table
+        await models.User.bulkCreate(teachers, {
+            include: [models.Teacher],
+            transaction: transaction,
+        });
+
+        // have to do here bcz of transaction
+        await emailService.sendAccountCreationEmail(credentials);
+
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error(err.message);
+    }
+}
 
 async function update(teacher, userId) {}
 

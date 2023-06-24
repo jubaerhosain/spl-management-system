@@ -1,7 +1,6 @@
 import StudentRepository from "../repositories/StudentRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import fileUtils from "../utils/fileUtils.js";
-import emailService from "./emailServices/emailService.js";
 import CustomError from "../utils/CustomError.js";
 import UserRepository from "../repositories/UserRepository.js";
 
