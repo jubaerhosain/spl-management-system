@@ -35,7 +35,32 @@ async function create(teachers, credentials) {
     }
 }
 
-async function update(teacher, userId) {}
+async function update(userId, teacher) {
+    const transaction = await sequelize.transaction();
+    try {
+        // update to User model
+        await models.User.update(teacher, {
+            where: {
+                userId: userId,
+            },
+            transaction: transaction,
+        });
+
+        // update to Teacher model
+        await models.Teacher.update(teacher, {
+            where: {
+                teacherId: userId,
+            },
+            transaction: transaction,
+        });
+
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error(err.message);
+    }
+}
 
 async function findAll() {
     let teachers = await models.Teacher.findAll({

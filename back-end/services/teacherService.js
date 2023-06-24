@@ -42,6 +42,12 @@ async function addTeacher(teachers) {
     }
 }
 
+async function updateTeacher(userId, teacher) {
+    // update in both User and Teacher table
+    await TeacherRepository.update(userId, teacher);
+}
+
 export default {
     addTeacher,
+    updateTeacher,
 };
