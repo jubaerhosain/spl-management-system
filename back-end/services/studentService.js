@@ -54,7 +54,13 @@ async function updateStudent(userId, student) {
     await UserRepository.updateAccount(userId, student);
 }
 
+async function updateStudentByAdmin(studentId, student) {
+    // update to Student table [only those fields are allowed]
+    await StudentRepository.update(studentId, student);
+}
+
 export default {
     addStudent,
     updateStudent,
+    updateStudentByAdmin,
 };

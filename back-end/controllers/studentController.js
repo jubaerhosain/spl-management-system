@@ -1,4 +1,3 @@
-import { sequelize, models, Op } from "../database/db.js";
 import { Response } from "../utils/responseUtils.js";
 
 import studentService from "../services/studentService.js";
@@ -41,18 +40,13 @@ async function updateStudentByAdmin(req, res) {
         const student = req.body;
         const { studentId } = req.params;
 
-        // update to Student table
-        await models.Student.update(student, {
-            where: {
-                studentId,
-            },
-        });
+        await studentService.updateStudentByAdmin(studentId, student);
 
         res.json(Response.success("Student account is updated successfully"));
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            Response.error("Internal Server Error", Response.SERVER_ERROR)
         );
     }
 }
@@ -60,4 +54,5 @@ async function updateStudentByAdmin(req, res) {
 export default {
     addStudent,
     updateStudent,
+    updateStudentByAdmin,
 };

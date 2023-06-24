@@ -11,6 +11,32 @@ async function isStudentExist(studentId) {
     return false;
 }
 
+async function isRollNoExist(rollNo) {
+    const student = await models.Student.findOne({
+        where: {
+            rollNo: rollNo,
+        },
+        raw: true,
+        attributes: ["rollNo"],
+    });
+
+    if (student) return true;
+    return false;
+}
+
+async function isRegistrationNoExist(registrationNo) {
+    const student = await models.Student.findOne({
+        where: {
+            registrationNo: registrationNo,
+        },
+        raw: true,
+        attributes: ["registrationNo"],
+    });
+
+    if (student) return true;
+    return false;
+}
+
 /**
  * Create one or more student account and send emails
  * @param {Array} students
@@ -35,11 +61,11 @@ async function create(students, credentials) {
     }
 }
 
-async function update(student, userId) {
-    // update to User table
-    await models.User.update(student, {
+async function update(studentId, student) {
+    // update to Student table
+    await models.Student.update(student, {
         where: {
-            userId: userId,
+            studentId: studentId,
         },
     });
 }
@@ -210,6 +236,8 @@ async function findAllRegistrationNumbers(regNumbers) {
 
 export default {
     isStudentExist,
+    isRollNoExist,
+    isRegistrationNoExist,
     findAllRollNumbers,
     findAllRegistrationNumbers,
     create,

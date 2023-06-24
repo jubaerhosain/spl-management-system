@@ -30,8 +30,8 @@ studentRoutes.put(
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
     studentMiddleware.checkStudentExistence,
-    studentValidator.updateStudentByAdminValidator
-    // updateStudentByAdmin
+    studentValidator.updateStudentByAdminValidator,
+    studentController.updateStudentByAdmin
 );
 
 export default studentRoutes;

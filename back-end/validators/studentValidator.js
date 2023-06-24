@@ -9,6 +9,7 @@ import {
     validateSession,
     validateGender,
     validatePhoneNumber,
+    validateCurriculumYear,
 } from "./common/commonValidators.js";
 
 import {
@@ -19,6 +20,13 @@ import {
 } from "./common/validationMiddlewares.js";
 
 import { commonValidationHandler } from "./common/commonValidationHandler.js";
+import CustomError from "../utils/CustomError.js";
+import StudentRepository from "../repositories/StudentRepository.js";
+
+/**
+ * allowedFieldsForCreatingStudentAccount
+ * ['name', 'email', 'rollNo', 'registrationNo', 'batch', 'session', 'curriculumYear']
+ */
 
 const addStudentValidator = [
     body("students")
@@ -32,6 +40,8 @@ const addStudentValidator = [
 
     body("students.*.email")
         .trim()
+        .notEmpty()
+        .withMessage("Email cannot be empty")
         .isEmail()
         .withMessage("Invalid email format")
         .bail()
@@ -41,30 +51,40 @@ const addStudentValidator = [
 
     body("students.*.rollNo")
         .trim()
+        .notEmpty()
+        .withMessage("rollNo cannot be empty")
         .custom((rollNo) => {
             return validateRollNo(rollNo);
         }),
 
     body("students.*.registrationNo")
         .trim()
+        .notEmpty()
+        .withMessage("registrationNo cannot be empty")
         .custom((registrationNo) => {
             return validateRegistrationNo(registrationNo);
         }),
 
     body("students.*.batch")
         .trim()
+        .notEmpty()
+        .withMessage("batch cannot be empty")
         .custom((batch) => {
             return validateBatch(batch);
         }),
 
     body("students.*.session")
         .trim()
+        .notEmpty()
+        .withMessage("session cannot be empty")
         .custom((session) => {
             return validateSession(session);
         }),
 
     body("students.*.curriculumYear")
         .trim()
+        .notEmpty()
+        .withMessage("curriculumYear cannot be empty")
         .custom((curriculumYear) => {
             return validateCurriculumYear(curriculumYear);
         }),
@@ -72,7 +92,7 @@ const addStudentValidator = [
     checkAddStudentUniqueness,
 
     checkAddStudentExistence,
-    
+
     commonValidationHandler,
 ];
 
@@ -128,47 +148,60 @@ const updateStudentByAdminValidator = [
     requiredAtLeastOneField,
     isFieldAllowed(allowedFieldsForAdmin),
 
-    // rollNoValidator.optional().custom(async (rollNo) => {
-    //     try {
-    //         const roll = await models.Student.findOne({
-    //             where: {
-    //                 rollNo,
-    //             },
-    //             attributes: ["rollNo"],
-    //             raw: true,
-    //         });
+    body("rollNo")
+        .trim()
+        .custom((rollNo) => {
+            return validateRollNo(rollNo);
+        })
+        .bail()
+        .custom(async (rollNo) => {
+            try {
+                const exist = await StudentRepository.isRollNoExist(rollNo);
+                if (exist) throw new CustomError("rollNo already exists", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error occurred while checking rollNo");
+            }
+        })
+        .optional(),
 
-    //         if (roll) {
-    //             throw new createHttpError(409, "Already exists");
-    //         }
-    //     } catch (err) {
-    //         if (err.status) console.log(err);
-    //         throw new Error(err.status ? err.message : "Error checking roll number");
-    //     }
-    // }),
+    body("registrationNo")
+        .trim()
+        .custom((registrationNo) => {
+            return validateRegistrationNo(registrationNo);
+        })
+        .bail()
+        .custom(async (registrationNo) => {
+            try {
+                const exist = await StudentRepository.isRegistrationNoExist(registrationNo);
+                if (exist) throw new CustomError("registrationNo already exists", 400);
+            } catch (err) {
+                if (err.status) throw new CustomError(err.message);
+                else throw new CustomError("An error occurred while checking registrationNo");
+            }
+        })
+        .optional(),
 
-    // registrationNoValidator.optional().custom(async (registrationNo) => {
-    //     try {
-    //         const registration = await models.Student.findOne({
-    //             where: {
-    //                 registrationNo,
-    //             },
-    //             attributes: ["registrationNo"],
-    //             raw: true,
-    //         });
+    body("batch")
+        .trim()
+        .custom((batch) => {
+            return validateBatch(batch);
+        })
+        .optional(),
 
-    //         if (registration) {
-    //             throw new createHttpError(409, "Already exists");
-    //         }
-    //     } catch (err) {
-    //         if (err.status) console.log(err);
-    //         throw new Error(err.status ? err.message : "Error checking registration number");
-    //     }
-    // }),
+    body("session")
+        .trim()
+        .custom((session) => {
+            return validateSession(session);
+        })
+        .optional(),
 
-    // batchValidator.optional(),
-    // sessionValidator.optional(),
-    // curriculumYearValidator.optional(),
+    body("curriculumYear")
+        .trim()
+        .custom((curriculumYear) => {
+            return validateCurriculumYear(curriculumYear);
+        })
+        .optional(),
 
     commonValidationHandler,
 ];
