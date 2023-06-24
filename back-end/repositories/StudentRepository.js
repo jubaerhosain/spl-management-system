@@ -1,4 +1,4 @@
-import { sequelize, models, Op } from "../database/db.js";
+import { sequelize, models, Op } from "../database/mysql.js";
 import emailService from "../services/emailServices/emailService.js";
 
 async function isStudentExist(studentId) {

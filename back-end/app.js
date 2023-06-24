@@ -7,7 +7,7 @@ import mainRoutes from "./routes/mainRoutes.js";
 import { defaultErrorHandler } from "./middlewares/common/defaultErrorHandler.js";
 import { notFoundHandler } from "./middlewares/common/notFoundHandler.js";
 import fileUtils from "./utils/fileUtils.js";
-import "./database/db.js"
+import "./database/mysql.js"
 import config from "./config/config.js";
 
 const app = express();

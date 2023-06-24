@@ -1,5 +1,9 @@
 import express from "express";
-const teacherRouter = express.Router();
+const teacherRoutes = express.Router();
+
+import teacherValidator from "../validators/teacherValidator.js";
+import teacherController from "../controllers/teacherController.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 // import { addTeacherValidator } from "../validators/teacher-validators.js";
 // import { commonValidationHandler } from "../validators/custom-validator.js";
@@ -9,17 +13,22 @@ const teacherRouter = express.Router();
 // } from "../middlewares/teacher-middlewares.js";
 // import { addTeacher } from "../controllers/teacher-controllers.js";
 
-// // add one or more teachers
-// teacherRouter.post(
-//     "/",
-//     addTeacherValidator,
-//     commonValidationHandler,
-//     checkAddTeacherUniqueness,
-//     checkAddTeacherExistence,
-//     addTeacher
-// );
+// add one or more teachers
+teacherRoutes.post(
+    "/",
+    authMiddleware.checkAuthentication,
+    authMiddleware.isAdmin,
+    teacherValidator.addTeacherValidator,
+    teacherController.addTeacher
+);
 
-// // update teacher profile
-// teacherRouter.put("/");
+// update teacher profile
+teacherRoutes.put(
+    "/",
+    authMiddleware.checkAuthentication,
+    authMiddleware.isTeacher,
+    teacherValidator.updateTeacherValidator,
+    teacherController.updateTeacher
+);
 
-export default teacherRouter;
+export default teacherRoutes;

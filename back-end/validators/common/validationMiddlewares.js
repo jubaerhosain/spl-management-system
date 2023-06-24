@@ -142,3 +142,51 @@ export async function checkAddStudentExistence(req, res, next) {
         res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
     }
 }
+
+export async function checkAddTeacherUniqueness(req, res, next) {
+    try {
+        const { teachers } = req.body;
+
+        // check duplicate email
+        if (!commonUtils.isUnique(teachers.map((teacher) => teacher.email))) {
+            res.status(400).json(
+                Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
+            );
+            return;
+        }
+
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+    }
+}
+
+export async function checkAddTeacherExistence(req, res, next) {
+    try {
+        const { teachers } = req.body;
+
+        const errors = [];
+
+        // check email existence
+        const emails = teachers.map((teacher) => teacher.email);
+        const existedEmails = await UserRepository.findAllEmails(emails);
+        if (existedEmails) {
+            errors.push({
+                message: "Following emails are already exists",
+                data: existedEmails,
+            });
+        }
+
+        if (errors.length > 0) {
+            res.status(400).json(
+                Response.error("Following data are already exists", Response.ARRAY_DATA, errors)
+            );
+        } else {
+            next();
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+    }
+}

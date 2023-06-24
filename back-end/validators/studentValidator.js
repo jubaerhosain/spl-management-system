@@ -36,7 +36,13 @@ const addStudentValidator = [
         .isLength({ min: 1 })
         .withMessage("Cannot be empty array"),
 
-    body("students.*.name").trim().notEmpty().withMessage("Name cannot be empty"),
+    body("students.*.name")
+        .trim()
+        .notEmpty()
+        .withMessage("Name cannot be empty")
+        .custom((name) => {
+            return validateName(name);
+        }),
 
     body("students.*.email")
         .trim()

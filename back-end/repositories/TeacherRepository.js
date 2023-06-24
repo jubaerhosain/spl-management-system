@@ -1,4 +1,4 @@
-import { models, Op } from "../database/db.js";
+import { models, Op } from "../database/mysql.js";
 
 async function isTeacherExist(teacherId) {
     const teacher = await models.Teacher.findByPk(teacherId, {

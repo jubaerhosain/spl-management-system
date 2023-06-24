@@ -1,4 +1,4 @@
-import { models, Op } from "../database/db.js";
+import { models, Op } from "../database/mysql.js";
 
 async function isUserExist(userId) {
     const user = await models.User.findByPk(userId, {

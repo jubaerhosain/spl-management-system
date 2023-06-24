@@ -1,10 +1,10 @@
-import { sequelize, models, Op } from "../database/db.js";
-import { writeCredentials } from "../utilities/file-utilities.js";
-import { Response } from "../utilities/response-format-utilities.js";
-import { generateHashedPassword } from "../utilities/password-utilities.js";
+import { sequelize, models, Op } from "../database/mysql.js";
+// import { writeCredentials } from "../utilities/file-utilities.js";
+// import { Response } from "../utilities/response-format-utilities.js";
+// import { generateHashedPassword } from "../utilities/password-utilities.js";
 
 // createTeacherAccount
-export async function addTeacher(req, res, next) {
+async function addTeacher(req, res) {
     try {
         const { teachers } = req.body;
 
@@ -59,7 +59,7 @@ export async function addTeacher(req, res, next) {
     }
 }
 
-export async function updateTeacher(req, res, next) {
+async function updateTeacher(req, res) {
     try {
         const teacher = req.body;
         const { userId } = req.user;
@@ -96,4 +96,9 @@ export async function updateTeacher(req, res, next) {
             Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
         );
     }
+}
+
+export default {
+    addTeacher,
+    updateTeacher,
 }

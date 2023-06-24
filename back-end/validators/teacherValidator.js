@@ -1,38 +1,19 @@
-// custom-validator.js
-import { body, body_param, body_param_query, validationResult } from "./custom-validator.js";
-
-// common-utilities.js
-import { makeUnique } from "../utilities/common-utilities.js";
-
-// user-validators.js
+import { body } from "express-validator";
+import { commonValidationHandler } from "./common/commonValidationHandler.js";
+import { requiredAtLeastOneField, isFieldAllowed } from "./common/validationMiddlewares.js";
 import {
-    nameValidator,
-    phoneNumberValidator,
-    genderValidator,
-    detailsValidator,
-    isIITEmail,
-} from "./user-validators.js";
+    checkAddTeacherUniqueness,
+    checkAddTeacherExistence,
+} from "./common/validationMiddlewares.js";
 
-// common-validators.js
-import { requiredOne, checkAllow } from "./common-validators.js";
-
-/**
- * body, params, query
- */
-const teacherIdValidator = body_param_query("teacherId")
-    .trim()
-    .notEmpty()
-    .withMessage("Must be provided");
-
-const designationValidator = body("designation")
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage("Must be between 2 to 50 characters");
-
-const availableValidator = body("available").trim().isBoolean().withMessage("Must be boolean");
+import {
+    validateEmail,
+    validateName,
+    validatePhoneNumber,
+    validateGender,
+} from "./common/commonValidators.js";
 
 const addTeacherValidator = [
-    // check array or not and make array elements unique
     body("teachers")
         .isArray()
         .withMessage("Must be an array")
@@ -40,21 +21,36 @@ const addTeacherValidator = [
         .isLength({ min: 1 })
         .withMessage("Cannot be empty array"),
 
-    body("teachers.*.name").trim().notEmpty().withMessage("Name cannot be empty"),
+    body("teachers.*.name")
+        .trim()
+        .notEmpty()
+        .withMessage("Name cannot be empty")
+        .custom((name) => {
+            return validateName(name);
+        }),
+
     body("teachers.*.email")
         .trim()
+        .trim()
+        .notEmpty()
+        .withMessage("Email cannot be empty")
         .isEmail()
         .withMessage("Invalid email format")
-        .isLength({ max: 50 })
-        .withMessage("Must be at most 50 characters")
         .custom((email) => {
-            if (isIITEmail(email)) return true;
-            throw new Error("Must be end with '@iit.du.ac.bd");
+            return validateEmail(email);
         }),
+
     body("teachers.*.designation")
         .trim()
-        .isLength({ min: 2, max: 50 })
-        .withMessage("Must be between 2 to 50 characters"),
+        .trim()
+        .notEmpty()
+        .withMessage("Designation cannot be empty"),
+
+    commonValidationHandler,
+
+    checkAddTeacherUniqueness,
+
+    checkAddTeacherExistence,
 ];
 
 /**
@@ -63,16 +59,45 @@ const addTeacherValidator = [
 const allowedFields = ["name", "phone", "gender", "details", "designation", "available"];
 
 const updateTeacherValidator = [
-    requiredOne,
-    checkAllow(allowedFields),
+    requiredAtLeastOneField,
+    isFieldAllowed(allowedFields),
 
     // Validate the individual fields
-    nameValidator.optional(),
-    phoneNumberValidator.optional(),
-    genderValidator.optional(),
-    detailsValidator.optional(),
-    designationValidator.optional(),
-    availableValidator.optional(),
+    body("name")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .bail()
+        .custom((name) => {
+            return validateName(name);
+        })
+        .optional(),
+
+    body("gender")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .custom((gender) => {
+            return validateGender(gender);
+        })
+        .optional(),
+
+    body("phone")
+        .trim()
+        .notEmpty()
+        .withMessage("Name must be provided")
+        .custom((phone) => {
+            return validatePhoneNumber(phone);
+        })
+        .optional(),
+
+    body("details").trim().notEmpty().withMessage("Details must be provided").optional(),
+
+    body("designation").trim().notEmpty().withMessage("Designation must be provided").optional(),
+
+    body("available").trim().isBoolean().withMessage("Must be a boolean").optional(),
+
+    commonValidationHandler,
 ];
 
-export { teacherIdValidator, addTeacherValidator, updateTeacherValidator };
+export default { addTeacherValidator, updateTeacherValidator };
