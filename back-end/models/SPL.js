@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
                 autoIncrement: true,
             },
             academicYear: {
-                type: DataTypes.STRING(4),
+                type: DataTypes.STRING(8),
                 allowNull: false,
                 validate: {
                     is: /^[0-9]{4}-[0-9]{2}$/,

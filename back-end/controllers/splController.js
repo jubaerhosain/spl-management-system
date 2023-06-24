@@ -1,7 +1,7 @@
 import { models, Op, sequelize } from "../database/mysql.js";
 import { Response } from "../utils/responseUtils.js";
-// import { getCurriculumYear } from "../utilities/spl-utilities.js";
 import splService from "../services/splService.js";
+import commonUtils from "../utils/commonUtils.js";
 
 async function createSPLCommittee(req, res) {
     try {
@@ -20,13 +20,15 @@ async function createSPLCommittee(req, res) {
         if (committeeMemberThree) committeeMembers.push(committeeMemberThree);
         if (committeeMemberFour) committeeMembers.push(committeeMemberFour);
 
-        // make committee members unique
+        const committee = {
+            splName,
+            academicYear,
+            committeeHead,
+            splManager,
+            committeeMembers: commonUtils.makeUnique(committeeMembers),
+        };
 
-        const committee = { splName, academicYear, committeeHead, splManager, committeeMembers };
-
-        console.log(committee);
-
-    //    await splService.createSPLCommittee(committee);
+        await splService.createSPLCommittee(committee);
 
         res.json(
             Response.success(
