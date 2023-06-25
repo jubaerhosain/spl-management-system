@@ -42,10 +42,14 @@ async function createSPLCommittee(committee) {
     );
 }
 
-async function assignMultipleStudentToSPL(splName) {
+async function assignMultipleStudent(splName) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
 
     const spl = await SPLRepository.findByName(splName);
+
+    if (!spl) {
+        throw new CustomError("SPL does not exist", 400);
+    }
 
     const { unassignedStudentIds, unassignedStudentEmails } =
         await StudentRepository.findAllUnassignedStudentIdAndEmail(spl.splId, curriculumYear);
@@ -57,15 +61,20 @@ async function assignMultipleStudentToSPL(splName) {
         );
     }
 
-    // send emails in transaction
-    await SPLRepository.assignMultipleStudentToSPL(
-        spl,
-        unassignedStudentIds,
-        unassignedStudentEmails
-    );
+    await SPLRepository.assignMultipleStudent(spl, unassignedStudentIds, unassignedStudentEmails);
+}
+
+async function unassignStudent(splId, studentId) {
+    const belongs = await SPLRepository.isStudentBelongsToSPL(splId, studentId);
+    if (!belongs) {
+        throw new CustomError("Invalid student or spl", 400);
+    }
+
+    await SPLRepository.removeStudent(splId, studentId);
 }
 
 export default {
     createSPLCommittee,
-    assignMultipleStudentToSPL,
+    assignMultipleStudent,
+    unassignStudent,
 };

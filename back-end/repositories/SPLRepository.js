@@ -1,6 +1,8 @@
 import { models, sequelize } from "../database/mysql.js";
 import emailService from "../services/emailServices/emailService.js";
 
+// -----------------------------------Create-----------------------------
+
 async function create(committee) {
     let committeeMemberIds = committee.committeeMemberIds;
     delete committee.committeeMemberIds;
@@ -28,7 +30,7 @@ async function create(committee) {
     }
 }
 
-async function assignMultipleStudentToSPL(spl, studentIds, studentEmails) {
+async function assignMultipleStudent(spl, studentIds, studentEmails) {
     const studentSPL = [];
     for (const studentId of studentIds) {
         studentSPL.push({
@@ -74,7 +76,19 @@ async function isExists(splName) {
     else return false;
 }
 
-// ------------------------------Find--------------------------------
+async function isStudentBelongsToSPL(splId, studentId) {
+    const studentSPL = await models.StudentSPL.findOne({
+        where: {
+            splId,
+            studentId,
+        },
+    });
+
+    if (studentSPL) return true;
+    else return false;
+}
+
+// ------------------------------Read--------------------------------
 async function findByName(splName) {
     const spl = await models.SPL.findOne({
         where: {
@@ -86,9 +100,21 @@ async function findByName(splName) {
     return spl;
 }
 
+// ------------------------------Delete--------------------------------
+async function removeStudent(splId, studentId) {
+    await models.StudentSPL.destroy({
+        where: {
+            splId,
+            studentId,
+        },
+    });
+}
+
 export default {
     create,
-    assignMultipleStudentToSPL,
+    assignMultipleStudent,
     isExists,
+    isStudentBelongsToSPL,
     findByName,
+    removeStudent,
 };
