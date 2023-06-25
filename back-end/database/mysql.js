@@ -87,16 +87,18 @@ Object.entries(models).forEach(([name, model]) => {
 // console.log("Number of table: ", Object.keys(models).length);
 
 // Test the connection
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log("MySql connection has been established successfully.");
-    })
-    .catch((err) => {
-        console.error("Unable to connect to the database:", err);
-    });
+export function initializeMySqlConnection() {
+    sequelize
+        .authenticate()
+        .then(() => {
+            console.log("MySql connection has been established successfully.");
+        })
+        .catch((err) => {
+            console.error("Unable to connect to the database:", err);
+        });
 
-sequelize.sync();
+    sequelize.sync();
+}
 
 // drop all tables
 // sequelize.drop({ force: true });

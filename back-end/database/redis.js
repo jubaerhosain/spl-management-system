@@ -1,10 +1,22 @@
 import redis from "redis";
 
-// Create a Redis client instance
-const client = redis.createClient();
+const redisClient = redis.createClient();
 
-client.set("name", "JubaerHosain");
+redisClient.on("end", () => {
+    console.log("Redis connection closed");
+});
 
-setTimeout(() => {
-    console.log(client.get("name"));
-}, 2000);
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+
+export function initializeRedisConnection() {
+    redisClient
+        .connect()
+        .then(() => {
+            console.log("Redis connection has been established successfully.");
+        })
+        .catch((err) => {
+            console.error("Error:", err);
+        });
+}
+
+export default redisClient;
