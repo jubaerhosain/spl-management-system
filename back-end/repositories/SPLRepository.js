@@ -1,21 +1,21 @@
 import { models, sequelize } from "../database/mysql.js";
 
 async function create(committee) {
-    let committeeMembers = committee.committeeMembers;
-    delete committee.committeeMembers;
+    let committeeMemberIds = committee.committeeMemberIds;
+    delete committee.committeeMemberIds;
 
     const transaction = await sequelize.transaction();
     try {
         const spl = await models.SPL.create(committee, { transaction });
 
-        committeeMembers = committeeMembers.map((teacherId) => {
+        committeeMemberIds = committeeMemberIds.map((teacherId) => {
             return {
                 splId: spl.splId,
                 teacherId: teacherId,
             };
         });
 
-        await models.TeacherSPL_CommitteeMember.bulkCreate(committeeMembers, {
+        await models.TeacherSPL_CommitteeMember.bulkCreate(committeeMemberIds, {
             transaction,
         });
 

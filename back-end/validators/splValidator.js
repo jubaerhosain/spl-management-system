@@ -37,7 +37,7 @@ const createSPLCommitteeValidator = [
             return validateAcademicYear(academicYear);
         }),
 
-    body("committeeHead")
+    body("committeeHeadEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -52,7 +52,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("splManager")
+    body("splManagerEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -67,7 +67,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberOne")
+    body("committeeMemberOneEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -82,7 +82,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberTwo")
+    body("committeeMemberTwoEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -97,7 +97,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberThree")
+    body("committeeMemberThreeEmail")
         .trim()
         .custom(async (committeeMemberThree) => {
             try {
@@ -110,7 +110,7 @@ const createSPLCommitteeValidator = [
         })
         .optional(),
 
-    body("committeeMemberFour")
+    body("committeeMemberFourEmail")
         .trim()
         .custom(async (committeeMemberFour) => {
             try {

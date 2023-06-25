@@ -8,24 +8,24 @@ async function createSPLCommittee(req, res) {
         const {
             splName,
             academicYear,
-            committeeHead,
-            splManager,
-            committeeMemberOne,
-            committeeMemberTwo,
-            committeeMemberThree,
-            committeeMemberFour,
+            committeeHeadEmail,
+            splManagerEmail,
+            committeeMemberOneEmail,
+            committeeMemberTwoEmail,
+            committeeMemberThreeEmail,
+            committeeMemberFourEmail,
         } = req.body;
 
-        const committeeMembers = [committeeMemberOne, committeeMemberTwo];
-        if (committeeMemberThree) committeeMembers.push(committeeMemberThree);
-        if (committeeMemberFour) committeeMembers.push(committeeMemberFour);
+        const committeeMemberEmails = [committeeMemberOneEmail, committeeMemberTwoEmail];
+        if (committeeMemberThreeEmail) committeeMemberEmails.push(committeeMemberThreeEmail);
+        if (committeeMemberFourEmail) committeeMemberEmails.push(committeeMemberFourEmail);
 
         const committee = {
             splName,
             academicYear,
-            committeeHead,
-            splManager,
-            committeeMembers: commonUtils.makeUnique(committeeMembers),
+            committeeHeadEmail,
+            splManagerEmail,
+            committeeMemberEmails: commonUtils.makeUnique(committeeMemberEmails),
         };
 
         await splService.createSPLCommittee(committee);
