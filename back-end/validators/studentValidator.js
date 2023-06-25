@@ -22,7 +22,10 @@ import {
     isFieldAllowed,
 } from "./common/validationMiddlewares.js";
 
-const addStudentValidator = [
+const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
+const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
+
+const validateCreateStudentAccount = [
     body("students")
         .isArray()
         .withMessage("Must be an array")
@@ -96,9 +99,7 @@ const addStudentValidator = [
     checkAddStudentExistence,
 ];
 
-const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
-
-const updateStudentValidator = [
+const validateUpdateStudentAccount = [
     requiredAtLeastOneField,
     isFieldAllowed(allowedFieldsForStudent),
 
@@ -135,9 +136,7 @@ const updateStudentValidator = [
     commonValidationHandler,
 ];
 
-const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
-
-const updateStudentByAdminValidator = [
+const validateUpdateStudentAccountByAdmin = [
     requiredAtLeastOneField,
     isFieldAllowed(allowedFieldsForAdmin),
 
@@ -200,7 +199,7 @@ const updateStudentByAdminValidator = [
 ];
 
 export default {
-    addStudentValidator,
-    updateStudentValidator,
-    updateStudentByAdminValidator,
+    validateCreateStudentAccount,
+    validateUpdateStudentAccount,
+    validateUpdateStudentAccountByAdmin,
 };

@@ -76,8 +76,6 @@ async function unassignStudent(req, res) {
     try {
         const { splId, studentId } = req.query;
 
-        console.log(splId, studentId)
-
         if (!splId || !studentId) {
             throw new CustomError(
                 "Both `splId` and `studentId` must be provided in query parameters",

@@ -1,21 +1,13 @@
 import { sequelize, models, Op } from "../database/mysql.js";
-import emailService from "../services/emailServices/emailService.js";
 
-/**
- * Create one or more student account and send emails
- * @param {Array} students
- */
-async function create(students, credentials) {
+// ================================CREATE=================================
+async function create(students) {
     const transaction = await sequelize.transaction();
     try {
-        // add in both User and Student table
         await models.User.bulkCreate(students, {
             include: [models.Student],
             transaction: transaction,
         });
-
-        // have to do here bcz of transaction
-        await emailService.sendAccountCreationEmail(credentials);
 
         await transaction.commit();
     } catch (err) {
@@ -25,7 +17,7 @@ async function create(students, credentials) {
     }
 }
 
-// -------------------------------Checking---------------------------------
+// ================================READ=================================
 async function isRollNoExist(rollNo) {
     const student = await models.Student.findOne({
         where: {
@@ -51,8 +43,6 @@ async function isRegistrationNoExist(registrationNo) {
     if (student) return true;
     return false;
 }
-
-// -------------------------------Find---------------------------------
 
 async function findAll() {
     const students = await models.Student.findAll({
@@ -227,8 +217,7 @@ async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
 
 async function findAllUnsupervisedStudentByCurriculumYear(curriculumYear) {}
 
-// -------------------------------Update---------------------------------
-
+// =================================UPDATE================================
 async function update(studentId, student) {
     // update to Student table
     // await models.Student.update(student, {
@@ -246,6 +235,8 @@ async function updateByAdmin(student, studentId) {
         },
     });
 }
+
+// ================================DELETE=====================================
 
 export default {
     create,

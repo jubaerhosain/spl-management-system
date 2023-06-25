@@ -3,12 +3,9 @@ import passwordUtils from "../utils/passwordUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import CustomError from "../utils/CustomError.js";
 import UserRepository from "../repositories/UserRepository.js";
+import emailService from "./emailServices/emailService.js";
 
-/**
- * Add one or more students
- * @param {Array} students
- */
-async function addStudent(students) {
+async function createStudentAccount(students) {
     try {
         const passwords = await passwordUtils.generateHashedPassword(students.length);
 
@@ -37,10 +34,10 @@ async function addStudent(students) {
             return user;
         });
 
-        // moved email service to the repository for transaction
-        await StudentRepository.create(users, credentials);
+        await StudentRepository.create(users);
 
-        // write credentials to the file
+        await emailService.sendAccountCreationEmail(credentials);
+
         fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
     } catch (err) {
         console.log(err);
@@ -48,18 +45,24 @@ async function addStudent(students) {
     }
 }
 
-async function updateStudent(userId, student) {
+async function updateStudentAccount(userId, student) {
     // update in user table [only those fields are allowed]
     await UserRepository.updateAccount(userId, student);
 }
 
-async function updateStudentByAdmin(studentId, student) {
+async function updateStudentAccountByAdmin(studentId, student) {
+    const exist = await UserRepository.isStudentById(studentId);
+
+    if (!exist) {
+        throw new CustomError("Student does not exist", 400);
+    }
+
     // update to Student table [only those fields are allowed]
     await StudentRepository.update(studentId, student);
 }
 
 export default {
-    addStudent,
-    updateStudent,
-    updateStudentByAdmin,
+    createStudentAccount,
+    updateStudentAccount,
+    updateStudentAccountByAdmin,
 };
