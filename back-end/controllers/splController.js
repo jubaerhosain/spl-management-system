@@ -7,30 +7,19 @@ import CustomError from "../utils/CustomError.js";
 
 async function createSPLCommittee(req, res) {
     try {
-        const {
-            splName,
-            academicYear,
-            committeeHeadEmail,
-            splManagerEmail,
-            committeeMemberOneEmail,
-            committeeMemberTwoEmail,
-            committeeMemberThreeEmail,
-            committeeMemberFourEmail,
-        } = req.body;
+        const committee = req.body;
 
-        const committeeMemberEmails = [committeeMemberOneEmail, committeeMemberTwoEmail];
-        if (committeeMemberThreeEmail) committeeMemberEmails.push(committeeMemberThreeEmail);
-        if (committeeMemberFourEmail) committeeMemberEmails.push(committeeMemberFourEmail);
+        const memberEmails = [committee.memberOneEmail, committee.memberTwoEmail];
+        if (committee.memberThreeEmail) memberEmails.push(committee.memberThreeEmail);
+        if (committee.memberFourEmail) memberEmails.push(committee.memberFourEmail);
 
-        const committee = {
-            splName,
-            academicYear,
-            committeeHeadEmail,
-            splManagerEmail,
-            committeeMemberEmails: commonUtils.makeUnique(committeeMemberEmails),
-        };
-
-        await splService.createSPLCommittee(committee);
+        await splService.createSPLCommittee({
+            splName: committee.splName,
+            academicYear: committee.academicYear,
+            headEmail: committee.headEmail,
+            managerEmail: committee.managerEmail,
+            memberEmails: commonUtils.makeUnique(memberEmails),
+        });
 
         res.json(
             Response.success(
@@ -43,18 +32,17 @@ async function createSPLCommittee(req, res) {
     }
 }
 
-async function assignMultipleStudent(req, res) {
+async function assignStudents(req, res) {
     try {
         const { splName } = req.query;
 
-        if(!splName) {
+        if (!splName) {
             throw new CustomError("splName must be provided in query param", 400);
         }
 
+        await splService.assignStudents(splName);
+
         const curriculumYear = splUtils.getCurriculumYear(splName);
-
-        await splService.assignMultipleStudent(splName);
-
         res.json(
             Response.success(
                 `${curriculumYear} year students are successfully assigned to ${splName.toUpperCase()}`
@@ -65,9 +53,7 @@ async function assignMultipleStudent(req, res) {
         if (err.status) {
             res.status(err.status).json(Response.error(err.message));
         } else {
-            res.status(500).json(
-                Response.error("Internal Server Error", Response.SERVER_ERROR)
-            );
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
 }
@@ -170,6 +156,6 @@ async function unassignStudent(req, res) {
 
 export default {
     createSPLCommittee,
-    assignMultipleStudent,
+    assignStudents,
     unassignStudent,
 };

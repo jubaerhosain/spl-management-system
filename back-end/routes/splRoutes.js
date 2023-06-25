@@ -9,7 +9,7 @@ splRoutes.post(
     "/",
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
-    splValidator.createSPLCommitteeValidator,
+    splValidator.validateCreateSPLCommittee,
     splController.createSPLCommittee
 );
 
@@ -18,7 +18,7 @@ splRoutes.post(
     "/assign",
     authMiddleware.checkAuthentication,
     authMiddleware.isAdmin,
-    splController.assignMultipleStudent
+    splController.assignStudents
 );
 
 // query param {splId, studentId}

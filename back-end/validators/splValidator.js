@@ -6,7 +6,7 @@ import SPLRepository from "../repositories/SPLRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import CustomError from "../utils/CustomError.js";
 
-const createSPLCommitteeValidator = [
+const validateCreateSPLCommittee = [
     body("splName")
         .trim()
         .notEmpty()
@@ -37,7 +37,7 @@ const createSPLCommitteeValidator = [
             return validateAcademicYear(academicYear);
         }),
 
-    body("committeeHeadEmail")
+    body("headEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -52,7 +52,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("splManagerEmail")
+    body("managerEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -67,7 +67,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberOneEmail")
+    body("memberOneEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -82,7 +82,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberTwoEmail")
+    body("memberTwoEmail")
         .trim()
         .notEmpty()
         .withMessage("Must be provided")
@@ -97,7 +97,7 @@ const createSPLCommitteeValidator = [
             }
         }),
 
-    body("committeeMemberThreeEmail")
+    body("memberThreeEmail")
         .trim()
         .custom(async (committeeMemberThree) => {
             try {
@@ -110,7 +110,7 @@ const createSPLCommitteeValidator = [
         })
         .optional(),
 
-    body("committeeMemberFourEmail")
+    body("memberFourEmail")
         .trim()
         .custom(async (committeeMemberFour) => {
             try {
@@ -126,11 +126,6 @@ const createSPLCommitteeValidator = [
     commonValidationHandler,
 ];
 
-const addSPLManagerValidator = [];
-const removeSPLManagerValidator = [];
-
-const removeStudentValidator = [];
-
 export default {
-    createSPLCommitteeValidator,
+    validateCreateSPLCommittee,
 };

@@ -7,42 +7,39 @@ import emailService from "./emailServices/emailService.js";
 
 async function createSPLCommittee(committee) {
     // find id's of corresponding email
-    const committeeHeadId = await UserRepository.findUserIdByEmail(committee.committeeHeadEmail);
-    const splManagerId = await UserRepository.findUserIdByEmail(committee.splManagerEmail);
-    const committeeMemberIds = await UserRepository.findAllUserIdByEmail(
-        committee.committeeMemberEmails
-    );
+    const headId = await UserRepository.findUserIdByEmail(committee.headEmail);
+    const managerId = await UserRepository.findUserIdByEmail(committee.managerEmail);
+    const memberIds = await UserRepository.findAllUserIdByEmail(committee.memberEmails);
 
     await SPLRepository.create({
         splName: committee.splName,
         academicYear: committee.academicYear,
-        committeeHeadId,
-        splManagerId,
-        committeeMemberIds,
+        committeeHead: headId,
+        splManager: managerId,
+        memberIds: memberIds,
     });
 
-    // send email to the committeeHead, SPL Manager, members
     // intentionally without await
     emailService.sendCommitteeCreationEmailToHead(
-        committee.committeeHeadEmail,
+        committee.headEmail,
         committee.splName,
         committee.academicYear
     );
 
     emailService.sendCommitteeCreationEmailToManager(
-        committee.splManagerEmail,
+        committee.managerEmail,
         committee.splName,
         committee.academicYear
     );
 
     emailService.sendCommitteeCreationEmailToMembers(
-        committee.committeeMemberEmails,
+        committee.memberEmails,
         committee.splName,
         committee.academicYear
     );
 }
 
-async function assignMultipleStudent(splName) {
+async function assignStudents(splName) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
 
     const spl = await SPLRepository.findByName(splName);
@@ -61,7 +58,9 @@ async function assignMultipleStudent(splName) {
         );
     }
 
-    await SPLRepository.assignMultipleStudent(spl, unassignedStudentIds, unassignedStudentEmails);
+    await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
+
+    await emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
 }
 
 async function unassignStudent(splId, studentId) {
@@ -75,6 +74,6 @@ async function unassignStudent(splId, studentId) {
 
 export default {
     createSPLCommittee,
-    assignMultipleStudent,
+    assignStudents,
     unassignStudent,
 };

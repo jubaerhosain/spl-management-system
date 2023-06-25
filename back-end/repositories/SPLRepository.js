@@ -4,61 +4,42 @@ import emailService from "../services/emailServices/emailService.js";
 // -----------------------------------Create-----------------------------
 
 async function create(committee) {
-    let committeeMemberIds = committee.committeeMemberIds;
-    delete committee.committeeMemberIds;
+    const memberIds = committee.memberIds;
+    delete committee.memberIds;
 
     const transaction = await sequelize.transaction();
     try {
         const spl = await models.SPL.create(committee, { transaction });
 
-        committeeMemberIds = committeeMemberIds.map((teacherId) => {
+        const teacherId_splId = memberIds.map((teacherId) => {
             return {
                 splId: spl.splId,
                 teacherId: teacherId,
             };
         });
 
-        await models.TeacherSPL_CommitteeMember.bulkCreate(committeeMemberIds, {
+        await models.TeacherSPL_CommitteeMember.bulkCreate(teacherId_splId, {
             transaction,
         });
 
         await transaction.commit();
     } catch (err) {
-        console.log(err);
         await transaction.rollback();
+        console.log(err);
         throw new Error(err.message);
     }
 }
 
-async function assignMultipleStudent(spl, studentIds, studentEmails) {
-    const studentSPL = [];
+async function assignStudents(splId, studentIds) {
+    const studentId_splId = [];
     for (const studentId of studentIds) {
-        studentSPL.push({
+        studentId_splId.push({
             studentId,
-            splId: spl.splId,
+            splId,
         });
     }
 
-    const transaction = await sequelize.transaction();
-    try {
-        // assign to SPL
-        await models.StudentSPL.bulkCreate(studentSPL, {
-            transaction: transaction,
-        });
-
-        // create mark row in Mark table
-        await models.Mark.bulkCreate(studentSPL, {
-            transaction: transaction,
-        });
-
-        await emailService.sendSPLAssignedEmail(studentEmails, spl.splName, spl.academicYear);
-
-        await transaction.commit();
-    } catch (err) {
-        await transaction.rollback();
-        console.log(err);
-        throw new Error(err.message);
-    }
+    await models.StudentSPL.bulkCreate(studentId_splId);
 }
 
 // ------------------------------Checking----------------------------------
@@ -112,7 +93,7 @@ async function removeStudent(splId, studentId) {
 
 export default {
     create,
-    assignMultipleStudent,
+    assignStudents,
     isExists,
     isStudentBelongsToSPL,
     findByName,
