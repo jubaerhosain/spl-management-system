@@ -1,4 +1,3 @@
-import { models, Op, sequelize } from "../database/mysql.js";
 import { Response } from "../utils/responseUtils.js";
 import splService from "../services/splService.js";
 import commonUtils from "../utils/commonUtils.js";
@@ -84,78 +83,99 @@ async function unassignStudent(req, res) {
     }
 }
 
-// async function addSPLManager(req, res, next) {
-//     try {
-//         const { splId, teacherId } = req.params;
+async function addCommitteeHead(req, res) {
+    try {
+        const { splId, teacherId } = req.query; // email ?
 
-//         await models.SPL.update(
-//             {
-//                 splManager: teacherId,
-//             },
-//             {
-//                 where: {
-//                     splId,
-//                 },
-//             }
-//         );
+        res.json({
+            message: `Committee head added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-//         res.json({
-//             message: `SPL Manager added successfully`,
-//         });
-//     } catch (err) {
-//         console.log(err);
-//         const message = err.status ? err.message : "Internal server error.";
-//         next(new createError(err.status || 500, message));
-//     }
-// }
+async function removedCommitteeHead(req, res) {
+    try {
+        const { splId, teacherId } = req.query;
 
-// /**
-//  * Remove spl manager from a particular spl
-//  * @param {*} req
-//  * @param {*} res
-//  * @param {*} next
-//  */
-// async function removeSPLManager(req, res, next) {
-//     try {
-//         const { splId } = req.params;
+        res.json({
+            message: `SPL Manager added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-//         // update to null instead of deleting the spl
-//         await models.SPL.update(
-//             {
-//                 splManager: null,
-//             },
-//             {
-//                 where: {
-//                     splId,
-//                 },
-//             }
-//         );
+async function addSPLManager(req, res) {
+    try {
+        const { splId, teacherId } = req.query;
 
-//         res.json({
-//             message: `SPL Manager removed successfully`,
-//         });
-//     } catch (err) {
-//         console.log(err);
-//         const message = err.status ? err.message : "Internal server error";
-//         next(new createError(err.status || 500, message));
-//     }
-// }
+        res.json({
+            message: `SPL Manager added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-// // finalize a spl after its completion [by a particular spls' committee head]
-// async function finalizeSPL(req, res, next) {
-//     try {
-//         res.end(req.params.splName);
-//         // deactivate committee
-//         // upgrade student to next curriculum year
-//         // delete all temporary database related to this spl/spl students/spl teachers
-//     } catch (err) {
-//         console.log(err);
-//         next(new createError(err.status || 500, "An error occurred finalize the spls"));
-//     }
-// }
+async function removeSPLManager(req, res) {
+    try {
+        const { splId, teacherId } = req.query;
+
+        res.json({
+            message: `SPL Manager added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function addCommitteeMember(req, res) {
+    try {
+        const { splId, teacherId } = req.query;
+
+        res.json({
+            message: `SPL Manager added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function removeCommitteeMember(req, res) {
+    try {
+        const { splId, teacherId } = req.query;
+
+        res.json({
+            message: `SPL Manager added successfully`,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+// finalize a spl after its completion [by a particular spls' committee head]
+async function finalizeSPL(req, res) {
+    try {
+        res.end(req.params.splName);
+        // deactivate committee
+        // upgrade student to next curriculum year
+        // delete all temporary database related to this spl/spl students/spl teachers
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 export default {
     createSPLCommittee,
     assignStudents,
     unassignStudent,
+    addCommitteeHead,
+    removedCommitteeHead,
+    addSPLManager,
+    removeSPLManager,
+    addCommitteeMember,
+    removeCommitteeMember,
+    finalizeSPL
 };
