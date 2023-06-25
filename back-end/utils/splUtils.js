@@ -22,4 +22,4 @@ function getSPLName(curriculumYear) {
     return splName;
 }
 
-export { getSPLName, getCurriculumYear };
+export default { getSPLName, getCurriculumYear };

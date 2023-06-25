@@ -148,7 +148,7 @@ async function findAllByCurriculumYear(curriculumYear) {
     return flattened;
 }
 
-async function findExistedRollNumbers(rollNumbers) {
+async function findAllExistedRollNo(rollNumbers) {
     const students = await models.Student.findAll({
         where: {
             rollNo: {
@@ -165,7 +165,7 @@ async function findExistedRollNumbers(rollNumbers) {
     return null;
 }
 
-async function findExistedRegistrationNumbers(registrationNumbers) {
+async function findAllExistedRegistrationNo(registrationNumbers) {
     const students = await models.Student.findAll({
         where: {
             registrationNo: {
@@ -181,6 +181,51 @@ async function findExistedRegistrationNumbers(registrationNumbers) {
     }
     return null;
 }
+
+async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
+    // find all active students of ${curriculumYear} left join with ${splName}
+    const students = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+                where: {
+                    active: true,
+                },
+                attributes: ["email"],
+                required: true,
+            },
+            {
+                model: models.SPL,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                where: {
+                    splId: splId,
+                },
+                required: false,
+                attributes: ["splId"],
+            },
+        ],
+        where: {
+            curriculumYear,
+        },
+        raw: true,
+        nest: true,
+        attributes: ["studentId"],
+    });
+
+    const unassignedStudents = students.filter((student) => {
+        return !student.SPLs.splId;
+    });
+
+    const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
+    const unassignedStudentEmails = unassignedStudents.map((student) => student.User.email);
+
+    return { unassignedStudentIds, unassignedStudentEmails };
+}
+
+async function findAllUnsupervisedStudentByCurriculumYear(curriculumYear) {}
 
 // -------------------------------Update---------------------------------
 
@@ -209,8 +254,9 @@ export default {
     findAll,
     findById,
     findAllByCurriculumYear,
-    findExistedRollNumbers,
-    findExistedRegistrationNumbers,
+    findAllExistedRollNo,
+    findAllExistedRegistrationNo,
+    findAllUnassignedStudentIdAndEmail,
     update,
     updateByAdmin,
 };

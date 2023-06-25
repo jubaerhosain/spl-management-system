@@ -2,6 +2,7 @@ import express from "express";
 const splRoutes = express.Router();
 
 import authMiddleware from "../middlewares/authMiddleware.js";
+import splMiddleware from "../middlewares/splMiddleware.js";
 import splValidator from "../validators/splValidator.js";
 import splController from "../controllers/splController.js";
 
@@ -27,14 +28,14 @@ splRoutes.post(
     splController.createSPLCommittee
 );
 
-// delete SPL [Do it manually]
-
 // Assign all unassigned students of a curriculumYear to corresponding SPL
-// splRoutes.post(
-//     "/assign/:splName",
-//     checkSPLActivenessByName,
-//     assignStudentToSPL
-// );
+splRoutes.post(
+    "/assign-student/:splName",
+    authMiddleware.checkAuthentication,
+    authMiddleware.isAdmin,
+    splMiddleware.isSPLExist,
+    splController.assignMultipleStudentToSPL,
+);
 
 // remove student from spl
 // splRoutes.delete(

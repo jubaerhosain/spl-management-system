@@ -18,6 +18,7 @@ const systemEmail = config.nodemailer.user;
 import sendOTPTemplate from "./emailTemplates/sendOTPTemplate.js";
 import accountCreationTemplate from "./emailTemplates/accountCreationTemplate.js";
 import splCommitteeCreationTemplate from "./emailTemplates/splCommitteeCreationTemplate.js";
+import splAssignedTemplate from "./emailTemplates/splAssignedTemplate.js";
 
 async function sendEmail(mailOptions) {
     try {
@@ -126,11 +127,44 @@ function sendCommitteeCreationEmailToMembers(memberEmails, splName, academicYear
 
         Promise.all(promises)
             .then((responses) => {
-                console.log("Creation creation emails sent successfully to the members");
+                console.log("Committee creation emails sent successfully to the members");
                 resolve(responses);
             })
             .catch((error) => {
                 console.log("Error sending committee creation emails to the members: ", error);
+                reject(error);
+            });
+    });
+}
+
+function sendSPLAssignedEmail(studentEmails, splName, academicYear) {
+    return new Promise((resolve, reject) => {
+        const promises = studentEmails.map((receiverEmail) => {
+            const mailOptions = {
+                from: config.nodemailer.user,
+                to: receiverEmail,
+                subject: `Assigned to ${splName.toUpperCase()}, ${academicYear}`,
+                html: splAssignedTemplate.getTemplate(splName, academicYear),
+            };
+
+            return new Promise((resolve, reject) => {
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(info.response);
+                    }
+                });
+            });
+        });
+
+        Promise.all(promises)
+            .then((responses) => {
+                console.log("SPL Assigned emails sent successfully to the students");
+                resolve(responses);
+            })
+            .catch((error) => {
+                console.log("Error sending SPL Assigned emails to the students: ", error);
                 reject(error);
             });
     });
@@ -141,5 +175,6 @@ export default {
     sendAccountCreationEmail,
     sendCommitteeCreationEmailToHead,
     sendCommitteeCreationEmailToManager,
-    sendCommitteeCreationEmailToMembers
+    sendCommitteeCreationEmailToMembers,
+    sendSPLAssignedEmail
 };
