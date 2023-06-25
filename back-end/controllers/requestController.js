@@ -1,13 +1,7 @@
-import { models, sequelize, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { models, sequelize, Op } from "../database/mysql.js";
+import { Response } from "../utils/responseUtils.js";
 
-/**
- * Do request by spl2 team
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-export async function teamRequest(req, res, next) {
+async function teamRequest(req, res, next) {
     try {
         const { teamId, teacherId } = req.query;
 
@@ -42,14 +36,7 @@ export async function teamRequest(req, res, next) {
     }
 }
 
-/**
- * Accept spl2 team
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns
- */
-export async function acceptTeamRequest(req, res, next) {
+async function acceptTeamRequest(req, res, next) {
     try {
         const { teamId } = req.query;
         const { userId } = req.user;
@@ -99,13 +86,44 @@ export async function acceptTeamRequest(req, res, next) {
     }
 }
 
-/**
- * Do request by spl3 student
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-export async function studentRequest(req, res, next) {
+async function cancelTeamRequest(req, res, next) {
+    try {
+        const { teamId, teacherId } = req.params;
+
+        await models.TeamRequest.destroy({
+            where: {
+                teacherId: teacherId,
+                teamId: teamId,
+            },
+        });
+
+        res.json(Response.success("Cancelled team request"));
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(Response.error("Internal Server Error"));
+    }
+}
+
+async function rejectTeamRequest(req, res, next) {
+    try {
+        const { userId } = req.user;
+        const { teamId } = req.params;
+
+        await models.TeamRequest.destroy({
+            where: {
+                teamId,
+                teacherId: userId,
+            },
+        });
+
+        res.json(Response.success("Rejected team request"));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal server error"));
+    }
+}
+
+async function studentRequest(req, res, next) {
     try {
         const { teacherId } = req.query;
         const studentId = req.user.userId;
@@ -141,13 +159,7 @@ export async function studentRequest(req, res, next) {
     }
 }
 
-/**
- * Accept spl3 student
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-export async function acceptStudentRequest(req, res, next) {
+async function acceptStudentRequest(req, res, next) {
     try {
         const { studentId } = req.query;
         const teacherId = req.user.userId;
@@ -193,7 +205,26 @@ export async function acceptStudentRequest(req, res, next) {
     }
 }
 
-export async function rejectStudentRequest(req, res, next) {
+async function cancelStudentRequest(req, res, next) {
+    try {
+        const { teacherId } = req.params;
+        const { userId } = req.user;
+
+        await models.StudentRequest.destroy({
+            where: {
+                teacherId: teacherId,
+                studentId: userId,
+            },
+        });
+
+        res.json(Response.success("Cancelled team request"));
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(Response.error("Internal Server Error"));
+    }
+}
+
+async function rejectStudentRequest(req, res, next) {
     try {
         const { userId } = req.user;
         const { studentId } = req.params;
@@ -212,58 +243,13 @@ export async function rejectStudentRequest(req, res, next) {
     }
 }
 
-export async function rejectTeamRequest(req, res, next) {
-    try {
-        const { userId } = req.user;
-        const { teamId } = req.params;
-
-        await models.TeamRequest.destroy({
-            where: {
-                teamId,
-                teacherId: userId,
-            },
-        });
-
-        res.json(Response.success("Rejected team request"));
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
-    }
-}
-
-export async function cancelTeamRequestByStudent(req, res, next) {
-    try {
-        const { teamId, teacherId } = req.params;
-
-        await models.TeamRequest.destroy({
-            where: {
-                teacherId: teacherId,
-                teamId: teamId,
-            },
-        });
-
-        res.json(Response.success("Cancelled team request"));
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
-    }
-}
-
-export async function cancelStudentRequestByStudent(req, res, next) {
-    try {
-        const { teacherId } = req.params;
-        const { userId } = req.user;
-
-        await models.StudentRequest.destroy({
-            where: {
-                teacherId: teacherId,
-                studentId: userId,
-            },
-        });
-
-        res.json(Response.success("Cancelled team request"));
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
-    }
-}
+export default {
+    teamRequest,
+    cancelTeamRequest,
+    rejectStudentRequest,
+    acceptTeamRequest,
+    studentRequest,
+    cancelStudentRequest,
+    rejectStudentRequest,
+    acceptStudentRequest,
+};
