@@ -1,4 +1,4 @@
-export { default as HomePage } from "./home/HomePage";
+export { default as HomePage } from "./PublicPanel/home/HomePage";
 export { default as LoginPage } from "./login/LoginPage";
 export { default as ForgotPasswordPage } from "./password-recovery/forgot-password/ForgotPasswordPage";
 export { default as ResetPasswordPage } from "./password-recovery/reset-password/ResetPasswordPage";

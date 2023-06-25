@@ -6,3 +6,4 @@ export { default as SubmitButton } from "./submit-button/SubmitButton";
 export { default as Title } from "./title/Title";
 export { default as CheckBox } from "./checkbox/CheckBox";
 export { default as Error } from "./error/Error";
+export { default as FormContainer } from "./form-container/FormContainer";
