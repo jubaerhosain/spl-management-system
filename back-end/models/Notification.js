@@ -35,7 +35,8 @@ export default (sequelize, DataTypes) => {
             validate: {
                 isIn: [["student_request", "team_request", "other"]],
             },
-            comment: "appoint committee person, student added to spl, allocated supervisor",
+            comment:
+                "appoint committee person, student added to spl, allocated supervisor, presentation event",
         },
         is_read: {
             type: DataTypes.BOOLEAN,
