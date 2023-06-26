@@ -29,7 +29,7 @@ export default function HomePage() {
             </p>
           </div>
         </div>
-        <Footer></Footer>
+        <Footer />
       </PageContainer>
     </>
   );
