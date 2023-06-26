@@ -17,9 +17,9 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
             },
         },
         date: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE, // CHANGE IT to week
             primaryKey: true,
-            defaultValue: Sequelize.NOW,
+            defaultValue: new Date(), 
         },
         mark: {
             type: DataTypes.FLOAT,

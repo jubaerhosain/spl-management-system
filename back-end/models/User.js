@@ -81,9 +81,8 @@ export default (sequelize, DataTypes, Op) => {
             foreignKey: "teacherId",
         });
 
-        // User - Notification [many to many]
-        User.belongsToMany(models.Notification, {
-            through: models.UserNotification,
+        // User - Notice [one to many]
+        User.hasMany(models.Notification, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "receiverId",

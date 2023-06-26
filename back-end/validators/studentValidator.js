@@ -152,7 +152,10 @@ const validateUpdateStudentAccountByAdmin = [
                 if (exist) throw new CustomError("rollNo already exists", 400);
             } catch (err) {
                 if (err.status) throw new CustomError(err.message);
-                else throw new CustomError("An error occurred while checking rollNo");
+                else {
+                    console.log(err);
+                    throw new CustomError("An error occurred while checking rollNo");
+                }
             }
         })
         .optional(),
@@ -169,7 +172,10 @@ const validateUpdateStudentAccountByAdmin = [
                 if (exist) throw new CustomError("registrationNo already exists", 400);
             } catch (err) {
                 if (err.status) throw new CustomError(err.message);
-                else throw new CustomError("An error occurred while checking registrationNo");
+                else {
+                    console.log(err);
+                    throw new CustomError("An error occurred while checking registrationNo");
+                }
             }
         })
         .optional(),

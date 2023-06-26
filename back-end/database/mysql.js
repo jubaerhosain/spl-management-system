@@ -31,6 +31,7 @@ import SPL from "../models/SPL.js";
 import Team from "../models/Team.js";
 import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
+import Notice from "../models/Notice.js";
 import Presentation from "../models/Presentation.js";
 import Mark from "../models/Mark.js";
 import PresentationMark from "../models/PresentationMark.js";
@@ -45,7 +46,6 @@ import StudentSPL from "../models/junctions/StudentSPL.js";
 import StudentTeam from "../models/junctions/StudentTeam.js";
 import TeacherSPL_PresentationEvaluator from "../models/junctions/TeacherSPL_PresentationEvaluator.js";
 import TeacherSPL_CommitteeMember from "../models/junctions/TeacherSPL_CommitteeMember.js";
-import UserNotification from "../models/junctions/UserNotification.js";
 import TeamTeacher_Request from "../models/junctions/TeamTeacher_Request.js";
 
 // =================================================================================================
@@ -59,6 +59,7 @@ const models = {
     Team: Team(sequelize, DataTypes, Op),
     Project: Project(sequelize, DataTypes, Op),
     Notification: Notification(sequelize, DataTypes, Op),
+    Notice: Notice(sequelize, DataTypes, Op),
     Presentation: Presentation(sequelize, DataTypes, Op),
     Mark: Mark(sequelize, DataTypes, Op),
     PresentationMark: PresentationMark(sequelize, DataTypes, Op),
@@ -68,7 +69,6 @@ const models = {
     // junctions
     StudentTeam: StudentTeam(sequelize, DataTypes, Op),
     StudentProject: StudentProject(sequelize, DataTypes, Op),
-    UserNotification: UserNotification(sequelize, DataTypes, Op),
     StudentTeacher_Supervisor: StudentTeacher_Supervisor(sequelize, DataTypes, Op),
     StudentTeacher_Request: StudentTeacher_Request(sequelize, DataTypes, Op),
     StudentSPL: StudentSPL(sequelize, DataTypes, Op),
@@ -84,7 +84,7 @@ Object.entries(models).forEach(([name, model]) => {
     }
 });
 
-// console.log("Number of table: ", Object.keys(models).length);
+console.log("Number of table: ", Object.keys(models).length);
 
 // Test the connection
 export function initializeMySqlConnection() {
