@@ -26,8 +26,12 @@ async function createSPLCommittee(req, res) {
             )
         );
     } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -49,7 +53,7 @@ async function assignStudents(req, res) {
         );
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message));
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
         } else {
             console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
@@ -64,7 +68,7 @@ async function unassignStudent(req, res) {
         if (!splId || !studentId) {
             throw new CustomError(
                 "Both `splId` and `studentId` must be provided in query parameters",
-                400
+                200
             );
         }
 
@@ -91,7 +95,12 @@ async function addCommitteeHead(req, res) {
             message: `Committee head added successfully`,
         });
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -103,7 +112,12 @@ async function removedCommitteeHead(req, res) {
             message: `SPL Manager added successfully`,
         });
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -115,7 +129,12 @@ async function addSPLManager(req, res) {
             message: `SPL Manager added successfully`,
         });
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -127,7 +146,12 @@ async function removeSPLManager(req, res) {
             message: `SPL Manager added successfully`,
         });
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -139,7 +163,12 @@ async function addCommitteeMember(req, res) {
             message: `SPL Manager added successfully`,
         });
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -163,7 +192,12 @@ async function finalizeSPL(req, res) {
         // upgrade student to next curriculum year
         // delete all temporary database related to this spl/spl students/spl teachers
     } catch (err) {
-        console.log(err);
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 

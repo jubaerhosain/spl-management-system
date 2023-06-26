@@ -9,8 +9,12 @@ async function createStudentAccount(req, res) {
 
         res.json(Response.success("Student accounts are created successfully"));
     } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 
@@ -23,8 +27,12 @@ async function updateStudentAccount(req, res) {
 
         res.json(Response.success("Account is updated successfully"));
     } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 

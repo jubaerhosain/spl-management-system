@@ -1,7 +1,6 @@
 import config from "../config/config.js";
 import { Response } from "../utils/responseUtils.js";
 import authService from "../services/authService.js";
-import UserRepository from "../repositories/UserRepository.js";
 
 async function login(req, res) {
     try {
@@ -18,7 +17,9 @@ async function login(req, res) {
         res.json(Response.success("Login successful"));
     } catch (err) {
         if (err.status) {
-            res.status(400).json(Response.error("Invalid email or password", Response.BAD_REQUEST));
+            res.status(err.status).json(
+                Response.error("Invalid email or password", Response.BAD_REQUEST)
+            );
         } else {
             console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
@@ -70,8 +71,12 @@ async function generateOTP(req, res) {
 
         res.json(Response.success("An OTP has been sent to your email"));
     } catch (err) {
-        console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+        } else {
+            console.log(err);
+            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        }
     }
 }
 

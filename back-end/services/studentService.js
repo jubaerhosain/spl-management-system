@@ -49,7 +49,7 @@ async function updateStudentAccountByAdmin(studentId, student) {
     const exist = await UserRepository.isStudentById(studentId);
 
     if (!exist) {
-        throw new CustomError("Student does not exist", 400);
+        throw new CustomError("Student does not exist", 200);
     }
 
     // update to Student table [only those fields are allowed]
