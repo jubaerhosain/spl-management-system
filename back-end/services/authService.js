@@ -23,7 +23,6 @@ async function login(email, password) {
         throw new CustomError("Password did not match", 400);
     }
 
-    // generate json web token
     const token = jwtUtils.generateToken({
         userId: user.userId,
         email: user.email,
@@ -32,6 +31,7 @@ async function login(email, password) {
 
     return token;
 }
+
 async function logout(email, password) {}
 
 async function changePassword(userId, oldPassword, newPassword) {
@@ -49,12 +49,10 @@ async function changePassword(userId, oldPassword, newPassword) {
 async function generateOTP(email) {
     const otp = passwordUtils.generateOTP(6);
 
-    // for 5 minutes
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
     await OTPRepository.createOTP(email, otp, expiresAt);
 
-    // send mail to user
     await emailService.sendEmailWithOTP(email, otp);
 }
 

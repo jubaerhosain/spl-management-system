@@ -28,12 +28,6 @@ async function updateStudentAccount(req, res) {
     }
 }
 
-/**
- * Update some special fields of student by admin
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
 async function updateStudentAccountByAdmin(req, res) {
     try {
         const student = req.body;
@@ -43,10 +37,10 @@ async function updateStudentAccountByAdmin(req, res) {
 
         res.json(Response.success("Student account is updated successfully"));
     } catch (err) {
-        console.log(err);
         if (err.status) {
             res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }

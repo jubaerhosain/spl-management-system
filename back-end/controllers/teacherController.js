@@ -1,11 +1,11 @@
 import { Response } from "../utils/responseUtils.js";
 import teacherService from "../services/teacherService.js";
 
-async function addTeacher(req, res) {
+async function createTeacherAccount(req, res) {
     try {
         const { teachers } = req.body;
 
-        await teacherService.addTeacher(teachers);
+        await teacherService.createTeacherAccount(teachers);
 
         res.json(Response.success("Teacher accounts are created successfully"));
     } catch (err) {
@@ -14,12 +14,12 @@ async function addTeacher(req, res) {
     }
 }
 
-async function updateTeacher(req, res) {
+async function updateTeacherAccount(req, res) {
     try {
         const teacher = req.body;
         const { userId } = req.user;
 
-        await teacherService.updateTeacher(userId, teacher);
+        await teacherService.updateTeacherAccount(userId, teacher);
 
         res.json(Response.success("Account updated successfully"));
     } catch (err) {
@@ -29,6 +29,6 @@ async function updateTeacher(req, res) {
 }
 
 export default {
-    addTeacher,
-    updateTeacher,
+    createTeacherAccount,
+    updateTeacherAccount,
 };

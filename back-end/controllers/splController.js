@@ -48,10 +48,10 @@ async function assignStudents(req, res) {
             )
         );
     } catch (err) {
-        console.log(err);
         if (err.status) {
             res.status(err.status).json(Response.error(err.message));
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
@@ -74,10 +74,10 @@ async function unassignStudent(req, res) {
             message: `Student unassigned successfully`,
         });
     } catch (err) {
-        console.log(err);
         if (err.status) {
             res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
@@ -177,5 +177,5 @@ export default {
     removeSPLManager,
     addCommitteeMember,
     removeCommitteeMember,
-    finalizeSPL
+    finalizeSPL,
 };

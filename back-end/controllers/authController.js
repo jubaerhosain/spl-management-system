@@ -17,10 +17,10 @@ async function login(req, res) {
 
         res.json(Response.success("Login successful"));
     } catch (err) {
-        console.log(err);
         if (err.status) {
             res.status(400).json(Response.error("Invalid email or password", Response.BAD_REQUEST));
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
@@ -47,8 +47,7 @@ async function changePassword(req, res) {
 
         res.json(Response.success("Password changed successfully"));
     } catch (err) {
-        console.log(err);
-        if (err.status == 400) {
+        if (err.status) {
             res.status(err.status).json(
                 Response.error(err.message, Response.VALIDATION_ERROR, {
                     oldPassword: {
@@ -57,6 +56,7 @@ async function changePassword(req, res) {
                 })
             );
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
@@ -83,7 +83,6 @@ async function verifyOTP(req, res) {
 
         res.json(Response.success("OTP verified successfully"));
     } catch (err) {
-        console.log(err);
         if (err.status) {
             res.status(err.status).json(
                 Response.error(err.message, Response.VALIDATION_ERROR, {
@@ -93,6 +92,7 @@ async function verifyOTP(req, res) {
                 })
             );
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }
@@ -106,10 +106,10 @@ async function resetPassword(req, res) {
 
         res.json(Response.success("Password reset successfully"));
     } catch (err) {
-        console.log(err);
-        if (err.status == 400) {
-            res.status(400).json(Response.error(err.message, Response.BAD_REQUEST));
+        if (err.status) {
+            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
         } else {
+            console.log(err);
             res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
         }
     }

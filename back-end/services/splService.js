@@ -61,6 +61,8 @@ async function assignStudents(splName) {
     await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
 
     await emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
+
+    // push notification
 }
 
 async function unassignStudent(splId, studentId) {

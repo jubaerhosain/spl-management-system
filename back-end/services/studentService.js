@@ -6,43 +6,38 @@ import UserRepository from "../repositories/UserRepository.js";
 import emailService from "./emailServices/emailService.js";
 
 async function createStudentAccount(students) {
-    try {
-        const passwords = await passwordUtils.generateHashedPassword(students.length);
+    const passwords = await passwordUtils.generateHashedPassword(students.length);
 
-        const credentials = [];
+    const credentials = [];
 
-        // normalize students to add both to User and Student table in a single query
-        let users = students.map((student, i) => {
-            const user = {};
+    // normalize students to add both to User and Student table in a single query
+    let users = students.map((student, i) => {
+        const user = {};
 
-            user.name = student.name;
-            user.email = student.email;
-            user.password = passwords[i].hashedPassword;
-            user.userType = "student";
+        user.name = student.name;
+        user.email = student.email;
+        user.password = passwords[i].hashedPassword;
+        user.userType = "student";
 
-            delete student.name;
-            delete student.email;
+        delete student.name;
+        delete student.email;
 
-            user.Student = [student];
+        user.Student = [student];
 
-            credentials.push({
-                name: user.name,
-                email: user.email,
-                password: passwords[i].originalPassword,
-            });
-
-            return user;
+        credentials.push({
+            name: user.name,
+            email: user.email,
+            password: passwords[i].originalPassword,
         });
 
-        await StudentRepository.create(users);
+        return user;
+    });
 
-        await emailService.sendAccountCreationEmail(credentials);
+    await StudentRepository.create(users);
 
-        fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
-    } catch (err) {
-        console.log(err);
-        throw new CustomError(err.message);
-    }
+    await emailService.sendAccountCreationEmail(credentials);
+
+    fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
 }
 
 async function updateStudentAccount(userId, student) {

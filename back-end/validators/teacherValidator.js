@@ -13,7 +13,7 @@ import {
     validateGender,
 } from "./common/commonValidators.js";
 
-const addTeacherValidator = [
+const validateCreateTeacherAccount = [
     body("teachers")
         .isArray()
         .withMessage("Must be an array")
@@ -58,7 +58,7 @@ const addTeacherValidator = [
  */
 const allowedFields = ["name", "phone", "gender", "details", "designation", "available"];
 
-const updateTeacherValidator = [
+const validateUpdateTeacherAccount = [
     requiredAtLeastOneField,
     isFieldAllowed(allowedFields),
 
@@ -100,4 +100,4 @@ const updateTeacherValidator = [
     commonValidationHandler,
 ];
 
-export default { addTeacherValidator, updateTeacherValidator };
+export default { validateCreateTeacherAccount, validateUpdateTeacherAccount };
