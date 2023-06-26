@@ -1,23 +1,14 @@
-import createError from "http-errors";
-import { models, sequelize, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { Response } from "../utils/responseUtils.js";
 
-
-async function createPresentation(req, res, next) {
+async function createPresentationEvent(req, res) {
     try {
-        const { splId, splName, academicYear } = req.spl;
+        const { splId } = req.query;
 
         const presentation = await models.Presentation.create({
             splId: splId,
         });
 
-        res.json(
-            Response.success(
-                `Presentation-${
-                    presentation.presentationNo
-                } created successfully for ${splName.toUpperCase()}, ${academicYear}`
-            )
-        );
+        res.json(Response.success(`Presentation event created successfully`));
     } catch (err) {
         console.log(err);
         res.status(500).json(Response.error("Internal Server Error"));
@@ -65,4 +56,4 @@ async function removePresentationEvaluator(req, res, next) {
     }
 }
 
-export { createPresentation, addPresentationEvaluator, removePresentationEvaluator };
+export default { createPresentationEvent, addPresentationEvaluator, removePresentationEvaluator };

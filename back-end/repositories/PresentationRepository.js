@@ -1,3 +1,11 @@
-import { models } from "../database/db.js";
+import { models } from "../database/mysql.js";
 
-export default {};
+async function create(splId) {
+    await models.Presentation.create({
+        splId: splId,
+    });
+}
+
+export default {
+    create,
+};

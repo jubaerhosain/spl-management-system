@@ -1,6 +1,7 @@
 import http from "http";
 import app from "./app.js";
 import config from "./config/config.js";
+
 import { initializeSocket } from "./sockets/socket.js";
 import { initializeMySqlConnection } from "./database/mysql.js";
 import { initializeRedisConnection } from "./database/redis.js";

@@ -1,51 +1,33 @@
 import { Router } from "express";
 const presentationRouter = Router();
 
-import { commonValidationHandler } from "../validators/custom-validator.js";
+import presentationController from "../controllers/presentationController.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
-import {
-    createPresentationValidator,
-    addPresentationEvaluatorValidator,
-    removePresentationEvaluatorValidator,
-} from "../validators/presentation-validators.js";
-
-import {
-    createPresentation,
-    addPresentationEvaluator,
-    removePresentationEvaluator,
-} from "../controllers/presentation-controllers.js";
-
-import {
-    checkCreatePresentation,
-    checkAddPresentationEvaluator,
-    checkRemovePresentationEvaluator,
-} from "../middlewares/presentation-middlewares.js";
-
-// create a presentation event
+// query params {splId}
 presentationRouter.post(
-    "/:splName",
-    createPresentationValidator,
-    commonValidationHandler,
-    checkCreatePresentation,
-    createPresentation
+    "/",
+    authMiddleware.checkAuthentication,
+    authMiddleware.isTeacher, // then is committee Head
+    presentationController.createPresentationEvent
 );
 
 // add one or more presentation evaluator
-presentationRouter.post(
-    "/evaluator/:splName",
-    addPresentationEvaluatorValidator,
-    commonValidationHandler,
-    checkAddPresentationEvaluator,
-    addPresentationEvaluator
-);
+// presentationRouter.post(
+//     "/evaluator/:splName",
+//     addPresentationEvaluatorValidator,
+//     commonValidationHandler,
+//     checkAddPresentationEvaluator,
+//     addPresentationEvaluator
+// );
 
 // remove a presentation evaluator
-presentationRouter.delete(
-    "/evaluator/:splId/:teacherId",
-    removePresentationEvaluatorValidator,
-    commonValidationHandler,
-    checkRemovePresentationEvaluator,
-    removePresentationEvaluator
-);
+// presentationRouter.delete(
+//     "/evaluator/:splId/:teacherId",
+//     removePresentationEvaluatorValidator,
+//     commonValidationHandler,
+//     checkRemovePresentationEvaluator,
+//     removePresentationEvaluator
+// );
 
 export default presentationRouter;

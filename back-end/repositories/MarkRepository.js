@@ -1,3 +1,7 @@
-import { models } from "../database/db.js";
+import { models } from "../database/mysql.js";
 
-export default {};
+async function createIfNotExists(splId, studentId) {}
+
+export default {
+    createIfNotExists,
+};

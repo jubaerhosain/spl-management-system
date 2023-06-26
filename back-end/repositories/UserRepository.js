@@ -1,8 +1,10 @@
 import { models, Op } from "../database/mysql.js";
 
+// ------------------------------Create----------------------------------
+
 async function create(user) {}
 
-// -----------------------------Checking-----------------------------------
+// ------------------------------Read----------------------------------
 
 async function isUserExist(userId) {
     const user = await models.User.findByPk(userId, {
@@ -80,8 +82,6 @@ async function isStudentById(userId) {
     if (user) return true;
     return false;
 }
-
-// ------------------------------Find----------------------------------
 
 async function findExistedEmails(emails) {
     const user = await models.User.findAll({
@@ -194,6 +194,8 @@ async function updatePasswordByUserId(userId, password) {
         }
     );
 }
+
+// ------------------------------Delete----------------------------------
 
 export default {
     create,

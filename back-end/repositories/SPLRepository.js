@@ -1,7 +1,7 @@
 import { models, sequelize } from "../database/mysql.js";
 import emailService from "../services/emailServices/emailService.js";
 
-// -----------------------------------Create-----------------------------
+// -------------------------------Create-----------------------------
 
 async function create(committee) {
     const memberIds = committee.memberIds;
@@ -42,7 +42,7 @@ async function assignStudents(splId, studentIds) {
     await models.StudentSPL.bulkCreate(studentId_splId);
 }
 
-// ------------------------------Checking----------------------------------
+// ------------------------------Read--------------------------------
 
 async function isExists(splName) {
     const spl = await models.SPL.findOne({
@@ -69,11 +69,19 @@ async function isStudentBelongsToSPL(splId, studentId) {
     else return false;
 }
 
-// ------------------------------Read--------------------------------
+async function findById(splId) {
+    const spl = await models.SPL.findByPk(splId, {
+        raw: true,
+    });
+
+    return spl;
+}
+
 async function findByName(splName) {
     const spl = await models.SPL.findOne({
         where: {
             splName: splName,
+            active: true,
         },
         raw: true,
     });
@@ -81,7 +89,7 @@ async function findByName(splName) {
     return spl;
 }
 
-// ------------------------------Delete--------------------------------
+// ------------------------------Delete-------------------------------
 async function removeStudent(splId, studentId) {
     await models.StudentSPL.destroy({
         where: {
@@ -96,6 +104,7 @@ export default {
     assignStudents,
     isExists,
     isStudentBelongsToSPL,
+    findById,
     findByName,
     removeStudent,
 };

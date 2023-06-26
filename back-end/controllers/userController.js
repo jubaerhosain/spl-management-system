@@ -108,7 +108,7 @@ async function getLoggedInUser(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            Response.error("Internal Server Error", Response.SERVER_ERROR)
         );
     }
 }
