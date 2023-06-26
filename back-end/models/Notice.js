@@ -20,6 +20,7 @@ export default (sequelize, DataTypes) => {
             validate: {
                 isIn: [["spl1", "spl2", "spl3"]],
             },
+            comment: "committee creation, presentation event"
         },
         timestamp: {
             type: DataTypes.DATE,

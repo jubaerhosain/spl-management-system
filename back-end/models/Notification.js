@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
         senderId: {
             type: DataTypes.INTEGER,
             allowNull: true,
-            comment: "studentId for student_request, teamId for team_request and null for appoint",
+            comment: "studentId for student_request, teamId for team_request and null for other",
         },
         receiverId: {
             type: DataTypes.INTEGER,
@@ -33,8 +33,9 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [["student_request", "team_request", "appoint"]],
+                isIn: [["student_request", "team_request", "other"]],
             },
+            comment: "appoint committee person, student added to spl, allocated supervisor",
         },
         is_read: {
             type: DataTypes.BOOLEAN,
