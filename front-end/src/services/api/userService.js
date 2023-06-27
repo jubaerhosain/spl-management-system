@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "./axios/axiosInstance";
 
 export function getLoggedInUser() {
   return axiosInstance.get("/user");
