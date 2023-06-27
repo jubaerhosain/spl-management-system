@@ -1,9 +1,7 @@
 import StudentRepository from "../repositories/StudentRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
-import fileUtils from "../utils/fileUtils.js";
 import CustomError from "../utils/CustomError.js";
 import UserRepository from "../repositories/UserRepository.js";
-import emailService from "./emailServices/emailService.js";
 
 async function createStudentAccount(students) {
     const passwords = await passwordUtils.generateHashedPassword(students.length);
@@ -11,7 +9,7 @@ async function createStudentAccount(students) {
     const credentials = [];
 
     // normalize students to add both to User and Student table in a single query
-    let users = students.map((student, i) => {
+    const users = students.map((student, i) => {
         const user = {};
 
         user.name = student.name;
@@ -35,17 +33,7 @@ async function createStudentAccount(students) {
 
     await StudentRepository.create(users);
 
-    try {
-        await emailService.sendAccountCreationEmail(credentials);
-    } catch (err) {
-        console.log(err);
-        throw new CustomError(
-            "Accounts are created successfully but failed to send email with credential",
-            200
-        );
-    }
-
-    fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
+    return credentials;
 }
 
 async function updateStudentAccount(userId, student) {

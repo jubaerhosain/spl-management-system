@@ -1,11 +1,34 @@
 import { Response } from "../utils/responseUtils.js";
 import studentService from "../services/studentService.js";
+import emailService from "../services/emailServices/emailService.js";
+import fileUtils from "../utils/fileUtils.js";
+import CustomError from "../utils/CustomError.js";
 
 async function createStudentAccount(req, res) {
     try {
         const { students } = req.body;
 
-        await studentService.createStudentAccount(students);
+        const credentials = await studentService.createStudentAccount(students);
+
+        try {
+            await emailService.sendAccountCreationEmail(credentials);
+        } catch (err) {
+            console.log(err);
+            throw new CustomError(
+                "Accounts are created successfully but failed to send email with credential",
+                200
+            );
+        }
+
+        try {
+            fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
+        } catch (err) {
+            console.log(err);
+            throw new CustomError(
+                "Accounts are created successfully but failed to write credentials in file ",
+                200
+            );
+        }
 
         res.json(Response.success("Student accounts are created successfully"));
     } catch (err) {

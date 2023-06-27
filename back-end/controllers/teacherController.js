@@ -1,11 +1,34 @@
 import { Response } from "../utils/responseUtils.js";
 import teacherService from "../services/teacherService.js";
+import fileUtils from "../utils/fileUtils.js";
+import emailService from "../services/emailServices/emailService.js";
+import CustomError from "../utils/CustomError.js";
 
 async function createTeacherAccount(req, res) {
     try {
         const { teachers } = req.body;
 
-        await teacherService.createTeacherAccount(teachers);
+        const credentials = await teacherService.createTeacherAccount(teachers);
+
+        try {
+            await emailService.sendAccountCreationEmail(credentials);
+        } catch (err) {
+            console.log(err);
+            throw new CustomError(
+                "Accounts are created successfully but failed to send email with credential",
+                200
+            );
+        }
+
+        try {
+            fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
+        } catch (err) {
+            console.log(err);
+            throw new CustomError(
+                "Accounts are created successfully but failed to wrote credentials tp file",
+                200
+            );
+        }
 
         res.json(Response.success("Teacher accounts are created successfully"));
     } catch (err) {
