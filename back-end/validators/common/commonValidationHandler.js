@@ -7,7 +7,7 @@ export async function commonValidationHandler(req, res, next) {
     if (Object.keys(mappedErrors).length === 0) {
         next();
     } else {
-        res.status(400).json(
+        res.status(200).json(
             Response.error("Validation failed", Response.VALIDATION_ERROR, mappedErrors)
         );
     }

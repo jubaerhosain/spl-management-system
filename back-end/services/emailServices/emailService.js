@@ -1,7 +1,7 @@
 "use strict";
-
-import nodemailer from "nodemailer";
 import config from "../../config/config.js";
+import nodemailer from "nodemailer";
+import templates from "./templates.js";
 
 const transporter = nodemailer.createTransport({
     service: config.nodemailer.service,
@@ -10,28 +10,10 @@ const transporter = nodemailer.createTransport({
         pass: config.nodemailer.password,
     },
 });
-
 const systemEmail = config.nodemailer.user;
 
-// =================================================================
-
-import sendOTPTemplate from "./emailTemplates/sendOTPTemplate.js";
-import accountCreationTemplate from "./emailTemplates/accountCreationTemplate.js";
-import splCommitteeCreationTemplate from "./emailTemplates/splCommitteeCreationTemplate.js";
-import splAssignedTemplate from "./emailTemplates/splAssignedTemplate.js";
-
-async function sendEmail(mailOptions) {
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully")
-    } catch (err) {
-        console.log("Error sending email: ", err);
-        throw new Error("Internal server error");
-    }
-}
-
 async function sendEmailWithOTP(receiverEmail, otp) {
-    const html = sendOTPTemplate.getTemplate(otp);
+    const html = templates.getSendOTPTemplate(otp);
     const mailOptions = {
         from: systemEmail,
         to: receiverEmail,
@@ -39,7 +21,13 @@ async function sendEmailWithOTP(receiverEmail, otp) {
         html: html,
     };
 
-    await sendEmail(mailOptions);
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email with otp sent successfully");
+    } catch (err) {
+        console.log("Error sending email with OTP: ", err);
+        throw new Error(err);
+    }
 }
 
 /**
@@ -54,7 +42,7 @@ function sendAccountCreationEmail(credentials) {
                 from: config.nodemailer.user,
                 to: user.email,
                 subject: "Welcome to SPL",
-                html: accountCreationTemplate.getTemplate(user.email, user.password),
+                html: templates.getAccountCreationTemplate(user.email, user.password),
             };
 
             return new Promise((resolve, reject) => {
@@ -70,7 +58,7 @@ function sendAccountCreationEmail(credentials) {
 
         Promise.all(promises)
             .then((responses) => {
-                console.log("Account creation emails sent successfully");
+                console.log("Account creation emails are sent successfully");
                 resolve(responses);
             })
             .catch((error) => {
@@ -137,7 +125,16 @@ function sendCommitteeCreationEmailToMembers(memberEmails, splName, academicYear
     });
 }
 
-function sendSPLAssignedEmail(studentEmails, splName, academicYear) {
+/**
+ * @param {string} headEmail
+ * @param {string} managerEmail
+ * @param {Array} memberEmails
+ * @param {string} splName
+ * @param {string} academicYear
+ */
+function sendCommitteeCreationEmail(headEmail, managerEmail, memberEmails, splName, academicYear) {}
+
+function sendAssignedToSPLEmail(studentEmails, splName, academicYear) {
     return new Promise((resolve, reject) => {
         const promises = studentEmails.map((receiverEmail) => {
             const mailOptions = {
@@ -173,8 +170,6 @@ function sendSPLAssignedEmail(studentEmails, splName, academicYear) {
 export default {
     sendEmailWithOTP,
     sendAccountCreationEmail,
-    sendCommitteeCreationEmailToHead,
-    sendCommitteeCreationEmailToManager,
-    sendCommitteeCreationEmailToMembers,
-    sendSPLAssignedEmail
+    sendCommitteeCreationEmail,
+    sendAssignedToSPLEmail,
 };

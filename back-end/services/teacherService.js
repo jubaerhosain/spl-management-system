@@ -33,7 +33,15 @@ async function createTeacherAccount(teachers) {
 
     await TeacherRepository.create(users);
 
-    await emailService.sendAccountCreationEmail(credentials);
+    try {
+        await emailService.sendAccountCreationEmail(credentials);
+    } catch (err) {
+        console.log(err);
+        throw new CustomError(
+            "Accounts are created successfully but failed to send email with credential",
+            200
+        );
+    }
 
     fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
 }
