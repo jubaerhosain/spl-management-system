@@ -16,7 +16,7 @@ async function createTeacherAccount(req, res) {
             console.log(err);
             throw new CustomError(
                 "Accounts are created successfully but failed to send email with credential",
-                200
+                400
             );
         }
 
@@ -26,7 +26,7 @@ async function createTeacherAccount(req, res) {
             console.log(err);
             throw new CustomError(
                 "Accounts are created successfully but failed to wrote credentials tp file",
-                200
+                400
             );
         }
 

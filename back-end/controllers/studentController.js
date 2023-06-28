@@ -16,7 +16,7 @@ async function createStudentAccount(req, res) {
             console.log(err);
             throw new CustomError(
                 "Accounts are created successfully but failed to send email with credential",
-                200
+                400
             );
         }
 
@@ -26,7 +26,7 @@ async function createStudentAccount(req, res) {
             console.log(err);
             throw new CustomError(
                 "Accounts are created successfully but failed to write credentials in file ",
-                200
+                400
             );
         }
 

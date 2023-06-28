@@ -15,12 +15,12 @@ async function login(email, password) {
     const user = await UserRepository.findLoginInfoByEmail(email);
 
     if (!user) {
-        throw new CustomError("Email not found", 200);
+        throw new CustomError("Email not found", 400);
     }
 
     const matches = await passwordUtils.verifyPassword(password, user.password);
     if (!matches) {
-        throw new CustomError("Password did not match", 200);
+        throw new CustomError("Password did not match", 400);
     }
 
     const token = jwtUtils.generateToken({
@@ -39,7 +39,7 @@ async function changePassword(userId, oldPassword, newPassword) {
 
     const matches = await passwordUtils.verifyPassword(oldPassword, hashedPassword);
     if (!matches) {
-        throw new CustomError("Password did not match", 200);
+        throw new CustomError("Password did not match", 400);
     }
 
     const newHashedPassword = await passwordUtils.hashPassword(newPassword);
@@ -60,7 +60,7 @@ async function verifyOTP(email, otp) {
     const actualOTP = await OTPRepository.findOTP(email);
 
     if (otp != actualOTP) {
-        throw new CustomError("Invalid OTP or expired", 200);
+        throw new CustomError("Invalid OTP or expired", 400);
     }
 }
 
@@ -68,7 +68,7 @@ async function resetPassword(email, otp, password) {
     const actualOTP = await OTPRepository.findOTP(email);
 
     if (actualOTP != otp) {
-        throw new CustomError("Your OTP is expired", 200);
+        throw new CustomError("Your OTP is expired", 400);
     }
 
     const hashedPassword = await passwordUtils.hashPassword(password);
