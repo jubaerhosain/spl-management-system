@@ -10,7 +10,6 @@ export default function HomeRoutes() {
         <Route index element={<h1>home</h1>} />
         <Route path="about" element={<h1>about</h1>} />
         <Route path="faculty" element={<h1>faculty</h1>} />
-        <Route path="projects" element={<h1>projects</h1>} />
 
         <Route path="/*" element={<PublicRoute />}>
           <Route path="login" element={<h1>Login page</h1>} />
@@ -21,6 +20,11 @@ export default function HomeRoutes() {
 
         <Route path="/*" element={<PrivateRoute />}>
           <Route path="notices" element={<h1>Notices</h1>} />
+          <Route path="spl" element={<h1>SPL LAYOUT</h1>}>
+            <Route path=":splName">
+              <Route path="projects" element={<h1>projects</h1>} />
+            </Route>
+          </Route>
         </Route>
       </Route>
     </Routes>
