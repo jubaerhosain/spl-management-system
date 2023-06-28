@@ -12,9 +12,7 @@ export default defineConfig({
       "@utils": path.resolve(new URL("./src/utils", import.meta.url).pathname),
       "@pages": path.resolve(new URL("./src/pages", import.meta.url).pathname),
       "@contexts": path.resolve(new URL("./src/contexts", import.meta.url).pathname),
-      "@routes": path.resolve(new URL("./src/routes", import.meta.url).pathname),
       "@services": path.resolve(new URL("./src/services", import.meta.url).pathname),
-      "@layouts": path.resolve(new URL("./src/layouts", import.meta.url).pathname),
     },
   },
 });

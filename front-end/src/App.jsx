@@ -1,40 +1,32 @@
 import "./App.css";
 
-import { Route, Routes } from "react-router-dom";
-import {
-  HomePage,
-  LoginPage,
-  NotFoundPage,
-  ForgotPasswordPage,
-  VerifyOTPPage,
-  ResetPasswordPage,
-} from "@pages";
+// import {
+//   HomePage,
+//   LoginPage,
+//   NotFoundPage,
+//   ForgotPasswordPage,
+//   VerifyOTPPage,
+//   ResetPasswordPage,
+// } from "@pages";
+
+import { Routes, Route } from "react-router-dom";
 
 import { AuthProvider } from "@contexts/AuthProvider";
-import { PrivateOutlet, PublicOutlet } from "@routes";
-import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
+import HomeRoutes from "./pages/HomePanel/routes/HomeRoutes";
+import AdminRoutes from "./pages/AdminPanel/routes/AdminRoutes";
+import TeacherRoutes from "./pages/TeacherPanel/routes/TeacherRoutes";
+
+// import { PrivateOutlet, PublicOutlet } from "@routes";
+// import { AdminDashboard, StudentDashboard, TeacherDashboard } from "@pages/dashboard";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/*" element={<NotFoundPage />} />
-        <Route path="/" element={<HomePage />} />
-
-        <Route path="/*" element={<PublicOutlet />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="verify-otp" element={<VerifyOTPPage />} />
-          <Route path="reset-password" element={<ResetPasswordPage />} />
-        </Route>
-
-        <Route path="/*" element={<PrivateOutlet />}>
-          <Route path="admin" element={<AdminDashboard />} />
-          <Route path="teacher" element={<TeacherDashboard />} />
-          <Route path="student" element={<StudentDashboard />}>
-            <Route path="profile" element={<h1>Student Profile</h1>}></Route>
-          </Route>
-        </Route>
+        <Route path="/*" element={<HomeRoutes />}></Route>
+        <Route path="/admin/*" element={<AdminRoutes />}></Route>
+        <Route path="/teacher/*" element={<TeacherRoutes />}></Route>
+        <Route path="/student/*" element={<h1>Student Routes</h1>}></Route>
       </Routes>
     </AuthProvider>
   );

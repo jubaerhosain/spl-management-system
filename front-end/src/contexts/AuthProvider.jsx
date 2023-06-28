@@ -1,6 +1,5 @@
-import UserService from "@services/UserService";
-import AuthService from "@services/AuthService";
 import { createContext, useState, useContext, useEffect } from "react";
+import authService from "@services/api/authService";
 
 const AuthContext = createContext();
 
@@ -11,39 +10,48 @@ export function useAuthProvider() {
 
 export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
+
+  // {userId, userType: ["admin", "teacher", "student"]}
   const [user, setUser] = useState(null);
 
-  const loadLoggedInUser = async () => {
-    UserService.getLoggedInUser()
-      .then((response) => {
-        if (response.success) {
-          setUser(response.data);
-        } else {
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const loadUserIfLoggedIn = async () => {
+    setLoading(true);
+    try {
+      const response = await authService.checkAuthentication();
+      if (response.success) {
+        setUser(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    loadLoggedInUser();
+    loadUserIfLoggedIn();
   }, []);
 
   async function login(data) {
-    const response = await AuthService.login(data);
-    if (response.success) {
-      loadLoggedInUser();
-    }
+    const response = await authService.login(data);
+
+    setTimeout(() => {
+      if (response.success) {
+        loadUserIfLoggedIn();
+      }
+    }, 500);
+
     return response;
   }
 
   async function logout() {
-    const response = await AuthService.logout();
-    if (response.success) {
-      setUser(null);
-    }
+    const response = await authService.logout();
+
+    setTimeout(() => {
+      if (response.success) {
+        setUser(null);
+      }
+    }, 500);
+
     return response;
   }
 

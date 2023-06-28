@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getUser, createUser, updateUser, getLoggedInUser } from "../api/userService";
 
-export function useUserService() {
+export default function useUserService() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 

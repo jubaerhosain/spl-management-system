@@ -1,17 +1,24 @@
 import axiosInstance from "./axios/axiosInstance";
 
-export function getLoggedInUser() {
+function getLoggedInUser() {
   return axiosInstance.get("/user");
 }
 
-export function getUser(userId) {
+function getUser(userId) {
   return axiosInstance.get(`/user/${userId}`);
 }
 
-export function createUser(userData) {
+function createUser(userData) {
   return axiosInstance.post("/user", userData);
 }
 
-export function updateUser(userId, userData) {
+function updateUser(userId, userData) {
   return axiosInstance.put(`/user/${userId}`, userData);
 }
+
+export default {
+  getLoggedInUser,
+  getUser,
+  createUser,
+  updateUser,
+};

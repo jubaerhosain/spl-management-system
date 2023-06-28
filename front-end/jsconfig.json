@@ -20,9 +20,9 @@
             // "@routes/*": [
             //     "src/routes/*"
             // ],
-            // "@services/*": [
-            //     "src/services/*"
-            // ],
+            "@services/*": [
+                "src/services/*"
+            ],
             // "@layouts/*": [
             //     "src/layouts/*"
             // ],
