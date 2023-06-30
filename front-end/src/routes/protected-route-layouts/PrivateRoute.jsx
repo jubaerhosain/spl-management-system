@@ -8,7 +8,5 @@ export default function PrivateLayout() {
     return <h1>Loading....</h1>;
   }
 
-  console.log("user", user);
-
   return user ? <Outlet /> : <Navigate to="/login" />;
 }

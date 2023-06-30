@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import PrivateRoute from "../../PrivateRoute";
-import TeacherLayout from "../layouts/TeacherLayout";
+import PrivateRoute from "./protected-route-layouts/PrivateRoute";
+import TeacherLayout from "../pages/TeacherPanel/layouts/TeacherLayout";
 
 export default function TeacherRoutes() {
   return (

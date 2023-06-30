@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import PrivateRoute from "../../PrivateRoute";
-import AdminLayout from "../layouts/AdminLayout";
+import PrivateRoute from "./protected-route-layouts/PrivateRoute";
+import AdminLayout from "../pages/AdminPanel/layouts/AdminLayout";
 
 export default function AdminRoutes() {
   return (

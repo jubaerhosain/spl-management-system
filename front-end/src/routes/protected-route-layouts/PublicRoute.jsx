@@ -34,7 +34,5 @@ export default function PublicLayout() {
     return <h1>Loading....</h1>;
   }
 
-  console.log("user", user);
-
   return !user ? <Outlet /> : <RedirectToProfile />;
 }

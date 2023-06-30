@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   // {userId, userType: ["admin", "teacher", "student"]}
+  // load full user information
   const [user, setUser] = useState(null);
 
   const loadUserIfLoggedIn = async () => {

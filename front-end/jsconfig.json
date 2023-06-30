@@ -2,9 +2,9 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            // "@components/*": [
-            //     "src/components/*"
-            // ],
+            "@components/*": [
+                "src/components/*"
+            ],
             // "@utils/*": [
             //     "src/utils/*"
             // ],
@@ -14,12 +14,12 @@
             // "@pages/*": [
             //     "src/pages/*"
             // ],
-            // "@contexts/*": [
-            //     "src/contexts/*"
-            // ],
-            // "@routes/*": [
-            //     "src/routes/*"
-            // ],
+            "@contexts/*": [
+                "src/contexts/*"
+            ],
+            "@routes/*": [
+                "src/routes/*"
+            ],
             "@services/*": [
                 "src/services/*"
             ],

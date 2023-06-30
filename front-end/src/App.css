@@ -15,3 +15,21 @@ body {
 .common-text-color1 {
   @apply text-blue-900;
 }
+
+.active {
+  @apply text-blue-600;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown-content {
+  min-width: 160px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

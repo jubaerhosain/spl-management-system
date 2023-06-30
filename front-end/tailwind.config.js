@@ -4,7 +4,19 @@ export default {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'nv': '900px',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.max-w-custom': {
+          'max-width': '1300px',
+        },
+      }, ['responsive']);
+    },
+  ],
 };
