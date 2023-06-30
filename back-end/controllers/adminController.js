@@ -1,12 +1,12 @@
-import { models } from "../database/db.js";
-import { writeCredentials } from "../utilities/file-utilities.js";
-import { generateHashedPassword, verifyPassword } from "../utilities/password-utilities.js";
+import { models } from "../database/mysql.js";
+import fileUtils from "../utils/fileUtils.js";
+import passwordUtils from "../utils/passwordUtils.js";
 
 async function addAdmin(req, res) {
     try {
         const { name, email } = req.body;
 
-        const hashedPasswords = await generateHashedPassword(1);
+        const hashedPasswords = await passwordUtils.generateHashedPassword(1);
         const { hashedPassword, originalPassword } = hashedPasswords[0];
 
         const admin = {
@@ -19,12 +19,16 @@ async function addAdmin(req, res) {
         await models.User.create(admin);
 
         const credentialData = `email: ${email}, password: ${originalPassword}`;
-        writeCredentials(new Date() + "\n" + credentialData);
+        fileUtils.writeCredentials(new Date() + "\n" + credentialData);
 
-        res.end("admin created successfully");
+        res.json({
+            message: "admin created successfully",
+            credentialData,
+        });
     } catch (err) {
         console.log(err);
+        res.status(500).end("An error occurred while creating admin");
     }
 }
 
-export { addAdmin };
+export default { addAdmin };
