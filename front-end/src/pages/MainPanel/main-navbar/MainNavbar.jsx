@@ -17,14 +17,14 @@ export default function MainNavbar() {
         </Link>
 
         <div className={styles.rightBox}>
-          {!user ? (
+          {user ? (
             <>
-              <div>
+              <div className="flex items-center">
                 <NotificationButton />
                 {/* <NotificationDropdown /> */}
               </div>
 
-              <div>
+              <div className="flex items-center">
                 <ProfileButton />
                 {/* <ProfileDropdown /> */}
               </div>
@@ -35,7 +35,7 @@ export default function MainNavbar() {
             </button>
           )}
 
-          <div>
+          <div className="flex items-center">
             <ToggleButton />
             {/* <ToggleDropdown /> */}
           </div>
