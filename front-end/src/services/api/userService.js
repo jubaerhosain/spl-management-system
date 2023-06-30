@@ -1,18 +1,24 @@
 import axiosInstance from "./axios/axiosInstance";
 
-function getLoggedInUser() {
-  return axiosInstance.get("/user");
+async function getLoggedInUser() {
+  try {
+    const response = await axiosInstance.get("/user");
+    return response.data;
+  } catch (err) {
+    if (err.response) return err.response.data;
+    return {};
+  }
 }
 
-function getUser(userId) {
+async function getUser(userId) {
   return axiosInstance.get(`/user/${userId}`);
 }
 
-function createUser(userData) {
+async function createUser(userData) {
   return axiosInstance.post("/user", userData);
 }
 
-function updateUser(userId, userData) {
+async function updateUser(userId, userData) {
   return axiosInstance.put(`/user/${userId}`, userData);
 }
 

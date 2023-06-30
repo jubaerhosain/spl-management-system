@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import authService from "@services/api/authService";
+import userService from "@services/api/userService";
 
 const AuthContext = createContext();
 
@@ -10,15 +11,12 @@ export function useAuthProvider() {
 
 export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
-
-  // {userId, userType: ["admin", "teacher", "student"]}
-  // load full user information
   const [user, setUser] = useState(null);
 
   const loadUserIfLoggedIn = async () => {
     setLoading(true);
     try {
-      const response = await authService.checkAuthentication();
+      const response = await userService.getLoggedInUser();
       if (response.success) {
         setUser(response.data);
       }

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import styles from "./MainNavbar.module.css";
 import NotificationButton from "./notification-button/NotificationButton";
 import ProfileButton from "./profile-button/ProfileButton";
@@ -8,6 +8,8 @@ import { useAuthProvider } from "@contexts/AuthProvider";
 
 export default function MainNavbar() {
   const { user } = useAuthProvider();
+  const location = useLocation();
+
   return (
     <nav className={styles.navContainer}>
       <div className={styles.navContent}>
@@ -29,6 +31,8 @@ export default function MainNavbar() {
                 {/* <ProfileDropdown /> */}
               </div>
             </>
+          ) : location.pathname == "/login" ? (
+            <div></div>
           ) : (
             <button className="bg-blue-900 hover:bg-blue-950 text-white font-semibold py-1 px-4 rounded">
               <Link to="/login">Login</Link>
