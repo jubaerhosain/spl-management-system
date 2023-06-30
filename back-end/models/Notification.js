@@ -7,11 +7,6 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        senderId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            comment: "studentId for student_request, teamId for team_request and null for other",
-        },
         receiverId: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -33,12 +28,12 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [["student_request", "team_request", "other"]],
+                isIn: [["other"]],
             },
             comment:
-                "appoint committee person, student added to spl, allocated supervisor, presentation event",
+                "appoint committee person, student added to spl, allocated supervisor, presentation event, posted a notice",
         },
-        is_read: {
+        isRead: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,

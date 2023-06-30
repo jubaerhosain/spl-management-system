@@ -18,6 +18,11 @@ export default (sequelize, DataTypes) => {
                 key: "teacherId",
             },
         },
+        isRead: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     });
 
     return StudentTeacher_Request;
