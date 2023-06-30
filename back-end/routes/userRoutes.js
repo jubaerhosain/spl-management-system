@@ -1,21 +1,19 @@
 import express from "express";
-const userRouter = express.Router();
+const userRoutes = express.Router();
 
 import adminRouter from "./adminRoutes.js";
 import studentRouter from "./studentRoutes.js";
 import teacherRouter from "./teacherRoutes.js";
 
-userRouter.use("/admin", adminRouter);
-userRouter.use("/student", studentRouter);
-userRouter.use("/teacher", teacherRouter);
-
-export default userRouter;
+userRoutes.use("/admin", adminRouter);
+userRoutes.use("/student", studentRouter);
+userRoutes.use("/teacher", teacherRouter);
 
 //==============================================================================================
 
-// import { uploadAvatar } from "../middlewares/user-middlewares.js";
-// import { checkAuthentication } from "../middlewares/common/check-auth-middleware.js";
-// import UserController from "../controllers/user-controllers.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
+import UserController from "../controllers/userController.js"
+
 
 // upload avatar
 // userRouter.post("/avatar", checkAuthentication, uploadAvatar, UserController.saveAvatar);
@@ -26,8 +24,8 @@ export default userRouter;
 // // deactivate the user by admin
 // userRouter.put("/deactivate/:userId", deactivateUser);
 
-// get user by logged in
-// userRouter.get("/", checkAuthentication, UserController.getLoggedInUser);
+
+userRoutes.get("/", authMiddleware.checkAuthentication, UserController.getLoggedInUser);
 
 // // get all students
 // // userRouter.get("/student", getAllStudent);
@@ -61,3 +59,5 @@ export default userRouter;
 // // teachers =========================
 // // get all teachers
 // userRouter.get("/teacher", getAllTeacher);
+
+export default userRoutes;

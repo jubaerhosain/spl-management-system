@@ -1,9 +1,7 @@
 import { models, sequelize, Op } from "../database/mysql.js";
 
-/**
- * Create one or more teacher
- * @param {Array} teachers
- */
+// --------------------------------Create--------------------------------
+
 async function create(teachers) {
     const transaction = await sequelize.transaction();
     try {
@@ -20,31 +18,33 @@ async function create(teachers) {
     }
 }
 
-async function update(userId, teacher) {
-    const transaction = await sequelize.transaction();
-    try {
-        // update to User model
-        await models.User.update(teacher, {
+// --------------------------------Read--------------------------------
+async function findById(userId) {
+    const teacher = await models.Teacher.findByPk(userId, {
+        include: {
+            model: models.User,
+            required: true,
             where: {
-                userId: userId,
+                active: true,
             },
-            transaction: transaction,
-        });
-
-        // update to Teacher model
-        await models.Teacher.update(teacher, {
-            where: {
-                teacherId: userId,
+            attributes: {
+                exclude: ["password"],
             },
-            transaction: transaction,
-        });
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["teacherId"],
+        },
+    });
 
-        await transaction.commit();
-    } catch (err) {
-        await transaction.rollback();
-        console.log(err);
-        throw new Error(err.message);
+    let flattened = {};
+    if (teacher) {
+        flattened = { ...teacher, ...teacher.User };
+        delete flattened.User;
     }
+
+    return flattened;
 }
 
 async function findAll() {
@@ -107,14 +107,41 @@ async function findAllDeactivatedAccounts() {
     return teachers;
 }
 
-async function findById(userId) {
-    // do it find by pk
+// --------------------------------Update--------------------------------
+
+async function update(userId, teacher) {
+    const transaction = await sequelize.transaction();
+    try {
+        // update to User model
+        await models.User.update(teacher, {
+            where: {
+                userId: userId,
+            },
+            transaction: transaction,
+        });
+
+        // update to Teacher model
+        await models.Teacher.update(teacher, {
+            where: {
+                teacherId: userId,
+            },
+            transaction: transaction,
+        });
+
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error(err.message);
+    }
 }
 
+// --------------------------------Delete--------------------------------
+
 export default {
-    findById,
     create,
-    update,
+    findById,
     findAll,
     findAllDeactivatedAccounts,
+    update,
 };

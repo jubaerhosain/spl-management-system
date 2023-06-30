@@ -70,7 +70,6 @@ async function findAll() {
 }
 
 async function findById(userId) {
-    // do it find by pk
     const student = await models.Student.findByPk(userId, {
         include: [
             {

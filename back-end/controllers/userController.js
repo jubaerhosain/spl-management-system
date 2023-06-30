@@ -1,21 +1,32 @@
 import fs from "fs";
 import path from "path";
 import createError from "http-errors";
-import { sequelize, models, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
-import { getDirectoryName } from "../utilities/file-utilities.js";
-import { getCurriculumYear, getSPLName } from "../utilities/spl-utilities.js";
+import { sequelize, models, Op } from "../database/mysql.js";
+import { Response } from "../utils/responseUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 
-/**
- * Delete previous avatar if it exists and
- * save the avatar path to the database
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
+async function getLoggedInUser(req, res, next) {
+    try {
+        const { userType, userId } = req.user;
+
+        let user = {};
+        if (userType === "admin") {
+            user = await UserRepository.findById(userId);
+        } else if (userType === "teacher") {
+            user = await TeacherRepository.findById(userId);
+        } else if (userType === "student") {
+            user = await StudentRepository.findById(userId);
+        }
+
+        res.json(Response.success("User retrieved successfully", user));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+    }
+}
+
 async function saveAvatar(req, res, next) {
     try {
         const { userId } = req.user;
@@ -82,35 +93,6 @@ async function deactivateUser(req, res, next) {
     res.json({
         message: `${req.params.userId} deactivated successfully`,
     });
-}
-
-/**
- * Get a logged in user
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-async function getLoggedInUser(req, res, next) {
-    try {
-        // if authenticated the req.user is defined
-        const { userType, userId } = req.user;
-
-        let user = {};
-        if (userType === "admin") {
-            user = await UserRepository.findById(userId);
-        } else if (userType === "teacher") {
-            user = await TeacherRepository.findById(userId);
-        } else if (userType === "student") {
-            user = await StudentRepository.findById(userId);
-        }
-
-        res.json(Response.success("User retrieved successfully", user));
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(
-            Response.error("Internal Server Error", Response.SERVER_ERROR)
-        );
-    }
 }
 
 async function getAvatar(req, res, next) {
@@ -447,15 +429,5 @@ async function findCurriculumYear(req, res, next) {
 }
 
 export default {
-    saveAvatar,
-    deactivateUser,
     getLoggedInUser,
-    getAvatar,
-    getStudentByCurriculumYear,
-    getAllTeacher,
-    getStudentAndSupervisor,
-    getRequestedStudents,
-    getStudentAsSupervisor,
-    getStudentsForSPLManager,
-    findCurriculumYear,
 };
