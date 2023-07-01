@@ -1,56 +1,51 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
-import styles from "./MainNavbar.module.css";
-import NotificationButton from "./notification-button/NotificationButton";
-import ProfileButton from "./profile-button/ProfileButton";
-import ToggleButton from "./toggle-button/ToggleButton";
+import styles from "./Navbar.module.css";
+
+// import NotificationButton from "./notification/notification-button/NotificationButton";
+// import ProfileButton from "./profile/profile-button/ProfileButton";
+import ToggleButton from "./toggle-menu/toggle-button/ToggleButton";
 // import ToggleDropdown from "./toggle-dropdown/ToggleDropdown";
 import { useAuthProvider } from "@contexts/AuthProvider";
 
-export default function MainNavbar() {
+export default function Navbar() {
   const { user } = useAuthProvider();
   const location = useLocation();
 
   return (
     <nav className={styles.navContainer}>
-      <div className={styles.navContent}>
+      <div>
         <Link to="/" className={styles.logo}>
           <img src="iitlogo-blue.png" alt="Logo" />
           <span>SPL</span>
         </Link>
 
-        <div className={styles.rightBox}>
+        <div className={styles.userControl}>
           {user ? (
             <>
-              <div className="flex items-center">
-                <NotificationButton />
-                {/* <NotificationDropdown /> */}
-              </div>
-
-              <div className="flex items-center">
-                <ProfileButton />
-                {/* <ProfileDropdown /> */}
-              </div>
+              {/* <Notification />
+              <Profile /> */}
             </>
           ) : location.pathname == "/login" ? (
             <div></div>
           ) : (
-            <button className="bg-blue-900 hover:bg-blue-950 text-white font-semibold py-1 px-4 rounded">
-              <Link to="/login">Login</Link>
-            </button>
+            <Link
+              to="/login"
+              className={styles.login}
+            >
+              Login
+            </Link>
           )}
 
-          <div className="flex items-center">
-            <ToggleButton />
-            {/* <ToggleDropdown /> */}
-          </div>
+          <ToggleButton />
+          {/* <ToggleDropdown /> */}
         </div>
 
-        <div className={styles.navLinkBox}>
+        <div className={styles.navLinks}>
           <ul>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/">Home</NavLink>
             </li>
-            <li className={`${styles.navLink} dropdown`}>
+            <li className="dropdown">
               <NavLink to="/about">About SPL</NavLink>
               <div className="dropdown-content z-50 border border-red-500  absolute overflow-auto font-light hidden">
                 <ul className="text-black">
@@ -66,19 +61,19 @@ export default function MainNavbar() {
                 </ul>
               </div>
             </li>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/notices">Notices</NavLink>
             </li>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/faculty">Faculty</NavLink>
             </li>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/students">Students</NavLink>
             </li>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/projects">Projects</NavLink>
             </li>
-            <li className={styles.navLink}>
+            <li>
               <NavLink to="/contact">Contact</NavLink>
             </li>
           </ul>

@@ -1,16 +1,15 @@
 import { Outlet } from "react-router-dom";
-import PageContainer from "@components/page-container/PageContainer";
-import Footer from "@components/footer/Footer";
-import MainNavbar from "../main-navbar/MainNavbar";
+import { PageContainer, ContentContainer, Footer } from "@components";
+import Navbar from "../navbar/Navbar";
 
 export default function MainLayout() {
   return (
     <div>
       <PageContainer>
-        <MainNavbar />
-        <div className="px-1">
+        <Navbar />
+        <ContentContainer>
           <Outlet />
-        </div>
+        </ContentContainer>
         <Footer />
       </PageContainer>
     </div>

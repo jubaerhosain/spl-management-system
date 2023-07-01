@@ -1,0 +1,39 @@
+.navContainer {
+  @apply max-w-custom bg-white border-gray-200 shadow-sm border-y dark:border-gray-600;
+}
+
+.navContainer > div {
+  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2;
+}
+
+.logo {
+  @apply flex items-center;
+}
+
+.logo img {
+  @apply h-8 mr-3;
+}
+
+.logo span {
+  @apply self-center text-xl font-sans whitespace-nowrap text-blue-900 dark:text-white;
+}
+
+.userControl {
+  @apply flex items-center nv:order-2;
+}
+
+.navLinks {
+  @apply items-center justify-between hidden w-auto nv:flex nv:w-auto nv:order-1;
+}
+
+.navLinks > ul {
+  @apply px-2 rounded-lg flex flex-row space-x-6 mt-0 border-0 bg-white;
+}
+
+.navLinks > ul > li {
+  @apply block font-light text-gray-900 rounded  hover:text-blue-600;
+}
+
+.login {
+  @apply text-blue-900 font-normal underline py-1 px-4 rounded nv:no-underline nv:bg-blue-900 nv:text-white nv:hover:bg-blue-950;
+}
