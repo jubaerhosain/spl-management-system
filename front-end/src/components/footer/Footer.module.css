@@ -1,0 +1,16 @@
+.footer {
+  @apply mt-auto w-full p-2 bg-white border-t border-gray-200 shadow md:flex md:items-center 
+  md:justify-center;
+}
+
+.footer > div {
+  @apply flex flex-col justify-center m-auto;
+}
+
+.footer > div > p {
+  @apply text-sm text-center text-gray-500 sm:text-center dark:text-gray-400;
+}
+
+.footer .link {
+  @apply hover:underline ml-1 mr-1;
+}
