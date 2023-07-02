@@ -20,7 +20,7 @@ const Dropdown = ({ dropdownButton: DropdownButton, dropdownMenu: DropDownMenu, 
   }, []);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
   return (
@@ -32,18 +32,3 @@ const Dropdown = ({ dropdownButton: DropdownButton, dropdownMenu: DropDownMenu, 
 };
 
 export default Dropdown;
-
-// const App = () => {
-//   const NotificationButton = ({ ...rest }) => <button {...rest}>Toggle Menu</button>;
-
-//   return (
-//     <div>
-//       <h1>My App</h1>
-//       <Dropdown
-//         // className={styles.notificationDropdown}
-//         dropdownButton={NotificationButton}
-//         dropdownMenu={"DropdownMenu"}
-//       />
-//     </div>
-//   );
-// };

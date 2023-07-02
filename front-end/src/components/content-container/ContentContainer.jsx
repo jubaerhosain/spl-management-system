@@ -1,3 +1,3 @@
 export default function ContentContainer({ children }) {
-  return <div className="p-2">{children}</div>;
+  return <div className="px-2 flex flex-col flex-grow">{children}</div>;
 }

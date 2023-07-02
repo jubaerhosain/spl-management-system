@@ -1,15 +1,12 @@
 import LoginForm from "./login-form/LoginForm";
-
-import { PageContainer } from "@layouts";
+import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   return (
-    <PageContainer>
-      <div className="max-w-sm min-w-full flex flex-col items-center justify-around">
-        <div className="w-full">
-          <LoginForm />
-        </div>
+    <div className={styles.loginPageContainer}>
+      <div>
+        <LoginForm />
       </div>
-    </PageContainer>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        'nv': '900px',
+        'nv': '1000px',
       },
     },
   },

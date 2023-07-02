@@ -7,3 +7,4 @@ export { default as Title } from "./title/Title";
 export { default as CheckBox } from "./checkbox/CheckBox";
 export { default as Error } from "./error/Error";
 export { default as FormContainer } from "./form-container/FormContainer";
+export { default as FormGroup } from "./group/FormGroup";

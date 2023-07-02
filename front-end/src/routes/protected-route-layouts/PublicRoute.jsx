@@ -4,20 +4,20 @@ import { useAuthProvider } from "@contexts/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function RedirectToProfile() {
+function RedirectToDashboard() {
   const navigate = useNavigate();
   const { user } = useAuthProvider();
 
   useEffect(() => {
     switch (user.userType) {
       case "admin":
-        navigate("/admin/profile");
+        navigate("/admin");
         break;
       case "student":
-        navigate("/student/profile");
+        navigate("/student");
         break;
       case "teacher":
-        navigate("/teacher/profile");
+        navigate("/teacher");
         break;
       default:
         navigate("/");
@@ -34,5 +34,5 @@ export default function PublicLayout() {
     return <h1>Loading....</h1>;
   }
 
-  return !user ? <Outlet /> : <RedirectToProfile />;
+  return !user ? <Outlet /> : <RedirectToDashboard />;
 }

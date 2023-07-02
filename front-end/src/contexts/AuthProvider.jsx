@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
       if (response.success) {
         loadUserIfLoggedIn();
       }
-    }, 500);
+    }, 2000);
 
     return response;
   }
@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
       if (response.success) {
         setUser(null);
       }
-    }, 500);
+    }, 2000);
 
     return response;
   }

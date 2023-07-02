@@ -11,9 +11,9 @@
             // "@common/*": [
             //     "src/components/common/*"
             // ],
-            // "@pages/*": [
-            //     "src/pages/*"
-            // ],
+            "@pages/*": [
+                "src/pages/*"
+            ],
             "@contexts/*": [
                 "src/contexts/*"
             ],

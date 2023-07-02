@@ -17,7 +17,7 @@ body {
 }
 
 .active {
-  @apply text-blue-600;
+  @apply text-sky-500;
 }
 
 /* The dropdown container */

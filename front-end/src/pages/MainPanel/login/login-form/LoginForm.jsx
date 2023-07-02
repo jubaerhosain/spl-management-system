@@ -1,13 +1,21 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthProvider } from "@contexts/AuthProvider";
-import { FormContainer } from "@layouts";
-import { Title, Form, Label, Input, PasswordInput, CheckBox, SubmitButton } from "@components/form";
+import {
+  Title,
+  Form,
+  Label,
+  Input,
+  PasswordInput,
+  CheckBox,
+  SubmitButton,
+  FormContainer,
+  FormGroup,
+} from "@components/form";
 
 import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
@@ -30,19 +38,28 @@ export default function LoginForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setProcessing(true);
-    const response = await login({ email, password, checked });
 
-    if (response.success) {
-      setError(null); 
-      alert(response.message);
-      navigate("/profile");
-    } else if (response.errorCode == "BAD_REQUEST") {
-      setError(response.message);
-    } else {
-      setError("An error occurred while logging in");
-    }
-    setProcessing(false);
+    if (isProcessing) return;
+
+    setProcessing(true);
+    login({ email, password, checked })
+      .then((response) => {
+        if (response.success) {
+          setError(null);
+          alert(response.message);
+          console.log(response);
+        } else {
+          if (response.errorCode == "BAD_REQUEST") {
+            setError(response.message);
+          } else {
+            setError("An error occurred while logging in");
+          }
+          setProcessing(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -52,7 +69,7 @@ export default function LoginForm() {
       <Title>Login to your account</Title>
 
       <Form onSubmit={onSubmit}>
-        <div>
+        <FormGroup>
           <Label htmlFor="email">Your email</Label>
           <Input
             value={email}
@@ -63,9 +80,9 @@ export default function LoginForm() {
             id="email"
             placeholder="name@iit.du.ac.bd"
           />
-        </div>
+        </FormGroup>
 
-        <div>
+        <FormGroup>
           <Label htmlFor="password">Password</Label>
           <PasswordInput
             value={password}
@@ -75,25 +92,25 @@ export default function LoginForm() {
             id="password"
             placeholder="••••••••••"
           />
-        </div>
+        </FormGroup>
 
-        <div className={styles.rememberAndForgotDiv}>
+        <FormGroup className={styles.rememberAndForgotDiv}>
           <CheckBox id="checkbox" checked={checked} onChange={onCheck}>
             Remember me
           </CheckBox>
           <Link to="/forgot-password" className={styles.forgotPasswordLink}>
             Forgot password?
           </Link>
-        </div>
+        </FormGroup>
 
         <SubmitButton disabled={isProcessing}> Login </SubmitButton>
 
-        <p className={styles.registerDiv}>
+        <FormGroup className={styles.registerDiv}>
           <span>Don&apos;t have an account yet?</span>
           <Link to="/register" className={styles.registerLink}>
             Register
           </Link>
-        </p>
+        </FormGroup>
       </Form>
     </FormContainer>
   );

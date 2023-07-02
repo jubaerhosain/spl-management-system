@@ -3,7 +3,7 @@
 }
 
 .navContainer > div {
-  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2;
+  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 py-3;
 }
 
 .logo {
@@ -27,11 +27,11 @@
 }
 
 .navLinks > ul {
-  @apply px-2 rounded-lg flex flex-row space-x-6 mt-0 border-0 bg-white;
+  @apply px-2 rounded-lg flex flex-row space-x-6 border-0 bg-white;
 }
 
 .navLinks > ul > li {
-  @apply block font-light text-gray-900 rounded  hover:text-blue-600;
+  @apply text-sm leading-6 font-semibold text-slate-700 dark:text-slate-200 hover:text-sky-500;
 }
 
 .login {
