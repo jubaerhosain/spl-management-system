@@ -3,7 +3,7 @@
 }
 
 .navContainer > div {
-  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 py-3;
+  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 nv:px-6 py-3;
 }
 
 .logo {
@@ -11,11 +11,11 @@
 }
 
 .logo img {
-  @apply h-8 mr-3;
+  @apply h-8 w-12 mr-2 md:mr-3;
 }
 
 .logo span {
-  @apply self-center text-xl font-sans whitespace-nowrap text-blue-900 dark:text-white;
+  @apply self-center text-xl font-semibold whitespace-nowrap text-blue-900 dark:text-white;
 }
 
 .userControl {
@@ -27,7 +27,7 @@
 }
 
 .navLinks > ul {
-  @apply px-2 rounded-lg flex flex-row space-x-6 border-0 bg-white;
+  @apply px-2 rounded-lg flex flex-row space-x-6 md:space-x-7 border-0 bg-white;
 }
 
 .navLinks > ul > li {

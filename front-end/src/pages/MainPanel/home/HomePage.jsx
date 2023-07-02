@@ -1,6 +1,13 @@
-// import SuccessToast from "@components/toasts/success/SuccessToast";
+import { toast } from "react-toastify";
 
 export default function HomePage() {
+  const show = () => {
+    toast.success("Success toast", {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 1000,
+    });
+  };
+
   return (
     <div className="w-full flex flex-row flex-wrap items-center justify-around">
       <div className="max-w-lg flex-grow p-4">
@@ -14,7 +21,7 @@ export default function HomePage() {
           maiores commodi vitae accusamus similique tempora.
         </p>
       </div>
-      {/* <SuccessToast></SuccessToast> */}
+      <button onClick={show}>click</button>
     </div>
   );
 }
