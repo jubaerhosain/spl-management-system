@@ -1,27 +1,12 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Sidebar from "@components/sidebar/Sidebar";
 
 export default function AdminLayout() {
   return (
-    <div>
-      <ul style={{ display: "inline", margin: "5px" }}>
-        <Link style={{ margin: "5px" }} to="/">
-          admin home
-        </Link>
-
-        <Link style={{ margin: "5px" }} to="about">
-          about
-        </Link>
-
-        <Link style={{ margin: "5px" }} to="login">
-          login
-        </Link>
-        <Link style={{ margin: "5px" }} to="faculty">
-          faculty
-        </Link>
-        <Link style={{ margin: "5px" }} to="projects">
-          projects
-        </Link>
-      </ul>
+    <div className="relative overflow-hidden flex flex-grow flex-row">
+      <div className="flex flex-col overflow-y-auto fixed h-screen">
+        <Sidebar />
+      </div>
       <Outlet />
     </div>
   );

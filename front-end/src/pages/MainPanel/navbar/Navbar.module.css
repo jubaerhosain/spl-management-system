@@ -1,5 +1,5 @@
 .navContainer {
-  @apply max-w-custom bg-white border-gray-200 shadow-sm border-y dark:border-gray-600;
+  @apply max-w-custom sticky top-0 z-50 bg-white border-gray-200 shadow-sm border-y dark:border-gray-600;
 }
 
 .navContainer > div {

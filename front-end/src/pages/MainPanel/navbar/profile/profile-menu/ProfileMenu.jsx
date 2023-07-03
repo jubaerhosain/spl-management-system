@@ -39,6 +39,9 @@ export default function ProfileMenu() {
           <Link to={user?.userType} className={styles.link}>Dashboard</Link>
         </li>
         <li>
+          <Link to={`${user?.userType}/profile`} className={styles.link}>Your Profile</Link>
+        </li>
+        <li>
           <Link to={`${user?.userType}/settings`} className={styles.link}>Settings</Link>
         </li>
         <button disabled={signOutProcessing} onClick={onSignOut} className={styles.link}>
