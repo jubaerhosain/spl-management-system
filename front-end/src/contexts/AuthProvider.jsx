@@ -33,11 +33,9 @@ export function AuthProvider({ children }) {
   async function login(data) {
     const response = await authService.login(data);
 
-    setTimeout(() => {
-      if (response.success) {
-        loadUserIfLoggedIn();
-      }
-    }, 2000);
+    if (response.success) {
+      loadUserIfLoggedIn();
+    }
 
     return response;
   }
@@ -45,11 +43,9 @@ export function AuthProvider({ children }) {
   async function logout() {
     const response = await authService.logout();
 
-    setTimeout(() => {
-      if (response.success) {
-        setUser(null);
-      }
-    }, 2000);
+    if (response.success) {
+      setUser(null);
+    }
 
     return response;
   }

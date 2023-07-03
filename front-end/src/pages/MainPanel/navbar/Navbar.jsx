@@ -2,14 +2,17 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 // import NotificationButton from "./notification/notification-button/NotificationButton";
-// import ProfileButton from "./profile/profile-button/ProfileButton";
-import ToggleButton from "./toggle-menu/toggle-button/ToggleButton";
-// import ToggleDropdown from "./toggle-dropdown/ToggleDropdown";
+import ToggleButton from "./menu/toggle-button/ToggleButton";
 import { useAuthProvider } from "@contexts/AuthProvider";
+import ProfileDropdown from "./profile/ProfileDropdown";
+import NotificationDropdown from "./notification/NotificationDropdown";
 
 export default function Navbar() {
-  const { user } = useAuthProvider();
+  const { user, loading } = useAuthProvider();
   const location = useLocation();
+
+
+  if(loading) return <p>loading</p>
 
   return (
     <nav className={styles.navContainer}>
@@ -22,8 +25,8 @@ export default function Navbar() {
         <div className={styles.userControl}>
           {user ? (
             <>
-              {/* <Notification />
-              <Profile /> */}
+              <NotificationDropdown />
+              <ProfileDropdown />
             </>
           ) : location.pathname == "/login" ? (
             <div></div>

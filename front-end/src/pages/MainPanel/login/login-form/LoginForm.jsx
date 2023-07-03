@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthProvider } from "@contexts/AuthProvider";
+import { toast } from "react-toastify";
 import {
   Title,
   Form,
@@ -46,8 +47,11 @@ export default function LoginForm() {
       .then((response) => {
         if (response.success) {
           setError(null);
-          alert(response.message);
-          console.log(response);
+          toast.success(response.message, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 1000,
+          });
+          // automatically redirected to dashboard as auth state changes
         } else {
           if (response.errorCode == "BAD_REQUEST") {
             setError(response.message);
