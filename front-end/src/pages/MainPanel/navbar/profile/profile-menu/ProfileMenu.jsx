@@ -36,10 +36,10 @@ export default function ProfileMenu() {
       </div>
       <ul>
         <li>
-          <Link className={styles.link}>Dashboard</Link>
+          <Link to={user?.userType} className={styles.link}>Dashboard</Link>
         </li>
         <li>
-          <Link className={styles.link}>Settings</Link>
+          <Link to={`${user?.userType}/settings`} className={styles.link}>Settings</Link>
         </li>
         <button disabled={signOutProcessing} onClick={onSignOut} className={styles.link}>
           Sign out

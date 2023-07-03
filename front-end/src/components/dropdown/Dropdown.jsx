@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./Dropdown.module.css";
 
 const Dropdown = ({ dropdownButton: DropdownButton, dropdownMenu: DropDownMenu, ...rest }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const location = useLocation();
+
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -18,6 +21,11 @@ const Dropdown = ({ dropdownButton: DropdownButton, dropdownMenu: DropDownMenu, 
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
+
+  // hide dropdown if location changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
   const toggleMenu = () => {
     setIsOpen((prevState) => !prevState);
