@@ -1,0 +1,18 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.custom-toggle {
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  /* Add more styles as needed */
+}
+
+.size-10 {
+  width: 10px;
+  height: 10px;
+}
