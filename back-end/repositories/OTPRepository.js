@@ -1,4 +1,4 @@
-import { models, Op } from "../data-store/mysql.js";
+import { models, Op } from "../config/mysql.js";
 
 /**
  * @param {String} email

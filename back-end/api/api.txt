@@ -20,32 +20,48 @@
     delete: teacher/{teacherId} {by admin}
 
 3. SPL 
-    get: spl/{splId|splName}
-    get: spl/ {query params: optional}
-    get: spl/{splId|splName}/student/ 
     post: spl
     put: spl/{splId|splName}/
-    put: spl/{splId|splName}/member/  
+    get: spl/{splId|splName} 
+    get: spl/ {query params: optional}
     delete: spl/{splId|splName}
+
+    post: spl/{splId|splName}/allocation // create mark table also for each student
+
+    get: spl/{splId|splName}/student/ 
+    delete: spl/{splId|splName}/student/{studentId}  // delete mark table also for that student
+
+    put: spl/{splId|splName}/member/  
     delete: spl/{splId|splName}/member/
 
 4. Mark 
-    get: mark/ {query params: optional, splId|splName}
-    get: mark/presentation-mark/{query params: optional, splName, teacherId}
-    get: mark/{markId} {query params: optional}
-    get: student/{studentId}/mark/ all spl marks of a student 
-    get: student/{studentId}/mark/{splName} mark of student for a specific spl
     put: mark/{markId} update atomic marks 
+    get: mark/ {query params: optional, splId|splName}
+    get: mark/{markId} {query params: optional}
+
+    get: mark/student/{studentId} all 3 spl marks of a student 
+    get: mark/student/{studentId}/{splName} mark of student for a specific spl
+
     post: mark/{markId}/presentation-mark/{presentationId}
+    get: mark/presentation-mark/{splName}{query params: optional, splName, teacherId}
     put: mark/presentation-mark/{presentationMarkId}
+
     post: mark/{markId}/continuous-mark/{weekName}
     put: mark/continuous-mark/{continuousMarkId}
 
 
-4. Presentation
+
+4. Presentation Event
     post: presentation/
-    get: presentation/{presentation_id}/mark
-    put: presentation/{presentation_id}/student/{studentId}/mark
+    put: presentation/
 
+5. Notice 
+    post: notice/
+    get: notice/ 
+    put: notice/{noticeId}
 
+6. Notification
+    post: notification/
+    get: notification/
+    put: notification/{notificationId}
 

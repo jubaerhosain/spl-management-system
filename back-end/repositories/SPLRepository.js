@@ -1,4 +1,4 @@
-import { models, sequelize } from "../data-store/mysql.js";
+import { models, sequelize } from "../config/mysql.js";
 import emailService from "../services/emailServices/emailService.js";
 
 // -------------------------------Create-----------------------------

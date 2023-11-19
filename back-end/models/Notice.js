@@ -18,7 +18,7 @@ export default (sequelize, DataTypes) => {
         noticeType: {
             type: DataTypes.STRING,
             validate: {
-                isIn: [["spl1", "spl2", "spl3"]],
+                isIn: [["spl1", "spl2", "spl3", "public"]],
             },
             comment: "committee creation, presentation event"
         },

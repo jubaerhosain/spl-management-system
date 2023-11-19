@@ -7,10 +7,10 @@ import { initializeMySqlConnection } from "./config/mysql.js";
 import { initializeRedisConnection } from "./config/redis.js";
 
 initializeMySqlConnection();
-initializeRedisConnection();
+// initializeRedisConnection(); 
 
 const server = http.createServer(app);
-initializeSocket(server, { cors: { origin: "*" } });
+// initializeSocket(server, { cors: { origin: "*" } });
 
 server.listen(config.port, () => {
     console.log(`Server listening on port ${config.port}...`);
