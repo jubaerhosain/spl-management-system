@@ -1,44 +1,44 @@
-GET: query param or param
+GET: query param or param (never use body)
+POST, PUT: always use body 
+DELETE: try to use body but some cases you can use param to locate resource
 
 1. Authentication 
     post: auth/login
+    get: auth/ {authenticated user}
     delete: auth/logout
-    get: auth/ {logged in user}
 
 2. Student
+    post: student/
+    put: student/ {by himself or admin will be business logic}
     get: student/{studentId}
     get: student/ {query params: optional}
-    post: student/
-    put: student/ {by him/herself}
-    put: student/{studentId} {by admin}
     delete: student/{studentId} {by admin}
 
 2. Teacher
+    post: teacher/
+    put: teacher/ {by himself or admin will be business logic}
     get: teacher/{teacherId}
     get: teacher/ {query params: optional}
-    post: teacher/
-    put: teacher/ {by him/herself}
-    put: teacher/{teacherId} {by admin}
     delete: teacher/{teacherId} {by admin}
 
 3. SPL 
-    post: spl
-    put: spl/{splId|splName}
+    post: spl/
+    put: spl/
     get: spl/{splId|splName} 
     get: spl/ {query params: optional}
     delete: spl/{splId|splName}
 
-    post: spl/{splId|splName}/student-allocation // create mark table also for each student
-    delete: spl/{splId|splName}/student-allocation/{studentId}  // delete mark table also for that student
+    post: spl/student-allocation/ body{splId|splName} // create mark table also for each student
+    delete: spl/student-allocation/  body{splId|splName, studentId} // delete mark table also for that student
 
-    put: spl/{splId|splName}/member/  
-    delete: spl/{splId|splName}/member/{memberId}
+    put: spl/member/ body{{splId|splName}}  
+    delete: spl/member/ body{splId|splName, memberId}
 
 4. Team
     post: team/
     put: team/
-    get: team/{params: optional, splName, splId}
     get: team/{teamId}
+    get: team/{params: optional, splName, splId}
     delete: team/{teamId}
 
     put: team/member
@@ -57,18 +57,18 @@ GET: query param or param
 
 5. Mark 
     put: mark/{markId} update atomic marks 
-    get: mark/{markId} {query params: optional}
+    get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
 
     get: mark/student/{studentId} all 3 spl marks of a student 
-    get: mark/student/{studentId}/{splName} mark of a student for a specific spl
+        add query param {splName} mark of a student for a specific spl
 
-    post: mark/{markId}/presentation-mark/{presentationId}
-    get: mark/presentation-mark/ {query params: optional, splName, teacherId}
-    put: mark/presentation-mark/{presentationMarkId}
+    post: mark/presentation-mark/ body {markId, presentationId, mark}
+    put: mark/presentation-mark/ body{presentationMarkId, mark}
+    get: mark/presentation-mark/ {query params: optional, splName, teacherId, presentationId}
 
-    post: mark/{markId}/continuous-mark/{weekName}
-    put: mark/continuous-mark/{continuousMarkId}
+    post: mark/continuous-mark/ body{markId, weekName, mark}
+    put: mark/continuous-mark/ body{continuousMarkId, mark}
 
 6. Presentation Event
     post: presentation/
@@ -77,10 +77,12 @@ GET: query param or param
 7. Notice 
     post: notice/
     get: notice/ 
-    put: notice/{noticeId}
+    get: notice/{noticeId}
+    put: notice/ body{noticeId, notice}
 
 8. Notification
     post: notification/
     get: notification/
-    put: notification/{notificationId}
+    get: notification/{notificationId}
+    put: notification/ body{notificationId, notification}
 
