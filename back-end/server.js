@@ -3,8 +3,8 @@ import app from "./app.js";
 import config from "./config/config.js";
 
 import { initializeSocket } from "./sockets/socket.js";
-import { initializeMySqlConnection } from "./data-store/mysql.js";
-import { initializeRedisConnection } from "./data-store/redis.js";
+import { initializeMySqlConnection } from "./config/mysql.js";
+import { initializeRedisConnection } from "./config/redis.js";
 
 initializeMySqlConnection();
 initializeRedisConnection();

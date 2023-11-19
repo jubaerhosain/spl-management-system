@@ -1,4 +1,4 @@
-import { sequelize, models, Op } from "../data-store/mysql.js";
+import { sequelize, models, Op } from "../config/mysql.js";
 
 // ================================CREATE=================================
 async function create(students) {

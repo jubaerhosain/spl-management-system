@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import createError from "http-errors";
-import { sequelize, models, Op } from "../data-store/mysql.js";
+import { sequelize, models, Op } from "../config/mysql.js";
 import { Response } from "../utils/responseUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
