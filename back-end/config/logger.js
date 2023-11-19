@@ -9,16 +9,13 @@ const customFormat = format.combine(
 
 const logger = createLogger({
     format: customFormat,
-    transports: [
-        new transports.Console({ level: "silly" }),
-        new transports.File({ filename: "logs/app.log", level: "info" }),
-    ],
+    transports: [new transports.Console({ level: "silly" }), new transports.File({ filename: "logs/app.log", level: "info" })],
 });
 
 export default logger;
 
 
-logger.error("My error")
+logger.error("MY ERROR");
 
 /**
  * const morgan = require('morgan');
