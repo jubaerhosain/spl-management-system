@@ -1,4 +1,4 @@
-students(student_id, name, gender, roll_number, reg_number, batch, admission_session, current_session, email, phone, password, avatar, details, documentation_progress, code_progress, active)
+students(student_id, name, gender, roll_number, reg_number, batch, admission_session, current_session, email, phone, password, avatar, details, documentation_progress, code_progress, weekly_progress, active)
 teachers(teacher_id, name, gender, email, phone, password, avatar, details, designation, rank, available, active)
 
 spls(spl_id, spl_name, academic_year, spl_manager, active)

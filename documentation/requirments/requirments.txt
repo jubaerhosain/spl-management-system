@@ -1,0 +1,89 @@
+Teachers of IIT:
+1. Teachers will have their accounts.
+2. Availability to use everywhere.
+3. Teachers Accounts will be created by admin and then admin will notify the
+users to change the password by logging in.
+4. Anyone with the permission of authority can be the admin of the system.
+5. SPL Manager will be able to post any notice.
+6. Committee head will randomize the SPL-1 supervisor.
+7. The system will suggest a supervisor to the committee for the students who
+won’t be able to convince any supervisor for SPL-2/3 according to students'
+ideas. Then the committee head will request the teachers to be supervisors by
+maintaining hierarchy or suggestion.
+8. After assigning a supervisor, the supervisor can post any notice which is visible
+to his/her students. Supervisor can also post the same notice for SPL-1/2/3
+students by customizing the visibility.
+9. Every student will get three different supervisors in their three SPL.
+10.Supervisor and SPL Manager will be able to track the students' activity
+progress through github repository or weekly reporting or progress check box.
+11.Course faculty will maintain the students' progress through attendance and a
+certain mark will be added by Course faculty in students' continuous
+evaluation.
+12.Supervisor will be able to upload marks of the students with admin’s
+permission which aren't editable.
+13.Committee members will be able to mark students in presentations
+individually. The Committee Head will be able to add an extra evaluator for
+presentations.
+14.Continuous evaluation will be visible to students after publishing the marks
+and final marks will be visible to only committee members.
+15.Final mark sheet will be ready by adding all other marks which are visible to
+committee members.
+16.Finally, the application should be easy to use.
+
+Students Of IIT:
+1. Students will have their accounts
+2. Teachers will be able to share his/her interested field in which he/she is willing
+to work as well as students can share their interest.
+3. Students of SPL-2, SPL-3 will be able to request any teacher to be their
+supervisor by sharing their ideas. Teachers can accept or skip the request.
+4. SPL manager notice and supervisor notice should be differentiable.
+
+Normal Requirements:
+1. Admin, Teachers and Students will have their accounts.
+2. Anyone with the permission of authority can be the admin of the system.
+3. Teachers Accounts will be created by admin and then admin will notify the
+users to change the password by logging in.
+4. Students will create their account.
+5. Committee head and SPL Manager will be able to post any notice.
+6. Committee head will randomize the SPL-1 supervisor.
+7. Teachers will be able to share his/her interested field in which he/she is willing
+to work as well as students can share their interest.
+8. Students of SPL-2/3 will be able to request any teacher to be their supervisor
+by sharing their ideas. Teachers can accept or skip the request.
+9. The system will suggest a supervisor to the committee for the students who
+won’t be able to convince any supervisor for SPL-3 according to students'
+
+ideas. Then the committee head will request the teachers to be supervisors by
+maintaining hierarchy or suggestion.
+10.After assigning a supervisor, the supervisor can post any notice which is visible
+to his/her students. Supervisor can also post the same notice for SPL-1/2/3
+students by customizing the visibility.
+11.Every student will get three different supervisors in their three SPL.
+12.Supervisor and SPL Manager will be able to track the students' activity
+progress through the progress check box.
+13.Course faculty will maintain the students' progress through attendance
+continuous development and a certain mark will be added by Course faculty in
+students' continuous evaluation.
+14.Supervisor will be able to upload marks of the students with admin’s
+permission which aren't editable.
+15.Committee members will be able to mark students in presentations
+individually. The Committee Head will be able to add an extra evaluator for
+presentations.
+16.Continuous evaluation will be visible to students after publishing the marks
+and final marks will be visible to only committee members.
+17.Final mark sheet will be ready by adding all other marks which are visible to
+committee members.
+
+Expected Requirements:
+1. Any notice’s visibility from coordinator or admin, can be customized.
+2. Information regarding faculty members to be available for students.
+3. Admin will be able to assign any supervisor manually.
+4. Admin will be able to modify any marks manually (will notify committee
+head).
+5. Data archive for previous year students.
+
+Exciting Requirements:
+1. The system will suggest supervisors to students according to their interest.
+
+
+* If progress of any student is unsatisfied, the system will send notification to the supervisor and spl committee to take action. 
