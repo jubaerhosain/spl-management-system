@@ -1,3 +1,5 @@
+GET: query param or param
+
 1. Authentication 
     post: auth/login
     delete: auth/logout
@@ -21,46 +23,63 @@
 
 3. SPL 
     post: spl
-    put: spl/{splId|splName}/
+    put: spl/{splId|splName}
     get: spl/{splId|splName} 
     get: spl/ {query params: optional}
     delete: spl/{splId|splName}
 
-    post: spl/{splId|splName}/allocation // create mark table also for each student
-
-    get: spl/{splId|splName}/student/ 
-    delete: spl/{splId|splName}/student/{studentId}  // delete mark table also for that student
+    post: spl/{splId|splName}/student-allocation // create mark table also for each student
+    delete: spl/{splId|splName}/student-allocation/{studentId}  // delete mark table also for that student
 
     put: spl/{splId|splName}/member/  
-    delete: spl/{splId|splName}/member/
+    delete: spl/{splId|splName}/member/{memberId}
 
-4. Mark 
+4. Team
+    post: team/
+    put: team/
+    get: team/{params: optional, splName, splId}
+    get: team/{teamId}
+    delete: team/{teamId}
+
+    put: team/member
+    delete: team/member/{memberId}
+
+5. Request
+    put: request/team/ body{teamId, teacherId}
+    delete: request/team/ body{teamId, teacherId}
+
+    put: request/student/ {studentId: from logged in user}
+    delete: request/student/ body{teacherId} {studentId: from logged in user}
+
+4. Supervisor
+    put: supervisor/ body{randomization}  body{teacherId, studentId, splId/splName}
+    delete: supervisor/ body{studentId, splId/splName}
+
+5. Mark 
     put: mark/{markId} update atomic marks 
-    get: mark/ {query params: optional, splId|splName}
     get: mark/{markId} {query params: optional}
+    get: mark/ {query params: splId|splName} mark of all student for a specific spl
 
     get: mark/student/{studentId} all 3 spl marks of a student 
-    get: mark/student/{studentId}/{splName} mark of student for a specific spl
+    get: mark/student/{studentId}/{splName} mark of a student for a specific spl
 
     post: mark/{markId}/presentation-mark/{presentationId}
-    get: mark/presentation-mark/{splName}{query params: optional, splName, teacherId}
+    get: mark/presentation-mark/ {query params: optional, splName, teacherId}
     put: mark/presentation-mark/{presentationMarkId}
 
     post: mark/{markId}/continuous-mark/{weekName}
     put: mark/continuous-mark/{continuousMarkId}
 
-
-
-4. Presentation Event
+6. Presentation Event
     post: presentation/
     put: presentation/
 
-5. Notice 
+7. Notice 
     post: notice/
     get: notice/ 
     put: notice/{noticeId}
 
-6. Notification
+8. Notification
     post: notification/
     get: notification/
     put: notification/{notificationId}
