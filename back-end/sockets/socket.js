@@ -1,5 +1,5 @@
 import { Server as SocketIO } from "socket.io";
-import redisClient from "../database/redis.js";
+import redisClient from "../data-store/redis.js";
 
 let ioInstance;
 

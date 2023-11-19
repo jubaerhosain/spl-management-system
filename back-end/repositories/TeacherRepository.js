@@ -1,4 +1,4 @@
-import { models, sequelize, Op } from "../database/mysql.js";
+import { models, sequelize, Op } from "../data-store/mysql.js";
 
 // --------------------------------Create--------------------------------
 

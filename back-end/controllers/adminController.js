@@ -1,4 +1,4 @@
-import { models } from "../database/mysql.js";
+import { models } from "../data-store/mysql.js";
 import fileUtils from "../utils/fileUtils.js";
 import passwordUtils from "../utils/passwordUtils.js";
 

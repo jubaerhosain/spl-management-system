@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import createError from "http-errors";
-import { sequelize, models, Op } from "../database/mysql.js";
+import { sequelize, models, Op } from "../data-store/mysql.js";
 import { Response } from "../utils/responseUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
@@ -58,10 +58,7 @@ async function saveAvatar(req, res, next) {
 
             // delete previous avatar
             if (user.avatar) {
-                const oldAvatarPath = path.join(
-                    getDirname(import.meta.url),
-                    "/../public/uploads/avatars/" + user.avatar
-                );
+                const oldAvatarPath = path.join(getDirname(import.meta.url), "/../public/uploads/avatars/" + user.avatar);
 
                 // why cannot use await here
                 fs.unlink(oldAvatarPath, function (err) {
