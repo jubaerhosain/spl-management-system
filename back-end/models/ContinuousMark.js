@@ -16,10 +16,13 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
                 key: "markId",
             },
         },
-        date: {
-            type: DataTypes.DATE, // CHANGE IT to week
-            primaryKey: true,
-            defaultValue: new Date(), 
+        weekName: {
+            type: DataTypes.STRING(6),
+            allowNull: false,
+            validate: {
+                is: /^Week [0-9]{1,2}$/,
+            },
+            comment: "Week 1",
         },
         mark: {
             type: DataTypes.FLOAT,
