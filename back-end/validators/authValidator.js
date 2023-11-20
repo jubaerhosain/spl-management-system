@@ -1,8 +1,5 @@
-import { body } from "express-validator";
 import Joi from "joi";
-import { commonValidationHandler } from "./common/commonValidationHandler.js";
-import { validatePassword, checkEmailExistence } from "./common/commonValidators.js";
-import JoiUtils from "../utils/JoiUtils.js";
+import { validatePassword } from "./common/commonValidators.js";
 
 const loginFormSchema = Joi.object({
     email: Joi.string().trim().email().required(),
@@ -11,104 +8,40 @@ const loginFormSchema = Joi.object({
 
 const changePasswordFormSchema = Joi.object({
     oldPassword: Joi.string().trim().required(),
-    newPassword: Joi.string().trim().min(8).max(30).required(),
+    newPassword: Joi.string().trim().custom(validatePassword).required(),
 });
 
-function validateLoginForm(data) {
-    try {
-        const { error } = loginFormSchema.validate(data, { abortEarly: false });
-        if (error) {
-            const transformedError = JoiUtils.transformError(error);
-            return transformedError;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-    return null;
-}
+const generateOTPFormSchema = Joi.object({
+    email: Joi.string().trim().email().required(),
+});
 
-function validateChangePasswordForm(data) {
-    try {
-        const { error } = changePasswordFormSchema.validate(data, { abortEarly: false });
-        if (error) {
-            const transformedError = JoiUtils.transformError(error);
-            return transformedError;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-    return null;
-}
-
-const loginForm = [
-    body("email").trim().notEmpty().withMessage("Email must be provided").isEmail().withMessage("Must be a valid email"),
-    body("password").trim().notEmpty().withMessage("Password must be provided"),
-    commonValidationHandler,
-];
-
-const changePasswordForm = [
-    body("oldPassword").trim().notEmpty().withMessage("Password must be provided"),
-    body("newPassword")
-        .trim()
-        .notEmpty()
-        .withMessage("Password must be provided")
-        .bail()
-        .custom((newPassword) => {
-            return validatePassword(newPassword);
+const verifyOTPFormSchema = Joi.object({
+    email: Joi.string().trim().email().required(),
+    otp: Joi.string()
+        .regex(/^\d{6}$/)
+        .required()
+        .messages({
+            "string.pattern.base": "OTP must be a 6-digit number",
+            "any.required": "OTP is required",
         }),
-    commonValidationHandler,
-];
+});
 
-const generateOTPForm = [
-    body("email")
-        .trim()
-        .notEmpty()
-        .withMessage("Email must be provided")
-        .isEmail()
-        .withMessage("Must be a valid email")
-        .bail()
-        .custom(async (email) => {
-            await checkEmailExistence(email);
+const resetPasswordFormSchema = Joi.object({
+    email: Joi.string().trim().email().required(),
+    otp: Joi.string()
+        .regex(/^\d{6}$/)
+        .required()
+        .messages({
+            "string.pattern.base": "OTP must be a 6-digit number",
+            "any.required": "OTP is required",
         }),
-    commonValidationHandler,
-];
+    password: Joi.string().trim().min(8).max(30).required(),
+});
 
-const verifyOTPForm = [
-    body("email")
-        .trim()
-        .notEmpty()
-        .withMessage("Email must be provided")
-        .isEmail()
-        .withMessage("Must be a valid email")
-        .bail()
-        .custom(async (email) => {
-            await checkEmailExistence(email);
-        }),
-    body("otp").trim().notEmpty().withMessage("OTP must be provided"),
-    commonValidationHandler,
-];
-
-const resetPasswordForm = [
-    body("email")
-        .trim()
-        .notEmpty()
-        .withMessage("Email must be provided")
-        .isEmail()
-        .withMessage("Must be a valid email")
-        .bail()
-        .custom(async (email) => {
-            await checkEmailExistence(email);
-        }),
-    body("otp").trim().notEmpty().withMessage("OTP must be provided"),
-    body("password")
-        .trim()
-        .notEmpty()
-        .withMessage("Password must be provided")
-        .bail()
-        .custom((newPassword) => {
-            return validatePassword(newPassword);
-        }),
-    commonValidationHandler,
-];
-
-export default { validateLoginForm, loginForm, changePasswordForm, generateOTPForm, verifyOTPForm, resetPasswordForm };
+export default {
+    loginFormSchema,
+    changePasswordFormSchema,
+    generateOTPFormSchema,
+    verifyOTPFormSchema,
+    resetPasswordFormSchema,
+};

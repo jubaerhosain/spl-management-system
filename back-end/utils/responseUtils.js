@@ -1,73 +1,62 @@
-class MyError {
-    constructor(message, errorCode, data) {
-        this.success = false;
-        this.message = message;
-        this.errorCode = errorCode;
-        this.data = data;
-    }
-}
+import Joi from "joi";
 
-class MySuccess {
-    constructor(message, data, successCode) {
-        this.success = true;
-        this.message = message;
-        this.data = data;
-        this.successCode = successCode;
-    }
-}
-
-class Response {
-    // to show error message in UI
+class GenericResponse {
     static UNAUTHORIZED = "UNAUTHORIZED";
     static FORBIDDEN = "FORBIDDEN";
     static NOT_FOUND = "NOT_FOUND";
     static SERVER_ERROR = "SERVER_ERROR";
-
-    // to show error message in alert dialog
     static BAD_REQUEST = "BAD_REQUEST";
-
-
-    // form validation error by express-validator
     static VALIDATION_ERROR = "VALIDATION_ERROR";
 
-
-    /**
-     * Success response with this.success = true
-     * @param {*} message
-     * @param {*} data
-     * @param {*} successCode
-     * @returns MySuccess Object
-     */
-    static success(message, data, successCode) {
-        return new MySuccess(message, data, successCode);
+    constructor(success, message, data, statusCode) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+        this.statusCode = statusCode;
     }
 
-    /**
-     * Error response with this.success = false
-     * @param {*} message
-     * @param {*} errorCode
-     * @param {*} data
-     * @returns MyError Object
-     */
-    static error(message, errorCode, data) {
-        return new MyError(message, errorCode, data);
+    static joiErrorToGenericError(joiError) {
+        if (Joi.isError(joiError)) {
+            const transformedErrorData = {};
+            joiError.details.forEach((detail) => {
+                transformedErrorData[`${detail.context.key}`] = {
+                    msg: detail.message,
+                    value: detail.context.value,
+                };
+            });
+            return transformedErrorData;
+        } else {
+            throw new Error("Invalid joi error instance");
+        }
+    }
+
+    static success(message, successData, successCode) {
+        return new GenericResponse(true, message, successData, successCode);
+    }
+
+    static error(message, errorData, errorCode) {
+        if (Joi.isError(errorData)) {
+            errorData = this.joiErrorToGenericError(errorData);
+        }
+        return new GenericResponse(false, message, errorData, errorCode);
     }
 }
 
+export { GenericResponse };
+
+console.log(GenericResponse.success("This is a success response", "data", "code"));
+
 /**
- * Create custom validation error message like
- * @param {Object} options 
- * 
+ * Generic ErrorData format
  * @example
  *  {
-        "name": {
-            "msg": "Hyphens are not allowed",
+        name: {
+            msg: "Hyphens are not allowed",
+            value: "jubaer-hosain" 
         },
-        "age": {
+        age: {
             msg: "Must be a number"
+            value: "24"
         }
     }
  */
-function createValidationError(options) {}
-
-export { Response, createValidationError };

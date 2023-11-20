@@ -1,15 +1,14 @@
 import UserRepository from "../../repositories/UserRepository.js";
 import CustomError from "../../utils/CustomError.js";
 
-export const validatePassword = (password) => {
-    let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&.]{8,}$/;
-    if (password.length < 8) throw new CustomError("Password must be at least 8 characters");
+export const validatePassword = (password, helper) => {
+    if (password.length < 8) return helper.message("Password length must be at least 8 character");
+    if (password.length > 30) return helper.message("Password length must be less than 30 character");
 
-    let result = regex.test(password);
-    if (!result)
-        throw new CustomError(
-            "Must contain at least one uppercase, lowercase, number and special character"
-        );
+    let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&.]{8,}$/;
+
+    if (!regex.test(password))
+        return helper.message("Must contain at least one uppercase, lowercase, number and special character");
 
     return true;
 };
