@@ -30,8 +30,6 @@ class Response {
     // form validation error by express-validator
     static VALIDATION_ERROR = "VALIDATION_ERROR";
 
-    // if an array is send as error
-    static ARRAY_DATA = "ARRAY_DATA";
 
     /**
      * Success response with this.success = true

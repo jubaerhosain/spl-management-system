@@ -1,5 +1,6 @@
+user(modify)
 students(student_id, name, gender, roll_number, reg_number, batch, admission_session, current_session, email, phone, password, avatar, details, documentation_progress, code_progress, weekly_progress, active)
-teachers(teacher_id, name, gender, email, phone, password, avatar, details, designation, rank, available, active)
+teachers(teacher_id, name, gender, email, phone, password, avatar, details, designation, available, active)
 
 spls(spl_id, spl_name, academic_year, spl_manager, committee_head, active)
 student_spl(student_id, spl_id) [many to many according to all spl]
@@ -30,7 +31,5 @@ team_requests(team_id, teacher_id) [Many to Many]
 interested_fields(field_id, field_name)
 student_fields(student_id, field_id) [Many to Many]
 teacher_fields(teacher_id, field_id) [Many to Many]
-
-designations(designation, rank) [One to Many - one designation many teacher]
 
 Total Table - 13, Others are Junction/Relation Table

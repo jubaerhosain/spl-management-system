@@ -7,6 +7,11 @@ DELETE: try to use body but some cases you can use param to locate resource
     get: auth/ {authenticated user}
     delete: auth/logout
 
+    put: auth/change-password
+    put: auth/generate-otp
+    put: auth/verify-otp
+    put: auth/reset-password
+
 2. Student
     post: student/
     put: student/ {by himself or admin will be business logic}
@@ -31,7 +36,7 @@ DELETE: try to use body but some cases you can use param to locate resource
     post: spl/student-allocation/ body{splId|splName} // create mark table also for each student
     delete: spl/student-allocation/  body{splId|splName, studentId} // delete mark table also for that student
 
-    put: spl/member/ body{{splId|splName}}  
+    put: spl/member/ body{splId|splName}  
     delete: spl/member/ body{splId|splName, memberId}
 
 4. Team
