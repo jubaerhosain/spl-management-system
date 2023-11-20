@@ -1,9 +1,16 @@
-import Joi from "joi";
+import joi from "joi";
 import { validatePassword } from "./common/commonValidators.js";
+
+const Joi = joi.defaults((schema) => {
+    return schema.options({
+        abortEarly: false,
+    });
+});
 
 const loginFormSchema = Joi.object({
     email: Joi.string().trim().email().required(),
-    password: Joi.string().trim().min(8).max(30).required(),
+    password: Joi.string().trim().empty().required(),
+    checked: Joi.boolean().optional(),
 });
 
 const changePasswordFormSchema = Joi.object({

@@ -1,4 +1,4 @@
-import { Response } from "../../utils/responseUtils.js";
+import { GenericResponse } from "../../utils/responseUtils.js";
 import { validationResult } from "express-validator";
 
 export async function commonValidationHandler(req, res, next) {
@@ -8,7 +8,7 @@ export async function commonValidationHandler(req, res, next) {
         next();
     } else {
         res.status(200).json(
-            Response.error("Validation failed", Response.VALIDATION_ERROR, mappedErrors)
+            GenericResponse.error("Validation failed", GenericResponse.VALIDATION_ERROR, mappedErrors)
         );
     }
 }

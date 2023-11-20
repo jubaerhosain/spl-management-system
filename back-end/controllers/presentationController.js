@@ -1,4 +1,4 @@
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 
 async function createPresentationEvent(req, res) {
     try {
@@ -8,10 +8,10 @@ async function createPresentationEvent(req, res) {
             splId: splId,
         });
 
-        res.json(Response.success(`Presentation event created successfully`));
+        res.json(GenericResponse.success(`Presentation event created successfully`));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -30,10 +30,10 @@ async function addPresentationEvaluator(req, res, next) {
 
         await models.SPLEvaluator.bulkCreate(presentationEvaluators);
 
-        res.json(Response.success("Presentation evaluator added successfully"));
+        res.json(GenericResponse.success("Presentation evaluator added successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -49,10 +49,10 @@ async function removePresentationEvaluator(req, res, next) {
             },
         });
 
-        res.json(Response.success("Presentation evaluator remove successfully"));
+        res.json(GenericResponse.success("Presentation evaluator remove successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 

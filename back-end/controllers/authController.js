@@ -1,11 +1,14 @@
 import config from "../config/config.js";
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 import authService from "../services/authService.js";
+import authValidator from "../validators/authValidator.js";
 
 async function login(req, res) {
     try {
-        const { email, password, checked } = req.body;
+        const { error } = authValidator.loginFormSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
+        const { email, password, checked } = req.body;
         const token = await authService.login(email, password);
 
         res.cookie(process.env.AUTH_COOKIE_NAME, token, {
@@ -14,28 +17,24 @@ async function login(req, res) {
             signed: true,
         });
 
-        res.json(Response.success("Login successful"));
+        return res.json(GenericResponse.success("Login successful"));
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(
-                Response.error("Invalid email or password", Response.BAD_REQUEST)
-            );
+            res.status(err.status).json(GenericResponse.error("Invalid email or password"));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error"));
         }
     }
 }
 
 async function logout(req, res) {
     try {
-        // do the stuffs in authService.logout if needed
-
         res.clearCookie(config.cookie.authCookieName);
-        res.json(Response.success("Logged out successfully"));
+        res.json(GenericResponse.success("Logged out successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -46,11 +45,11 @@ async function changePassword(req, res) {
 
         await authService.changePassword(userId, oldPassword, newPassword);
 
-        res.json(Response.success("Password changed successfully"));
+        res.json(GenericResponse.success("Password changed successfully"));
     } catch (err) {
         if (err.status) {
             res.status(err.status).json(
-                Response.error(err.message, Response.VALIDATION_ERROR, {
+                GenericResponse.error(err.message, {
                     oldPassword: {
                         msg: err.message,
                     },
@@ -58,7 +57,7 @@ async function changePassword(req, res) {
             );
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error"));
         }
     }
 }
@@ -69,13 +68,13 @@ async function generateOTP(req, res) {
 
         await authService.generateOTP(email);
 
-        res.json(Response.success("An OTP has been sent to your email"));
+        GenericResponse.success(res, "An OTP has been sent to your email");
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error"));
         }
     }
 }
@@ -86,11 +85,11 @@ async function verifyOTP(req, res) {
 
         await authService.verifyOTP(email, otp);
 
-        res.json(Response.success("OTP verified successfully"));
+        res.json(GenericResponse.success("OTP verified successfully"));
     } catch (err) {
         if (err.status) {
             res.status(err.status).json(
-                Response.error(err.message, Response.VALIDATION_ERROR, {
+                GenericResponse.error(err.message, {
                     otp: {
                         msg: err.message,
                     },
@@ -98,7 +97,7 @@ async function verifyOTP(req, res) {
             );
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error"));
         }
     }
 }
@@ -109,13 +108,13 @@ async function resetPassword(req, res) {
 
         await authService.resetPassword(email, otp, password);
 
-        res.json(Response.success("Password reset successfully"));
+        res.json(GenericResponse.success("Password resets successfully"));
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error"));
         }
     }
 }

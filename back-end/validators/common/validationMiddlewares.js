@@ -1,4 +1,4 @@
-import { Response } from "../../utils/responseUtils.js";
+import { GenericResponse } from "../../utils/responseUtils.js";
 import UserRepository from "../../repositories/UserRepository.js";
 import StudentRepository from "../../repositories/StudentRepository.js";
 import commonUtils from "../../utils/commonUtils.js";
@@ -12,7 +12,7 @@ import commonUtils from "../../utils/commonUtils.js";
 export function requiredAtLeastOneField(req, res, next) {
     if (Object.keys(req.body).length === 0) {
         res.status(400).json(
-            Response.error("At least one field must be provided", Response.BAD_REQUEST)
+            GenericResponse.error("At least one field must be provided", GenericResponse.BAD_REQUEST)
         );
     } else {
         next();
@@ -32,9 +32,9 @@ export function isFieldAllowed(allowedFields) {
             req.res
                 .status(400)
                 .json(
-                    Response.error(
+                    GenericResponse.error(
                         "Following fields are not allowed",
-                        Response.BAD_REQUEST,
+                        GenericResponse.BAD_REQUEST,
                         invalidFields
                     )
                 );
@@ -56,23 +56,23 @@ export async function checkAddStudentUniqueness(req, res, next) {
 
         if (!commonUtils.isUnique(students.map((student) => student.email))) {
             res.status(400).json(
-                Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
+                GenericResponse.error("Duplicate emails are not allowed", GenericResponse.BAD_REQUEST)
             );
             return;
         }
 
         if (!commonUtils.isUnique(students.map((student) => student.rollNo))) {
             res.status(400).json(
-                Response.error("Duplicate roll numbers are not allowed", Response.BAD_REQUEST)
+                GenericResponse.error("Duplicate roll numbers are not allowed", GenericResponse.BAD_REQUEST)
             );
             return;
         }
 
         if (!commonUtils.isUnique(students.map((student) => student.registrationNo))) {
             res.status(400).json(
-                Response.error(
+                GenericResponse.error(
                     "Duplicate registration numbers are not allowed",
-                    Response.BAD_REQUEST
+                    GenericResponse.BAD_REQUEST
                 )
             );
             return;
@@ -81,7 +81,7 @@ export async function checkAddStudentUniqueness(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }
 
@@ -126,14 +126,14 @@ export async function checkAddStudentExistence(req, res, next) {
 
         if (errors.length > 0) {
             res.status(400).json(
-                Response.error("Following data are already exists", Response.ARRAY_DATA, errors)
+                GenericResponse.error("Following data are already exists", GenericResponse.ARRAY_DATA, errors)
             );
         } else {
             next();
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }
 
@@ -143,7 +143,7 @@ export async function checkAddTeacherUniqueness(req, res, next) {
 
         if (!commonUtils.isUnique(teachers.map((teacher) => teacher.email))) {
             res.status(400).json(
-                Response.error("Duplicate emails are not allowed", Response.BAD_REQUEST)
+                GenericResponse.error("Duplicate emails are not allowed", GenericResponse.BAD_REQUEST)
             );
             return;
         }
@@ -151,7 +151,7 @@ export async function checkAddTeacherUniqueness(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }
 
@@ -172,13 +172,13 @@ export async function checkAddTeacherExistence(req, res, next) {
 
         if (errors.length > 0) {
             res.status(400).json(
-                Response.error("Following data are already exists", Response.ARRAY_DATA, errors)
+                GenericResponse.error("Following data are already exists", GenericResponse.ARRAY_DATA, errors)
             );
         } else {
             next();
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }

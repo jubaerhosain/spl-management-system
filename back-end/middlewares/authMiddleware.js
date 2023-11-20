@@ -1,5 +1,5 @@
 import jwtUtils from "../utils/jwtUtils.js";
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 
 /**
  * Puts req.user = user
@@ -20,14 +20,14 @@ export async function checkAuthentication(req, res, next) {
         const token = signedCookie || authToken;
 
         if (!token) {
-            res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
+            res.status(401).json(GenericResponse.error("Authentication failed", GenericResponse.UNAUTHORIZED));
             return;
         }
 
         const decoded = jwtUtils.verifyToken(token);
 
         if (!decoded) {
-            res.status(401).json(Response.error("Authentication failed", Response.UNAUTHORIZED));
+            res.status(401).json(GenericResponse.error("Authentication failed", GenericResponse.UNAUTHORIZED));
             return;
         }
 
@@ -37,7 +37,7 @@ export async function checkAuthentication(req, res, next) {
         next();
     } catch (err) {
         console.log(err);
-        res.status(400).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(400).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }
 
@@ -46,7 +46,7 @@ export async function isAdmin(req, res, next) {
     if (user.userType === "admin") {
         next();
     } else {
-        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
     }
 }
 
@@ -55,7 +55,7 @@ export async function isTeacher(req, res, next) {
     if (user.userType === "teacher") {
         next();
     } else {
-        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
     }
 }
 
@@ -64,7 +64,7 @@ export async function isStudent(req, res, next) {
     if (user.userType === "student") {
         next();
     } else {
-        res.status(403).json(Response.error("You are not allowed", Response.FORBIDDEN));
+        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
     }
 }
 

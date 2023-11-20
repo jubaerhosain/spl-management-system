@@ -1,5 +1,5 @@
 import { models, sequelize, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { GenericResponse } from "../utilities/response-format-utilities.js";
 import { randomize } from "../utilities/sup-allocation-utilities.js";
 
 /**
@@ -23,7 +23,7 @@ async function randomizeSupervisor(req, res, next) {
         });
 
         if (hasSupervisor) {
-            res.status(400).json(Response.error("Randomization already done for SPL1"));
+            res.status(400).json(GenericResponse.error("Randomization already done for SPL1"));
             return;
         }
 
@@ -37,7 +37,7 @@ async function randomizeSupervisor(req, res, next) {
         });
 
         if (students.length == 0) {
-            res.status(400).json(Response.error("There is no SPL1 student"));
+            res.status(400).json(GenericResponse.error("There is no SPL1 student"));
             return;
         }
 
@@ -61,7 +61,7 @@ async function randomizeSupervisor(req, res, next) {
         });
 
         if (teachers.length === 0) {
-            res.status(400).json(Response.error("There is no available teacher"));
+            res.status(400).json(GenericResponse.error("There is no available teacher"));
             return;
         }
 
@@ -78,10 +78,10 @@ async function randomizeSupervisor(req, res, next) {
         // allocate supervisor
         await models.StudentTeacher_Supervisor.bulkCreate(studentTeachers);
 
-        res.json(Response.success("Supervisor randomized successfully for SPL1 students"));
+        res.json(GenericResponse.success("Supervisor randomized successfully for SPL1 students"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR));
     }
 }
 
@@ -124,15 +124,15 @@ async function manuallyAllocateTeamSupervisor(req, res, next) {
 
             await transaction.commit();
 
-            res.json(Response.success("SPL2 supervisor allocated successfully"));
+            res.json(GenericResponse.success("SPL2 supervisor allocated successfully"));
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            res.status(500).json(Response.error("Internal server error"));
+            res.status(500).json(GenericResponse.error("Internal server error"));
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(GenericResponse.error("Internal server error"));
     }
 }
 
@@ -173,16 +173,16 @@ async function manuallyAllocateStudentSupervisor(req, res, next) {
             await transaction.commit();
 
             res.json(
-                Response.success(`${splName.toUpperCase()} supervisor allocated successfully`)
+                GenericResponse.success(`${splName.toUpperCase()} supervisor allocated successfully`)
             );
         } catch (err) {
             await transaction.rollback();
             console.log(err);
-            res.status(500).json(Response.error("Internal server error"));
+            res.status(500).json(GenericResponse.error("Internal server error"));
         }
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(GenericResponse.error("Internal server error"));
     }
 }
 
@@ -203,10 +203,10 @@ async function removeSupervisor(req, res, next) {
             },
         });
 
-        res.json(Response.success("Supervisor removed successfully"));
+        res.json(GenericResponse.success("Supervisor removed successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(GenericResponse.error("Internal server error"));
     }
 }
 
@@ -223,7 +223,7 @@ async function assignManuallyByEmail(req, res, next) {
         });
 
         if (!spl) {
-            res.status(400).json(Response.error(`There is no active ${splName.toUpperCase()}`));
+            res.status(400).json(GenericResponse.error(`There is no active ${splName.toUpperCase()}`));
             return;
         }
 
@@ -236,7 +236,7 @@ async function assignManuallyByEmail(req, res, next) {
         });
 
         if (!teacher) {
-            res.status(400).json(Response.error("Invalid teacher"));
+            res.status(400).json(GenericResponse.error("Invalid teacher"));
             return;
         }
 
@@ -249,7 +249,7 @@ async function assignManuallyByEmail(req, res, next) {
         });
 
         if (!student) {
-            res.status(400).json(Response.error("Invalid student"));
+            res.status(400).json(GenericResponse.error("Invalid student"));
             return;
         }
 
@@ -264,7 +264,7 @@ async function assignManuallyByEmail(req, res, next) {
         if (!assigned) {
             if (!spl) {
                 res.status(400).json(
-                    Response.error(`Student is not assigned to ${splName.toUpperCase()}`)
+                    GenericResponse.error(`Student is not assigned to ${splName.toUpperCase()}`)
                 );
                 return;
             }
@@ -277,10 +277,10 @@ async function assignManuallyByEmail(req, res, next) {
             teacherId: teacher.userId,
         });
 
-        res.json(Response.success("Supervisor assigned successfully"));
+        res.json(GenericResponse.success("Supervisor assigned successfully"));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 

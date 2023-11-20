@@ -1,7 +1,7 @@
 import createError from "http-errors";
 import { models, Op } from "../database/db.js";
 import { getCurrentDate } from "../utilities/common-utilities.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { GenericResponse } from "../utilities/response-format-utilities.js";
 
 /**
  * Create a mark raw in "Marks" table
@@ -15,7 +15,7 @@ async function createMark({ studentId, splId }) {
         return studentMark;
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -53,7 +53,7 @@ async function addPresentationMark(req, res, next) {
 
         if (presentationMark) {
             res.status(400).json(
-                Response.error("Presentation mark is already given to that student")
+                GenericResponse.error("Presentation mark is already given to that student")
             );
             return;
         }
@@ -66,10 +66,10 @@ async function addPresentationMark(req, res, next) {
             mark: mark,
         });
 
-        res.json(Response.success("Presentation mark added successfully"));
+        res.json(GenericResponse.success("Presentation mark added successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -89,10 +89,10 @@ async function updatePresentationMark(req, res, next) {
             }
         );
 
-        res.json(Response.success("Presentation mark updated successfully"));
+        res.json(GenericResponse.success("Presentation mark updated successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -118,7 +118,7 @@ async function addSupervisorMark(req, res, next) {
         }
 
         if (studentMark.supervisorMark > 0) {
-            res.status(400).json(Response.error("Supervisor mark is already given"));
+            res.status(400).json(GenericResponse.error("Supervisor mark is already given"));
             return;
         }
 
@@ -134,10 +134,10 @@ async function addSupervisorMark(req, res, next) {
             }
         );
 
-        res.json(Response.success("Supervisor mark added successfully"));
+        res.json(GenericResponse.success("Supervisor mark added successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -189,7 +189,7 @@ async function addCodingMark(req, res, next) {
         }
 
         if (studentMark.codingMark > 0) {
-            res.status(400).json(Response.error("Coding mark is already given"));
+            res.status(400).json(GenericResponse.error("Coding mark is already given"));
             return;
         }
 
@@ -205,10 +205,10 @@ async function addCodingMark(req, res, next) {
             }
         );
 
-        res.json(Response.success("Coding mark added successfully"));
+        res.json(GenericResponse.success("Coding mark added successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -228,10 +228,10 @@ async function updateCodingMark(req, res, next) {
             }
         );
 
-        res.json(Response.success("Coding mark updated successfully"));
+        res.json(GenericResponse.success("Coding mark updated successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -267,7 +267,7 @@ async function addContinuousMark(req, res, next) {
 
         if (continuousMark) {
             res.status(400).json(
-                Response.error("Today's continuous mark is already given to that student")
+                GenericResponse.error("Today's continuous mark is already given to that student")
             );
             return;
         }
@@ -278,10 +278,10 @@ async function addContinuousMark(req, res, next) {
             mark: mark,
         });
 
-        res.json(Response.success("Continuous Mark added successfully"));
+        res.json(GenericResponse.success("Continuous Mark added successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -301,10 +301,10 @@ async function updateContinuousMark(req, res, next) {
             }
         );
 
-        res.json(Response.success("Continuous mark updated successfully"));
+        res.json(GenericResponse.success("Continuous mark updated successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -322,7 +322,7 @@ async function getMarksByStudentId(req, res, next) {
         });
 
         if (!mark) {
-            res.status(500).json(Response.error("NO marks found"));
+            res.status(500).json(GenericResponse.error("NO marks found"));
         }
 
         const presentationMarks = await models.PresentationMark.findAll({
@@ -343,10 +343,10 @@ async function getMarksByStudentId(req, res, next) {
         mark.continuousMarks = continuousMarks;
 
         console.log(mark);
-        res.json(Response.success("Marks retrieved successfully", mark));
+        res.json(GenericResponse.success("Marks retrieved successfully", mark));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error(""));
+        res.status(500).json(GenericResponse.error(""));
     }
 }
 
@@ -385,10 +385,10 @@ async function getMarksByCurriculumYear(req, res, next) {
         });
 
         console.log(marks);
-        res.json(Response.success("Marks retrieved successfully", marks));
+        res.json(GenericResponse.success("Marks retrieved successfully", marks));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error(""));
+        res.status(500).json(GenericResponse.error(""));
     }
 }
 

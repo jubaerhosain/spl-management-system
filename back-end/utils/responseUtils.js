@@ -1,24 +1,22 @@
 import Joi from "joi";
 
-class GenericResponse {
-    static UNAUTHORIZED = "UNAUTHORIZED";
-    static FORBIDDEN = "FORBIDDEN";
-    static NOT_FOUND = "NOT_FOUND";
-    static SERVER_ERROR = "SERVER_ERROR";
-    static BAD_REQUEST = "BAD_REQUEST";
-    static VALIDATION_ERROR = "VALIDATION_ERROR";
-
-    constructor(success, message, data, statusCode) {
+class GenericResponseModel {
+    constructor(success, message, data) {
         this.success = success;
         this.message = message;
         this.data = data;
-        this.statusCode = statusCode;
+    }
+}
+
+class GenericResponse {
+    static success(message, data) {
+        new GenericResponseModel(true, message, data);
     }
 
-    static joiErrorToGenericError(joiError) {
-        if (Joi.isError(joiError)) {
+    static JoiErrorToGenericError(error) {
+        if (Joi.isError(error)) {
             const transformedErrorData = {};
-            joiError.details.forEach((detail) => {
+            error.details.forEach((detail) => {
                 transformedErrorData[`${detail.context.key}`] = {
                     msg: detail.message,
                     value: detail.context.value,
@@ -30,21 +28,16 @@ class GenericResponse {
         }
     }
 
-    static success(message, successData, successCode) {
-        return new GenericResponse(true, message, successData, successCode);
-    }
-
-    static error(message, errorData, errorCode) {
-        if (Joi.isError(errorData)) {
-            errorData = this.joiErrorToGenericError(errorData);
+    static error(message, data) {
+        if (Joi.isError(data)) {
+            data = this.JoiErrorToGenericError(data);
         }
-        return new GenericResponse(false, message, errorData, errorCode);
+
+        return new GenericResponseModel(false, message, data);
     }
 }
 
 export { GenericResponse };
-
-console.log(GenericResponse.success("This is a success response", "data", "code"));
 
 /**
  * Generic ErrorData format

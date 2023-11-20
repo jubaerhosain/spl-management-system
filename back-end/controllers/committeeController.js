@@ -1,6 +1,6 @@
 import createError from "http-errors";
 import { sequelize, models, Op } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { GenericResponse } from "../utilities/response-format-utilities.js";
 
 /**
  * Create a committee for a particular spl
@@ -51,7 +51,7 @@ async function createCommittee(req, res, next) {
             await transaction.commit();
 
             res.status(200).json(
-                Response.success(`${splName.toUpperCase()} committee created successfully`)
+                GenericResponse.success(`${splName.toUpperCase()} committee created successfully`)
             );
         } catch (err) {
             await transaction.rollback();
@@ -61,7 +61,7 @@ async function createCommittee(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }

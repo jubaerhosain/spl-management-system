@@ -1,4 +1,4 @@
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 import studentService from "../services/studentService.js";
 import emailService from "../services/emailServices/emailService.js";
 import fileUtils from "../utils/fileUtils.js";
@@ -30,13 +30,13 @@ async function createStudentAccount(req, res) {
             );
         }
 
-        res.json(Response.success("Student accounts are created successfully"));
+        res.json(GenericResponse.success("Student accounts are created successfully"));
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -48,13 +48,13 @@ async function updateStudentAccount(req, res) {
 
         await studentService.updateStudentAccount(userId, student);
 
-        res.json(Response.success("Account is updated successfully"));
+        res.json(GenericResponse.success("Account is updated successfully"));
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -66,13 +66,13 @@ async function updateStudentAccountByAdmin(req, res) {
 
         await studentService.updateStudentAccountByAdmin(studentId, student);
 
-        res.json(Response.success("Student account is updated successfully"));
+        res.json(GenericResponse.success("Student account is updated successfully"));
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }

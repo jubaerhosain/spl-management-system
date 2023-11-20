@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import createError from "http-errors";
 import { sequelize, models, Op } from "../config/mysql.js";
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
@@ -20,10 +20,10 @@ async function getLoggedInUser(req, res, next) {
             user = await StudentRepository.findById(userId);
         }
 
-        res.json(Response.success("User retrieved successfully", user));
+        res.json(GenericResponse.success("User retrieved successfully", user));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+        res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
     }
 }
 
@@ -125,10 +125,10 @@ async function getStudentByCurriculumYear(req, res, next) {
 
         // console.log(users);
 
-        res.json(Response.success("Successfully retrieved students", users));
+        res.json(GenericResponse.success("Successfully retrieved students", users));
     } catch (err) {
         console.log(err);
-        Response.status(500).json("Internal Server Error");
+        GenericResponse.status(500).json("Internal Server Error");
     }
 }
 
@@ -156,10 +156,10 @@ async function getAllTeacher(req, res, next) {
 
         // console.log(users);
 
-        res.json(Response.success("Successfully retrieved teachers", users));
+        res.json(GenericResponse.success("Successfully retrieved teachers", users));
     } catch (err) {
         console.log(err);
-        Response.status(500).json("Internal Server Error");
+        GenericResponse.status(500).json("Internal Server Error");
     }
 }
 
@@ -175,7 +175,7 @@ async function getStudentAndSupervisor(req, res, next) {
         });
 
         if (!spl) {
-            res.status(400).json(Response.error("No SPL found"));
+            res.status(400).json(GenericResponse.error("No SPL found"));
             return;
         }
 
@@ -246,10 +246,10 @@ async function getStudentAndSupervisor(req, res, next) {
 
         // console.log(users);
 
-        res.json(Response.success("Successfully retrieved students", users));
+        res.json(GenericResponse.success("Successfully retrieved students", users));
     } catch (err) {
         console.log(err);
-        Response.status(500).json("Internal Server Error");
+        GenericResponse.status(500).json("Internal Server Error");
     }
 }
 
@@ -295,10 +295,10 @@ async function getRequestedStudents(req, res, next) {
 
         // console.log(users);
 
-        res.json(Response.success("Successfully retrieved students", users));
+        res.json(GenericResponse.success("Successfully retrieved students", users));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -362,10 +362,10 @@ async function getStudentAsSupervisor(req, res, next) {
 
         console.log(users);
 
-        res.json(Response.success("Successfully retrieved students", users));
+        res.json(GenericResponse.success("Successfully retrieved students", users));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -400,10 +400,10 @@ async function getStudentsForSPLManager() {
 
         console.log(users);
 
-        res.json(Response.success("Successfully retrieved students", users));
+        res.json(GenericResponse.success("Successfully retrieved students", users));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -418,10 +418,10 @@ async function findCurriculumYear(req, res, next) {
             raw: true,
         });
 
-        res.json(Response.success("Successfully retrieved students", student));
+        res.json(GenericResponse.success("Successfully retrieved students", student));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.json("Internal Server Error"));
+        res.status(500).json(GenericResponse.json("Internal Server Error"));
     }
 }
 

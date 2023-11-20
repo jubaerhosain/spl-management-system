@@ -1,4 +1,4 @@
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 import splService from "../services/splService.js";
 import commonUtils from "../utils/commonUtils.js";
 import splUtils from "../utils/splUtils.js";
@@ -21,16 +21,16 @@ async function createSPLCommittee(req, res) {
         });
 
         res.json(
-            Response.success(
+            GenericResponse.success(
                 `${splName.toUpperCase()}, ${academicYear} committee is created successfully`
             )
         );
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -47,16 +47,16 @@ async function assignStudents(req, res) {
 
         const curriculumYear = splUtils.getCurriculumYear(splName);
         res.json(
-            Response.success(
+            GenericResponse.success(
                 `${curriculumYear} year students are successfully assigned to ${splName.toUpperCase()}`
             )
         );
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -79,10 +79,10 @@ async function unassignStudent(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -96,10 +96,10 @@ async function addCommitteeHead(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -113,10 +113,10 @@ async function removedCommitteeHead(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -130,10 +130,10 @@ async function addSPLManager(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -147,10 +147,10 @@ async function removeSPLManager(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -164,10 +164,10 @@ async function addCommitteeMember(req, res) {
         });
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }
@@ -193,10 +193,10 @@ async function finalizeSPL(req, res) {
         // delete all temporary database related to this spl/spl students/spl teachers
     } catch (err) {
         if (err.status) {
-            res.status(err.status).json(Response.error(err.message, Response.BAD_REQUEST));
+            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
         } else {
             console.log(err);
-            res.status(500).json(Response.error("Internal Server Error", Response.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
         }
     }
 }

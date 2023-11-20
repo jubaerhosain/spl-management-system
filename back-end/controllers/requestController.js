@@ -1,5 +1,5 @@
 import { models, sequelize, Op } from "../database/mysql.js";
-import { Response } from "../utils/responseUtils.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 
 async function teamRequest(req, res, next) {
     try {
@@ -15,7 +15,7 @@ async function teamRequest(req, res, next) {
         });
 
         if (requested) {
-            res.status(400).json(Response.error("Already requested this teacher"));
+            res.status(400).json(GenericResponse.error("Already requested this teacher"));
             return;
         }
 
@@ -27,11 +27,11 @@ async function teamRequest(req, res, next) {
 
         // trigger a notification after the request
 
-        res.json(Response.success("Request sent successfully"));
+        res.json(GenericResponse.success("Request sent successfully"));
     } catch (err) {
         console.log(err);
         res.status(400).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }
@@ -72,7 +72,7 @@ async function acceptTeamRequest(req, res, next) {
 
             await transaction.commit();
 
-            res.json(Response.success("Request accepted"));
+            res.json(GenericResponse.success("Request accepted"));
         } catch (err) {
             await transaction.rollback();
             console.log(err);
@@ -81,7 +81,7 @@ async function acceptTeamRequest(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }
@@ -97,10 +97,10 @@ async function cancelTeamRequest(req, res, next) {
             },
         });
 
-        res.json(Response.success("Cancelled team request"));
+        res.json(GenericResponse.success("Cancelled team request"));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -116,10 +116,10 @@ async function rejectTeamRequest(req, res, next) {
             },
         });
 
-        res.json(Response.success("Rejected team request"));
+        res.json(GenericResponse.success("Rejected team request"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(GenericResponse.error("Internal server error"));
     }
 }
 
@@ -138,7 +138,7 @@ async function studentRequest(req, res, next) {
         });
 
         if (requested) {
-            res.status(400).json(Response.error("Already requested this teacher"));
+            res.status(400).json(GenericResponse.error("Already requested this teacher"));
             return;
         }
 
@@ -150,11 +150,11 @@ async function studentRequest(req, res, next) {
 
         // trigger a notification after the request
 
-        res.json(Response.success("Request sent successfully"));
+        res.json(GenericResponse.success("Request sent successfully"));
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }
@@ -191,7 +191,7 @@ async function acceptStudentRequest(req, res, next) {
 
             await transaction.commit();
 
-            res.json(Response.success("Request accepted"));
+            res.json(GenericResponse.success("Request accepted"));
         } catch (err) {
             await transaction.rollback();
             console.log(err);
@@ -200,7 +200,7 @@ async function acceptStudentRequest(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }
@@ -217,10 +217,10 @@ async function cancelStudentRequest(req, res, next) {
             },
         });
 
-        res.json(Response.success("Cancelled team request"));
+        res.json(GenericResponse.success("Cancelled team request"));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -236,10 +236,10 @@ async function rejectStudentRequest(req, res, next) {
             },
         });
 
-        res.json(Response.success("Rejected student request"));
+        res.json(GenericResponse.success("Rejected student request"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(Response.error("Internal server error"));
+        res.status(500).json(GenericResponse.error("Internal server error"));
     }
 }
 

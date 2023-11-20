@@ -1,6 +1,6 @@
 import createError from "http-errors";
 import { models, Op, sequelize } from "../database/db.js";
-import { Response } from "../utilities/response-format-utilities.js";
+import { GenericResponse } from "../utilities/response-format-utilities.js";
 import lodash from "lodash";
 
 /**
@@ -38,7 +38,7 @@ async function createTeam(req, res, next) {
 
             transaction.commit();
 
-            res.json(Response.success(`'${teamName}' created successfully`));
+            res.json(GenericResponse.success(`'${teamName}' created successfully`));
         } catch (err) {
             await transaction.rollback();
             console.log(err);
@@ -47,7 +47,7 @@ async function createTeam(req, res, next) {
     } catch (err) {
         console.log(err);
         res.status(500).json(
-            Response.error("Internal Server Error", Response.INTERNAL_SERVER_ERROR)
+            GenericResponse.error("Internal Server Error", GenericResponse.INTERNAL_SERVER_ERROR)
         );
     }
 }
@@ -192,10 +192,10 @@ async function getRequestedTeams(req, res, next) {
             newTeams.push(team);
         }
 
-        res.json(Response.success("Successful", newTeams));
+        res.json(GenericResponse.success("Successful", newTeams));
     } catch (error) {
         console.log(err);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -225,10 +225,10 @@ async function getTeamByTeamMember(req, res, next) {
 
         console.log(team);
 
-        res.json(Response.success("Team retrieved successfully", team));
+        res.json(GenericResponse.success("Team retrieved successfully", team));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -280,10 +280,10 @@ async function getTeamsWithMembers(req, res, next) {
             newTeams.push(team);
         }
 
-        res.json(Response.success("Successful", newTeams));
+        res.json(GenericResponse.success("Successful", newTeams));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
@@ -354,10 +354,10 @@ async function getTeamInfoWithSuperVisor(req, res, next) {
             newTeams.push(team);
         }
 
-        res.json(Response.success("Successful", newTeams));
+        res.json(GenericResponse.success("Successful", newTeams));
     } catch (error) {
         console.log(error);
-        res.status(500).json(Response.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("Internal Server Error"));
     }
 }
 
