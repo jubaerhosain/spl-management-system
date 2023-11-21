@@ -4,17 +4,20 @@ import CustomError from "../utils/CustomError.js";
 import UserRepository from "../repositories/UserRepository.js";
 
 async function createStudentAccount(students) {
-    const passwords = await passwordUtils.generateHashedPassword(students.length);
+
+    // validate data existences
+
+    const passwords = await passwordUtils.generatePassword(students.length);
 
     const credentials = [];
 
     // normalize students to add both to User and Student table in a single query
-    const users = students.map((student, i) => {
+    const newStudents = students.map((student, i) => {
         const user = {};
 
         user.name = student.name;
         user.email = student.email;
-        user.password = passwords[i].hashedPassword;
+        user.password = passwords[i].hash;
         user.userType = "student";
 
         delete student.name;
@@ -25,13 +28,27 @@ async function createStudentAccount(students) {
         credentials.push({
             name: user.name,
             email: user.email,
-            password: passwords[i].originalPassword,
+            password: passwords[i].original,
         });
 
         return user;
     });
 
-    await StudentRepository.create(users);
+    await StudentRepository.create(newStudents);
+
+    try {
+        await emailService.sendAccountCreationEmail(credentials);
+    } catch (err) {
+        console.log(err);
+        throw new CustomError("Accounts are created successfully but failed to send email with credential", 400);
+    }
+
+    try {
+        fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
+    } catch (err) {
+        console.log(err);
+        throw new CustomError("Accounts are created successfully but failed to write credentials in file ", 400);
+    }
 
     return credentials;
 }

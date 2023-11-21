@@ -2,8 +2,8 @@ GET: query param or param (never use body)
 POST, PUT: always use body 
 DELETE: try to use body but some cases you can use param to locate resource
 
-0. Authentication 
-    post: auth/login
+0. Authentication [done]
+    post: auth/login 
     get: auth/ {authenticated user}
     delete: auth/logout
 
@@ -17,7 +17,7 @@ DELETE: try to use body but some cases you can use param to locate resource
 0. Account
     put: activate/
 
-1.  Admin
+1.  Admin [done]
     post: admin/
     put: admin/
     delete: admin/{userId}

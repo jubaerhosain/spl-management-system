@@ -12,33 +12,6 @@ async function verifyPassword(password, hashedPassword) {
 }
 
 /**
- * Generates n number of password with hash
- * @param {*} n
- * @returns [{hashedPassword, originalPassword}]
- */
-async function generateHashedPassword(numberOfPassword = 1) {
-    const passwords = generator.generateMultiple(numberOfPassword, {
-        length: 10,
-        uppercase: true,
-        numbers: true,
-        symbols: false,
-        lowercase: true,
-    });
-
-    const hashedPasswords = [];
-    await Promise.all(
-        passwords.map(async (password) => {
-            hashedPasswords.push({
-                originalPassword: password,
-                hashedPassword: await hashPassword(password),
-            });
-        })
-    );
-
-    return hashedPasswords;
-}
-
-/**
  * Generates password and corresponding hash
  * @param {*} n number of password to be generated
  * @returns [{ original, hash }]
@@ -80,4 +53,4 @@ function generateOTP(numberOfDigit = 6) {
     return otp;
 }
 
-export default { hashPassword, verifyPassword, generatePassword, generateHashedPassword, generateOTP };
+export default { hashPassword, verifyPassword, generatePassword, generateOTP };

@@ -18,6 +18,8 @@ import {
     validateCurriculumYear,
 } from "./common/commonValidators.js";
 
+import utils from "../utils/utils.js";
+
 const createStudentSchema = Joi.array().items(
     Joi.object({
         name: Joi.string().trim().custom(validateName).required(),
@@ -46,8 +48,55 @@ const updateStudentByAdminSchema = Joi.object({
     curriculumYear: Joi.string().trim().custom(validateCurriculumYear).optional(),
 });
 
+function validateDuplicates(students) {
+    const error = {};
+    const emails = students.map((student) => student.email);
+    emails.forEach((email, index) => {
+        if (utils.countOccurrences(emails, email) > 1) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["email"] = {
+                msg: "duplicate email not allowed",
+                value: email,
+            };
+        }
+    });
+
+    const rollNos = students.map((student) => student.rollNo);
+    rollNos.forEach((rollNo, index) => {
+        if (utils.countOccurrences(rollNos, rollNo) > 1) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["rollNo"] = {
+                msg: "duplicate roll not allowed",
+                value: rollNo,
+            };
+        }
+    });
+
+    const registrationNos = students.map((student) => student.registrationNo);
+    registrationNos.forEach((registrationNo, index) => {
+        if (utils.countOccurrences(registrationNos, registrationNo) > 1) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["registrationNo"] = {
+                msg: "duplicate registration not allowed",
+                value: registrationNo,
+            };
+        }
+    });
+
+    if (Object.keys(error).length === 0) return null;
+
+    return error;
+}
+
 export default {
-    addStudentSchema,
+    createStudentSchema,
+    validateDuplicates,
     updateStudentSchema,
     updateStudentByAdminSchema,
 };

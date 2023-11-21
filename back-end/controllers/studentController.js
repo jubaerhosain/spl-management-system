@@ -3,31 +3,29 @@ import studentService from "../services/studentService.js";
 import emailService from "../services/emailServices/emailService.js";
 import fileUtils from "../utils/fileUtils.js";
 import CustomError from "../utils/CustomError.js";
+import studentValidator from "../validators/studentValidator.js";
 
 async function createStudentAccount(req, res) {
     try {
         const { students } = req.body;
 
-        const credentials = await studentService.createStudentAccount(students);
+        if (!students || students.length === 0)
+            return res.status(400).json(GenericResponse.error("Please! provided student information"));
 
-        try {
-            await emailService.sendAccountCreationEmail(credentials);
-        } catch (err) {
-            console.log(err);
-            throw new CustomError("Accounts are created successfully but failed to send email with credential", 400);
-        }
+        const { error } = studentValidator.createStudentSchema.validate(students);
+        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
-        try {
-            fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
-        } catch (err) {
-            console.log(err);
-            throw new CustomError("Accounts are created successfully but failed to write credentials in file ", 400);
-        }
+        const duplicateError = studentValidator.validateDuplicates(students);
+        if (duplicateError) return res.status(400).json(GenericResponse.error("duplicate data is not allowed", duplicateError));
+
+        return;
+
+        await studentService.createStudentAccount(students);
 
         res.json(GenericResponse.success("Student accounts are created successfully"));
     } catch (err) {
-        if (err.status) {
-            res.status(err.status).json(GenericResponse.error(err.message));
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
             res.status(500).json(GenericResponse.error("An error occurred while creating student account"));
@@ -44,8 +42,8 @@ async function updateStudentAccount(req, res) {
 
         res.json(GenericResponse.success("Account is updated successfully"));
     } catch (err) {
-        if (err.status) {
-            res.status(err.status).json(GenericResponse.error(err.message));
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
             res.status(500).json(GenericResponse.error("An error occurred while updating account"));
