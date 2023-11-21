@@ -1,7 +1,5 @@
 import joi from "joi";
 import { body } from "express-validator";
-import { commonValidationHandler } from "./common/commonValidationHandler.js";
-import CustomError from "../utils/CustomError.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 
 const Joi = joi.defaults((schema) => {
@@ -34,8 +32,13 @@ const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "
 
 const createStudentSchema = Joi.array().items(
     Joi.object({
-        name: Joi.string().required(),
-        email: Joi.string().email().required(),
+        name: Joi.string().trim().custom(validateName).required(),
+        email: Joi.string().trim().email().custom(validateEmail).required(),
+        rollNo: Joi.string().trim().custom(validateRollNo).required(),
+        registrationNo: Joi.string().trim().custom(validateRegistrationNo).required(),
+        batch: Joi.string().trim().custom(validateBatch).required(),
+        session: Joi.string().trim().custom(validateSession).required(),
+        curriculumYear: Joi.string().trim().custom(validateCurriculumYear).required(),
     })
 );
 
@@ -101,8 +104,6 @@ const validateCreateStudentAccount = [
             return validateCurriculumYear(curriculumYear);
         }),
 
-    commonValidationHandler,
-
     checkAddStudentUniqueness,
 
     checkAddStudentExistence,
@@ -141,8 +142,6 @@ const validateUpdateStudentAccount = [
         .optional(),
 
     body("details").trim().notEmpty().withMessage("Details must be provided").optional(),
-
-    commonValidationHandler,
 ];
 
 const validateUpdateStudentAccountByAdmin = [
@@ -158,12 +157,12 @@ const validateUpdateStudentAccountByAdmin = [
         .custom(async (rollNo) => {
             try {
                 const exist = await StudentRepository.isRollNoExist(rollNo);
-                if (exist) throw new CustomError("rollNo already exists", 400);
+                if (exist) throw new Error("rollNo already exists", 400);
             } catch (err) {
-                if (err.status) throw new CustomError(err.message);
+                if (err.status) throw new Error(err.message);
                 else {
                     console.log(err);
-                    throw new CustomError("An error occurred while checking rollNo");
+                    throw new Error("An error occurred while checking rollNo");
                 }
             }
         })
@@ -178,12 +177,12 @@ const validateUpdateStudentAccountByAdmin = [
         .custom(async (registrationNo) => {
             try {
                 const exist = await StudentRepository.isRegistrationNoExist(registrationNo);
-                if (exist) throw new CustomError("registrationNo already exists", 400);
+                if (exist) throw new Error("registrationNo already exists", 400);
             } catch (err) {
-                if (err.status) throw new CustomError(err.message);
+                if (err.status) throw new Error(err.message);
                 else {
                     console.log(err);
-                    throw new CustomError("An error occurred while checking registrationNo");
+                    throw new Error("An error occurred while checking registrationNo");
                 }
             }
         })
@@ -209,8 +208,6 @@ const validateUpdateStudentAccountByAdmin = [
             return validateCurriculumYear(curriculumYear);
         })
         .optional(),
-
-    commonValidationHandler,
 ];
 
 export default {

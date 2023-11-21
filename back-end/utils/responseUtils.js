@@ -17,22 +17,21 @@ class ErrorResponse {
 }
 
 class GenericResponse {
-    static success(message, data) {
-        return new SuccessResponse(message, data);
-    }
-
     static JoiErrorToGenericError(error) {
         if (Joi.isError(error)) {
-            const transformedErrorData = {};
+            const result = {};
 
             error.details.forEach((detail) => {
-                transformedErrorData[detail.context.key] = {
-                    msg: detail.message.replace(/(\")/g, ""),
-                    value: detail.context.value,
-                };
+                // process ony first error of same key
+                if (!result[detail.context.key]) {
+                    result[detail.context.key] = {
+                        msg: detail.message.replace(/(\")/g, ""),
+                        value: detail.context.value,
+                    };
+                }
             });
 
-            return transformedErrorData;
+            return result;
         } else {
             throw new Error("Invalid joi error instance");
         }
@@ -49,16 +48,23 @@ class GenericResponse {
                     result[key] = {};
                 }
 
-                result[key][detail.context.key] = {
-                    msg: detail.message.replace(/(\[\d+\]\.)|(\")/g, ""),
-                    value: detail.context.value,
-                };
+                // process ony first error of same
+                if (!result[key][detail.context.key]) {
+                    result[key][detail.context.key] = {
+                        msg: detail.message.replace(/(\[\d+\]\.)|(\")/g, ""),
+                        value: detail.context.value,
+                    };
+                }
             });
 
             return result;
         } else {
             throw new Error("Invalid joi error instance");
         }
+    }
+
+    static success(message, data) {
+        return new SuccessResponse(message, data);
     }
 
     static error(message, error) {
@@ -77,13 +83,9 @@ export { GenericResponse };
  * GenericError format
  * @example
  *  {
-        name: {
-            msg: "Hyphens are not allowed",
-            value: "jubaer-hosain" 
+        key: {
+            msg: "messages goes here",
+            value: "value goes here" 
         },
-        age: {
-            msg: "Must be a number"
-            value: "24"
-        }
     }
  */
