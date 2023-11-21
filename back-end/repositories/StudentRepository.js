@@ -151,7 +151,7 @@ async function findAllExistedRollNo(rollNumbers) {
     if (students.length > 0) {
         return students.map((student) => student.rollNo);
     }
-    return null;
+    return [];
 }
 
 async function findAllExistedRegistrationNo(registrationNumbers) {
@@ -168,7 +168,7 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     if (students.length > 0) {
         return students.map((student) => student.registrationNo);
     }
-    return null;
+    return [];
 }
 
 async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {

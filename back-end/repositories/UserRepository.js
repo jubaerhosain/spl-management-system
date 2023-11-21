@@ -71,19 +71,19 @@ async function findLoginInfo(email) {
     return user;
 }
 
-// async function findAllByEmail(emails) {
-//     const users = await models.User.findAll({
-//         where: {
-//             email: {
-//                 [Op.in]: emails,
-//             },
-//         },
-//         attributes: ["userId"],
-//     });
+async function findAllExistedEmail(emails) {
+    const users = await models.User.findAll({
+        where: {
+            email: {
+                [Op.in]: emails,
+            },
+        },
+        attributes: ["email"],
+    });
 
-//     if (users) return users.map((user) => user.userId);
-//     return null;
-// }
+    if (users.length > 0) return users.map((user) => user.email);
+    return [];
+}
 
 async function remove(userId) {
     console.log(userId);
@@ -101,5 +101,6 @@ export default {
     findPasswordById,
     findPasswordByEmail,
     findLoginInfo,
+    findAllExistedEmail,
     remove,
 };

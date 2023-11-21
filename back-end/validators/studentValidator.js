@@ -19,6 +19,8 @@ import {
 } from "./common/commonValidators.js";
 
 import utils from "../utils/utils.js";
+import UserRepository from "../repositories/UserRepository.js";
+import StudentRepository from "../repositories/StudentRepository.js";
 
 const createStudentSchema = Joi.array().items(
     Joi.object({
@@ -48,7 +50,7 @@ const updateStudentByAdminSchema = Joi.object({
     curriculumYear: Joi.string().trim().custom(validateCurriculumYear).optional(),
 });
 
-function validateDuplicates(students) {
+function validateCreateStudentDuplicates(students) {
     const error = {};
     const emails = students.map((student) => student.email);
     emails.forEach((email, index) => {
@@ -94,9 +96,59 @@ function validateDuplicates(students) {
     return error;
 }
 
+async function validateCreateStudentExistence(students) {
+    const error = {};
+    const emails = students.map((student) => student.email);
+    const existedEmails = await UserRepository.findAllExistedEmail(emails);
+    emails.forEach((email, index) => {
+        if (existedEmails.includes(email)) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["email"] = {
+                msg: "email already exists",
+                value: email,
+            };
+        }
+    });
+
+    const rollNos = students.map((student) => student.rollNo);
+    const existedRollNos = await StudentRepository.findAllExistedRollNo(rollNos);
+    rollNos.forEach((rollNo, index) => {
+        if (existedRollNos.includes(rollNo)) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["rollNo"] = {
+                msg: "rollNo already exists",
+                value: rollNo,
+            };
+        }
+    });
+
+    const registrationNos = students.map((student) => student.registrationNo);
+    const existedRegistrationNos = await StudentRepository.findAllExistedRegistrationNo(registrationNos);
+    registrationNos.forEach((registrationNo, index) => {
+        if (existedRegistrationNos.includes(registrationNo)) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["registrationNo"] = {
+                msg: "registrationNo already exists",
+                value: registrationNo,
+            };
+        }
+    });
+
+    if (Object.keys(error).length === 0) return null;
+
+    return error;
+}
+
 export default {
     createStudentSchema,
-    validateDuplicates,
+    validateCreateStudentDuplicates,
+    validateCreateStudentExistence,
     updateStudentSchema,
     updateStudentByAdminSchema,
 };
