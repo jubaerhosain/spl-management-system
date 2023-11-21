@@ -1,7 +1,14 @@
+import joi from "joi";
 import { body } from "express-validator";
 import { commonValidationHandler } from "./common/commonValidationHandler.js";
 import CustomError from "../utils/CustomError.js";
 import StudentRepository from "../repositories/StudentRepository.js";
+
+const Joi = joi.defaults((schema) => {
+    return schema.options({
+        abortEarly: false,
+    });
+});
 
 import {
     validateEmail,
@@ -25,13 +32,15 @@ import {
 const allowedFieldsForStudent = ["phone", "name", "gender", "details"];
 const allowedFieldsForAdmin = ["rollNo", "registrationNo", "batch", "session", "curriculumYear"];
 
+const createStudentSchema = Joi.array().items(
+    Joi.object({
+        name: Joi.string().required(),
+        email: Joi.string().email().required(),
+    })
+);
+
 const validateCreateStudentAccount = [
-    body("students")
-        .isArray()
-        .withMessage("Must be an array")
-        .bail()
-        .isLength({ min: 1 })
-        .withMessage("Cannot be empty array"),
+    body("students").isArray().withMessage("Must be an array").bail().isLength({ min: 1 }).withMessage("Cannot be empty array"),
 
     body("students.*.name")
         .trim()
@@ -205,6 +214,7 @@ const validateUpdateStudentAccountByAdmin = [
 ];
 
 export default {
+    createStudentSchema,
     validateCreateStudentAccount,
     validateUpdateStudentAccount,
     validateUpdateStudentAccountByAdmin,
