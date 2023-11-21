@@ -14,10 +14,13 @@ DELETE: try to use body but some cases you can use param to locate resource
     put: auth/verify-otp
     put: auth/reset-password
 
-1. Admin 
+0. Account
+    put: activate/
+
+1.  Admin
     post: admin/
     put: admin/
-    delete: admin/
+    delete: admin/{userId}
 
 2. Student
     post: student/

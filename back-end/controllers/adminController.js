@@ -17,8 +17,32 @@ async function createAdminAccount(req, res) {
     }
 }
 
-async function updateAdminAccount(req, res) {}
+async function updateAdminAccount(req, res) {
+    try {
+        const { error } = adminValidator.updateAdminSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
 
-async function deleteAdminAccount(req, res) {}
+        const user = req.user;
+        await userService.updateUserAccount(user.userId, req.body);
+
+        res.json(GenericResponse.success("Account updated successfully"));
+    } catch (error) {
+        console.log(err);
+        res.status(500).json(GenericResponse.error("An error occurred during account creation"));
+    }
+}
+
+async function deleteAdminAccount(req, res) {
+    try {
+        const { userId } = req.params;
+
+        await userService.deleteUserAccount(userId);
+
+        res.json(GenericResponse.success("Account deleted successfully"));
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(GenericResponse.error("An error occurred during account creation"));
+    }
+}
 
 export default { createAdminAccount, updateAdminAccount, deleteAdminAccount };

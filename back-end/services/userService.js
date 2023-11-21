@@ -4,7 +4,7 @@ import passwordUtils from "../utils/passwordUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 
 async function createUserAccount(user) {
-    const exists = await UserRepository.isEmailExists(user.email);
+    const exists = await UserRepository.findUserId(user.email);
 
     if (exists) {
         return new CustomError("User already exists", 400, {
@@ -27,8 +27,12 @@ async function createUserAccount(user) {
     fileUtils.writeCredentials(new Date() + "\n" + credentialData);
 }
 
-async function updateUserAccount(user) {}
+async function updateUserAccount(userId, user) {
+    await UserRepository.update(userId, user);
+}
 
-async function deleteUserAccount(user) {}
+async function deleteUserAccount(userId) {
+    await UserRepository.remove(userId);
+}
 
-export default { createUserAccount };
+export default { createUserAccount, updateUserAccount, deleteUserAccount };
