@@ -31,4 +31,8 @@ async function addAdmin(req, res) {
     }
 }
 
-export default { addAdmin };
+async function updateAdmin(req, res) {}
+
+async function removeAdmin(req, res) {}
+
+export default { addAdmin, updateAdmin, removeAdmin };

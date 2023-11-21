@@ -1,103 +1,33 @@
-import { body } from "express-validator";
-import { commonValidationHandler } from "./common/commonValidationHandler.js";
-import { requiredAtLeastOneField, isFieldAllowed } from "./common/validationMiddlewares.js";
-import {
-    checkAddTeacherUniqueness,
-    checkAddTeacherExistence,
-} from "./common/validationMiddlewares.js";
+import joi from "joi";
+const Joi = joi.defaults((schema) => {
+    return schema.options({
+        abortEarly: false,
+    });
+});
 
 import {
     validateEmail,
     validateName,
     validatePhoneNumber,
     validateGender,
+    validateDesignation,
 } from "./common/commonValidators.js";
 
-const validateCreateTeacherAccount = [
-    body("teachers")
-        .isArray()
-        .withMessage("Must be an array")
-        .bail()
-        .isLength({ min: 1 })
-        .withMessage("Cannot be empty array"),
+const createTeacherSchema = Joi.array().items(
+    Joi.object({
+        name: Joi.string().trim().custom(validateName).required(),
+        email: Joi.string().trim().email().custom(validateEmail).required(),
+        designation: Joi.string().trim().custom(validateDesignation).required(),
+    })
+);
 
-    body("teachers.*.name")
-        .trim()
-        .notEmpty()
-        .withMessage("Name cannot be empty")
-        .custom((name) => {
-            return validateName(name);
-        }),
+const updateTeacherSchema = Joi.object({
+    name: Joi.string().trim().custom(validateName).optional(),
+    gender: Joi.string().trim().custom(validateGender).optional(),
+    phone: Joi.string().trim().custom(validatePhoneNumber).optional(),
+    details: Joi.string().trim().min(5).max(600).optional(),
+    designation: Joi.string().trim().custom(validateDesignation).optional(),
+    available: Joi.boolean().optional(),
+});
 
-    body("teachers.*.email")
-        .trim()
-        .trim()
-        .notEmpty()
-        .withMessage("Email cannot be empty")
-        .isEmail()
-        .withMessage("Invalid email format")
-        .custom((email) => {
-            return validateEmail(email);
-        }),
-
-    body("teachers.*.designation")
-        .trim()
-        .trim()
-        .notEmpty()
-        .withMessage("Designation cannot be empty"),
-
-    commonValidationHandler,
-
-    checkAddTeacherUniqueness,
-
-    checkAddTeacherExistence,
-];
-
-/**
- * Allowed fields to update by teacher
- */
-const allowedFields = ["name", "phone", "gender", "details", "designation", "available"];
-
-const validateUpdateTeacherAccount = [
-    requiredAtLeastOneField,
-    isFieldAllowed(allowedFields),
-
-    // Validate the individual fields
-    body("name")
-        .trim()
-        .notEmpty()
-        .withMessage("Name must be provided")
-        .bail()
-        .custom((name) => {
-            return validateName(name);
-        })
-        .optional(),
-
-    body("gender")
-        .trim()
-        .notEmpty()
-        .withMessage("Name must be provided")
-        .custom((gender) => {
-            return validateGender(gender);
-        })
-        .optional(),
-
-    body("phone")
-        .trim()
-        .notEmpty()
-        .withMessage("Name must be provided")
-        .custom((phone) => {
-            return validatePhoneNumber(phone);
-        })
-        .optional(),
-
-    body("details").trim().notEmpty().withMessage("Details must be provided").optional(),
-
-    body("designation").trim().notEmpty().withMessage("Designation must be provided").optional(),
-
-    body("available").trim().isBoolean().withMessage("Must be a boolean").optional(),
-
-    commonValidationHandler,
-];
-
-export default { validateCreateTeacherAccount, validateUpdateTeacherAccount };
+export default { createTeacherSchema, updateTeacherSchema };

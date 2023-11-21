@@ -1,5 +1,4 @@
-import { body } from "express-validator";
-
+function body(){}
 import { validateSPLName, validateAcademicYear } from "./common/commonValidators.js";
 import { commonValidationHandler } from "./common/commonValidationHandler.js";
 import SPLRepository from "../repositories/SPLRepository.js";

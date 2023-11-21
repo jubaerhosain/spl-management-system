@@ -1,5 +1,5 @@
 import joi from "joi";
-import { validatePassword } from "./common/commonValidators.js";
+import { validatePassword, validateOTP } from "./common/commonValidators.js";
 
 const Joi = joi.defaults((schema) => {
     return schema.options({
@@ -24,25 +24,13 @@ const generateOTPFormSchema = Joi.object({
 
 const verifyOTPFormSchema = Joi.object({
     email: Joi.string().trim().email().required(),
-    otp: Joi.string()
-        .regex(/^\d{6}$/)
-        .required()
-        .messages({
-            "string.pattern.base": "OTP must be a 6-digit number",
-            "any.required": "OTP is required",
-        }),
+    otp: Joi.string().trim().custom(validateOTP).required(),
 });
 
 const resetPasswordFormSchema = Joi.object({
     email: Joi.string().trim().email().required(),
-    otp: Joi.string()
-        .regex(/^\d{6}$/)
-        .required()
-        .messages({
-            "string.pattern.base": "OTP must be a 6-digit number",
-            "any.required": "OTP is required",
-        }),
-    password: Joi.string().trim().min(8).max(30).required(),
+    otp: Joi.string().trim().custom(validateOTP).required(),
+    password: Joi.string().trim().custom(validatePassword).required(),
 });
 
 export default {

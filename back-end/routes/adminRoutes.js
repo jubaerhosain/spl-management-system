@@ -2,11 +2,10 @@ import express from "express";
 const adminRoutes = express.Router();
 
 import adminController from "../controllers/adminController.js";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
-// import { addAdminValidator } from "../validators/admin-validators.js";
-// import { commonValidationHandler } from "../validators/custom-validator.js";
-// import { addAdmin } from "../controllers/admin-controllers.js";
-
-adminRoutes.post("/", adminController.addAdmin);
+adminRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.addAdmin);
+adminRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.updateAdmin);
+adminRoutes.delete("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.removeAdmin);
 
 export default adminRoutes;

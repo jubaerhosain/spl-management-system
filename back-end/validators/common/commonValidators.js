@@ -128,3 +128,13 @@ export const validateOTP = (otp, helper) => {
 
     return true;
 };
+
+export const validateDesignation = (designation, helper) => {
+    const options = ["Professor", "Associate Professor", "Assistant Professor", "Lecturer"];
+
+    if (!options.includes(designation)) {
+        return helper.message("invalid designation");
+    }
+
+    return true;
+};

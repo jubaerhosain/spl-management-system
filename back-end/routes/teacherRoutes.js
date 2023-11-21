@@ -1,27 +1,13 @@
 import express from "express";
 const teacherRoutes = express.Router();
 
-import teacherValidator from "../validators/teacherValidator.js";
 import teacherController from "../controllers/teacherController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
+teacherRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, teacherController.createTeacherAccount);
 
-// add one or more teachers
-teacherRoutes.post(
-    "/",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    teacherValidator.validateCreateTeacherAccount,
-    teacherController.createTeacherAccount
-);
+teacherRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isTeacher, teacherController.updateTeacherAccount);
 
-// update teacher profile
-teacherRoutes.put(
-    "/",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isTeacher,
-    teacherValidator.validateUpdateTeacherAccount,
-    teacherController.updateTeacherAccount
-);
+teacherRoutes.get("/");
 
 export default teacherRoutes;

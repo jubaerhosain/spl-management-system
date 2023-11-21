@@ -2,9 +2,11 @@ import express from "express";
 const apiRoutes = express.Router();
 
 import authRoutes from "./authRoutes.js";
-import userRoutes from "./userRoutes.js";
-import splRoutes from "./splRoutes.js";
 import studentRoutes from "./studentRoutes.js";
+import teacherRoutes from "./teacherRoutes.js";
+import adminRoutes from "./adminRoutes.js";
+// import userRoutes from "./userRoutes.js";
+// import splRoutes from "./splRoutes.js";
 // import committeeRouter from "./committeeRouter.js";
 // import teamRouter from "./teamRouter.js";
 // import supervisorAllocationRouter from "./supAllocationRouter.js";
@@ -12,8 +14,9 @@ import studentRoutes from "./studentRoutes.js";
 // import markingRouter from "./markingRouter.js";
 
 apiRoutes.use("/auth", authRoutes);
-
+apiRoutes.use("/admin", adminRoutes);
 apiRoutes.use("/student", studentRoutes); 
+apiRoutes.use("/teacher", teacherRoutes); 
 
 // apiRoutes.use("/user", userRoutes);
 
