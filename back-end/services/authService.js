@@ -5,14 +5,8 @@ import UserRepository from "../repositories/UserRepository.js";
 import OTPRepository from "../repositories/OTPRepository.js";
 import CustomError from "../utils/CustomError.js";
 
-/**
- * Returns jwt if login successful otherwise return null
- * @param {*} email
- * @param {*} password
- * @returns {Promise<Object>} jwt
- */
 async function login(email, password) {
-    const user = await UserRepository.findLoginInfoByEmail(email);
+    const user = await UserRepository.findLoginInfo(email);
 
     if (!user) {
         throw new CustomError("Email not found", 400);
@@ -20,7 +14,7 @@ async function login(email, password) {
 
     const matches = await passwordUtils.verifyPassword(password, user.password);
     if (!matches) {
-        throw new CustomError("Password did not match", 400);
+        throw new CustomError("Password did not matched", 400);
     }
 
     const token = jwtUtils.generateToken({
@@ -35,15 +29,19 @@ async function login(email, password) {
 async function logout(email, password) {}
 
 async function changePassword(userId, oldPassword, newPassword) {
-    const hashedPassword = await UserRepository.findPasswordByUserId(userId);
+    const hashedPassword = await UserRepository.findPasswordById(userId);
 
     const matches = await passwordUtils.verifyPassword(oldPassword, hashedPassword);
     if (!matches) {
-        throw new CustomError("Password did not match", 400);
+        throw new CustomError("invalid information", 400, {
+            oldPassword: {
+                msg: "wrong password",
+            },
+        });
     }
 
     const newHashedPassword = await passwordUtils.hashPassword(newPassword);
-    await UserRepository.updatePasswordByUserId(userId, newHashedPassword);
+    await UserRepository.updatePasswordById(userId, newHashedPassword);
 }
 
 async function generateOTP(email) {
@@ -60,7 +58,11 @@ async function verifyOTP(email, otp) {
     const actualOTP = await OTPRepository.findOTP(email);
 
     if (otp != actualOTP) {
-        throw new CustomError("Invalid OTP or expired", 400);
+        throw new CustomError("Invalid information", 400, {
+            otp: {
+                msg: "Invalid otp",
+            },
+        });
     }
 }
 

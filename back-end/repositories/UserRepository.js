@@ -12,10 +12,12 @@ async function update(userId, user) {
     });
 }
 
-async function updatePassword(userId, password) {
-    if (userId) {
-        await models.User.update({ password: password }, { where: { userId } });
-    }
+async function updatePasswordById(userId, password) {
+    await models.User.update({ password: password }, { where: { userId } });
+}
+
+async function updatePasswordByEmail(email, password) {
+    await models.User.update({ password: password }, { where: { email } });
 }
 
 async function findById(userId) {
@@ -47,17 +49,7 @@ async function findUserId(email) {
     return null;
 }
 
-async function findLoginInfo(userId) {
-    const user = await models.User.findOne({
-        where: { userId },
-        raw: true,
-        attributes: ["userId", "email", "password", "userType"],
-    });
-
-    return user;
-}
-
-async function findPassword(userId) {
+async function findPasswordById(userId) {
     const user = await models.User.findByPk(userId, {
         raw: true,
         attributes: ["password"],
@@ -67,34 +59,47 @@ async function findPassword(userId) {
     return null;
 }
 
-async function findAllByEmail(emails) {
-    const users = await models.User.findAll({
-        where: {
-            email: {
-                [Op.in]: emails,
-            },
-        },
-        attributes: ["userId"],
+async function findPasswordByEmail(email) {}
+
+async function findLoginInfo(email) {
+    const user = await models.User.findOne({
+        where: { email },
+        raw: true,
+        attributes: ["userId", "email", "password", "userType"],
     });
 
-    if (users) return users.map((user) => user.userId);
-    return null;
+    return user;
 }
 
+// async function findAllByEmail(emails) {
+//     const users = await models.User.findAll({
+//         where: {
+//             email: {
+//                 [Op.in]: emails,
+//             },
+//         },
+//         attributes: ["userId"],
+//     });
+
+//     if (users) return users.map((user) => user.userId);
+//     return null;
+// }
+
 async function remove(userId) {
-    console.log(userId)
+    console.log(userId);
     await models.User.update({ active: false }, { where: { userId } });
 }
 
 export default {
     create,
     update,
-    updatePassword,
+    updatePasswordById,
+    updatePasswordByEmail,
     findById,
     findByEmail,
     findUserId,
+    findPasswordById,
+    findPasswordByEmail,
     findLoginInfo,
-    findPassword,
-    findAllByEmail,
     remove,
 };

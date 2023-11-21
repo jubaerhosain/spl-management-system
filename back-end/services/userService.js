@@ -7,7 +7,7 @@ async function createUserAccount(user) {
     const exists = await UserRepository.findUserId(user.email);
 
     if (exists) {
-        return new CustomError("User already exists", 400, {
+        throw new CustomError("User already exists", 400, {
             email: { msg: "Email already exists", value: user.email },
         });
     }
