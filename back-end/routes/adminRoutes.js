@@ -7,6 +7,6 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 // adminRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.addAdmin);
 adminRoutes.post("/", adminController.createAdminAccount);
 adminRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.updateAdminAccount);
-adminRoutes.delete("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.removeAdminAccount);
+adminRoutes.delete("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, adminController.deleteAdminAccount);
 
 export default adminRoutes;
