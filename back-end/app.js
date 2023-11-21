@@ -3,7 +3,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import mainRoutes from "./routes/mainRoutes.js";
+import mainRoutes from "./routes/apiRoutes.js";
 import { defaultErrorHandler } from "./middlewares/common/defaultErrorHandler.js";
 import { notFoundHandler } from "./middlewares/common/notFoundHandler.js";
 import fileUtils from "./utils/fileUtils.js";

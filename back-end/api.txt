@@ -8,9 +8,13 @@ DELETE: try to use body but some cases you can use param to locate resource
     delete: auth/logout
 
     put: auth/change-password
+
+    // forgot password logic
     put: auth/generate-otp
     put: auth/verify-otp
     put: auth/reset-password
+
+
 
 2. Student
     post: student/

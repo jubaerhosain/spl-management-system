@@ -1,35 +1,13 @@
 import express from "express";
 const studentRoutes = express.Router();
 
-import studentValidator from "../validators/studentValidator.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import studentController from "../controllers/studentController.js";
 
-// add one or more students
-studentRoutes.post(
-    "/",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    studentValidator.validateCreateStudentAccount,
-    studentController.createStudentAccount
-);
+studentRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, studentController.createStudentAccount);
 
-// update student profile by student
-studentRoutes.put(
-    "/",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isStudent,
-    studentValidator.validateUpdateStudentAccount,
-    studentController.updateStudentAccount
-);
+studentRoutes.put("/", authMiddleware.checkAuthentication, studentController.updateStudentAccount);
 
-// update student profile by admin
-studentRoutes.put(
-    "/:studentId",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    studentValidator.validateUpdateStudentAccountByAdmin,
-    studentController.updateStudentAccountByAdmin
-);
+studentRoutes.get("/");
 
 export default studentRoutes;

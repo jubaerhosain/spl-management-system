@@ -1,20 +1,23 @@
 import express from "express";
-const mainRoutes = express.Router();
+const apiRoutes = express.Router();
 
 import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
 import splRoutes from "./splRoutes.js";
+import studentRoutes from "./studentRoutes.js";
 // import committeeRouter from "./committeeRouter.js";
 // import teamRouter from "./teamRouter.js";
 // import supervisorAllocationRouter from "./supAllocationRouter.js";
 // import presentationRouter from "./presentationRouter.js";
 // import markingRouter from "./markingRouter.js";
 
-mainRoutes.use("/auth", authRoutes);
+apiRoutes.use("/auth", authRoutes);
 
-mainRoutes.use("/user", userRoutes);
+apiRoutes.use("/student", studentRoutes); 
 
-mainRoutes.use("/spl", splRoutes);
+// apiRoutes.use("/user", userRoutes);
+
+// apiRoutes.use("/spl", splRoutes);
 
 // committtee merge with spl ??? create spl with committtee???
 // mainRouter.use("/committee", committeeRouter);
@@ -27,4 +30,4 @@ mainRoutes.use("/spl", splRoutes);
 
 // mainRouter.use("/marking", markingRouter);
 
-export default mainRoutes;
+export default apiRoutes;

@@ -23,7 +23,7 @@ async function login(req, res) {
             res.status(err.status).json(GenericResponse.error("Invalid email or password"));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error"));
+            res.status(500).json(GenericResponse.error("An error occurred while logging in"));
         }
     }
 }
@@ -34,7 +34,7 @@ async function logout(req, res) {
         res.json(GenericResponse.success("Logged out successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).json(GenericResponse.error("Internal Server Error"));
+        res.status(500).json(GenericResponse.error("An error occurred while logging out"));
     }
 }
 
@@ -57,7 +57,7 @@ async function changePassword(req, res) {
             );
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error"));
+            res.status(500).json(GenericResponse.error("An error occurred while changing password"));
         }
     }
 }
@@ -74,7 +74,7 @@ async function generateOTP(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error"));
+            res.status(500).json(GenericResponse.error("An error occurred while generating otp"));
         }
     }
 }
@@ -97,7 +97,7 @@ async function verifyOTP(req, res) {
             );
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error"));
+            res.status(500).json(GenericResponse.error("An error occurred while verifying otp"));
         }
     }
 }
@@ -114,7 +114,7 @@ async function resetPassword(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error"));
+            res.status(500).json(GenericResponse.error("An error occurred while resetting password"));
         }
     }
 }
