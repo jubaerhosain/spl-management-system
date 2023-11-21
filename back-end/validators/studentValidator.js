@@ -47,7 +47,7 @@ const updateStudentByAdminSchema = Joi.object({
 });
 
 export default {
-    createStudentSchema,
+    addStudentSchema,
     updateStudentSchema,
     updateStudentByAdminSchema,
 };

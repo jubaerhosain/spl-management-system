@@ -39,6 +39,35 @@ async function generateHashedPassword(numberOfPassword = 1) {
 }
 
 /**
+ * Generates password and corresponding hash
+ * @param {*} n number of password to be generated
+ * @returns [{ original, hash }]
+ */
+async function generatePassword(n = 1) {
+    const passwords = generator.generateMultiple(n, {
+        length: 10,
+        uppercase: true,
+        numbers: true,
+        symbols: false,
+        lowercase: true,
+    });
+
+    const passwordsWithHash = [];
+    await Promise.all(
+        passwords.map(async (password) => {
+            passwordsWithHash.push({
+                original: password,
+                hash: await hashPassword(password),
+            });
+        })
+    );
+
+    if (n == 1) return passwordsWithHash[0];
+
+    return passwordsWithHash;
+}
+
+/**
  * Generate a n digit otp. Default length is 6.
  * @param {Integer} length
  * @returns
@@ -51,4 +80,4 @@ function generateOTP(numberOfDigit = 6) {
     return otp;
 }
 
-export default { hashPassword, verifyPassword, generateHashedPassword, generateOTP };
+export default { hashPassword, verifyPassword, generatePassword, generateHashedPassword, generateOTP };

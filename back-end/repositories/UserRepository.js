@@ -2,7 +2,9 @@ import { models, Op } from "../config/mysql.js";
 
 // ------------------------------Create----------------------------------
 
-async function create(user) {}
+async function create(user) {
+    await models.User.create(user);
+}
 
 // ------------------------------Read----------------------------------
 
@@ -25,7 +27,7 @@ async function isEmailExists(email) {
         attributes: ["email"],
     });
 
-    if (user) true;
+    if (user) return true;
     return false;
 }
 

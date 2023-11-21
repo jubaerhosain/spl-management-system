@@ -1,38 +1,25 @@
-import { models } from "../config/mysql.js";
-import fileUtils from "../utils/fileUtils.js";
-import passwordUtils from "../utils/passwordUtils.js";
 
-async function addAdmin(req, res) {
+import { GenericResponse } from "../utils/responseUtils.js";
+import adminValidator from "../validators/adminValidator.js";
+import userService from "../services/userService.js";
+
+async function createAdminAccount(req, res) {
     try {
-        const { name, email } = req.body;
+        const { error } = adminValidator.createAdminSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
 
-        const hashedPasswords = await passwordUtils.generateHashedPassword(1);
-        const { hashedPassword, originalPassword } = hashedPasswords[0];
+        const err = await userService.createUserAccount(req.body);
+        if (err) return res.status(err.status).json(GenericResponse.error(err.message, err.data));
 
-        const admin = {
-            name: name,
-            email: email,
-            userType: "admin",
-            password: hashedPassword,
-        };
-
-        await models.User.create(admin);
-
-        const credentialData = `email: ${email}, password: ${originalPassword}`;
-        fileUtils.writeCredentials(new Date() + "\n" + credentialData);
-
-        res.json({
-            message: "admin created successfully",
-            credentialData,
-        });
+        res.json(GenericResponse.success("Account created successfully"));
     } catch (err) {
         console.log(err);
-        res.status(500).end("An error occurred while creating admin");
+        res.status(500).json(GenericResponse.error("An error occurred during account creation"));
     }
 }
 
-async function updateAdmin(req, res) {}
+async function updateAdminAccount(req, res) {}
 
-async function removeAdmin(req, res) {}
+async function removeAdminAccount(req, res) {}
 
-export default { addAdmin, updateAdmin, removeAdmin };
+export default { createAdminAccount, updateAdminAccount, removeAdminAccount };
