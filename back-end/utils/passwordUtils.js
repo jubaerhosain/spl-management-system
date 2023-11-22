@@ -35,8 +35,6 @@ async function generatePassword(n = 1) {
         })
     );
 
-    if (n == 1) return passwordsWithHash[0];
-
     return passwordsWithHash;
 }
 

@@ -1,17 +1,20 @@
 import passwordUtils from "../utils/passwordUtils.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
+import emailService from "../services/emailServices/emailService.js";
+import fileUtils from "../utils/fileUtils.js";
 
 async function createTeacherAccount(teachers) {
-    const passwords = await passwordUtils.generateHashedPassword(teachers.length);
+    const passwords = await passwordUtils.generatePassword(teachers.length);
 
     const credentials = [];
 
-    const users = teachers.map((teacher, i) => {
+    // normalize teacher to add both to User and Teacher table in a single query
+    const newTeachers = teachers.map((teacher, i) => {
         const user = {};
 
         user.name = teacher.name;
         user.email = teacher.email;
-        user.password = passwords[i].hashedPassword;
+        user.password = passwords[i].hash;
         user.userType = "teacher";
 
         delete teacher.name;
@@ -22,15 +25,27 @@ async function createTeacherAccount(teachers) {
         credentials.push({
             name: user.name,
             email: user.email,
-            password: passwords[i].originalPassword,
+            password: passwords[i].original,
         });
 
         return user;
     });
 
-    await TeacherRepository.create(users);
+    // await TeacherRepository.create(newTeachers);
 
-    return credentials;
+    try {
+        emailService.sendAccountCreationEmail(credentials);
+    } catch (err) {
+        console.log(err);
+        console.log("Accounts are created successfully but failed to send email with credential");
+    }
+
+    try {
+        fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
+    } catch (err) {
+        console.log(err);
+        console.log("Accounts are created successfully but failed to wrote credentials tp file");
+    }
 }
 
 async function updateTeacherAccount(userId, teacher) {

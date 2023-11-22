@@ -1,39 +1,30 @@
 import { GenericResponse } from "../utils/responseUtils.js";
 import teacherService from "../services/teacherService.js";
-import fileUtils from "../utils/fileUtils.js";
-import emailService from "../services/emailServices/emailService.js";
 import CustomError from "../utils/CustomError.js";
+import teacherValidator from "../validators/teacherValidator.js";
 
 async function createTeacherAccount(req, res) {
     try {
         const { teachers } = req.body;
 
-        const credentials = await teacherService.createTeacherAccount(teachers);
+        if (!teachers || teachers.length === 0)
+            return res.status(400).json(GenericResponse.error("At least one teacher information must be provided"));
 
-        try {
-            await emailService.sendAccountCreationEmail(credentials);
-        } catch (err) {
-            console.log(err);
-            throw new CustomError(
-                "Accounts are created successfully but failed to send email with credential",
-                400
-            );
-        }
+        const { error } = teacherValidator.createTeacherSchema.validate(teachers);
+        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
-        try {
-            fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
-        } catch (err) {
-            console.log(err);
-            throw new CustomError(
-                "Accounts are created successfully but failed to wrote credentials tp file",
-                400
-            );
-        }
+        const error1 = teacherValidator.validateCreateTeacherDuplicates(teachers);
+        if (error1) return res.status(400).json(GenericResponse.error("duplicate emails are not allowed", error1));
+
+        const error2 = await teacherValidator.validateCreateTeacherExistence(teachers);
+        if (error2) return res.status(400).json(GenericResponse.error("existed emails are not allowed", error2));
+
+        await teacherService.createTeacherAccount(teachers);
 
         res.json(GenericResponse.success("Teacher accounts are created successfully"));
     } catch (err) {
-        if (err.status) {
-            res.status(err.status).json(GenericResponse.error(err.message, GenericResponse.BAD_REQUEST));
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
             res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));

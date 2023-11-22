@@ -12,18 +12,18 @@ async function createUserAccount(user) {
         });
     }
 
-    const password = await passwordUtils.generatePassword();
+    const password = await passwordUtils.generatePassword(1);
 
-    const admin = {
+    const newUser = {
         name: user.name,
         email: user.email,
         userType: user.userType,
-        password: password.hash,
+        password: password[0].hash,
     };
 
-    await UserRepository.create(admin);
+    await UserRepository.create(newUser);
 
-    const credentialData = `email: ${user.email}, password: ${password.original}`;
+    const credentialData = `email: ${user.email}, password: ${password[0].original}`;
     fileUtils.writeCredentials(new Date() + "\n" + credentialData);
 }
 

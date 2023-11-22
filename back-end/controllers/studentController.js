@@ -10,7 +10,7 @@ async function createStudentAccount(req, res) {
         const { students } = req.body;
 
         if (!students || students.length === 0)
-            return res.status(400).json(GenericResponse.error("Please! provided student information"));
+            return res.status(400).json(GenericResponse.error("At least one student information must be provided"));
 
         const { error } = studentValidator.createStudentSchema.validate(students);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));

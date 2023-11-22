@@ -8,6 +8,8 @@ import fileUtils from "../utils/fileUtils.js";
 async function createStudentAccount(students) {
     const passwords = await passwordUtils.generatePassword(students.length);
 
+    
+
     const credentials = [];
 
     // normalize students to add both to User and Student table in a single query
