@@ -108,11 +108,11 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     post: notice/
     get: notice/ 
     get: notice/{noticeId}
-    put: notice/ body{noticeId, notice}
+    put: notice/{noticeId} {notice}
 
 8. Notification
     post: notification/
     get: notification/
     get: notification/{notificationId}
-    put: notification/ body{notificationId, notification}
+    put: notification/{notificationId} 
 
