@@ -3,7 +3,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import mainRoutes from "./routes/apiRoutes.js";
+import apiRoutes from "./routes/apiRoutes.js";
 import { defaultErrorHandler } from "./middlewares/common/defaultErrorHandler.js";
 import { notFoundHandler } from "./middlewares/common/notFoundHandler.js";
 import fileUtils from "./utils/fileUtils.js";
@@ -25,7 +25,7 @@ app.use(express.static(path.join(fileUtils.getDirectoryName(import.meta.url), "p
 
 app.use(cookieParser(config.cookie.secret));
 
-app.use("/api", mainRoutes);
+app.use("/api", apiRoutes);
 
 app.use(notFoundHandler);
 
