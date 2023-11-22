@@ -6,12 +6,12 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     get: auth/ {authenticated user}
     delete: auth/logout
 
-    put: auth/change-password
+    put: auth/password
 
     // forgot password logic
-    put: auth/generate-otp
-    put: auth/verify-otp
-    put: auth/reset-password
+    put: auth/forgot-password/generate-otp
+    put: auth/forgot-password/verify-otp
+    put: auth/forgot-password/reset-password
 
 0. Account
     put: activate/
@@ -23,7 +23,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 
 2. Student
     post: student/
-    put: student/ {by himself or admin will be business logic}
+    put: student/{studentId} {by himself or admin will be business logic}
     get: student/{studentId}
     get: student/{studentId}/spl/current {current spl, with progress data} // remove spl include from get student query
     get: student/{studentId}/spl {all spl, with progress data}
@@ -34,7 +34,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 
 2. Teacher
     post: teacher/
-    put: teacher/ {by himself or admin will be business logic}
+    put: teacher/{teacherId} {by himself or admin will be business logic}
     get: teacher/{teacherId}
     get: teacher/{teacherId}/student
     get: teacher/ {query params: optional}
@@ -43,7 +43,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 // to resource identification use splId, can use splName in other places
 3. SPL 
     post: spl/
-    put: spl/
+    put: spl/{splId} {data in body}
     get: spl/{splName}/active // get active spl info by splName
     get: spl/{splId} 
     get: spl/{splId}/student 
@@ -58,9 +58,9 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 
 4. Team
     post: team/
-    put: team/
+    put: team/{teamId}
     get: team/{teamId}
-    get: team/{params: optional, splName, splId}
+    get: team/{params: optional, splName}
     delete: team/{teamId}
 
     put: team/{teamId}/member
@@ -74,7 +74,8 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     delete: request/student/ body{teacherId} {studentId: from logged in user}
 
 4. Supervisor
-    put: supervisor/ body{randomization}  body{teacherId, studentId, splId/splName}
+    put: supervisor/randomize
+    put: supervisor   body{teacherId, studentId, splId/splName}
     delete: supervisor/ body{studentId, splId/splName}
 
 
