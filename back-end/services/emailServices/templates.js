@@ -8,9 +8,9 @@ function getSignature() {
     return signature;
 }
 
-function getAccountCreationTemplate(email, password) {
+function getAccountCreationTemplate(name, email, password) {
     const html = `
-    <p>Dear User,</p>
+    <p>Dear ${name},</p>
 
     <p>Welcome to SPL Management System! We are excited to have you onboard.</p>
 

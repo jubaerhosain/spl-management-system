@@ -17,13 +17,11 @@ async function createStudentAccount(req, res) {
 
         const error1 = studentValidator.validateCreateStudentDuplicates(students);
         if (error1)
-            return res.status(400).json(GenericResponse.error("duplicate email, roll, registration is not allowed", error1));
+            return res.status(400).json(GenericResponse.error("duplicate email, roll, registration are not allowed", error1));
 
         const error2 = await studentValidator.validateCreateStudentExistence(students);
         if (error2)
-            return res.status(400).json(GenericResponse.error("existed email, roll, registration is not allowed", error2));
-
-        return;
+            return res.status(400).json(GenericResponse.error("existed email, roll, registration are not allowed", error2));
 
         await studentService.createStudentAccount(students);
 

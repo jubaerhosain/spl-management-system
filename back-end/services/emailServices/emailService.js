@@ -31,7 +31,7 @@ async function sendEmailWithOTP(receiverEmail, otp) {
 }
 
 /**
- * Send email to users with credentials [{email, password}]
+ * Send email to users with credentials [{name, email, password}]
  * @param {Array} credentials
  * @returns
  */
@@ -42,7 +42,7 @@ function sendAccountCreationEmail(credentials) {
                 from: config.nodemailer.user,
                 to: user.email,
                 subject: "Welcome to SPL",
-                html: templates.getAccountCreationTemplate(user.email, user.password),
+                html: templates.getAccountCreationTemplate(user.name, user.email, user.password),
             };
 
             return new Promise((resolve, reject) => {

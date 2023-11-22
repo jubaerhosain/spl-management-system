@@ -2,11 +2,10 @@ import StudentRepository from "../repositories/StudentRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import CustomError from "../utils/CustomError.js";
 import UserRepository from "../repositories/UserRepository.js";
+import emailService from "./emailServices/emailService.js";
+import fileUtils from "../utils/fileUtils.js";
 
 async function createStudentAccount(students) {
-
-    // validate data existences
-
     const passwords = await passwordUtils.generatePassword(students.length);
 
     const credentials = [];
@@ -37,20 +36,18 @@ async function createStudentAccount(students) {
     await StudentRepository.create(newStudents);
 
     try {
-        await emailService.sendAccountCreationEmail(credentials);
+        emailService.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);
-        throw new CustomError("Accounts are created successfully but failed to send email with credential", 400);
+        console.log("Accounts are created successfully but failed to send email with credential");
     }
 
     try {
         fileUtils.writeCredentials(new Date() + "\n" + JSON.stringify(credentials));
     } catch (err) {
         console.log(err);
-        throw new CustomError("Accounts are created successfully but failed to write credentials in file ", 400);
+        console.log("Accounts are created successfully but failed to write credentials in file");
     }
-
-    return credentials;
 }
 
 async function updateStudentAccount(userId, student) {

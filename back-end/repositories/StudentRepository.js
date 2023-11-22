@@ -1,6 +1,5 @@
 import { sequelize, models, Op } from "../config/mysql.js";
 
-// ================================CREATE=================================
 async function create(students) {
     const transaction = await sequelize.transaction();
     try {
@@ -15,58 +14,6 @@ async function create(students) {
         console.log(err);
         throw new Error(err.message);
     }
-}
-
-// ================================READ=================================
-async function isRollNoExist(rollNo) {
-    const student = await models.Student.findOne({
-        where: {
-            rollNo: rollNo,
-        },
-        raw: true,
-        attributes: ["rollNo"],
-    });
-
-    if (student) return true;
-    return false;
-}
-
-async function isRegistrationNoExist(registrationNo) {
-    const student = await models.Student.findOne({
-        where: {
-            registrationNo: registrationNo,
-        },
-        raw: true,
-        attributes: ["registrationNo"],
-    });
-
-    if (student) return true;
-    return false;
-}
-
-async function findAll() {
-    const students = await models.Student.findAll({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
-            },
-        },
-        raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["studentId"],
-        },
-    });
-
-    const flattened = students.map((student) => {
-        const user = { ...student, ...student.User };
-        delete user.User;
-        return user;
-    });
-
-    return flattened;
 }
 
 async function findById(userId) {
@@ -107,6 +54,31 @@ async function findById(userId) {
     }
 
     return flattened;
+}
+
+async function findAll() {
+    const students = await models.Student.findAll({
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
+            },
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["studentId"],
+        },
+    });
+
+    const flattened = students.map((student) => {
+        const user = { ...student, ...student.User };
+        delete user.User;
+        return user;
+    });
+
+    return flattened || [];
 }
 
 async function findAllByCurriculumYear(curriculumYear) {
@@ -171,7 +143,7 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     return [];
 }
 
-async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
+async function findAllUnassignedStudent(splId, curriculumYear) {
     // find all active students of ${curriculumYear} left join with ${splName}
     const students = await models.Student.findAll({
         include: [
@@ -180,7 +152,6 @@ async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
                 where: {
                     active: true,
                 },
-                attributes: ["email"],
                 required: true,
             },
             {
@@ -193,7 +164,6 @@ async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
                     splId: splId,
                 },
                 required: false,
-                attributes: ["splId"],
             },
         ],
         where: {
@@ -214,9 +184,6 @@ async function findAllUnassignedStudentIdAndEmail(splId, curriculumYear) {
     return { unassignedStudentIds, unassignedStudentEmails };
 }
 
-async function findAllUnsupervisedStudentByCurriculumYear(curriculumYear) {}
-
-// =================================UPDATE================================
 async function update(studentId, student) {
     // update to Student table
     // await models.Student.update(student, {
@@ -235,18 +202,13 @@ async function updateByAdmin(student, studentId) {
     });
 }
 
-// ================================DELETE=====================================
-
 export default {
     create,
-    isRollNoExist,
-    isRegistrationNoExist,
     findAll,
     findById,
     findAllByCurriculumYear,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
-    findAllUnassignedStudentIdAndEmail,
     update,
     updateByAdmin,
 };
