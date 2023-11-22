@@ -1,7 +1,5 @@
 import { models, sequelize, Op } from "../config/mysql.js";
 
-// --------------------------------Create--------------------------------
-
 async function create(teachers) {
     const transaction = await sequelize.transaction();
     try {
@@ -18,7 +16,6 @@ async function create(teachers) {
     }
 }
 
-// --------------------------------Read--------------------------------
 async function findById(userId) {
     const teacher = await models.Teacher.findByPk(userId, {
         include: {
@@ -26,9 +23,6 @@ async function findById(userId) {
             required: true,
             where: {
                 active: true,
-            },
-            attributes: {
-                exclude: ["password"],
             },
         },
         raw: true,
@@ -42,6 +36,7 @@ async function findById(userId) {
     if (teacher) {
         flattened = { ...teacher, ...teacher.User };
         delete flattened.User;
+        delete flattened.password;
     }
 
     return flattened;
@@ -77,38 +72,6 @@ async function findAll() {
     return teachers;
 }
 
-async function findAllDeactivatedAccounts() {
-    let teachers = await models.Teacher.findAll({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: false,
-            },
-            attributes: {
-                exclude: ["password", "active"],
-            },
-        },
-        raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["teacherId"],
-        },
-    });
-
-    if (teachers.length > 0) {
-        // copy the properties of the User to the teachers array
-        for (const i in teachers) {
-            teachers[i] = { ...teachers[i], ...teachers[i].User };
-            delete teachers[i].User;
-        }
-    }
-
-    return teachers;
-}
-
-// --------------------------------Update--------------------------------
-
 async function update(userId, teacher) {
     const transaction = await sequelize.transaction();
     try {
@@ -136,12 +99,9 @@ async function update(userId, teacher) {
     }
 }
 
-// --------------------------------Delete--------------------------------
-
 export default {
     create,
     findById,
     findAll,
-    findAllDeactivatedAccounts,
     update,
 };

@@ -4,26 +4,13 @@ async function create(user) {
     await models.User.create(user);
 }
 
-async function update(userId, user) {
-    await models.User.update(user, {
-        where: {
-            userId: userId,
-        },
-    });
-}
-
-async function updatePasswordById(userId, password) {
-    await models.User.update({ password: password }, { where: { userId } });
-}
-
-async function updatePasswordByEmail(email, password) {
-    await models.User.update({ password: password }, { where: { email } });
-}
-
 async function findById(userId) {
     const user = await models.User.findByPk(userId, {
         raw: true,
     });
+
+    delete user?.password;
+
     return user;
 }
 
@@ -85,6 +72,22 @@ async function findAllExistedEmail(emails) {
     return [];
 }
 
+async function update(userId, user) {
+    await models.User.update(user, {
+        where: {
+            userId: userId,
+        },
+    });
+}
+
+async function updatePasswordById(userId, password) {
+    await models.User.update({ password: password }, { where: { userId } });
+}
+
+async function updatePasswordByEmail(email, password) {
+    await models.User.update({ password: password }, { where: { email } });
+}
+
 async function remove(userId) {
     console.log(userId);
     await models.User.update({ active: false }, { where: { userId } });
@@ -92,9 +95,6 @@ async function remove(userId) {
 
 export default {
     create,
-    update,
-    updatePasswordById,
-    updatePasswordByEmail,
     findById,
     findByEmail,
     findUserId,
@@ -102,5 +102,8 @@ export default {
     findPasswordByEmail,
     findLoginInfo,
     findAllExistedEmail,
+    update,
+    updatePasswordById,
+    updatePasswordByEmail,
     remove,
 };

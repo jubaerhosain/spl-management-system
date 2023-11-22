@@ -18,27 +18,13 @@ async function create(students) {
 
 async function findById(studentId) {
     const student = await models.Student.findByPk(studentId, {
-        include: [
-            {
-                model: models.User,
-                required: true,
-                where: {
-                    active: true,
-                },
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
             },
-            {
-                model: models.SPL,
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                required: false,
-                where: {
-                    active: true,
-                },
-                attributes: ["splId", "splName", "academicYear"],
-            },
-        ],
+        },
         raw: true,
         nest: true,
         attributes: {
@@ -48,9 +34,9 @@ async function findById(studentId) {
 
     let flattened = {};
     if (student) {
-        flattened = { ...student, ...student.User, ...student.SPLs };
+        flattened = { ...student, ...student.User };
         delete flattened.User;
-        delete flattened.SPLs;
+        delete flattened.password;
     }
 
     return flattened;
