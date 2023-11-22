@@ -8,8 +8,6 @@ import fileUtils from "../utils/fileUtils.js";
 async function createStudentAccount(students) {
     const passwords = await passwordUtils.generatePassword(students.length);
 
-    
-
     const credentials = [];
 
     // normalize students to add both to User and Student table in a single query
@@ -59,7 +57,7 @@ async function updateStudentAccount(userId, student) {
 
 async function updateStudentAccountByAdmin(studentId, student) {
     // check roll and registration number existence
-    const {rollNo, registrationNo} = student;
+    const { rollNo, registrationNo } = student;
     const error = {};
     if (rollNo) {
         const exist = await StudentRepository.findByRoll(rollNo);
