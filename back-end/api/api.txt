@@ -1,5 +1,7 @@
 GET: query param or param (never use body)
-POST, PUT, DELETE: try to use body but some cases you can use param to locate resource
+POST: always use body to create resource {in case of child resource can use param to identify parent resource}
+PUT, DELETE: try to use body but some cases you can use param to "locate resource"
+document with swagger
 
 0. Authentication [done]
     post: auth/login 
