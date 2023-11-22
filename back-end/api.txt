@@ -1,6 +1,5 @@
 GET: query param or param (never use body)
-POST, PUT: always use body 
-DELETE: try to use body but some cases you can use param to locate resource
+POST, PUT, DELETE: try to use body but some cases you can use param to locate resource
 
 0. Authentication [done]
     post: auth/login 
@@ -26,6 +25,10 @@ DELETE: try to use body but some cases you can use param to locate resource
     post: student/
     put: student/ {by himself or admin will be business logic}
     get: student/{studentId}
+    get: student/{studentId}/spl/current {current spl, with progress data} // remove spl include from get student query
+    get: student/{studentId}/spl {all spl, with progress data}
+    get: student/{studentId}/teacher/current {current supervisor}
+    get: student/{studentId}/teacher/ {all supervisor}
     get: student/ {query params: optional}
     delete: student/{studentId} {by admin}
 
@@ -33,21 +36,25 @@ DELETE: try to use body but some cases you can use param to locate resource
     post: teacher/
     put: teacher/ {by himself or admin will be business logic}
     get: teacher/{teacherId}
+    get: teacher/{teacherId}/student
     get: teacher/ {query params: optional}
     delete: teacher/{teacherId} {by admin}
 
+// to resource identification use splId, use splName in other places
 3. SPL 
     post: spl/
     put: spl/
-    get: spl/{splId|splName} 
+    get: spl/{splName}/active // get active spl info 
+    get: spl/{splId} 
+    get: spl/{splId}/student 
     get: spl/ {query params: optional}
-    delete: spl/{splId|splName}
+    delete: spl/{splId}
 
-    post: spl/student-allocation/ body{splId|splName} // create mark table also for each student
-    delete: spl/student-allocation/  body{splId|splName, studentId} // delete mark table also for that student
+    post: spl/{splId}/student-allocation/ // create mark table also for each student
+    delete: spl/{splId}/student-allocation/{studentId}  // delete mark table also for that student
 
-    put: spl/member/ body{splId|splName}  
-    delete: spl/member/ body{splId|splName, memberId}
+    put: spl/{splId}/member/ 
+    delete: spl/{splId}/member/{memberId}
 
 4. Team
     post: team/
