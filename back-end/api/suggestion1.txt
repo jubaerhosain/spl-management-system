@@ -1,0 +1,36 @@
+Your API design appears to follow some standard conventions, but there are a few points where you might consider making adjustments to align more closely with RESTful conventions:
+
+1. **Authentication:**
+   - Instead of `auth/change-password`, you might consider using `PUT /auth/password` for updating the password. It's more RESTful to use resource-oriented URIs.
+
+2. **Account:**
+   - For the `activate` endpoint, consider using a more resource-oriented approach such as `PUT /account/activate/{activationCode}` instead of just `activate/`.
+
+3. **Student and Teacher:**
+   - The `PUT` endpoints for updating student and teacher information could be more resource-oriented. For example, use `PUT /student/{studentId}` and `PUT /teacher/{teacherId}`.
+
+4. **SPL:**
+   - The `GET` endpoint for getting active SPL information by SPL name could be more RESTful. Consider using `GET /spl/active/{splName}`.
+
+5. **Request:**
+   - For `PUT /request/student/` and `DELETE /request/student/`, consider making the resource more explicit, such as `PUT /request/student/enroll` and `DELETE /request/student/enroll`.
+
+6. **Supervisor:**
+   - For `PUT /supervisor/`, it might be clearer to use a more specific resource-oriented URI, such as `PUT /supervision/randomize` if it's a randomization operation.
+
+7. **Mark:**
+   - The URI structure for the `PUT /mark/{markId}/presentation-mark/` and `PUT /mark/{markId}/continuous-mark/` could be simplified. Consider using `PUT /mark/{markId}/presentation/` and `PUT /mark/{markId}/continuous/` respectively.
+
+8. **Presentation Mark:**
+   - Consider using a more resource-oriented URI, like `PUT /presentation-mark/{presentationMarkId}` instead of `PUT /mark/{markId}/presentation-mark/`.
+
+9. **Continuous Mark:**
+   - Similar to Presentation Mark, consider using `PUT /continuous-mark/{continuousMarkId}` instead of `PUT /mark/{markId}/continuous-mark/`.
+
+10. **Presentation Event:**
+    - Consider using a more specific URI, like `POST /presentation/event` instead of `POST /presentation/`.
+
+11. **Notice and Notification:**
+    - The URIs for `PUT` might be more RESTful if they are resource-oriented. For example, use `PUT /notice/{noticeId}` and `PUT /notification/{notificationId}`.
+
+Remember that RESTful design is more about adhering to conventions and principles rather than strict rules. Adjustments can be made based on your specific use case and requirements.
