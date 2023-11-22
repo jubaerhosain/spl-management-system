@@ -23,7 +23,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 
 2. Student
     post: student/
-    put: student/{studentId} {by himself or admin will be business logic}
+    put: student/ {studentId from logged in user, from body if updateBy Admin} 
     get: student/{studentId}
     get: student/{studentId}/spl/current {current spl, with progress data} // remove spl include from get student query
     get: student/{studentId}/spl {all spl, with progress data}
@@ -34,7 +34,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
 
 2. Teacher
     post: teacher/
-    put: teacher/{teacherId} {by himself or admin will be business logic}
+    put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
     get: teacher/{teacherId}/student
     get: teacher/ {query params: optional}
