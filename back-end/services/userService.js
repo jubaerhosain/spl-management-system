@@ -17,7 +17,7 @@ async function createUserAccount(user) {
     const admin = {
         name: user.name,
         email: user.email,
-        userType: "admin",
+        userType: user.userType,
         password: password.hash,
     };
 

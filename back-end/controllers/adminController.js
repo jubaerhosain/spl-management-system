@@ -8,6 +8,7 @@ async function createAdminAccount(req, res) {
         const { error } = adminValidator.createAdminSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
 
+        req.body.userType = "admin";
         await userService.createUserAccount(req.body);
 
         res.json(GenericResponse.success("Account created successfully"));
