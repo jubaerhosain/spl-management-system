@@ -40,11 +40,11 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     get: teacher/ {query params: optional}
     delete: teacher/{teacherId} {by admin}
 
-// to resource identification use splId, use splName in other places
+// to resource identification use splId, can use splName in other places
 3. SPL 
     post: spl/
     put: spl/
-    get: spl/{splName}/active // get active spl info 
+    get: spl/{splName}/active // get active spl info by splName
     get: spl/{splId} 
     get: spl/{splId}/student 
     get: spl/ {query params: optional}
@@ -63,8 +63,8 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     get: team/{params: optional, splName, splId}
     delete: team/{teamId}
 
-    put: team/member
-    delete: team/member/{memberId}
+    put: team/{teamId}/member
+    delete: team/{teamId}/member/{memberId}
 
 5. Request
     put: request/team/ body{teamId, teacherId}
@@ -77,6 +77,7 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     put: supervisor/ body{randomization}  body{teacherId, studentId, splId/splName}
     delete: supervisor/ body{studentId, splId/splName}
 
+
 5. Mark 
     put: mark/{markId} update atomic marks 
     get: mark/{markId} 
@@ -85,16 +86,22 @@ POST, PUT, DELETE: try to use body but some cases you can use param to locate re
     get: mark/student/{studentId} all 3 spl marks of a student 
         add query param {splName} mark of a student for a specific spl
 
-    post: mark/presentation-mark/ body {markId, presentationId, mark}
-    put: mark/presentation-mark/ body{presentationMarkId, mark}
-    get: mark/presentation-mark/ {query params: optional, splName, teacherId, presentationId}
+    post: mark/{markId}/presentation-mark/ body {presentationId, mark}
+    put: mark/{markId}/presentation-mark/ body{presentationMarkId, mark}
+    get: mark{markId}/presentation-mark/ {query params: optional, splName, teacherId, presentationId}
 
-    post: mark/continuous-mark/ body{markId, weekName, mark}
-    put: mark/continuous-mark/ body{continuousMarkId, mark}
+    post: mark/{markId}/continuous-mark/ body{ weekName, mark}
+    put: mark/{markId}/continuous-mark/ body{continuousMarkId, mark}
+
+6. Presentation Mark
+
+
+7. Continuous Mark
+        put: continuous-mark/{continuousMarkId} body{mark}
+
 
 6. Presentation Event
     post: presentation/
-    put: presentation/
 
 7. Notice 
     post: notice/
