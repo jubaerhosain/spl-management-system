@@ -56,6 +56,30 @@ async function updateStudentAccount(userId, student) {
 }
 
 async function updateStudentAccountByAdmin(studentId, student) {
+    // check roll and registration number existence
+    const {rollNo, registrationNo} = student;
+    const error = {};
+    if (rollNo) {
+        const exist = await StudentRepository.findByRoll(rollNo);
+        if (exist) {
+            error["rollNo"] = {
+                msg: "rollNo already exists",
+                value: rollNo,
+            };
+        }
+    }
+    if (registrationNo) {
+        const exist = await StudentRepository.findByRegistration(registrationNo);
+        if (exist) {
+            error["registrationNo"] = {
+                msg: "registrationNo already exists",
+                value: registrationNo,
+            };
+        }
+    }
+
+    if (Object.keys(error).length > 0) throw new CustomError("invalid data", 400, error);
+
     // update to Student table [only those fields are allowed]
     await StudentRepository.update(studentId, student);
 }

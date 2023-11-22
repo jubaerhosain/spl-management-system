@@ -16,8 +16,8 @@ async function create(students) {
     }
 }
 
-async function findById(userId) {
-    const student = await models.Student.findByPk(userId, {
+async function findById(studentId) {
+    const student = await models.Student.findByPk(studentId, {
         include: [
             {
                 model: models.User,
@@ -54,6 +54,16 @@ async function findById(userId) {
     }
 
     return flattened;
+}
+
+async function findByRoll(rollNo) {
+    const student = await models.Student.findOne({ where: { rollNo } });
+    return student;
+}
+
+async function findByRegistration(registrationNo) {
+    const student = await models.Student.findOne({ where: { registrationNo } });
+    return student;
 }
 
 async function findAll() {
@@ -206,6 +216,8 @@ export default {
     create,
     findAll,
     findById,
+    findByRoll,
+    findByRegistration,
     findAllByCurriculumYear,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,

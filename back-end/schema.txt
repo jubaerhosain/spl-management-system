@@ -33,3 +33,5 @@ student_fields(student_id, field_id) [Many to Many]
 teacher_fields(teacher_id, field_id) [Many to Many]
 
 Total Table - 13, Others are Junction/Relation Table
+
+// put progresses in student_spl relation

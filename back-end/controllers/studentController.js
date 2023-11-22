@@ -44,12 +44,11 @@ async function updateStudentAccount(req, res) {
             return res.status(400).json(GenericResponse.error("At least one field must be provided"))
         }
 
-        console.log(student);
         if (req.user.userType === "admin") {
             const { error } = studentValidator.updateStudentByAdminSchema.validate(student);
             if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
-            await studentService.updateStudentAccountByAdmin(userId, student);
+            await studentService.updateStudentAccountByAdmin(student.studentId, student);
         } else if (req.user.userType === "student") {
             const { error } = studentValidator.updateStudentSchema.validate(student);
             if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
