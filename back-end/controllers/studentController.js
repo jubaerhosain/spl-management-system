@@ -85,6 +85,7 @@ async function getStudent(req, res) {
 }
 async function getAllStudent(req, res) {
     try {
+        // add pagination logic later
         const options = req.query;
         let students;
         if (utils.isObjectEmpty(options)) {

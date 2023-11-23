@@ -50,6 +50,22 @@ async function createStudent(students) {
     }
 }
 
+async function getStudent(studentId) {
+    const student = await StudentRepository.findById(studentId);
+    return student;
+}
+
+async function getAllStudent(options) {
+    // options { page=10, count=10 } etc
+    const students = await StudentRepository.findAll();
+    return students;
+}
+
+async function getAllStudentByCurriculumYear(curriculumYear) {
+    const students = await StudentRepository.findAllByCurriculumYear(curriculumYear);
+    return students;
+}
+
 async function updateStudent(userId, student) {
     // update in user table [only those fields are allowed]
     await UserRepository.updateAccount(userId, student);
@@ -85,20 +101,11 @@ async function updateStudentByAdmin(studentId, student) {
     await StudentRepository.update(studentId, student);
 }
 
-async function getStudent(studentId) {
-    const student = await StudentRepository.findById(studentId);
-    return student;
-}
-
-async function getAllStudent(options) {
-    const students = await StudentRepository.findAll();
-    return students;
-}
-
 export default {
     createStudent,
     getStudent,
     getAllStudent,
+    getAllStudentByCurriculumYear,
     updateStudent,
     updateStudentByAdmin,
 };

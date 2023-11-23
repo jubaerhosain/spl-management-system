@@ -139,46 +139,46 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     return [];
 }
 
-async function findAllUnassignedStudent(splId, curriculumYear) {
-    // find all active students of ${curriculumYear} left join with ${splName}
-    const students = await models.Student.findAll({
-        include: [
-            {
-                model: models.User,
-                where: {
-                    active: true,
-                },
-                required: true,
-            },
-            {
-                model: models.SPL,
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                where: {
-                    splId: splId,
-                },
-                required: false,
-            },
-        ],
-        where: {
-            curriculumYear,
-        },
-        raw: true,
-        nest: true,
-        attributes: ["studentId"],
-    });
+// async function findAllUnassignedStudent(splId, curriculumYear) {
+//     // find all active students of ${curriculumYear} left join with ${splName}
+//     const students = await models.Student.findAll({
+//         include: [
+//             {
+//                 model: models.User,
+//                 where: {
+//                     active: true,
+//                 },
+//                 required: true,
+//             },
+//             {
+//                 model: models.SPL,
+//                 through: {
+//                     model: models.StudentSPL,
+//                     attributes: [],
+//                 },
+//                 where: {
+//                     splId: splId,
+//                 },
+//                 required: false,
+//             },
+//         ],
+//         where: {
+//             curriculumYear,
+//         },
+//         raw: true,
+//         nest: true,
+//         attributes: ["studentId"],
+//     });
 
-    const unassignedStudents = students.filter((student) => {
-        return !student.SPLs.splId;
-    });
+//     const unassignedStudents = students.filter((student) => {
+//         return !student.SPLs.splId;
+//     });
 
-    const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
-    const unassignedStudentEmails = unassignedStudents.map((student) => student.User.email);
+//     const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
+//     const unassignedStudentEmails = unassignedStudents.map((student) => student.User.email);
 
-    return { unassignedStudentIds, unassignedStudentEmails };
-}
+//     return { unassignedStudentIds, unassignedStudentEmails };
+// }
 
 async function update(studentId, student) {
     // update to Student table
