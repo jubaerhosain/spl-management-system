@@ -18,6 +18,21 @@ export default (sequelize, DataTypes) => {
                 key: "splId",
             },
         },
+        documentationProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        codeProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        weeklyProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
     });
 
     return StudentSPL;

@@ -50,21 +50,6 @@ export default (sequelize, DataTypes, Op) => {
             },
             comment: "'none' will be treated as unenrolled",
         },
-        documentationProgress: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        codeProgress: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        weeklyProgress: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
     });
 
     Student.associate = (models) => {
