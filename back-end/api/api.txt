@@ -15,8 +15,10 @@ document with swagger
     put: auth/forgot-password/verify-otp
     put: auth/forgot-password/reset-password
 
-0. Account
-    put: activate/
+0. User
+    put: user/account/activate
+    put: user/account/deactivate
+    put: user/{userId}/avatar
 
 1.  Admin [done]
     post: admin/

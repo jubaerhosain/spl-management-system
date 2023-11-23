@@ -3,7 +3,7 @@ import teacherService from "../services/teacherService.js";
 import CustomError from "../utils/CustomError.js";
 import teacherValidator from "../validators/teacherValidator.js";
 
-async function createTeacherAccount(req, res) {
+async function createTeacher(req, res) {
     try {
         const { teachers } = req.body;
 
@@ -19,7 +19,7 @@ async function createTeacherAccount(req, res) {
         const error2 = await teacherValidator.validateCreateTeacherExistence(teachers);
         if (error2) return res.status(400).json(GenericResponse.error("existed emails are not allowed", error2));
 
-        await teacherService.createTeacherAccount(teachers);
+        await teacherService.createTeacher(teachers);
 
         res.json(GenericResponse.success("Teacher accounts are created successfully"));
     } catch (err) {
@@ -32,12 +32,12 @@ async function createTeacherAccount(req, res) {
     }
 }
 
-async function updateTeacherAccount(req, res) {
+async function updateTeacher(req, res) {
     try {
         const teacher = req.body;
         const { userId } = req.user;
 
-        await teacherService.updateTeacherAccount(userId, teacher);
+        await teacherService.updateTeacher(userId, teacher);
 
         res.json(GenericResponse.success("Account updated successfully"));
     } catch (err) {
@@ -51,6 +51,6 @@ async function updateTeacherAccount(req, res) {
 }
 
 export default {
-    createTeacherAccount,
-    updateTeacherAccount,
+    createTeacher,
+    updateTeacher,
 };

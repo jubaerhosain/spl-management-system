@@ -3,7 +3,7 @@ import TeacherRepository from "../repositories/TeacherRepository.js";
 import emailService from "../services/emailServices/emailService.js";
 import fileUtils from "../utils/fileUtils.js";
 
-async function createTeacherAccount(teachers) {
+async function createTeacher(teachers) {
     const passwords = await passwordUtils.generatePassword(teachers.length);
 
     const credentials = [];
@@ -31,7 +31,7 @@ async function createTeacherAccount(teachers) {
         return user;
     });
 
-    // await TeacherRepository.create(newTeachers);
+    await TeacherRepository.create(newTeachers);
 
     try {
         emailService.sendAccountCreationEmail(credentials);
@@ -48,11 +48,11 @@ async function createTeacherAccount(teachers) {
     }
 }
 
-async function updateTeacherAccount(userId, teacher) {
+async function updateTeacher(userId, teacher) {
     await TeacherRepository.update(userId, teacher);
 }
 
 export default {
-    createTeacherAccount,
-    updateTeacherAccount,
+    createTeacher,
+    updateTeacher,
 };
