@@ -1,6 +1,7 @@
 import StudentRepository from "../repositories/StudentRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import CustomError from "../utils/CustomError.js";
+import SPLRepository from "../repositories/SPLRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import emailService from "./emailServices/emailService.js";
 import fileUtils from "../utils/fileUtils.js";
@@ -66,6 +67,14 @@ async function getAllStudentByCurriculumYear(curriculumYear) {
     return students;
 }
 
+async function getAllSPL(studentId) {
+
+}
+
+async function getCurrentSPL(studentId) {
+    const spl = await SPLRepository.findActiveSPL(studentId);
+}
+
 async function updateStudent(userId, student) {
     // update in user table [only those fields are allowed]
     await UserRepository.updateAccount(userId, student);
@@ -106,6 +115,8 @@ export default {
     getStudent,
     getAllStudent,
     getAllStudentByCurriculumYear,
+    getAllSPL,
+    getCurrentSPL,
     updateStudent,
     updateStudentByAdmin,
 };

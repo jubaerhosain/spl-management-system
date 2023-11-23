@@ -74,7 +74,7 @@ async function getStudent(req, res) {
         if (utils.isObjectEmpty(student)) return res.status(400).json(GenericResponse.error("Student not found"));
 
         res.json(GenericResponse.success("Student is retrieved successfully", student));
-    } catch (error) {
+    } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
@@ -83,6 +83,7 @@ async function getStudent(req, res) {
         }
     }
 }
+
 async function getAllStudent(req, res) {
     try {
         // add pagination logic later
@@ -90,14 +91,14 @@ async function getAllStudent(req, res) {
         let students;
         if (utils.isObjectEmpty(options)) {
             students = await studentService.getAllStudent();
-        } else if(options.curriculumYear) {
+        } else if (options.curriculumYear) {
             students = await studentService.getAllStudentByCurriculumYear(options.curriculumYear);
-        } else if(options.inactive) {
+        } else if (options.inactive) {
             students = await studentService.getAllInactiveStudents();
         }
 
         res.json(GenericResponse.success("Students are retrieved successfully", students));
-    } catch (error) {
+    } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
@@ -107,7 +108,20 @@ async function getAllStudent(req, res) {
     }
 }
 
-async function getCurrentSPL(req, res) {}
+async function getCurrentSPL(req, res) {
+    try {
+        const { studentId } = req.params;
+        const spl = await studentService.getCurrentSPL(studentId);
+        res.json(GenericResponse.success("Retrieved successfully", spl));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred while updating account"));
+        }
+    }
+}
 
 async function getAllSPL(req, res) {}
 
