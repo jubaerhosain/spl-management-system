@@ -5,7 +5,7 @@ import UserRepository from "../repositories/UserRepository.js";
 import emailService from "./emailServices/emailService.js";
 import fileUtils from "../utils/fileUtils.js";
 
-async function createStudentAccount(students) {
+async function createStudent(students) {
     const passwords = await passwordUtils.generatePassword(students.length);
 
     const credentials = [];
@@ -50,12 +50,12 @@ async function createStudentAccount(students) {
     }
 }
 
-async function updateStudentAccount(userId, student) {
+async function updateStudent(userId, student) {
     // update in user table [only those fields are allowed]
     await UserRepository.updateAccount(userId, student);
 }
 
-async function updateStudentAccountByAdmin(studentId, student) {
+async function updateStudentByAdmin(studentId, student) {
     // check roll and registration number existence
     // if same as the current student then no need to throw error
     const { rollNo, registrationNo } = student;
@@ -85,8 +85,20 @@ async function updateStudentAccountByAdmin(studentId, student) {
     await StudentRepository.update(studentId, student);
 }
 
+async function getStudent(studentId) {
+    const student = await StudentRepository.findById(studentId);
+    return student;
+}
+
+async function getAllStudent(options) {
+    const students = await StudentRepository.findAll();
+    return students;
+}
+
 export default {
-    createStudentAccount,
-    updateStudentAccount,
-    updateStudentAccountByAdmin,
+    createStudent,
+    getStudent,
+    getAllStudent,
+    updateStudent,
+    updateStudentByAdmin,
 };
