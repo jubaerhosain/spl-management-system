@@ -125,11 +125,20 @@ async function getCurrentSPL(req, res) {
 
 async function getAllSPL(req, res) {}
 
+async function getCurrentSupervisor(req, res) {}
+
+async function getAllSupervisor(req, res) {}
+
+async function deleteStudent(req, res) {}
+
 export default {
     createStudent,
     getStudent,
     getAllStudent,
     getCurrentSPL,
     getAllSPL,
+    getCurrentSupervisor,
+    getAllSupervisor,
     updateStudent,
+    deleteStudent,
 };
