@@ -4,6 +4,19 @@ import { commonValidationHandler } from "./common/commonValidationHandler.js";
 import SPLRepository from "../repositories/SPLRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import CustomError from "../utils/CustomError.js";
+import joi from "joi";
+const Joi = joi.defaults((schema) => {
+    return schema.options({
+        abortEarly: false,
+    });
+});
+
+const createSPLSchema = Joi.object({
+    splName: Joi.string().trim().custom(validateSPLName).required(),
+    academicYear: Joi.string().trim().custom(validateAcademicYear).required(),
+});
+
+const updateSPLSchema = Joi.object({});
 
 const validateCreateSPLCommittee = [
     body("splName")
@@ -126,5 +139,6 @@ const validateCreateSPLCommittee = [
 ];
 
 export default {
-    validateCreateSPLCommittee,
+    createSPLSchema,
+    updateSPLSchema,
 };

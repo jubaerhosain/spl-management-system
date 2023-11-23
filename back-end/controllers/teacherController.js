@@ -32,6 +32,14 @@ async function createTeacher(req, res) {
     }
 }
 
+async function getTeacher(req, res) {}
+
+async function getAllTeacher(req, res) {}
+
+async function getAllStudentUnderSupervision(req, res) {}
+
+async function getAllCurrentStudentUnderSupervision(req, res) {}
+
 async function updateTeacher(req, res) {
     try {
         const teacher = req.body;
@@ -50,7 +58,14 @@ async function updateTeacher(req, res) {
     }
 }
 
+async function deleteTeacher(req, res) {}
+
 export default {
     createTeacher,
+    getTeacher,
+    getAllTeacher,
+    getAllStudentUnderSupervision,
+    getAllCurrentStudentUnderSupervision,
     updateTeacher,
+    deleteTeacher,
 };

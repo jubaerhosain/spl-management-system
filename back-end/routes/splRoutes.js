@@ -2,44 +2,19 @@ import express from "express";
 const splRoutes = express.Router();
 
 import authMiddleware from "../middlewares/authMiddleware.js";
-import splValidator from "../validators/splValidator.js";
 import splController from "../controllers/splController.js";
 
-splRoutes.post(
-    "/",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    splValidator.validateCreateSPLCommittee,
-    splController.createSPLCommittee
-);
+splRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, splController.createSPL);
+splRoutes.get("/:splName/active", authMiddleware.checkAuthentication, splController.getActiveSPL);
+splRoutes.get("/", authMiddleware.checkAuthentication, splController.getAllSPL);
+splRoutes.get("/:splId", authMiddleware.checkAuthentication, splController.getSPL);
+splRoutes.get("/:splId/student", authMiddleware.checkAuthentication, splController.getAllStudentUnderSPL);
+splRoutes.put("/:splId", authMiddleware.checkAuthentication, splController.updateSPL);
+splRoutes.put("/:splId/student", authMiddleware.checkAuthentication, splController.assignStudentToSPL);
+splRoutes.put("/:splId/member", authMiddleware.checkAuthentication, splController.addCommitteeMemberToSPL);
+splRoutes.delete("/:splId", authMiddleware.checkAuthentication, splController.deleteSPL);
+splRoutes.delete("/:splId/student/:studentId", authMiddleware.checkAuthentication, splController.removeStudentFromSPL);
+splRoutes.delete("/:splId/member/:memberId", authMiddleware.checkAuthentication, splController.removeCommitteeMemberFromSPL);
 
-// query param {splName}
-splRoutes.post(
-    "/assign",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    splController.assignStudents
-);
-
-// query param {splId, studentId}
-splRoutes.delete(
-    "/assign",
-    authMiddleware.checkAuthentication,
-    authMiddleware.isAdmin,
-    splController.unassignStudent
-);
-
-// query param {splId, teacherEmail}
-splRoutes.post("/head", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-splRoutes.post("/manager", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-splRoutes.post("/member", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-
-// query param {splId, teacherId}
-splRoutes.delete("/head", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-splRoutes.delete("/manager", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-splRoutes.delete("/member", authMiddleware.checkAuthentication, authMiddleware.isAdmin);
-
-// Finalize(including generating grade sheet and much more task) a Running SPL by splName
-// splRouter.put("/finalize/:splName", splNameValidator, splValidationHandler, finalizeSPL);
 
 export default splRoutes;

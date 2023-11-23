@@ -40,24 +40,26 @@ document with swagger
     post: teacher/
     put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
-    get: teacher/{teacherId}/student
+    get: teacher/{teacherId}/student {all student under supervision, splName as query}
+    get: teacher/{teacherId}/student/current {all student of current active spls, splName as query}
     get: teacher/ {query params: optional}
     delete: teacher/{teacherId} {by admin}
 
 // to resource identification use splId, can use splName in other places
 3. SPL 
     post: spl/
-    put: spl/{splId} {data in body}
+    get: spl/ {query params: optional, active: true/false}
     get: spl/{splName}/active // get active spl info by splName
     get: spl/{splId} 
     get: spl/{splId}/student 
-    get: spl/ {query params: optional}
+    put: spl/{splId} {data in body}
     delete: spl/{splId}
 
-    post: spl/{splId}/student-allocation/ // create mark table also for each student
-    delete: spl/{splId}/student-allocation/{studentId}  // delete mark table also for that student
+    // ASSIGN STUDENTS TO THE SPL
+    post: spl/{splId}/student/ // create mark table also for each student
+    delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
-    put: spl/{splId}/member/ 
+    put: spl/{splId}/member/ //by email
     delete: spl/{splId}/member/{memberId}
 
 4. Team
