@@ -57,11 +57,12 @@ async function updateStudentAccount(userId, student) {
 
 async function updateStudentAccountByAdmin(studentId, student) {
     // check roll and registration number existence
+    // if same as the current student then no need to throw error
     const { rollNo, registrationNo } = student;
     const error = {};
     if (rollNo) {
-        const exist = await StudentRepository.findByRoll(rollNo);
-        if (exist) {
+        const info = await StudentRepository.findByRoll(rollNo);
+        if (info && info.studentId != studentId) {
             error["rollNo"] = {
                 msg: "rollNo already exists",
                 value: rollNo,
@@ -69,8 +70,8 @@ async function updateStudentAccountByAdmin(studentId, student) {
         }
     }
     if (registrationNo) {
-        const exist = await StudentRepository.findByRegistration(registrationNo);
-        if (exist) {
+        const info = await StudentRepository.findByRegistration(registrationNo);
+        if (info && info.studentId != studentId) {
             error["registrationNo"] = {
                 msg: "registrationNo already exists",
                 value: registrationNo,
