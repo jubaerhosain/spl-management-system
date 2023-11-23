@@ -68,11 +68,13 @@ async function getAllStudentByCurriculumYear(curriculumYear) {
 }
 
 async function getAllSPL(studentId) {
-
+    const spls = await SPLRepository.findActiveSPLByStudentId(studentId);
+    return spls;
 }
 
 async function getCurrentSPL(studentId) {
-    const spl = await SPLRepository.findActiveSPL(studentId);
+    const spl = await SPLRepository.findActiveSPLByStudentId(studentId);
+    return spl;
 }
 
 async function updateStudent(userId, student) {

@@ -96,5 +96,6 @@ export default {
     findById,
     findActiveSPLByName,
     findActiveSPLByStudentId,
+    findActiveSPLByStudentId,
     removeStudentFromSPL,
 };
