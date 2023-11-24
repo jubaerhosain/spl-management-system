@@ -2,6 +2,7 @@ GET: query param or param (never use body)
 POST: always use body to create resource {in case of child resource can use param to identify parent resource}
 PUT, DELETE: try to use body but some cases you can use param to "locate resource"
 document with swagger
+Notification will be created on some action. so there no need to post/put api end point for them
 
 0. Authentication [done]
     post: auth/login 
@@ -17,9 +18,9 @@ document with swagger
 
 0. User
     put: user/{userId}/activate
-    delete: user/{userId}/deactivate
+    delete: user/{userId}
     put: user/{userId}/avatar
-    
+
     get: user/{userId}/notification/ {query params: optional read/unread etc}
     delete: user/{userId}/notification/{notificationId} 
 
@@ -44,6 +45,9 @@ document with swagger
     post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
+
+    get: student/{studentId}/mark {all 3 spl marks of a student, qeury param: splName optional} 
+
 
 2. Teacher
     post: teacher/
@@ -73,7 +77,7 @@ document with swagger
     put: spl/{splId} {data in body}
     delete: spl/{splId}
 
-    // ASSIGN STUDENTS TO THE SPL
+    // ASSIGN/remove STUDENTS TO/from THE SPL Manually
     post: spl/{splId}/student/ // create mark table also for each student
     delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
@@ -101,16 +105,13 @@ document with swagger
 
 4. Supervisor (manual)
     put: supervisor/randomize
-    put: supervisor   body{teacherId, studentId, splId/splName}
+    put: supervisor   body{teacherId/email?, studentId, splId/splName}
     delete: supervisor/ body{studentId, splId/splName}
 
 5. Mark 
     put: mark/{markId} update atomic marks 
     get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
-
-    get: mark/student/{studentId} all 3 spl marks of a student 
-        add query param {splName} mark of a student for a specific spl
 
     post: mark/{markId}/presentation-mark/ body {presentationId, mark}
     put: mark/{markId}/presentation-mark/ body{presentationMarkId, mark}
@@ -131,10 +132,8 @@ document with swagger
 
 7. Notice 
     post: notice/
-    get: notice/ 
+    get: notice/ {query params: optional, splName}
     get: notice/{noticeId}
     put: notice/{noticeId} {notice}
-
-8. Notification
-    notification will be created on some action. so there no need to post/put api end point for them()
+   
 

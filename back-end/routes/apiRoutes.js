@@ -8,7 +8,6 @@ import adminRoutes from "./adminRoutes.js";
 import splRoutes from "./splRoutes.js";
 import teamRoutes from "./teamRoutes.js";
 // import userRoutes from "./userRoutes.js";
-// import committeeRouter from "./committeeRouter.js";
 // import supervisorAllocationRouter from "./supAllocationRouter.js";
 // import presentationRouter from "./presentationRouter.js";
 // import markingRouter from "./markingRouter.js";
@@ -23,11 +22,7 @@ apiRoutes.use("/team", teamRoutes);
 // apiRoutes.use("/user", userRoutes);
 
 
-// committtee merge with spl ??? create spl with committtee???
-// mainRouter.use("/committee", committeeRouter);
-
 // mainRouter.use("/sup-allocation", supervisorAllocationRouter);
-
 
 // mainRouter.use("/presentation", presentationRouter);
 
