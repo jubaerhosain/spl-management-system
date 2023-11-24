@@ -44,7 +44,6 @@ async function deleteRequest(req, res) {
     // Logic to delete a request for a team
 }
 
-
 export default {
     createTeam,
     updateTeam,

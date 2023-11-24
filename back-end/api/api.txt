@@ -16,9 +16,12 @@ document with swagger
     put: auth/forgot-password/reset-password
 
 0. User
-    put: user/account/activate
-    put: user/account/deactivate
+    put: user/{userId}/activate
+    delete: user/{userId}/deactivate
     put: user/{userId}/avatar
+    
+    get: user/{userId}/notification/ {query params: optional read/unread etc}
+    delete: user/{userId}/notification/{notificationId} 
 
 1.  Admin [done]
     post: admin/
@@ -133,8 +136,5 @@ document with swagger
     put: notice/{noticeId} {notice}
 
 8. Notification
-    post: notification/
-    get: notification/
-    get: notification/{notificationId}
-    put: notification/{notificationId} 
+    notification will be created on some action. so there no need to post/put api end point for them()
 
