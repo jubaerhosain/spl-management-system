@@ -44,6 +44,8 @@ document with swagger
     get: teacher/{teacherId}
     get: teacher/{teacherId}/student {all student under supervision, splName as query}
     get: teacher/{teacherId}/team {all teams under supervision, splName as query}
+    get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
+    get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
     get: teacher/{teacherId}/student/current {all student of current active spls, splName as query}
     get: teacher/{teacherId}/team/current {all team of current active spls, splName as query}
     get: teacher/ {query params: optional}
