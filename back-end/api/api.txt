@@ -38,18 +38,27 @@ document with swagger
     get: student/ {query params: optional}
     delete: student/{studentId} {by admin}
 
+    post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
+    get: student/{studentId}/request  // all teacher requested by that student
+    delete: student/{studentId}/request body{teacherId} // delete request
+
 2. Teacher
     post: teacher/
     put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
     get: teacher/{teacherId}/student {all student under supervision, splName as query}
-    get: teacher/{teacherId}/team {all teams under supervision, splName as query}
-    get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
-    get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
     get: teacher/{teacherId}/student/current {all student of current active spls, splName as query}
+    get: teacher/{teacherId}/team {all teams under supervision, splName as query}
     get: teacher/{teacherId}/team/current {all team of current active spls, splName as query}
     get: teacher/ {query params: optional}
     delete: teacher/{teacherId} {by admin}
+
+    get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
+    put: teacher/{teacherId}/request/team body{teamId, accept: true} // accept team request
+    delete: teacher/{teacherId}/request/team body{teamId}  // reject team request
+    get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
+    put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
+    delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
 
 // to resource identification use splId, can use splName in other places
 3. SPL 
@@ -83,18 +92,14 @@ document with swagger
     put: team/{teamId}/member {all members under that team}
     delete: team/{teamId}/member/{memberId}
 
-5. Request
-    put: request/team/ body{teamId, teacherId}
-    delete: request/team/ body{teamId, teacherId}
+    post: team/{teamId}/request body{teacherId} // request a teacher to be supervisor
+    get: team/{teamId}/request //get all requested teachers by that team
+    delete: team/{teamId}/request body{teacherId} // delete a team request
 
-    put: request/student/ {studentId: from logged in user}
-    delete: request/student/ body{teacherId} {studentId: from logged in user}
-
-4. Supervisor
+4. Supervisor (manual)
     put: supervisor/randomize
     put: supervisor   body{teacherId, studentId, splId/splName}
     delete: supervisor/ body{studentId, splId/splName}
-
 
 5. Mark 
     put: mark/{markId} update atomic marks 

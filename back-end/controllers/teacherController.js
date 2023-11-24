@@ -65,6 +65,12 @@ async function updateTeacher(req, res) {
 
 async function deleteTeacher(req, res) {}
 
+async function acceptStudentRequest(req, res) {}
+async function rejectStudentRequest(req, res) {}
+
+async function acceptTeamRequest(req, res) {}
+async function rejectTeamRequest(req, res) {}
+
 export default {
     createTeacher,
     getTeacher,
@@ -75,6 +81,10 @@ export default {
     getAllCurrentTeamUnderSupervision,
     getAllStudentRequestedTeacher,
     getAllTeamRequestedTeacher,
+    acceptStudentRequest,
+    rejectStudentRequest,
+    acceptTeamRequest,
+    rejectTeamRequest,
     updateTeacher,
     deleteTeacher,
 };
