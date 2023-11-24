@@ -37,8 +37,11 @@ async function getTeacher(req, res) {}
 async function getAllTeacher(req, res) {}
 
 async function getAllStudentUnderSupervision(req, res) {}
+async function getAllTeamUnderSupervision(req, res) {}
 
 async function getAllCurrentStudentUnderSupervision(req, res) {}
+
+async function getAllCurrentTeamUnderSupervision(req, res) {}
 
 async function updateTeacher(req, res) {
     try {
@@ -65,7 +68,9 @@ export default {
     getTeacher,
     getAllTeacher,
     getAllStudentUnderSupervision,
+    getAllTeamUnderSupervision,
     getAllCurrentStudentUnderSupervision,
+    getAllCurrentTeamUnderSupervision,
     updateTeacher,
     deleteTeacher,
 };

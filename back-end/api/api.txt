@@ -33,6 +33,8 @@ document with swagger
     get: student/{studentId}/spl {all spl, with progress data}
     get: student/{studentId}/teacher/current {current supervisor}
     get: student/{studentId}/teacher/ {all supervisor}
+    get: student/{studentId}/team/ {all teams of that student}
+    get: student/{studentId}/team/current {get current team of that student}
     get: student/ {query params: optional}
     delete: student/{studentId} {by admin}
 
@@ -41,7 +43,9 @@ document with swagger
     put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
     get: teacher/{teacherId}/student {all student under supervision, splName as query}
+    get: teacher/{teacherId}/team {all teams under supervision, splName as query}
     get: teacher/{teacherId}/student/current {all student of current active spls, splName as query}
+    get: teacher/{teacherId}/team/current {all team of current active spls, splName as query}
     get: teacher/ {query params: optional}
     delete: teacher/{teacherId} {by admin}
 
@@ -59,21 +63,22 @@ document with swagger
     post: spl/{splId}/student/ // create mark table also for each student
     delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
-    put: spl/{splId}/member/head
-    put: spl/{splId}/member/manager
+    put: spl/{splId}/head
+    put: spl/{splId}/manager
     put: spl/{splId}/member/ //by email
     delete: spl/{splId}/member/{memberId}
-    delete: spl/{splId}/member/head/{headId}
-    delete: spl/{splId}/member/manager{managerId}
+    delete: spl/{splId}/head/{headId}
+    delete: spl/{splId}/manager{managerId}
 
 4. Team
     post: team/
-    put: team/{teamId}
-    get: team/{teamId}
     get: team/{params: optional, splName}
+    get: team/{teamId}
+    get: team/{teamId}/member
+    put: team/{teamId}
     delete: team/{teamId}
 
-    put: team/{teamId}/member
+    put: team/{teamId}/member {all members under that team}
     delete: team/{teamId}/member/{memberId}
 
 5. Request

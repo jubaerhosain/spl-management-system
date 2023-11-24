@@ -8,7 +8,9 @@ teacherRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdm
 teacherRoutes.get("/", teacherController.getAllTeacher);
 teacherRoutes.get("/:teacherId", teacherController.getTeacher);
 teacherRoutes.get("/:teacherId/student", teacherController.getAllStudentUnderSupervision);
+teacherRoutes.get("/:teacherId/team", teacherController.getAllTeamUnderSupervision);
 teacherRoutes.get("/:teacherId/student/current", teacherController.getAllCurrentStudentUnderSupervision);
+teacherRoutes.get("/:teacherId/team/current", teacherController.getAllCurrentTeamUnderSupervision);
 teacherRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isTeacher, teacherController.updateTeacher);
 teacherRoutes.delete("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, teacherController.deleteTeacher);
 
