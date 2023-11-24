@@ -2,12 +2,6 @@
 
 export default (sequelize, DataTypes) => {
     const PresentationMark = sequelize.define("PresentationMarks", {
-        presentationMarkId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            unique: true,
-            autoIncrement: true,
-        },
         markId: {
             type: DataTypes.INTEGER,
             primaryKey: true,

@@ -68,7 +68,7 @@ Notification will be created on some action. so there no need to post/put api en
     put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
     delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
 
-    // add mark routes for teacher???
+    // add mark routes for teacher for retrieving only??? or in mark routes
 
 // to resource identification use splId, can use splName in other places
 3. SPL 
@@ -91,10 +91,10 @@ Notification will be created on some action. so there no need to post/put api en
     delete: spl/{splId}/head/{headId}
     delete: spl/{splId}/manager{managerId}
 
-    // create presentation event
+    // create presentation event (announcement)
     post: spl/{splId}/presentation/ {presentationNo: give manualInput?} 
 
-    // create continuous event
+    // create continuous event (announcement)
     post: spl/{splId}/continuous/ body{weekNo} // create marks in continuous mark table with zeroes
 
 
@@ -120,13 +120,13 @@ Notification will be created on some action. so there no need to post/put api en
 
 5. Mark 
     put: mark/{markId} update atomic marks 
-    // get: mark/{markId} 
+    get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
 
-    post: mark/presentation/{presentationId}/student/{studentId} body{mark} // by teacher who gives that mark
-    put: mark/presentation-mark/{presentationMarkId}/student/{studentId} body{mark} // by teacher who gives that mark
+    post: mark/presentation/{presentationId} body{mark, studentId} // by teacher who gives that mark
+    put: mark/{markId}/presentation/{presentationId} body{mark. studentId} // by teacher who gives that mark
     
-    put: mark/continuous-mark/{continuousMarkId}/student/{studentId} body{mark} // by spl Manager    
+    put: mark/{markId}/continuous/{weekNo} body{mark, studentId} // by spl Manager    
 
 7. Notice 
     post: notice/

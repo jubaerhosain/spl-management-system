@@ -2,12 +2,6 @@
 
 export default (sequelize, DataTypes, Op, Sequelize) => {
     const ContinuousMark = sequelize.define("ContinuousMarks", {
-        continuousMarkId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            unique: true,
-            autoIncrement: true,
-        },
         markId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -18,11 +12,11 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
         },
         weekName: {
             type: DataTypes.STRING(6),
-            allowNull: false,
+            primaryKey: true,
             validate: {
-                is: /^Week [0-9]{1,2}$/,
+                is: /^week-[0-9]{1,2}$/,
             },
-            comment: "Week 1",
+            comment: "Week-1",
         },
         mark: {
             type: DataTypes.FLOAT,
