@@ -68,7 +68,7 @@ Notification will be created on some action. so there no need to post/put api en
     put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
     delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
 
-    // add mark routes for teacher
+    // add mark routes for teacher???
 
 // to resource identification use splId, can use splName in other places
 3. SPL 
@@ -90,6 +90,13 @@ Notification will be created on some action. so there no need to post/put api en
     delete: spl/{splId}/member/{memberId}
     delete: spl/{splId}/head/{headId}
     delete: spl/{splId}/manager{managerId}
+
+    // create presentation event
+    post: spl/{splId}/presentation/ {presentationNo: give manualInput?} 
+
+    // create continuous event
+    post: spl/{splId}/continuous/ body{weekNo} // create marks in continuous mark table with zeroes
+
 
 4. Team
     post: team/
@@ -113,25 +120,13 @@ Notification will be created on some action. so there no need to post/put api en
 
 5. Mark 
     put: mark/{markId} update atomic marks 
-    get: mark/{markId} 
+    // get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
 
-    post: mark/{markId}/presentation-mark/ body {presentationId, mark}
-    put: mark/{markId}/presentation-mark/ body{presentationMarkId, mark}
-    get: mark{markId}/presentation-mark/ {query params: optional, splName, teacherId, presentationId}
-
-    post: mark/{markId}/continuous-mark/ body{ weekName, mark}
-    put: mark/{markId}/continuous-mark/ body{continuousMarkId, mark}
-
-6. Presentation Mark
-
-
-7. Continuous Mark
-        put: continuous-mark/{continuousMarkId} body{mark}
-
-
-6. Presentation Event
-    post: presentation/
+    post: mark/presentation/{presentationId}/student/{studentId} body{mark} // by teacher who gives that mark
+    put: mark/presentation-mark/{presentationMarkId}/student/{studentId} body{mark} // by teacher who gives that mark
+    
+    put: mark/continuous-mark/{continuousMarkId}/student/{studentId} body{mark} // by spl Manager    
 
 7. Notice 
     post: notice/
