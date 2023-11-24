@@ -28,4 +28,8 @@ studentRoutes.post('/:studentId/request', studentController.requestTeacher);
 studentRoutes.get('/:studentId/request', studentController.getAllRequest);
 studentRoutes.delete('/:studentId/request', studentController.deleteRequest);
 
+// routes related to mark
+studentRoutes.get("/:studentId/mark", studentController.getAllSPLMark);
+studentRoutes.get("/:studentId/mark/:splName", studentController.getSPLMark);
+
 export default studentRoutes;

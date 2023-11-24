@@ -138,6 +138,9 @@ async function requestTeacher(req, res) {}
 async function getAllRequest(req, res) {}
 async function deleteRequest(req, res) {}
 
+async function getAllSPLMark(req, res) {}
+async function getSPLMark(req, res) {}
+
 export default {
     createStudent,
     getStudent,
@@ -152,5 +155,7 @@ export default {
     getCurrentTeam,
     requestTeacher,
     getAllRequest,
+    getAllSPLMark,
+    getSPLMark,
     deleteRequest
 };

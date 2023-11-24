@@ -46,7 +46,8 @@ Notification will be created on some action. so there no need to post/put api en
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
-    get: student/{studentId}/mark {all 3 spl marks of a student, qeury param: splName optional} 
+    get: student/{studentId}/mark {all 3 spl marks of a student} 
+    get: student/{studentId}/mark/:splName
 
 
 2. Teacher
@@ -66,6 +67,8 @@ Notification will be created on some action. so there no need to post/put api en
     get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
     put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
     delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
+
+    // add mark routes for teacher
 
 // to resource identification use splId, can use splName in other places
 3. SPL 
