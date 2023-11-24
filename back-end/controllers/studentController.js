@@ -131,6 +131,13 @@ async function getAllSupervisor(req, res) {}
 
 async function deleteStudent(req, res) {}
 
+async function getAllTeam(req, res) {}
+async function getCurrentTeam(req, res) {}
+
+async function requestTeacher(req, res) {}
+async function getAllRequest(req, res) {}
+async function deleteRequest(req, res) {}
+
 export default {
     createStudent,
     getStudent,
@@ -141,4 +148,9 @@ export default {
     getAllSupervisor,
     updateStudent,
     deleteStudent,
+    getAllTeam,
+    getCurrentTeam,
+    requestTeacher,
+    getAllRequest,
+    deleteRequest
 };
