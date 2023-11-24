@@ -48,7 +48,7 @@ class GenericResponse {
                     result[key] = {};
                 }
 
-                // process ony first error of same
+                // process ony first error of same key
                 if (!result[key][detail.context.key]) {
                     result[key][detail.context.key] = {
                         msg: detail.message.replace(/(\[\d+\]\.)|(\")/g, ""),
@@ -69,7 +69,7 @@ class GenericResponse {
 
     static error(message, error) {
         if (Joi.isError(error)) {
-            if (error.details[0].path.length > 1) error = this.JoiArrayErrorToGenericError(error);
+            if (error.details[0].path.length > 1 ) error = this.JoiArrayErrorToGenericError(error);
             else error = this.JoiErrorToGenericError(error);
         }
 

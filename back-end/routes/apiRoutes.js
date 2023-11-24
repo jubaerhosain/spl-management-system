@@ -5,8 +5,8 @@ import authRoutes from "./authRoutes.js";
 import studentRoutes from "./studentRoutes.js";
 import teacherRoutes from "./teacherRoutes.js";
 import adminRoutes from "./adminRoutes.js";
+import splRoutes from "./splRoutes.js";
 // import userRoutes from "./userRoutes.js";
-// import splRoutes from "./splRoutes.js";
 // import committeeRouter from "./committeeRouter.js";
 // import teamRouter from "./teamRouter.js";
 // import supervisorAllocationRouter from "./supAllocationRouter.js";
@@ -17,10 +17,10 @@ apiRoutes.use("/auth", authRoutes);
 apiRoutes.use("/admin", adminRoutes);
 apiRoutes.use("/student", studentRoutes); 
 apiRoutes.use("/teacher", teacherRoutes); 
+apiRoutes.use("/spl", splRoutes);
 
 // apiRoutes.use("/user", userRoutes);
 
-// apiRoutes.use("/spl", splRoutes);
 
 // committtee merge with spl ??? create spl with committtee???
 // mainRouter.use("/committee", committeeRouter);

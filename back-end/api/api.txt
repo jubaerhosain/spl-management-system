@@ -59,8 +59,12 @@ document with swagger
     post: spl/{splId}/student/ // create mark table also for each student
     delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
+    put: spl/{splId}/member/head
+    put: spl/{splId}/member/manager
     put: spl/{splId}/member/ //by email
     delete: spl/{splId}/member/{memberId}
+    delete: spl/{splId}/member/head/{headId}
+    delete: spl/{splId}/member/manager{managerId}
 
 4. Team
     post: team/

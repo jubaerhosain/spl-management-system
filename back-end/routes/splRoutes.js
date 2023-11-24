@@ -11,10 +11,13 @@ splRoutes.get("/:splId", authMiddleware.checkAuthentication, splController.getSP
 splRoutes.get("/:splId/student", authMiddleware.checkAuthentication, splController.getAllStudentUnderSPL);
 splRoutes.put("/:splId", authMiddleware.checkAuthentication, splController.updateSPL);
 splRoutes.put("/:splId/student", authMiddleware.checkAuthentication, splController.assignStudentToSPL);
-splRoutes.put("/:splId/member", authMiddleware.checkAuthentication, splController.addCommitteeMemberToSPL);
+splRoutes.put("/:splId/member", authMiddleware.checkAuthentication, splController.addCommitteeMember);
+splRoutes.put("/:splId/head", authMiddleware.checkAuthentication, splController.addCommitteeHead);
+splRoutes.put("/:splId/manager", authMiddleware.checkAuthentication, splController.addSPLManager);
 splRoutes.delete("/:splId", authMiddleware.checkAuthentication, splController.deleteSPL);
 splRoutes.delete("/:splId/student/:studentId", authMiddleware.checkAuthentication, splController.removeStudentFromSPL);
-splRoutes.delete("/:splId/member/:memberId", authMiddleware.checkAuthentication, splController.removeCommitteeMemberFromSPL);
-
+splRoutes.delete("/:splId/member/:memberId", authMiddleware.checkAuthentication, splController.removeCommitteeMember);
+splRoutes.delete("/:splId/head/:headId", authMiddleware.checkAuthentication, splController.removeCommitteeHead);
+splRoutes.delete("/:splId/manager/:managerId", authMiddleware.checkAuthentication, splController.removeSPLManager);
 
 export default splRoutes;

@@ -104,7 +104,7 @@ export const validateSPLName = (splName, helper) => {
     const options = ["spl1", "spl2", "spl3"];
 
     if (!options.includes(splName)) {
-        return helper.message("splName must be in ['spl1', 'spl2', 'spl3'");
+        return helper.message("splName must be in ['spl1', 'spl2', 'spl3']");
     }
 
     return true;
