@@ -1,15 +1,24 @@
 import { Router } from "express";
-const teamRouter = Router();
+const teamRoutes = Router();
 
 import teamController from "../controllers/teamController.js" 
 
-teamRouter.post("/", teamController.createTeam);
-teamRouter.get("/", teamController.getAllTeam);
-teamRouter.get("/:teamId", teamController.getTeam);
-teamRouter.get("/:teamId/member", teamController.getAllTeamMember);
-teamRouter.put("/", teamController.updateTeam);
-teamRouter.put("/:teamId/member", teamController.addTeamMember);
-teamRouter.delete("/:teamId", teamController.deleteTeam);
-teamRouter.delete("/:teamId/member/:memberId", teamController.deleteTeamMember);
+// routes related to team 
+teamRoutes.post("/", teamController.createTeam);
+teamRoutes.get("/", teamController.getAllTeam);
+teamRoutes.get("/:teamId", teamController.getTeam);
+teamRoutes.put("/", teamController.updateTeam);
+teamRoutes.delete("/:teamId", teamController.deleteTeam);
 
-export default teamRouter;
+// routes related to team member
+teamRoutes.get("/:teamId/member", teamController.getAllTeamMember);
+teamRoutes.put("/:teamId/member", teamController.addTeamMember);
+teamRoutes.delete("/:teamId/member/:memberId", teamController.removeTeamMember);
+
+// routes related to request
+teamRoutes.post('/team/:teamId/request', teamController.requestTeacher);
+teamRoutes.get('/team/:teamId/request', teamController.getAllRequest);
+teamRoutes.delete('/team/:teamId/request', teamController.deleteRequest);
+
+
+export default teamRoutes;

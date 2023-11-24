@@ -3,7 +3,7 @@ import adminValidator from "../validators/adminValidator.js";
 import userService from "../services/userService.js";
 import CustomError from "../utils/CustomError.js";
 
-async function createAdminAccount(req, res) {
+async function createAdmin(req, res) {
     try {
         const { error } = adminValidator.createAdminSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
@@ -22,7 +22,7 @@ async function createAdminAccount(req, res) {
     }
 }
 
-async function updateAdminAccount(req, res) {
+async function updateAdmin(req, res) {
     try {
         const { error } = adminValidator.updateAdminSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
@@ -37,7 +37,7 @@ async function updateAdminAccount(req, res) {
     }
 }
 
-async function deleteAdminAccount(req, res) {
+async function deleteAdmin(req, res) {
     try {
         const { userId } = req.params;
 
@@ -50,4 +50,4 @@ async function deleteAdminAccount(req, res) {
     }
 }
 
-export default { createAdminAccount, updateAdminAccount, deleteAdminAccount };
+export default { createAdmin, updateAdmin, deleteAdmin };
