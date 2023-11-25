@@ -20,6 +20,8 @@ use plural names for end points
     put: auth/forgot-password/reset-password
 
 2. User
+    post: users
+    put: users/{userId}
     put: user/{userId}/activate
     delete: user/{userId}
     put: user/{userId}/avatar
@@ -28,12 +30,7 @@ use plural names for end points
     put: user/{userId}/notification/{notificationId} {body {markas read}}
     delete: user/{userId}/notification/{notificationId} 
 
-3.  Admin [done]
-    post: admin/
-    put: admin/
-    delete: admin/{userId}
-
-4. Student
+3. Student
     post: student/
     put: student/ {studentId from logged in user, from body if updateBy Admin} 
     get: student/{studentId}
@@ -57,7 +54,7 @@ use plural names for end points
     delete: student/{studentId}/supervisor/current // remove current supervisor of that student
 
 
-5. Teacher
+4. Teacher
     post: teacher/
     put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
@@ -78,7 +75,7 @@ use plural names for end points
     // add mark routes for teacher for retrieving only??? or in mark routes
 
 // to resource identification use splId, can use splName in other places
-6. SPL 
+5. SPL 
     post: spl/
     get: spl/ {query params: optional, active: true/false}
     get: spl/{splName}/active // get active spl info by splName
@@ -108,7 +105,7 @@ use plural names for end points
     post: spl/{splId}/continuous/ body{weekNo} // create marks in continuous mark table with zeroes
 
 
-7. Team
+6. Team
     post: team/
     get: team/{params: optional, splName}
     get: team/{teamId}
@@ -123,7 +120,7 @@ use plural names for end points
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-8. Mark 
+7. Mark 
     put: mark/{markId} update atomic marks 
     // get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
@@ -134,7 +131,7 @@ use plural names for end points
     post : mark/continuous/{weekNo} body{mark studentId} 
     put: mark/{markId}/continuous/{weekNo} body{mark, studentId} // by spl Manager    
 
-9. Notice 
+8. Notice 
     post: notice/
     get: notice/ {query params: optional, splName}
     get: notice/{noticeId}

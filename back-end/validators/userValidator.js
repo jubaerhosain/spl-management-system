@@ -5,15 +5,16 @@ const Joi = joi.defaults((schema) => {
     });
 });
 
-import { validateName, validateEmail } from "../validators/common/commonValidators.js";
+import { validateName, validateEmail } from "./common/commonValidators.js";
 
-const createAdminSchema = Joi.object({
+const createUserSchema = Joi.object({
     name: Joi.string().trim().custom(validateName).required(),
     email: Joi.string().trim().email().custom(validateEmail).required(),
+    userType: Joi.string().trim().required(),
 });
 
-const updateAdminSchema = Joi.object({
+const updateUserSchema = Joi.object({
     name: Joi.string().trim().custom(validateName).required(),
 });
 
-export default { createAdminSchema, updateAdminSchema };
+export default { createUserSchema, updateUserSchema };
