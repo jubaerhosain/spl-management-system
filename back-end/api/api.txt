@@ -9,15 +9,15 @@ use plural names for end points
 // query params for include another table or not  {include: spl} IN API
 
 1. Authentication [done]
-    post: auth/login 
-    get: auth/ {authenticated user}
+    post: auth/login   body{email, password}
+    get: auth/                             // get authenticated user
     delete: auth/logout
 
     put: auth/change-password
 
-    put: auth/forgot-password/generate-otp
-    put: auth/forgot-password/verify-otp
-    put: auth/forgot-password/reset-password
+    put: auth/forgot-password/generate-otp      body{email}
+    put: auth/forgot-password/verify-otp        body{email, otp}
+    put: auth/forgot-password/reset-password    body{email, otp, password}
 
 2. User
     post: users
