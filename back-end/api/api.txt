@@ -4,6 +4,8 @@ PUT, DELETE: try to use body but some cases you can use param to "locate resourc
 document with swagger
 Notification will be created on some action. so there no need to post/put api end point for them
 
+// query params for include another table or not  {include: spl} IN API
+
 0. Authentication [done]
     post: auth/login 
     get: auth/ {authenticated user}
@@ -33,10 +35,8 @@ Notification will be created on some action. so there no need to post/put api en
     post: student/
     put: student/ {studentId from logged in user, from body if updateBy Admin} 
     get: student/{studentId}
-    get: student/{studentId}/spl/current {current spl, with progress data} // remove spl include from get student query
+    get: student/{studentId}/spl/current {current spl, with progress data}
     get: student/{studentId}/spl {all spl, with progress data}
-    get: student/{studentId}/teacher/current {current supervisor}
-    get: student/{studentId}/teacher/ {all supervisor}
     get: student/{studentId}/team/ {all teams of that student}
     get: student/{studentId}/team/current {get current team of that student}
     get: student/ {query params: optional}
@@ -48,6 +48,11 @@ Notification will be created on some action. so there no need to post/put api en
 
     get: student/{studentId}/mark {all 3 spl marks of a student} 
     get: student/{studentId}/mark/:splName
+
+    post: student/{studentId}/supervisor/ {splName, teacherEmail} // add supervisor manually
+    get: student/{studentId}/supervisor/current {current supervisor}
+    get: student/{studentId}/supervisor/ {all supervisor}
+    delete: student/{studentId}/supervisor/current // remove current supervisor of that student
 
 
 2. Teacher
@@ -91,6 +96,9 @@ Notification will be created on some action. so there no need to post/put api en
     delete: spl/{splId}/head/{headId}
     delete: spl/{splId}/manager{managerId}
 
+    // randomize supervisor
+    post: spl/{splId}/supervisor/randomize
+
     // create presentation event (announcement)
     post: spl/{splId}/presentation/ {presentationNo: give manualInput?} 
 
@@ -113,19 +121,15 @@ Notification will be created on some action. so there no need to post/put api en
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-4. Supervisor (manual)
-    put: supervisor/randomize
-    put: supervisor   body{teacherId/email?, studentId, splId/splName}
-    delete: supervisor/ body{studentId, splId/splName}
-
 5. Mark 
     put: mark/{markId} update atomic marks 
-    get: mark/{markId} 
+    // get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
 
     post: mark/presentation/{presentationId} body{mark, studentId} // by teacher who gives that mark
     put: mark/{markId}/presentation/{presentationId} body{mark. studentId} // by teacher who gives that mark
     
+    post : mark/continuous/{weekNo} body{mark studentId} 
     put: mark/{markId}/continuous/{weekNo} body{mark, studentId} // by spl Manager    
 
 7. Notice 
