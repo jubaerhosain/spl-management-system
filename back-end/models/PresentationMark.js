@@ -18,14 +18,6 @@ export default (sequelize, DataTypes) => {
                 key: "presentationId",
             },
         },
-        teacherId: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            references: {
-                model: "Teachers",
-                key: "teacherId",
-            },
-        },
         mark: {
             type: DataTypes.FLOAT,
             allowNull: false,
@@ -46,13 +38,6 @@ export default (sequelize, DataTypes) => {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "presentationId",
-        });
-
-        // Teacher - PresentationMark [one to many]
-        PresentationMark.belongsTo(models.Teacher, {
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "teacherId",
         });
     };
 

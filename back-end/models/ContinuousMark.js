@@ -10,13 +10,13 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
                 key: "markId",
             },
         },
-        weekName: {
+        classNo: {
             type: DataTypes.STRING(6),
             primaryKey: true,
             validate: {
-                is: /^week-[0-9]{1,2}$/,
+                is: /^class-[0-9]{1,2}$/,
             },
-            comment: "Week-1",
+            comment: "class-1",
         },
         mark: {
             type: DataTypes.FLOAT,

@@ -4,6 +4,8 @@ PUT, DELETE: try to use body but some cases you can use param to "locate resourc
 document with swagger
 Notification will be created on some action. so there no need to post/put api end point for them
 
+// presentation er markgula manager collect korbe (average kore input dibe)
+
 use plural names for end points
 
 // query params for include another table or not  {include: spl} IN API
@@ -48,6 +50,8 @@ use plural names for end points
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
+    // get all types of marks (including continuous and presentation)
+    // allowed marks
     get: student/{studentId}/mark {all 3 spl marks of a student} 
     get: student/{studentId}/mark/:splName
 
@@ -74,8 +78,6 @@ use plural names for end points
     put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
     delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
 
-    // add mark routes for teacher for retrieving only??? or in mark routes
-
 // to resource identification use splId, can use splName in other places
 5. SPL 
     post: spl/
@@ -101,10 +103,14 @@ use plural names for end points
     post: spl/{splId}/supervisor/randomize
 
     // create presentation event (announcement)
-    post: spl/{splId}/presentation/ {presentationNo: give manualInput?} 
+    post: spl/{splId}/presentation/ // generate presentationNo automatically
+    get: spl/{splId}/presentation/ {get all presentations of that spl} 
+    delete: spl/{splId}/presentation/{presentationId}
 
-    // create continuous event (announcement)
-    post: spl/{splId}/continuous/ body{weekNo} // create marks in continuous mark table with zeroes
+    // create continuous event 
+    post: spl/{splId}/continuous/ body{classNo}   // create marks in continuous mark table with zeroes by given date
+    get: spl/{splId}/continuous/  // all continuous classes of that spl
+    delete: spl/{splId}/continuous/:classNo ???
 
 
 6. Team
@@ -123,15 +129,15 @@ use plural names for end points
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
 7. Mark 
-    put: mark/{markId} update atomic marks 
-    // get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
+    put: mark/{markId} update atomic marks 
 
-    post: mark/presentation/{presentationId} body{mark, studentId} // by teacher who gives that mark
-    put: mark/{markId}/presentation/{presentationId} body{mark. studentId} // by teacher who gives that mark
+    post: mark/presentation/{presentationId} body{mark, studentId} // by splManager who gives that mark
+    get: mark/presentation/{presentationId} // presentation mark of all students 
+    put: mark/{markId}/presentation/{presentationId} body{mark. studentId} // splManager
     
-    post : mark/continuous/{weekNo} body{mark studentId} 
-    put: mark/{markId}/continuous/{weekNo} body{mark, studentId} // by spl Manager    
+    get: mark/continuous/{classNo}/spl/{splId} // continuous mark of all students for a classNo
+    put: mark/{markId}/continuous/{classNo} body{mark, studentId} // by spl Manager    
 
 8. Notice 
     post: notice/

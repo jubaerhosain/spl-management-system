@@ -28,8 +28,14 @@ splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splControlle
 // supervisor randomization
 splRoutes.post("/:splId/supervisor/randomize");
 
-// spl event related routes
+// presentation event related routes
 splRoutes.post("spl/:splId/presentation"); // createPresentationEvent
+splRoutes.get("spl/:splId/presentation"); 
+splRoutes.delete("spl/:splId/presentation/:presentationId"); 
+
+// continuous event related routes
 splRoutes.post("spl/:splId/continuous"); // createContinuousEvaluationEvent
+splRoutes.get("spl/:splId/continuous"); 
+splRoutes.delete("spl/:splId/continuous/:weekNo"); 
 
 export default splRoutes;
