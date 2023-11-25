@@ -1,7 +1,7 @@
 paths:
   /users:
     get:
-      summary: Get a list of all users
+      summary: Get a list of users
       tags:
         - Users
       responses:
