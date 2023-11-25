@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import generator from "generate-password";
 
-async function hashPassword(password) {
+export async function hashPassword(password) {
     const hashedPassword = await bcrypt.hash(password, 10);
     return hashedPassword;
 }
 
-async function verifyPassword(password, hashedPassword) {
+export async function verifyPassword(password, hashedPassword) {
     const passwordMatches = await bcrypt.compare(password, hashedPassword);
     return passwordMatches;
 }
@@ -16,7 +16,7 @@ async function verifyPassword(password, hashedPassword) {
  * @param {*} n number of password to be generated
  * @returns [{ original, hash }]
  */
-async function generatePassword(n = 1) {
+export async function generatePassword(n = 1) {
     const passwords = generator.generateMultiple(n, {
         length: 10,
         uppercase: true,
@@ -43,7 +43,7 @@ async function generatePassword(n = 1) {
  * @param {Integer} length
  * @returns
  */
-function generateOTP(numberOfDigit = 6) {
+export function generateOTP(numberOfDigit = 6) {
     let otp = "";
     for (let i = 0; i < numberOfDigit; i++) {
         otp += Math.floor(Math.random() * 10);

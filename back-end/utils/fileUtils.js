@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-function getFileName(metaUrl) {
+export function getFileName(metaUrl) {
     const __filename = fileURLToPath(metaUrl);
 
     return __filename;
@@ -23,7 +23,7 @@ export function getDirectoryName(metaUrl) {
  * Custom function to write credentials to a file
  * @param {*} data
  */
-function writeCredentials(data) {
+export function writeCredentials(data) {
     fs.appendFileSync("credentials.txt", data + "\n\n", "utf8");
 }
 
@@ -38,21 +38,19 @@ function formatFileName(fileName, extension) {
     return newFileName;
 }
 
+// move this to middleware
 /**
- * @param {*} fileName - name of the file to be saved
+ * @param {*} fileName - name of the file to be saved [move this to middleware]
  * @param {*} subfolder
  * @param {*} allowedTypes
  * @param {*} maxSize
  * @param {*} errorMessage
  * @returns Promise of upload object
  */
-function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) {
+export function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) {
     return new Promise((resolve, reject) => {
         try {
-            const uploadFolder = path.join(
-                getDirname(import.meta.url),
-                `../public/uploads/${subfolder}/`
-            );
+            const uploadFolder = path.join(getDirname(import.meta.url), `../public/uploads/${subfolder}/`);
 
             // define storage
             const storage = multer.diskStorage({
@@ -87,9 +85,8 @@ function fileUploader(fileName, subfolder, allowedTypes, maxSize, errorMessage) 
     });
 }
 
-
 export default {
     getDirectoryName,
     writeCredentials,
     fileUploader,
-}
+};
