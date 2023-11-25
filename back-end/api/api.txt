@@ -52,7 +52,7 @@ use plural names for end points
 
     // get all types of marks (including continuous and presentation)
     // allowed marks
-    get: student/{studentId}/mark {all 3 spl marks of a student} 
+    get: student/{studentId}/mark {all 3 spl marks of a student} query 
     get: student/{studentId}/mark/:splName
 
     post: student/{studentId}/supervisor/ {splName, teacherEmail} // add supervisor manually
@@ -107,12 +107,6 @@ use plural names for end points
     get: spl/{splId}/presentation/ {get all presentations of that spl} 
     delete: spl/{splId}/presentation/{presentationId}
 
-    // create continuous event 
-    post: spl/{splId}/continuous/ body{classNo}   // create marks in continuous mark table with zeroes by given date
-    get: spl/{splId}/continuous/  // all continuous classes of that spl
-    delete: spl/{splId}/continuous/:classNo ???
-
-
 6. Team
     post: team/
     get: team/{params: optional, splName}
@@ -128,16 +122,19 @@ use plural names for end points
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
+// all mark should be updated by spl manager
 7. Mark 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
-    put: mark/{markId} update atomic marks 
+    put: mark/{markId} update atomic marks by spl manager
 
-    post: mark/presentation/{presentationId} body{mark, studentId} // by splManager who gives that mark
+    post: mark/presentation/{presentationId} [body{mark, studentId, splId|splName}] // by splManager multiple mark
     get: mark/presentation/{presentationId} // presentation mark of all students 
-    put: mark/{markId}/presentation/{presentationId} body{mark. studentId} // splManager
+    put: mark/{markId}/presentation/{presentationId} body{mark, studentId, splId} // splManager
     
-    get: mark/continuous/{classNo}/spl/{splId} // continuous mark of all students for a classNo
-    put: mark/{markId}/continuous/{classNo} body{mark, studentId} // by spl Manager    
+    post: mark/continuous/ [body{mark, classNo, studentId, splName}] // by spl Manager  multiple mark
+    get: mark/continuous/spl/{splName|splId} // all continuous classes take in this spl 
+    get: mark/continuous/{classNo}/spl/{splName} // continuous mark of all students
+    put: mark/{markId}/continuous/{classNo} body{mark, studentId, splName} 
 
 8. Notice 
     post: notice/

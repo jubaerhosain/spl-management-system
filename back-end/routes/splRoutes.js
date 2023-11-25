@@ -34,8 +34,6 @@ splRoutes.get("spl/:splId/presentation");
 splRoutes.delete("spl/:splId/presentation/:presentationId"); 
 
 // continuous event related routes
-splRoutes.post("spl/:splId/continuous"); // createContinuousEvaluationEvent
 splRoutes.get("spl/:splId/continuous"); 
-splRoutes.delete("spl/:splId/continuous/:weekNo"); 
 
 export default splRoutes;
