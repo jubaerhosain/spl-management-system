@@ -28,15 +28,10 @@ app.use(cookieParser(config.cookie.secret));
 
 app.use("/api", apiRoutes);
 
-app.use("/api-docs", swaggerConfig.swaggerServe, swaggerConfig.swaggerSetup);
+app.use("/api/docs", swaggerConfig.swaggerServe, swaggerConfig.swaggerSetup);
 
 app.use(notFoundHandler);
 
 app.use(defaultErrorHandler);
 
 export default app;
-
-/**
- * Common password
- * 1119@iit.DU
- */
