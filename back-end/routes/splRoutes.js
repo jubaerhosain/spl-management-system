@@ -25,4 +25,11 @@ splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStuden
 splRoutes.put("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
 splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
+// supervisor randomization
+splRoutes.post("/:splId/supervisor/randomize");
+
+// spl event related routes
+splRoutes.post("spl/:splId/presentation"); // createPresentationEvent
+splRoutes.post("spl/:splId/continuous"); // createContinuousEvaluationEvent
+
 export default splRoutes;

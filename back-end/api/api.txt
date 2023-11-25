@@ -21,10 +21,13 @@ use plural names for end points
 
 2. User
     post: users
+    get: users/
+    get: users/{userId}
     put: users/{userId}
-    put: user/{userId}/activate
-    delete: user/{userId}
     put: user/{userId}/avatar
+    put: user/{userId}/activate
+    delete: user/{userId}/deactivate
+    delete: user/{userId}
 
     get: user/{userId}/notification/ {query params: optional read/unread etc}
     put: user/{userId}/notification/{notificationId} {body {markas read}}
@@ -53,7 +56,6 @@ use plural names for end points
     get: student/{studentId}/supervisor/ {all supervisor}
     delete: student/{studentId}/supervisor/current // remove current supervisor of that student
 
-
 4. Teacher
     post: teacher/
     put: teacher/ {teacherId from logged in user}
@@ -79,13 +81,13 @@ use plural names for end points
     post: spl/
     get: spl/ {query params: optional, active: true/false}
     get: spl/{splName}/active // get active spl info by splName
-    get: spl/{splId} 
-    get: spl/{splId}/student 
+    get: spl/{splId}  
     put: spl/{splId} {data in body}
     delete: spl/{splId}
 
     // ASSIGN/remove STUDENTS TO/from THE SPL Manually
     post: spl/{splId}/student/ // create mark table also for each student
+    get: spl/{splId}/student/ // get all student under spl
     delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
     put: spl/{splId}/head
@@ -109,11 +111,11 @@ use plural names for end points
     post: team/
     get: team/{params: optional, splName}
     get: team/{teamId}
-    get: team/{teamId}/member
     put: team/{teamId}
     delete: team/{teamId}
 
     put: team/{teamId}/member {all members under that team}
+    get: team/{teamId}/member
     delete: team/{teamId}/member/{memberId}
 
     post: team/{teamId}/request body{teacherId} // request a teacher to be supervisor

@@ -1,4 +1,4 @@
-user(modify)
+user(modify, add facebook, github, google scholar, ... account urls)
 students(student_id, name, gender, roll_number, reg_number, batch, admission_session, current_session, email, phone, password, avatar, details, documentation_progress, code_progress, weekly_progress, active)
 teachers(teacher_id, name, gender, email, phone, password, avatar, details, designation, available, active)
 

@@ -11,7 +11,7 @@ userRoutes.get("/:userId");
 userRoutes.put("/:userId", checkAuthentication, isAdmin, userController.updateUser);
 userRoutes.put("/:userId/avatar");
 userRoutes.put("/:userId/activate");
-userRoutes.put("/:userId/deactivate");
+userRoutes.delete("/:userId/deactivate");
 userRoutes.delete("/:userId", checkAuthentication, isAdmin, userController.deleteUser);
 
 // notification related routes
