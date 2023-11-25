@@ -6,32 +6,32 @@ Notification will be created on some action. so there no need to post/put api en
 
 // query params for include another table or not  {include: spl} IN API
 
-0. Authentication [done]
+1. Authentication [done]
     post: auth/login 
     get: auth/ {authenticated user}
     delete: auth/logout
 
-    put: auth/password
+    put: auth/change-password
 
-    // forgot password logic
     put: auth/forgot-password/generate-otp
     put: auth/forgot-password/verify-otp
     put: auth/forgot-password/reset-password
 
-0. User
+2. User
     put: user/{userId}/activate
     delete: user/{userId}
     put: user/{userId}/avatar
 
     get: user/{userId}/notification/ {query params: optional read/unread etc}
+    put: user/{userId}/notification/{notificationId} {body {markas read}}
     delete: user/{userId}/notification/{notificationId} 
 
-1.  Admin [done]
+3.  Admin [done]
     post: admin/
     put: admin/
     delete: admin/{userId}
 
-2. Student
+4. Student
     post: student/
     put: student/ {studentId from logged in user, from body if updateBy Admin} 
     get: student/{studentId}
@@ -55,7 +55,7 @@ Notification will be created on some action. so there no need to post/put api en
     delete: student/{studentId}/supervisor/current // remove current supervisor of that student
 
 
-2. Teacher
+5. Teacher
     post: teacher/
     put: teacher/ {teacherId from logged in user}
     get: teacher/{teacherId}
@@ -76,7 +76,7 @@ Notification will be created on some action. so there no need to post/put api en
     // add mark routes for teacher for retrieving only??? or in mark routes
 
 // to resource identification use splId, can use splName in other places
-3. SPL 
+6. SPL 
     post: spl/
     get: spl/ {query params: optional, active: true/false}
     get: spl/{splName}/active // get active spl info by splName
@@ -106,7 +106,7 @@ Notification will be created on some action. so there no need to post/put api en
     post: spl/{splId}/continuous/ body{weekNo} // create marks in continuous mark table with zeroes
 
 
-4. Team
+7. Team
     post: team/
     get: team/{params: optional, splName}
     get: team/{teamId}
@@ -121,7 +121,7 @@ Notification will be created on some action. so there no need to post/put api en
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-5. Mark 
+8. Mark 
     put: mark/{markId} update atomic marks 
     // get: mark/{markId} 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
@@ -132,7 +132,7 @@ Notification will be created on some action. so there no need to post/put api en
     post : mark/continuous/{weekNo} body{mark studentId} 
     put: mark/{markId}/continuous/{weekNo} body{mark, studentId} // by spl Manager    
 
-7. Notice 
+9. Notice 
     post: notice/
     get: notice/ {query params: optional, splName}
     get: notice/{noticeId}
