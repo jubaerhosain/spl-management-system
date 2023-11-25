@@ -1,0 +1,72 @@
+paths: 
+  /posts:
+    get:
+      summary: Get a list of posts
+      tags:
+        - Posts
+      responses:
+        '200':
+          description: Successful response
+
+    post:
+      summary: Create a new post
+      tags:
+        - Posts
+      requestBody:
+        description: Post data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Post created successfully
+
+  /posts/{postId}:
+    get:
+      summary: Get a specific post
+      tags:
+        - Posts
+      parameters:
+        - $ref: '../components/parameters/postId.yaml'
+      responses:
+        '200':
+          description: Successful response
+
+    put:
+      summary: Update a post
+      tags:
+        - Posts
+      parameters:
+        - $ref: '../components/parameters/postId.yaml'
+      requestBody:
+        description: Updated post data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Post updated successfully
+
+    delete:
+      summary: Delete a post
+      tags:
+        - Posts
+      parameters:
+        - $ref: '../components/parameters/postId.yaml'
+      responses:
+        '204':
+          description: Post deleted successfully

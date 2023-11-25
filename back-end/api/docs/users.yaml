@@ -1,0 +1,72 @@
+paths:
+  /users:
+    get:
+      summary: Get a list of users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Successful response
+
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: User created successfully
+
+  /users/{userId}:
+    get:
+      summary: Get a specific user
+      tags:
+        - Users
+      parameters:
+        - $ref: '../components/parameters/userId.yaml'
+      responses:
+        '200':
+          description: Successful response
+
+    put:
+      summary: Update a user
+      tags:
+        - Users
+      parameters:
+        - $ref: '../components/parameters/userId.yaml'
+      requestBody:
+        description: Updated user data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+
+    delete:
+      summary: Delete a user
+      tags:
+        - Users
+      parameters:
+        - $ref: '../components/parameters/userId.yaml'
+      responses:
+        '204':
+          description: User deleted successfully

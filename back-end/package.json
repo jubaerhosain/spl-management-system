@@ -26,6 +26,8 @@
         "redis": "^4.6.7",
         "sequelize": "^6.29.3",
         "socket.io": "^4.7.0",
-        "winston": "^3.9.0"
+        "swagger-ui-express": "^5.0.0",
+        "winston": "^3.9.0",
+        "yamljs": "^0.3.0"
     }
 }

@@ -1,0 +1,16 @@
+parameters:
+  userId:
+    name: userId
+    in: path
+    required: true
+    description: ID of the user
+    schema:
+      type: integer
+
+  postId:
+    name: postId
+    in: path
+    required: true
+    description: ID of the post
+    schema:
+      type: integer
