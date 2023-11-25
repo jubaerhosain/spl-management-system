@@ -2,17 +2,17 @@ import express from "express";
 const userRoutes = express.Router();
 
 import userController from "../controllers/userController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
 // user related routes
-userRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, userController.createUser);
+userRoutes.post("/", checkAuthentication, isAdmin, userController.createUser);
 userRoutes.get("/");
 userRoutes.get("/:userId");
-userRoutes.put("/:userId", authMiddleware.checkAuthentication, authMiddleware.isAdmin, userController.updateUser);
+userRoutes.put("/:userId", checkAuthentication, isAdmin, userController.updateUser);
 userRoutes.put("/:userId/avatar");
 userRoutes.put("/:userId/activate");
 userRoutes.put("/:userId/deactivate");
-userRoutes.delete("/:userId", authMiddleware.checkAuthentication, authMiddleware.isAdmin, userController.deleteUser);
+userRoutes.delete("/:userId", checkAuthentication, isAdmin, userController.deleteUser);
 
 // notification related routes
 userRoutes.get("/:userId/notification");

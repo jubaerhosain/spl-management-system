@@ -2,14 +2,14 @@ import express from "express";
 const teacherRoutes = express.Router();
 
 import teacherController from "../controllers/teacherController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import { checkAuthentication, isAdmin, isTeacher } from "../middlewares/authMiddleware.js";
 
 // routes related to teacher account
-teacherRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, teacherController.createTeacher);
+teacherRoutes.post("/", checkAuthentication, isAdmin, teacherController.createTeacher);
 teacherRoutes.get("/", teacherController.getAllTeacher);
 teacherRoutes.get("/:teacherId", teacherController.getTeacher);
-teacherRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isTeacher, teacherController.updateTeacher);
-teacherRoutes.delete("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, teacherController.deleteTeacher);
+teacherRoutes.put("/", checkAuthentication, isTeacher, teacherController.updateTeacher);
+teacherRoutes.delete("/", checkAuthentication, isAdmin, teacherController.deleteTeacher);
 
 // routes related to student supervision
 teacherRoutes.get("/:teacherId/student", teacherController.getAllStudentUnderSupervision);

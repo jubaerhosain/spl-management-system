@@ -2,6 +2,8 @@ import { Router } from "express";
 const teamRoutes = Router();
 
 import teamController from "../controllers/teamController.js" 
+import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
+
 
 // routes related to team 
 teamRoutes.post("/", teamController.createTeam);

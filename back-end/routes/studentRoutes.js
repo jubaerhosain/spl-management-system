@@ -1,15 +1,16 @@
 import express from "express";
 const studentRoutes = express.Router();
 
-import authMiddleware from "../middlewares/authMiddleware.js";
 import studentController from "../controllers/studentController.js";
+import { checkAuthentication, isAdmin, isStudent } from "../middlewares/authMiddleware.js";
+
 
 // routes related to student account
-studentRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, studentController.createStudent);
+studentRoutes.post("/", checkAuthentication, isAdmin, studentController.createStudent);
 studentRoutes.get("/", studentController.getAllStudent);
 studentRoutes.get("/:studentId", studentController.getStudent);
-studentRoutes.put("/", authMiddleware.checkAuthentication, authMiddleware.isStudent, studentController.updateStudent);
-studentRoutes.delete("/:studentId", authMiddleware.checkAuthentication, authMiddleware.isAdmin, studentController.deleteStudent);
+studentRoutes.put("/", checkAuthentication, isStudent, studentController.updateStudent);
+studentRoutes.delete("/:studentId", checkAuthentication, isAdmin, studentController.deleteStudent);
 
 // routes related to spl
 studentRoutes.get("/:studentId/spl", studentController.getAllSPL);

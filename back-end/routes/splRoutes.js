@@ -1,23 +1,28 @@
 import express from "express";
 const splRoutes = express.Router();
 
-import authMiddleware from "../middlewares/authMiddleware.js";
 import splController from "../controllers/splController.js";
+import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
-splRoutes.post("/", authMiddleware.checkAuthentication, authMiddleware.isAdmin, splController.createSPL);
-splRoutes.get("/:splName/active", authMiddleware.checkAuthentication, splController.getActiveSPL);
-splRoutes.get("/", authMiddleware.checkAuthentication, splController.getAllSPL);
-splRoutes.get("/:splId", authMiddleware.checkAuthentication, splController.getSPL);
-splRoutes.get("/:splId/student", authMiddleware.checkAuthentication, splController.getAllStudentUnderSPL);
-splRoutes.put("/:splId", authMiddleware.checkAuthentication, splController.updateSPL);
-splRoutes.put("/:splId/student", authMiddleware.checkAuthentication, splController.assignStudentToSPL);
-splRoutes.put("/:splId/member", authMiddleware.checkAuthentication, splController.addCommitteeMember);
-splRoutes.put("/:splId/head", authMiddleware.checkAuthentication, splController.addCommitteeHead);
-splRoutes.put("/:splId/manager", authMiddleware.checkAuthentication, splController.addSPLManager);
-splRoutes.delete("/:splId", authMiddleware.checkAuthentication, splController.deleteSPL);
-splRoutes.delete("/:splId/student/:studentId", authMiddleware.checkAuthentication, splController.removeStudentFromSPL);
-splRoutes.delete("/:splId/member/:memberId", authMiddleware.checkAuthentication, splController.removeCommitteeMember);
-splRoutes.delete("/:splId/head/:headId", authMiddleware.checkAuthentication, splController.removeCommitteeHead);
-splRoutes.delete("/:splId/manager/:managerId", authMiddleware.checkAuthentication, splController.removeSPLManager);
+// spl related routes
+splRoutes.post("/", checkAuthentication, isAdmin, splController.createSPL);
+splRoutes.get("/:splName/active", checkAuthentication, splController.getActiveSPL);
+splRoutes.get("/", checkAuthentication, splController.getAllSPL);
+splRoutes.get("/:splId", checkAuthentication, splController.getSPL);
+splRoutes.put("/:splId", checkAuthentication, splController.updateSPL);
+splRoutes.delete("/:splId", checkAuthentication, splController.deleteSPL);
+
+// committee related routes
+splRoutes.put("/:splId/head", checkAuthentication, splController.addCommitteeHead);
+splRoutes.put("/:splId/manager", checkAuthentication, splController.addSPLManager);
+splRoutes.put("/:splId/member", checkAuthentication, splController.addCommitteeMember);
+splRoutes.delete("/:splId/member/:memberId", checkAuthentication, splController.removeCommitteeMember);
+splRoutes.delete("/:splId/head/:headId", checkAuthentication, splController.removeCommitteeHead);
+splRoutes.delete("/:splId/manager/:managerId", checkAuthentication, splController.removeSPLManager);
+
+// student related routes
+splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStudentUnderSPL);
+splRoutes.put("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
+splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
 export default splRoutes;
