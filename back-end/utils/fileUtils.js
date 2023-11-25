@@ -13,7 +13,7 @@ function getFileName(metaUrl) {
  * @param {String} metaUrl import.meta.url
  * @returns dirname
  */
-function getDirectoryName(metaUrl) {
+export function getDirectoryName(metaUrl) {
     const __dirname = path.dirname(getFileName(metaUrl));
 
     return __dirname;

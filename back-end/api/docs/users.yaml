@@ -1,7 +1,7 @@
 paths:
   /users:
     get:
-      summary: Get a list of users
+      summary: Get a list of all users
       tags:
         - Users
       responses:
@@ -20,7 +20,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                name:
                   type: string
                 email:
                   type: string

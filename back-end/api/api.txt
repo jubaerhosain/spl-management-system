@@ -4,6 +4,8 @@ PUT, DELETE: try to use body but some cases you can use param to "locate resourc
 document with swagger
 Notification will be created on some action. so there no need to post/put api end point for them
 
+use plural names for end points
+
 // query params for include another table or not  {include: spl} IN API
 
 1. Authentication [done]
