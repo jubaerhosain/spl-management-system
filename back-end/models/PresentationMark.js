@@ -56,13 +56,6 @@ export default (sequelize, DataTypes) => {
             foreignKey: ["presentationNo", "splId"],
         });
 
-        // SPL - PresentationMark [one to many]
-        // PresentationMark.belongsTo(models.SPL, {
-        //     onDelete: "CASCADE",
-        //     onUpdate: "CASCADE",
-        //     foreignKey: "splId",
-        // });
-
         // Teacher - PresentationMark [one to many]
         PresentationMark.belongsTo(models.Teacher, {
             onDelete: "CASCADE",

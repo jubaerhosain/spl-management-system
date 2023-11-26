@@ -122,16 +122,16 @@ use plural names for end points
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-// all mark should be updated by spl manager
+// move all mark routes under spl[ramain in saparate file but under the spl path]
 7. Mark 
     get: mark/ {query params: splId|splName} mark of all student for a specific spl
     put: mark/{markId} update atomic marks by spl manager
 
-    post: mark/presentation/{presentationId} [body{mark, studentId, splId|splName}] // by splManager multiple mark
+    post: mark/presentation/{presentationId} [body{mark, studentId, splId|splName}] // r multiple mark
     get: mark/presentation/{presentationId} // presentation mark of all students 
-    put: mark/{markId}/presentation/{presentationId} body{mark, studentId, splId} // splManager
+    put: mark/{markId}/presentation/{presentationId} body{mark, studentId, splId} // 
     
-    post: mark/continuous/ [body{mark, classNo, studentId, splName}] // by spl Manager  multiple mark
+    post: mark/continuous/ [body{mark, classNo, studentId, splName}] // by   multiple mark
     get: mark/continuous/spl/{splName|splId} // all continuous classes take in this spl 
     get: mark/continuous/{classNo}/spl/{splName} // continuous mark of all students
     put: mark/{markId}/continuous/{classNo} body{mark, studentId, splName} 

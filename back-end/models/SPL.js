@@ -125,13 +125,6 @@ export default (sequelize, DataTypes) => {
             foreignKey: "splId",
         });
 
-        // SPL - PresentationMark [one to many]
-        // SPL.hasMany(models.PresentationMark, {
-        //     onDelete: "CASCADE",
-        //     onUpdate: "CASCADE",
-        //     foreignKey: "splId",
-        // });
-
         // SPL - ContinuousMark [one to many]
         SPL.hasMany(models.ContinuousMark, {
             onDelete: "CASCADE",
