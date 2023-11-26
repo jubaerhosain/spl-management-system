@@ -2,21 +2,25 @@
 
 export default (sequelize, DataTypes, Op, Sequelize) => {
     const ContinuousMark = sequelize.define("ContinuousMarks", {
-        markId: {
+        studentId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {
-                model: "Marks",
-                key: "markId",
+                model: "Students",
+                key: "studentId",
+            },
+        },
+        splId: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            references: {
+                model: "SPLs",
+                key: "splId",
             },
         },
         classNo: {
-            type: DataTypes.STRING(6),
+            type: DataTypes.INTEGER,
             primaryKey: true,
-            validate: {
-                is: /^class-[0-9]{1,2}$/,
-            },
-            comment: "class-1",
         },
         mark: {
             type: DataTypes.FLOAT,
@@ -26,11 +30,18 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
     });
 
     ContinuousMark.associate = (models) => {
-        // Mark - ContinuousMark [one to many]
-        ContinuousMark.belongsTo(models.Mark, {
+        // Student - ContinuousMark [one to many]
+        ContinuousMark.belongsTo(models.Student, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "markId",
+            foreignKey: "studentId",
+        });
+
+        // SPL - ContinuousMark [one to many]
+        ContinuousMark.belongsTo(models.SPL, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "splId",
         });
     };
 

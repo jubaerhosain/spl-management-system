@@ -2,22 +2,17 @@
 
 export default (sequelize, DataTypes) => {
     const Presentation = sequelize.define("Presentations", {
-        presentationId: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
         splId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            primaryKey: true,
             references: {
                 model: "SPLs",
                 key: "splId",
             },
         },
         presentationNo: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
+            type: DataTypes.INTEGER, // add manually ???
+            primaryKey: true,
             defaultValue: 0,
         },
     });
@@ -45,7 +40,7 @@ export default (sequelize, DataTypes) => {
         Presentation.hasMany(models.PresentationMark, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "presentationId",
+            primaryKey: ["presentationNo", "splId"],
         });
     };
 

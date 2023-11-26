@@ -69,6 +69,13 @@ export default (sequelize, DataTypes) => {
             foreignKey: "teacherId",
         });
 
+        // Teacher - PresentationMark [one to many] as PresentationEvaluator
+        Teacher.hasMany(models.PresentationMark, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teacherId",
+        });
+
         // Student - Teacher [many to many] as Request Receiver
         Teacher.belongsToMany(models.Student, {
             as: "RequestedStudents",

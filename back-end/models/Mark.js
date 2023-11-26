@@ -2,12 +2,6 @@
 
 export default (sequelize, DataTypes) => {
     const Mark = sequelize.define("Marks", {
-        markId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            unique: true,
-            autoIncrement: true,
-        },
         studentId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -49,22 +43,6 @@ export default (sequelize, DataTypes) => {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",
-        });
-
-        // Mark - PresentationMark [one to many]
-        Mark.hasMany(models.PresentationMark, {
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            sourceKey: "markId",
-            foreignKey: "markId",
-        });
-
-        // Mark - ContinuousMark [one to many]
-        Mark.hasMany(models.ContinuousMark, {
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            sourceKey: "markId",
-            foreignKey: "markId",
         });
     };
 

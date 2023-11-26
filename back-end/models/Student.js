@@ -100,6 +100,20 @@ export default (sequelize, DataTypes, Op) => {
             foreignKey: "studentId",
         });
 
+        // Student - PresentationMark [one to many]
+        Student.hasMany(models.PresentationMark, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "studentId",
+        });
+
+        // Student - ContinuousMark [one to many]
+        Student.hasMany(models.ContinuousMark, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "studentId",
+        });
+
         // Student - Teacher [many to many] as Request Sender
         Student.belongsToMany(models.Teacher, {
             as: "RequestedTeachers",

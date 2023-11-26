@@ -2,20 +2,36 @@
 
 export default (sequelize, DataTypes) => {
     const PresentationMark = sequelize.define("PresentationMarks", {
-        markId: {
+        studentId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {
-                model: "Marks",
-                key: "markId",
+                model: "Students",
+                key: "studentId",
             },
         },
-        presentationId: {
+        splId: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            // references: {            // don't works if I use those references
+            //     model: "Presentations",
+            //     key: "splId",
+            // },
+        },
+        presentationNo: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            // references: {
+            //     model: "Presentations",
+            //     key: "presentationNo",
+            // },
+        },
+        teacherId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {
-                model: "Presentations",
-                key: "presentationId",
+                model: "Teachers",
+                key: "teacherId",
             },
         },
         mark: {
@@ -26,18 +42,32 @@ export default (sequelize, DataTypes) => {
     });
 
     PresentationMark.associate = (models) => {
-        // Mark - PresentationMark [one to many]
-        PresentationMark.belongsTo(models.Mark, {
+        // Student - PresentationMark [one to many]
+        PresentationMark.belongsTo(models.Student, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "markId",
+            foreignKey: "studentId",
         });
 
         // Presentation - PresentationMark [one to many]
         PresentationMark.belongsTo(models.Presentation, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "presentationId",
+            foreignKey: ["presentationNo", "splId"],
+        });
+
+        // SPL - PresentationMark [one to many]
+        // PresentationMark.belongsTo(models.SPL, {
+        //     onDelete: "CASCADE",
+        //     onUpdate: "CASCADE",
+        //     foreignKey: "splId",
+        // });
+
+        // Teacher - PresentationMark [one to many]
+        PresentationMark.belongsTo(models.Teacher, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teacherId",
         });
     };
 
