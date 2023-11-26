@@ -122,19 +122,27 @@ use plural names for end points
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-// move all mark routes under spl[ramain in saparate file but under the spl path]
+// move all mark routes under spl[ramain in saparate file but under the spl path]???????
 7. Mark 
-    get: mark/ {query params: splId|splName} mark of all student for a specific spl
-    put: mark/{markId} update atomic marks by spl manager
+    get: spl/{splId}/mark/  // get mark of all student for a specific spl
+    put: spl/{splId}/mark body {mark, studentId} // update atomic mark of that student 
 
-    post: mark/presentation/{presentationId} [body{mark, studentId, splId|splName}] // r multiple mark
-    get: mark/presentation/{presentationId} // presentation mark of all students 
-    put: mark/{markId}/presentation/{presentationId} body{mark, studentId, splId} // 
+    // by presentation evaluator
+    post: spl/{splId}/presentation/{presentationNo}/mark [body{mark, studentId}] 
+
+    // for splManager/committeeHead find all mark
+    get: spl/{splId}/presentation/{presentationNo}/mark
+
+    // for presentation evaluator | given by that teacher
+    get: spl/{splId}/presentation/{presentationNo}/mark/teacher/{teacherId}
+
+    // by presentation evaluator
+    put: spl/{splId}/presentation/{presentationNo} body{mark, studentId} 
     
-    post: mark/continuous/ [body{mark, classNo, studentId, splName}] // by   multiple mark
-    get: mark/continuous/spl/{splName|splId} // all continuous classes take in this spl 
-    get: mark/continuous/{classNo}/spl/{splName} // continuous mark of all students
-    put: mark/{markId}/continuous/{classNo} body{mark, studentId, splName} 
+    post: spl/{splId}/continuous/mark [body{mark, classNo, studentId}]
+    get: spl/{splId}/continuous/mark // all continuous class mark for all student of that spl
+    get: spl/{splId}/continuous/{classNo}/mark // continuous mark of all students of that classNo
+    put: spl/{splId}/continuous/{classNo}/mark body{mark, studentId} // by splManager
 
 8. Notice 
     post: notice/
