@@ -11,17 +11,13 @@ paths:
       tags:
         - Auth
       requestBody:
-        description: Login data
+        description: Login information
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
+              $ref: '#/components/schemas/User'
+
       responses:
         '200':
           description: Successful response
@@ -65,3 +61,14 @@ paths:
       summary: Reset Password after OTP Verification
       tags:
         - Auth
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email

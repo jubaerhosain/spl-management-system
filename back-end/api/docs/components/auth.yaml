@@ -1,0 +1,15 @@
+components:
+  login:
+    description: ...
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+          required:
+            - username
+            - password

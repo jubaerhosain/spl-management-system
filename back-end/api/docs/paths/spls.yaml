@@ -94,7 +94,7 @@ paths:
     post:
       tags:
         - SPL
-      summary: Create a presentation event for an SPL and generate presentationNo automatically
+      summary: Create a presentation event for an SPL
 
     get:
       tags:

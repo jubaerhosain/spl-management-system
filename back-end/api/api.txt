@@ -28,7 +28,7 @@ use plural names for end points
     delete: user/{userId}
 
     get: user/{userId}/notification/ {query params: optional read/unread etc}
-    put: user/{userId}/notification/{notificationId} {body {markas read}}
+    put: user/{userId}/notification/{notificationId} {body {mark as read}}
     delete: user/{userId}/notification/{notificationId} 
 
 3. Student
@@ -76,7 +76,7 @@ use plural names for end points
 
 // to resource identification use splId, can use splName in other places
 5. SPL 
-    post: spl/
+    post: spl/ // create a new spl committee
     get: spl/ {query params: optional, active: true/false}
     get: spl/{splName}/active // get active spl info by splName
     get: spl/{splId}  
@@ -89,11 +89,11 @@ use plural names for end points
     delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
 
     put: spl/{splId}/head
+    delete: spl/{splId}/head/{headId}
     put: spl/{splId}/manager
+    delete: spl/{splId}/manager{managerId}
     put: spl/{splId}/member/ //by email
     delete: spl/{splId}/member/{memberId}
-    delete: spl/{splId}/head/{headId}
-    delete: spl/{splId}/manager{managerId}
 
     // randomize supervisor
     post: spl/{splId}/supervisor/randomize
