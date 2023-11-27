@@ -1,72 +1,62 @@
 paths:
-  /users:
-    get:
-      summary: Get a list of users
-      tags:
-        - Users
-      responses:
-        '200':
-          description: Successful response
-
+  /user:
     post:
+      tags:
+        - User
       summary: Create a new user
-      tags:
-        - Users
-      requestBody:
-        description: User data
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-      responses:
-        '201':
-          description: User created successfully
 
-  /users/{userId}:
     get:
-      summary: Get a specific user
       tags:
-        - Users
-      parameters:
-        - $ref: '../components/parameters/userId.yaml'
-      responses:
-        '200':
-          description: Successful response
+        - User
+      summary: Get a list of users
+
+  /user/{userId}:
+    get:
+      tags:
+        - User
+      summary: Get details of a specific user
 
     put:
-      summary: Update a user
       tags:
-        - Users
-      parameters:
-        - $ref: '../components/parameters/userId.yaml'
-      requestBody:
-        description: Updated user data
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                email:
-                  type: string
-      responses:
-        '200':
-          description: User updated successfully
+        - User
+      summary: Update user details
 
     delete:
-      summary: Delete a user
       tags:
-        - Users
-      parameters:
-        - $ref: '../components/parameters/userId.yaml'
-      responses:
-        '204':
-          description: User deleted successfully
+        - User
+      summary: Delete a user
+
+  /user/{userId}/avatar:
+    put:
+      tags:
+        - User
+      summary: Update user avatar
+
+  /user/{userId}/activate:
+    put:
+      tags:
+        - User
+      summary: Activate user
+
+  /user/{userId}/deactivate:
+    delete:
+      tags:
+        - User
+      summary: Deactivate user
+
+  /user/{userId}/notification:
+    get:
+      tags:
+        - User
+      summary: Get user notifications
+
+  /user/{userId}/notification/{notificationId}:
+    put:
+      tags:
+        - User
+      summary: Mark a notification as read
+
+    delete:
+      tags:
+        - User
+      summary: Delete a notification

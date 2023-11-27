@@ -1,3 +1,95 @@
 paths:
-  tags:
-    - Students
+  /student:
+    post:
+      tags:
+        - Student
+      summary: Create a new student
+
+    get:
+      tags:
+        - Student
+      summary: Get a list of students (with optional query parameters)
+
+  /student/{studentId}:
+    get:
+      tags:
+        - Student
+      summary: Get details of a specific student
+
+    put:
+      tags:
+        - Student
+      summary: Update student details
+
+    delete:
+      tags:
+        - Student
+      summary: Delete a student (by admin)
+
+  /student/{studentId}/spl/current:
+    get:
+      tags:
+        - Student
+      summary: Get current SPL information with progress data for a student
+
+  /student/{studentId}/spl:
+    get:
+      tags:
+        - Student
+      summary: Get all SPLs with progress data for a student
+
+  /student/{studentId}/team/:
+    get:
+      tags:
+        - Student
+      summary: Get all teams of a specific student
+
+  /student/{studentId}/team/current:
+    get:
+      tags:
+        - Student
+      summary: Get the current team of a specific student
+
+  /student/{studentId}/request:
+    post:
+      tags:
+        - Student
+      summary: Request a teacher to be a supervisor for the student
+
+    get:
+      tags:
+        - Student
+      summary: Get all teacher requests made by the student
+
+    delete:
+      tags:
+        - Student
+      summary: Delete a request made by the student to a teacher
+
+  /student/{studentId}/mark:
+    get:
+      tags:
+        - Student
+      summary: Get all types of marks (including continuous and presentation) for a student
+
+  /student/{studentId}/mark/{splName}:
+    get:
+      tags:
+        - Student
+      summary: Get marks for a specific SPL for a student
+
+  /student/{studentId}/supervisor/:
+    post:
+      tags:
+        - Student
+      summary: Add a supervisor manually for a student
+
+    get:
+      tags:
+        - Student
+      summary: Get all supervisors for a student
+
+    delete:
+      tags:
+        - Student
+      summary: Remove the current supervisor of a student

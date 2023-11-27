@@ -1,1 +1,22 @@
 paths:
+  /notice:
+    post:
+      tags:
+        - Notice
+      summary: Create a new notice
+
+    get:
+      tags:
+        - Notice
+      summary: Get a list of notices with optional query parameters (splName)
+
+  /notice/{noticeId}:
+    get:
+      tags:
+        - Notice
+      summary: Get details of a specific notice
+
+    put:
+      tags:
+        - Notice
+      summary: Update details of a specific notice

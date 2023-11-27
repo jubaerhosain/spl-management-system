@@ -1,3 +1,164 @@
 paths:
-  tags:
-    - SPLs
+  /spl:
+    post:
+      tags:
+        - SPL
+      summary: Create a new SPL
+
+    get:
+      tags:
+        - SPL
+      summary: Get a list of SPLs with optional query parameters
+
+  /spl/{splName}/active:
+    get:
+      tags:
+        - SPL
+      summary: Get active SPL information by splName
+
+  /spl/{splId}:
+    get:
+      tags:
+        - SPL
+      summary: Get details of a specific SPL
+
+    put:
+      tags:
+        - SPL
+      summary: Update SPL details (data in body)
+
+    delete:
+      tags:
+        - SPL
+      summary: Delete an SPL
+
+  /spl/{splId}/student:
+    post:
+      tags:
+        - SPL
+      summary: Manually assign students to an SPL and create mark table for each student
+
+    get:
+      tags:
+        - SPL
+      summary: Get all students under an SPL
+
+  /spl/{splId}/student/{studentId}:
+    delete:
+      tags:
+        - SPL
+      summary: Remove a student from an SPL and delete the mark table for that student
+
+  /spl/{splId}/head:
+    put:
+      tags:
+        - SPL
+      summary: Assign a head to an SPL
+
+  /spl/{splId}/manager:
+    put:
+      tags:
+        - SPL
+      summary: Assign a manager to an SPL
+
+  /spl/{splId}/member/{email}:
+    put:
+      tags:
+        - SPL
+      summary: Assign a member by email to an SPL
+
+    delete:
+      tags:
+        - SPL
+      summary: Remove a member by memberId from an SPL
+
+  /spl/{splId}/head/{headId}:
+    delete:
+      tags:
+        - SPL
+      summary: Remove the head from an SPL
+
+  /spl/{splId}/manager/{managerId}:
+    delete:
+      tags:
+        - SPL
+      summary: Remove the manager from an SPL
+
+  /spl/{splId}/supervisor/randomize:
+    post:
+      tags:
+        - SPL
+      summary: Randomize the supervisor for an SPL
+
+  /spl/{splId}/presentation:
+    post:
+      tags:
+        - SPL
+      summary: Create a presentation event for an SPL and generate presentationNo automatically
+
+    get:
+      tags:
+        - SPL
+      summary: Get all presentations of an SPL
+
+  /spl/{splId}/presentation/{presentationNo}:
+    delete:
+      tags:
+        - SPL
+      summary: Delete a presentation event from an SPL
+
+  /spl/{splId}/marks:
+    get:
+      tags:
+        - SPL
+      summary: Get marks of all students for a specific SPL
+
+    put:
+      tags:
+        - SPL
+      summary: Update atomic marks of a student for a specific SPL 
+
+  /spl/{splId}/presentation/{presentationNo}/marks:
+    post:
+      tags:
+        - SPL
+      summary: Add marks given by presentation evaluator for an SPL 
+
+    put:
+      tags:
+        - SPL
+      summary: Update marks given by presentation evaluator for a specific presentation 
+
+    get:
+      tags:
+        - SPL
+      summary: Get marks of all students given by presentation evaluators for a specific presentation
+
+  /spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId}:
+    get:
+      tags:
+        - SPL
+      summary: Get marks given by a specific teacher for a specific presentation
+
+  /spl/{splId}/continuous/marks:
+    post:
+      tags:
+        - SPL
+      summary: Add continuous marks for all students of an SPL 
+
+    get:
+      tags:
+        - SPL
+      summary: Get all continuous class marks for all students of an SPL
+
+  /spl/{splId}/continuous/{classNo}/marks:
+    get:
+      tags:
+        - SPL
+      summary: Get continuous marks of all students for a specific classNo of an SPL
+
+  
+    put:
+      tags:
+        - SPL
+      summary: Update continuous marks of a student for a specific classNo of an SPL

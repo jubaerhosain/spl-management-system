@@ -1,1 +1,59 @@
 paths:
+  /team:
+    post:
+      tags:
+        - Team
+      summary: Create a new team
+
+    get:
+      tags:
+        - Team
+      summary: Get a list of teams with optional query parameters (splName)
+
+  /team/{teamId}:
+    get:
+      tags:
+        - Team
+      summary: Get details of a specific team
+
+    put:
+      tags:
+        - Team
+      summary: Update details of a specific team
+
+    delete:
+      tags:
+        - Team
+      summary: Delete a team
+
+  /team/{teamId}/member:
+    put:
+      tags:
+        - Team
+      summary: Get all members under a specific team
+
+    get:
+      tags:
+        - Team
+      summary: Get all members under a specific team
+
+    delete:
+      tags:
+        - Team
+      summary: Remove a member from a specific team
+
+  /team/{teamId}/request:
+    post:
+      tags:
+        - Team
+      summary: Request a teacher to be a supervisor for a specific team
+
+    get:
+      tags:
+        - Team
+      summary: Get all requested teachers by a specific team
+
+    delete:
+      tags:
+        - Team
+      summary: Delete a team request

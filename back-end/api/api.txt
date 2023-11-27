@@ -20,20 +20,20 @@ use plural names for end points
 2. User
     post: users
     get: users/
-    get: users/{userId}
-    put: users/{userId}
-    put: users/{userId}/avatar
-    put: users/{userId}/activate
-    delete: users/{userId}/deactivate
-    delete: users/{userId}
+    get: user/{userId}
+    put: user/{userId}
+    put: user/{userId}/avatar
+    put: user/{userId}/activate
+    delete: user/{userId}/deactivate
+    delete: user/{userId}
 
-    get: users/{userId}/notifications/ {query params: optional read/unread etc}
-    put: users/{userId}/notifications/{notificationId} {body {markas read}}
-    delete: users/{userId}/notifications/{notificationId} 
+    get: user/{userId}/notification/ {query params: optional read/unread etc}
+    put: user/{userId}/notification/{notificationId} {body {markas read}}
+    delete: user/{userId}/notification/{notificationId} 
 
 3. Student
     post: student/
-    put: student/ {studentId from logged in user, from body if updateBy Admin} 
+    put: student/{studentId} {studentId from logged in user, from body if updateBy Admin} 
     get: student/{studentId}
     get: student/{studentId}/spl/current {current spl, with progress data}
     get: student/{studentId}/spl {all spl, with progress data}
