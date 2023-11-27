@@ -5,13 +5,16 @@ import path from "path";
 import { getDirectoryName } from "../utils/fileUtils.js";
 const mainSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/main.yaml");
 const authSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/auth.yaml");
-const usersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/users.yaml");
-const studentsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/students.yaml");
-const teachersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/teachers.yaml");
-const splsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/spls.yaml");
-const teamsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/teams.yaml");
-const marksSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/marks.yaml");
-const noticesSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/notices.yaml");
+const usersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/user.yaml");
+const studentsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/student.yaml");
+const teachersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/teacher.yaml");
+const splsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/spl.yaml");
+const teamsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/team.yaml");
+const marksSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/mark.yaml");
+const noticesSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/notice.yaml");
+
+const authComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/auth.yaml");
+const studentComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/student.yaml");
 
 const mainSpec = YAML.load(mainSpecUrl);
 const authSpec = YAML.load(authSpecUrl);
@@ -19,9 +22,12 @@ const usersSpec = YAML.load(usersSpecUrl);
 const studentsSpec = YAML.load(studentsSpecUrl);
 const teachersSpec = YAML.load(teachersSpecUrl);
 const splsSpec = YAML.load(splsSpecUrl);
-const marksSpec = YAML.load(mainSpecUrl);
+const marksSpec = YAML.load(marksSpecUrl);
 const teamsSpec = YAML.load(teamsSpecUrl);
 const noticesSpec = YAML.load(noticesSpecUrl);
+
+const authComponentSpec = YAML.load(authComponentUrl);
+const studentComponentSpec = YAML.load(studentComponentUrl);
 
 const apiSpec = {
     ...mainSpec,
@@ -38,6 +44,8 @@ const apiSpec = {
     },
     components: {
         ...mainSpec.components,
+        ...authComponentSpec.components,
+        ...studentComponentSpec.components,
     },
 };
 

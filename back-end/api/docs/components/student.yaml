@@ -1,12 +1,15 @@
 components:
-  auth:
+  student:
     schemas:
-      Login:
+      CreateStudent:
         type: object
         properties:
+          name:
+            type: string
           email:
             type: string
             format: email
-          password:
+          roll:
             type: string
-            format: password
+          registration: 
+            type: string
