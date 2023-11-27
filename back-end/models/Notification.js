@@ -8,8 +8,8 @@ export default (options) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
-        receiverId: {
-            type: DataTypes.INTEGER,
+        userId: {
+            type: DataTypes.UUID,
             allowNull: false,
             references: {
                 model: "Users",
@@ -45,7 +45,7 @@ export default (options) => {
         Notification.belongsTo(models.User, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "receiverId",
+            foreignKey: "userId",
         });
     };
 

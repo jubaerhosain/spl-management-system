@@ -9,7 +9,7 @@ export default (options) => {
             primaryKey: true,
         },
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             allowNull: false,
             references: {
                 model: "SPLs",

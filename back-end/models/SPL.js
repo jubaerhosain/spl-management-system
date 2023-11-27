@@ -26,14 +26,14 @@ export default (options) => {
                 },
             },
             splManager: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 references: {
                     model: "Teachers",
                     key: "teacherId",
                 },
             },
             committeeHead: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
                 references: {
                     model: "Teachers",
                     key: "teacherId",
