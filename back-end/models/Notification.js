@@ -1,11 +1,12 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const Notification = sequelize.define("Notifications", {
         notificationId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
         },
         receiverId: {
             type: DataTypes.INTEGER,
@@ -30,8 +31,7 @@ export default (sequelize, DataTypes) => {
             validate: {
                 isIn: [["other"]],
             },
-            comment:
-                "appoint committee person, student added to spl, allocated supervisor, presentation event, posted a notice",
+            comment: "appoint committee person, student added to spl, allocated supervisor, presentation event, posted a notice",
         },
         isRead: {
             type: DataTypes.BOOLEAN,

@@ -1,11 +1,12 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const Project = sequelize.define("Projects", {
         projectId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
         },
         splId: {
             type: DataTypes.INTEGER,

@@ -1,9 +1,10 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const StudentTeacher_Supervisor = sequelize.define("StudentTeacher_Supervisors", {
         teacherId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Teachers",
@@ -11,7 +12,7 @@ export default (sequelize, DataTypes) => {
             },
         },
         studentId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Students",
@@ -19,7 +20,7 @@ export default (sequelize, DataTypes) => {
             },
         },
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "SPLs",

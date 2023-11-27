@@ -1,10 +1,10 @@
 "use strict";
 
-// Presentation Evaluator of SPL
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const TeacherSPL_PresentationEvaluator = sequelize.define("TeacherSPL_PresentationEvaluators", {
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "SPLs",
@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
             },
         },
         teacherId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Teachers",

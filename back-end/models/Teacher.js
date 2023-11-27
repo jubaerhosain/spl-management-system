@@ -1,9 +1,10 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const Teacher = sequelize.define("Teachers", {
         teacherId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Users",

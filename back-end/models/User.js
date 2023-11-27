@@ -1,13 +1,14 @@
 "use strict";
 
-export default (sequelize, DataTypes, Op) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const User = sequelize.define(
         "Users",
         {
             userId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
-                autoIncrement: true,
             },
             email: {
                 type: DataTypes.STRING(40),
@@ -54,7 +55,6 @@ export default (sequelize, DataTypes, Op) => {
             },
         },
         {
-            initialAutoIncrement: 1000,
             defaultScope: {
                 where: {
                     active: true,

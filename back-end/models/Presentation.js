@@ -1,9 +1,10 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const Presentation = sequelize.define("Presentations", {
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "SPLs",

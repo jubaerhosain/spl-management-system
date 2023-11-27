@@ -1,10 +1,11 @@
 "use strict";
 
 // [Committee Members]
-export default (sequelize, DataTypes, Op) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const TeacherSPL_CommitteeMember = sequelize.define("TeacherSPL_CommitteeMembers", {
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "SPLs",
@@ -12,7 +13,7 @@ export default (sequelize, DataTypes, Op) => {
             },
         },
         teacherId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Teachers",

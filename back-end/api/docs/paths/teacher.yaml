@@ -50,12 +50,6 @@ paths:
         - Teacher
       summary: Get all teams of the current active SPLs under the supervision of a specific teacher (with optional splName query)
 
-  /teacher/:
-    get:
-      tags:
-        - Teacher
-      summary: Get a list of teachers (with optional query parameters)
-
   /teacher/{teacherId}/request/team:
     get:
       tags:

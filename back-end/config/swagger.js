@@ -49,4 +49,8 @@ const apiSpec = {
     },
 };
 
-export default { swaggerServe: swaggerUI.serve, swaggerSetup: swaggerUI.setup(apiSpec) };
+const options = {
+    customSiteTitle: "SPL Management System API Doc",
+};
+
+export default { swaggerServe: swaggerUI.serve, swaggerSetup: swaggerUI.setup(apiSpec, options) };

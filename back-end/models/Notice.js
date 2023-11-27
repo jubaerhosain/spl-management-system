@@ -1,11 +1,12 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const Notice = sequelize.define("Notices", {
         noticeId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
         },
         title: {
             type: DataTypes.STRING(60),
@@ -20,7 +21,7 @@ export default (sequelize, DataTypes) => {
             validate: {
                 isIn: [["spl1", "spl2", "spl3", "public"]],
             },
-            comment: "committee creation, presentation event"
+            comment: "committee creation, presentation event",
         },
         timestamp: {
             type: DataTypes.DATE,

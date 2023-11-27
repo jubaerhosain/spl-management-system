@@ -1,9 +1,10 @@
 "use strict";
 
-export default (sequelize, DataTypes, Op) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const Student = sequelize.define("Students", {
         studentId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Users",
@@ -46,7 +47,7 @@ export default (sequelize, DataTypes, Op) => {
         curriculumYear: {
             type: DataTypes.STRING(5),
             validate: {
-                isIn: [["1st", "2nd", "3rd", "4th", "none"]],
+                isIn: [["1st", "2nd", "3rd", "4th", "graduated", "none"]],
             },
             comment: "'none' will be treated as unenrolled",
         },

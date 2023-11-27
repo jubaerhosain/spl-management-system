@@ -1,13 +1,14 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const SPL = sequelize.define(
         "SPLs",
         {
             splId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.UUID,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
-                autoIncrement: true,
             },
             academicYear: {
                 type: DataTypes.STRING(8),

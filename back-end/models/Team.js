@@ -1,11 +1,12 @@
 "use strict";
 
-export default (sequelize, DataTypes) => {
+export default (options) => {
+    const { sequelize, DataTypes, Sequelize } = options;
     const Team = sequelize.define("Teams", {
         teamId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
-            autoIncrement: true,
         },
         splId: {
             type: DataTypes.INTEGER,
@@ -20,8 +21,9 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
             comment: "Team belongs to same SPL cannot have duplicate names",
         },
-
-        // add details field
+        details: {
+            type: DataTypes.TEXT,
+        },
     });
 
     Team.associate = (models) => {

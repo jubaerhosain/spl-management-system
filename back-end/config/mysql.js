@@ -45,31 +45,33 @@ import TeamTeacher_Request from "../models/junctions/TeamTeacher_Request.js";
 
 // =================================================================================================
 
+const options = { sequelize, DataTypes, Sequelize, Op };
+
 const models = {
     // users
-    User: User(sequelize, DataTypes, Op),
-    Teacher: Teacher(sequelize, DataTypes, Op),
-    Student: Student(sequelize, DataTypes, Op),
-    SPL: SPL(sequelize, DataTypes, Op),
-    Team: Team(sequelize, DataTypes, Op),
-    Project: Project(sequelize, DataTypes, Op),
-    Notification: Notification(sequelize, DataTypes, Op),
-    Notice: Notice(sequelize, DataTypes, Op),
-    Presentation: Presentation(sequelize, DataTypes, Op),
-    Mark: Mark(sequelize, DataTypes, Op),
-    PresentationMark: PresentationMark(sequelize, DataTypes, Op),
-    ContinuousMark: ContinuousMark(sequelize, DataTypes, Op, Sequelize),
-    OTP: OTP(sequelize, DataTypes, Op),
+    User: User(options),
+    Teacher: Teacher(options),
+    Student: Student(options),
+    SPL: SPL(options),
+    Team: Team(options),
+    Project: Project(options),
+    Notification: Notification(options),
+    Notice: Notice(options),
+    Presentation: Presentation(options),
+    Mark: Mark(options),
+    PresentationMark: PresentationMark(options),
+    ContinuousMark: ContinuousMark(options),
+    OTP: OTP(options),
 
     // junctions
-    StudentTeam: StudentTeam(sequelize, DataTypes, Op),
-    StudentProject: StudentProject(sequelize, DataTypes, Op),
-    StudentTeacher_Supervisor: StudentTeacher_Supervisor(sequelize, DataTypes, Op),
-    StudentTeacher_Request: StudentTeacher_Request(sequelize, DataTypes, Op),
-    StudentSPL: StudentSPL(sequelize, DataTypes, Op),
-    TeacherSPL_PresentationEvaluator: TeacherSPL_PresentationEvaluator(sequelize, DataTypes, Op),
-    TeacherSPL_CommitteeMember: TeacherSPL_CommitteeMember(sequelize, DataTypes, Op),
-    TeamTeacher_Request: TeamTeacher_Request(sequelize, DataTypes, Op),
+    StudentTeam: StudentTeam(options),
+    StudentProject: StudentProject(options),
+    StudentTeacher_Supervisor: StudentTeacher_Supervisor(options),
+    StudentTeacher_Request: StudentTeacher_Request(options),
+    StudentSPL: StudentSPL(options),
+    TeacherSPL_PresentationEvaluator: TeacherSPL_PresentationEvaluator(options),
+    TeacherSPL_CommitteeMember: TeacherSPL_CommitteeMember(options),
+    TeamTeacher_Request: TeamTeacher_Request(options),
 };
 
 // initialize associations
@@ -95,7 +97,8 @@ export function initializeMySqlConnection() {
     sequelize.sync();
 }
 
-// drop all tables
-// sequelize.drop({ force: true });
+function dropAllTable() {
+    sequelize.drop({ force: true });
+}
 
 export { Op, Sequelize, sequelize, models };

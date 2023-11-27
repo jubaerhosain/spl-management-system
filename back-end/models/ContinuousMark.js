@@ -1,9 +1,10 @@
 "use strict";
 
-export default (sequelize, DataTypes, Op, Sequelize) => {
+export default (options) => {
+    const { sequelize, DataTypes } = options;
     const ContinuousMark = sequelize.define("ContinuousMarks", {
         studentId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "Students",
@@ -11,7 +12,7 @@ export default (sequelize, DataTypes, Op, Sequelize) => {
             },
         },
         splId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             references: {
                 model: "SPLs",
