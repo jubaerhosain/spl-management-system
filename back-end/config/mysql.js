@@ -3,7 +3,6 @@
 import { Sequelize, Op, DataTypes } from "sequelize";
 import config from "./config.js";
 
-// create sequelize instance
 const sequelize = new Sequelize(config.mysql.db_name, config.mysql.username, config.mysql.password, {
     host: config.mysql.host,
     dialect: config.mysql.dialect,
@@ -17,8 +16,7 @@ const sequelize = new Sequelize(config.mysql.db_name, config.mysql.username, con
     logging: false,
 });
 
-// =================================================================================================
-// tables
+// entity tables
 import User from "../models/User.js";
 import Teacher from "../models/Teacher.js";
 import Student from "../models/Student.js";
@@ -43,12 +41,10 @@ import TeacherSPL_PresentationEvaluator from "../models/junctions/TeacherSPL_Pre
 import TeacherSPL_CommitteeMember from "../models/junctions/TeacherSPL_CommitteeMember.js";
 import TeamTeacher_Request from "../models/junctions/TeamTeacher_Request.js";
 
-// =================================================================================================
-
 const options = { sequelize, DataTypes, Sequelize, Op };
 
 const models = {
-    // users
+    // entity tables
     User: User(options),
     Teacher: Teacher(options),
     Student: Student(options),
