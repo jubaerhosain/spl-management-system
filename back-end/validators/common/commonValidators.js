@@ -111,10 +111,10 @@ export const validateSPLName = (splName, helper) => {
 };
 
 export const validateAcademicYear = (academicYear, helper) => {
-    const regex = /^[0-9]{4}-[0-9]{2}$/;
+    const regex = /^[0-9]{4}$/;
 
     if (!regex.test(academicYear)) {
-        return helper.message("academicYear must be in following format: '2018-19'");
+        return helper.message("academicYear must be in following format: '2018'");
     }
 
     return true;

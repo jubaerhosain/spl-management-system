@@ -6,7 +6,6 @@ import splValidator from "../validators/splValidator.js";
 async function createSPL(req, res) {
     try {
         const { error } = splValidator.createSPLSchema.validate(req.body);
-        console.log(error.details);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
         res.json(GenericResponse.success("SPL created successfully"));
