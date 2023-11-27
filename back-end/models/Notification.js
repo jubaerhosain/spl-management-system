@@ -8,44 +8,34 @@ export default (options) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
-        userId: {
-            type: DataTypes.UUID,
+        title: {
+            type: DataTypes.STRING(100),
             allowNull: false,
-            references: {
-                model: "Users",
-                key: "userId",
-            },
         },
-        message: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        content: {
+            type: DataTypes.TEXT,
         },
         timestamp: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: new Date(),
         },
-        notificationType: {
-            type: DataTypes.STRING,
+        type: {
+            type: DataTypes.STRING(8),
             allowNull: false,
             validate: {
-                isIn: [["other"]],
+                isIn: [["info", "warning", "success", "error"]],
             },
-            comment: "appoint committee person, student added to spl, allocated supervisor, presentation event, posted a notice",
-        },
-        isRead: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
         },
     });
 
     Notification.associate = (models) => {
         // User - Notification [many to many]
-        Notification.belongsTo(models.User, {
+        Notification.belongsToMany(models.User, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "userId",
+            through: models.UserNotification,
+            foreignKey: "notificationId",
         });
     };
 

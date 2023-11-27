@@ -14,9 +14,9 @@ export default (options) => {
                 type: DataTypes.STRING(8),
                 allowNull: false,
                 validate: {
-                    is: /^[0-9]{4}-[0-9]{2}$/,
+                    is: /^[0-9]{4}$/,
                 },
-                comment: "Academic year of SPL. Format: '2020-21'",
+                comment: "Academic year of SPL. Format: '2020'",
             },
             splName: {
                 type: DataTypes.STRING(4),

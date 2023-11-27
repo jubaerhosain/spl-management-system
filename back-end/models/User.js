@@ -18,6 +18,18 @@ export default (options) => {
                     isEmail: true,
                 },
             },
+            github: {
+                type: DataTypes.STRING(100),
+            },
+            linkedin: {
+                type: DataTypes.STRING(100),
+            },
+            facebook: {
+                type: DataTypes.STRING(100),
+            },
+            website: {
+                type: DataTypes.STRING(100),
+            },
             password: {
                 type: DataTypes.STRING(72),
                 allowNull: false,
@@ -42,8 +54,8 @@ export default (options) => {
                 },
             },
             avatar: {
-                type: DataTypes.STRING(50),
-                comment: "File name format 'userId-currentTime.extension'",
+                type: DataTypes.STRING(100),
+                comment: "store in object storage",
             },
             details: {
                 type: DataTypes.TEXT,
@@ -81,11 +93,12 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // User - Notice [one to many]
-        User.hasMany(models.Notification, {
+        // User - Notification [many to many]
+        User.belongsToMany(models.Notification, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "receiverId",
+            through: models.UserNotification,
+            foreignKey: "userId",
         });
 
         // User - OTP [one to one]

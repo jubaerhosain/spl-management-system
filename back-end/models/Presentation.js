@@ -15,6 +15,9 @@ export default (options) => {
             type: DataTypes.INTEGER,
             primaryKey: true,
         },
+        details: {
+            type: DataTypes.TEXT,
+        },
     });
 
     Presentation.associate = (models) => {

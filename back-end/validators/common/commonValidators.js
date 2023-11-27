@@ -138,3 +138,13 @@ export const validateDesignation = (designation, helper) => {
 
     return true;
 };
+
+export const validateUserType = (userType, helper) => {
+    const options = ["admin", "student", "teacher"];
+
+    if (!options.includes(userType)) {
+        return helper.message("invalid designation");
+    }
+
+    return true;
+};

@@ -5,12 +5,12 @@ const Joi = joi.defaults((schema) => {
     });
 });
 
-import { validateName, validateEmail } from "./common/commonValidators.js";
+import { validateName, validateEmail, validateUserType } from "./common/commonValidators.js";
 
 const createUserSchema = Joi.object({
     name: Joi.string().trim().custom(validateName).required(),
     email: Joi.string().trim().email().custom(validateEmail).required(),
-    userType: Joi.string().trim().required(),
+    userType: Joi.string().trim().custom(validateUserType).required(),
 });
 
 const updateUserSchema = Joi.object({

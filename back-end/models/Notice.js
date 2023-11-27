@@ -9,24 +9,24 @@ export default (options) => {
             primaryKey: true,
         },
         title: {
-            type: DataTypes.STRING(60),
+            type: DataTypes.STRING(100),
             allowNull: false,
         },
-        description: {
+        content: {
             type: DataTypes.TEXT,
             allowNull: false,
-        },
-        noticeType: {
-            type: DataTypes.STRING,
-            validate: {
-                isIn: [["spl1", "spl2", "spl3", "public"]],
-            },
-            comment: "committee creation, presentation event",
         },
         timestamp: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: new Date(),
+        },
+        type: {
+            type: DataTypes.STRING(8),
+            validate: {
+                isIn: [["spl1", "spl2", "spl3", "public"]],
+            },
+            comment: "committee creation, presentation event date",
         },
     });
 
