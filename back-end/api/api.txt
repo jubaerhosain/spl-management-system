@@ -4,11 +4,7 @@ PUT, DELETE: try to use body but some cases you can use param to "locate resourc
 document with swagger
 Notification will be created on some action. so there no need to post/put api end point for them
 
-// presentation er markgula manager collect korbe (average kore input dibe)
-
 use plural names for end points
-
-// query params for include another table or not  {include: spl} IN API
 
 1. Authentication [done]
     post: auth/login   body{email, password}
@@ -17,7 +13,7 @@ use plural names for end points
 
     put: auth/change-password
 
-    put: auth/forgot-password/generate-otp      body{email}
+    post: auth/forgot-password/generate-otp      body{email}
     put: auth/forgot-password/verify-otp        body{email, otp}
     put: auth/forgot-password/reset-password    body{email, otp, password}
 
@@ -26,14 +22,14 @@ use plural names for end points
     get: users/
     get: users/{userId}
     put: users/{userId}
-    put: user/{userId}/avatar
-    put: user/{userId}/activate
-    delete: user/{userId}/deactivate
-    delete: user/{userId}
+    put: users/{userId}/avatar
+    put: users/{userId}/activate
+    delete: users/{userId}/deactivate
+    delete: users/{userId}
 
-    get: user/{userId}/notification/ {query params: optional read/unread etc}
-    put: user/{userId}/notification/{notificationId} {body {markas read}}
-    delete: user/{userId}/notification/{notificationId} 
+    get: users/{userId}/notifications/ {query params: optional read/unread etc}
+    put: users/{userId}/notifications/{notificationId} {body {markas read}}
+    delete: users/{userId}/notifications/{notificationId} 
 
 3. Student
     post: student/
@@ -102,10 +98,32 @@ use plural names for end points
     // randomize supervisor
     post: spl/{splId}/supervisor/randomize
 
+    // presentation related
+
     // create presentation event (announcement)
     post: spl/{splId}/presentation/ // generate presentationNo automatically
     get: spl/{splId}/presentation/ {get all presentations of that spl} 
-    delete: spl/{splId}/presentation/{presentationId}
+    delete: spl/{splId}/presentation/{presentationNo}
+
+    // mark related
+    // atomic marks related
+    get: spl/{splId}/marks/  // get mark of all student for a specific spl
+    put: spl/{splId}/marks body {markName, studentId} // update atomic mark of that student 
+
+    // by presentation evaluator
+    post: spl/{splId}/presentation/{presentationNo}/marks [body{mark, studentId}] 
+    // for splManager/committeeHead find all mark
+    get: spl/{splId}/presentation/{presentationNo}/marks
+    // for presentation evaluator | given by that teacher
+    get: spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId}
+    // by presentation evaluator
+    put: spl/{splId}/presentation/{presentationNo}/marks body{mark, studentId} 
+
+    // continuous mark related
+    post: spl/{splId}/continuous/marks [body{mark, classNo, studentId}]
+    get: spl/{splId}/continuous/marks // all continuous class mark for all student of that spl
+    get: spl/{splId}/continuous/{classNo}/marks // continuous mark of all students of that classNo
+    put: spl/{splId}/continuous/{classNo}/marks body{mark, studentId} // by splManager
 
 6. Team
     post: team/
@@ -122,29 +140,7 @@ use plural names for end points
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-// move all mark routes under spl[ramain in saparate file but under the spl path]???????
-7. Mark 
-    get: spl/{splId}/mark/  // get mark of all student for a specific spl
-    put: spl/{splId}/mark body {mark, studentId} // update atomic mark of that student 
-
-    // by presentation evaluator
-    post: spl/{splId}/presentation/{presentationNo}/mark [body{mark, studentId}] 
-
-    // for splManager/committeeHead find all mark
-    get: spl/{splId}/presentation/{presentationNo}/mark
-
-    // for presentation evaluator | given by that teacher
-    get: spl/{splId}/presentation/{presentationNo}/mark/teacher/{teacherId}
-
-    // by presentation evaluator
-    put: spl/{splId}/presentation/{presentationNo} body{mark, studentId} 
-    
-    post: spl/{splId}/continuous/mark [body{mark, classNo, studentId}]
-    get: spl/{splId}/continuous/mark // all continuous class mark for all student of that spl
-    get: spl/{splId}/continuous/{classNo}/mark // continuous mark of all students of that classNo
-    put: spl/{splId}/continuous/{classNo}/mark body{mark, studentId} // by splManager
-
-8. Notice 
+7. Notice 
     post: notice/
     get: notice/ {query params: optional, splName}
     get: notice/{noticeId}

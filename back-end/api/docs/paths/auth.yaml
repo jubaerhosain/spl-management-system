@@ -1,1 +1,67 @@
 paths:
+  /auth: 
+    get: 
+      summary: Get authentication details
+      tags:
+        - Auth
+
+  /auth/login:
+    post:
+      summary: Login to the system
+      tags:
+        - Auth
+      requestBody:
+        description: Login data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+
+  /auth/logout:
+    delete: 
+      summary: Logout from the system
+      tags:
+        - Auth
+
+  /auth/change-password:
+    patch:
+      summary: Change password
+      tags:
+        - Auth
+
+  /auth/forgot-password/generate-otp:
+    post:
+      summary: Generate OTP for Forgot Password
+      tags:
+        - Auth
+
+  /auth/forgot-password/verify-otp:
+    put:
+      summary: Verify OTP for Forgot Password
+      tags:
+        - Auth
+
+  /auth/forgot-password/reset-password:
+    put:
+      summary: Reset Password after OTP Verification
+      tags:
+        - Auth
