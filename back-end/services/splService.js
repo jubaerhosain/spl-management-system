@@ -76,6 +76,47 @@ async function addSPLManager(splId, data) {
     await NotificationRepository.create(notification);
 }
 
+async function addCommitteeMember(splId, members) {
+    // const spl = await SPLRepository.findById(splId);
+    // if (!spl) throw new CustomError("spl does not exists", 400);
+
+    const emails = members.map((member) => member.email);
+    const users = await UserRepository.findAllExistedUserByEmail(emails);
+
+    const validateIfAllAreTeacher = async () => {
+        const isTeacherEmail = (users, email) => {
+            for (const user of users) {
+                if (email === user.email && user.userType == "teacher") return true;
+            }
+            return false;
+        };
+
+        const error = {};
+        emails.forEach((email, index) => {
+            if (!isTeacherEmail(users, email)) {
+                if (!error[index]) {
+                    error[index] = {};
+                }
+                error[index]["email"] = {
+                    msg: "committee member must be a teacher",
+                    value: email,
+                };
+            }
+        });
+
+        if (Object.keys(error).length === 0) return null;
+
+        return error;
+    };
+
+    const error = await validateIfAllAreTeacher();
+    if (error) throw new CustomError("committee members must be teacher", 400, error);
+
+    // check if anyone is already member or not
+
+    console.log(users);
+}
+
 async function assignStudents(splName) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
 
@@ -114,6 +155,7 @@ export default {
     createSPL,
     addCommitteeHead,
     addSPLManager,
+    addCommitteeMember,
     assignStudents,
     unassignStudent,
 };

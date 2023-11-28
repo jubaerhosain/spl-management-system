@@ -1,4 +1,4 @@
-import { models } from "../database/db.js";
+import { models } from "../config/mysql.js";
 
 async function create(data) {
     await models.Notification.create(data);

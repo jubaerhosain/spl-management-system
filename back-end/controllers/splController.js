@@ -42,7 +42,7 @@ async function addCommitteeHead(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while creating student account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
@@ -61,12 +61,38 @@ async function addSPLManager(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while creating student account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
 
-async function addCommitteeMember(req, res) {}
+async function addCommitteeMember(req, res) {
+    try {
+        const { members } = req.body;
+        if (!members || members.length < 1)
+            return res.status(400).json(GenericResponse.error("at least one member must be provided"));
+
+        const { error } = splValidator.addCommitteeMemberSchema.validate(members);
+        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
+
+        const error1 = splValidator.validateMemberEmailDuplicates(members);
+        if (error1) return res.status(400).json(GenericResponse.error("duplicate email", error1));
+
+
+        const { splId } = req.params;
+        await splService.addCommitteeMember(splId, members);
+
+        res.json(GenericResponse.success("committee members added successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
 async function deleteSPL(req, res) {}
 async function removeStudentFromSPL(req, res) {}
 async function removeCommitteeMember(req, res) {}

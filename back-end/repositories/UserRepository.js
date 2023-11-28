@@ -72,6 +72,18 @@ async function findAllExistedEmail(emails) {
     return [];
 }
 
+async function findAllExistedUserByEmail(emails) {
+    const users = await models.User.findAll({
+        where: {
+            email: {
+                [Op.in]: emails,
+            },
+        },
+    });
+
+    return users;
+}
+
 async function update(userId, user) {
     await models.User.update(user, {
         where: {
@@ -102,6 +114,7 @@ export default {
     findPasswordByEmail,
     findLoginInfo,
     findAllExistedEmail,
+    findAllExistedUserByEmail,
     update,
     updatePasswordById,
     updatePasswordByEmail,
