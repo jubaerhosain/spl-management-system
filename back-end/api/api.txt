@@ -36,31 +36,29 @@ Notification will be created on some action. so there no need to post/put api en
     put: student/{studentId} 
     delete: student/{studentId} {by admin}
 
-    get: student/{studentId}/spl/current {current spl, with progress data}
     get: student/{studentId}/spl {all spl, with progress data}
+    get: student/{studentId}/spl/{splId} {a spl, with progress data}
 
     get: student/{studentId}/team/ {all teams of that student}
-    get: student/{studentId}/team/current {get current team of that student}
+    get: student/{studentId}/team/{teamId} 
 
     post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
     post: student/{studentId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
-    get: student/{studentId}/supervisor/current {current supervisor}
-    get: student/{studentId}/supervisor/ {all supervisor}
+    get: student/{studentId}/supervisor/   query{current: true/false, splName: , splId: }
     delete: student/{studentId}/supervisor/{supervisorId} // remove A supervisor of that student
 
 4. Teacher
     post: teacher/
-    put: teacher/ {teacherId from logged in user}
-    get: teacher/{teacherId}
-    get: teacher/{teacherId}/student {all student under supervision, splName as query}
-    get: teacher/{teacherId}/student/current {all student of current active spls, splName as query}
-    get: teacher/{teacherId}/team {all teams under supervision, splName as query}
-    get: teacher/{teacherId}/team/current {all team of current active spls, splName as query}
     get: teacher/ {query params: optional}
+    get: teacher/{teacherId}
+    put: teacher/{teacherId} 
     delete: teacher/{teacherId} {by admin}
+
+    get: teacher/{teacherId}/student // all student under supervision, query{splName, current: true/false}
+    get: teacher/{teacherId}/team // all teams under supervision, query{splName, current: true/false}
 
     get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
     put: teacher/{teacherId}/request/team body{teamId, accept: true} // accept team request
@@ -73,7 +71,7 @@ Notification will be created on some action. so there no need to post/put api en
 5. SPL 
     post: spl/ // create a new spl committee
     get: spl/ {query params: optional, active: true/false}
-    get: spl/{splName}/active // get active spl info by splName
+    get: spl/{splName} query {active: } // get active spl info by splName
     get: spl/{splId}  
     put: spl/{splId} {data in body}
     delete: spl/{splId}
@@ -100,21 +98,21 @@ Notification will be created on some action. so there no need to post/put api en
 
     // mark related
     // atomic marks related
-    get: spl/{splId}/marks/  // get mark of all student for a specific spl
-    get: spl/{splId}/marks/student/{studentId}  // get mark of a student for a specific spl // by stud
-    put: spl/{splId}/marks body {markName, studentId} // update atomic mark of that student 
+    get: spl/{splId}/mark/  // get mark of all student for a specific spl
+    get: spl/{splId}/mark/student/{studentId}  // get mark of a student for a specific spl // by stud
+    put: spl/{splId}/mark body {markName, studentId} // update atomic mark of that student 
 
     // presentation mark related
-    post: spl/{splId}/presentation/{presentationNo}/marks [body{mark, studentId}] // by presentation evaluator
-    get: spl/{splId}/presentation/{presentationNo}/marks // for splManager/committeeHead find all mark
-    get: spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId} // for presentation evaluator | given by that teacher
-    put: spl/{splId}/presentation/{presentationNo}/marks body{mark, studentId}  // by presentation evaluator
+    post: spl/{splId}/presentation/{presentationNo}/mark [body{mark, studentId}] // by presentation evaluator
+    get: spl/{splId}/presentation/{presentationNo}/mark // for splManager/committeeHead find all mark
+    get: spl/{splId}/presentation/{presentationNo}/mark/teacher/{teacherId} // for presentation evaluator | given by that teacher
+    put: spl/{splId}/presentation/{presentationNo}/mark body{mark, studentId}  // by presentation evaluator
 
     // continuous mark related
-    post: spl/{splId}/continuous/marks [body{mark, classNo, studentId}]
-    get: spl/{splId}/continuous/marks // all continuous class mark for all student of that spl
-    get: spl/{splId}/continuous/{classNo}/marks // continuous mark of all students of that classNo
-    put: spl/{splId}/continuous/{classNo}/marks body{mark, studentId} // by splManager
+    post: spl/{splId}/continuous/mark [body{mark, classNo, studentId}]
+    get: spl/{splId}/continuous/mark // all continuous class mark for all student of that spl
+    get: spl/{splId}/continuous/{classNo}/mark // continuous mark of all students of that classNo
+    put: spl/{splId}/continuous/{classNo}/mark body{mark, studentId} // by splManager
 
 6. Team
     post: team/
