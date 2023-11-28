@@ -25,6 +25,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/common/schemas/SuccessResponse'
+        '400':
+          description: Unsuccessful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/common/schemas/SuccessResponse'
+
                 
   /auth/logout:
     delete: 

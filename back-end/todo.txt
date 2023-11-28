@@ -1,0 +1,6 @@
+0. create admin, student, teacher [done]
+1. spl
+2. supervisor allocation
+3. marking
+5. finalize marking
+4. notice

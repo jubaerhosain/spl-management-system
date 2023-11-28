@@ -5,7 +5,7 @@ import userController from "../controllers/userController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
 // user related routes
-userRoutes.post("/", userController.createUser);
+userRoutes.post("/", checkAuthentication, isAdmin, userController.createUser);
 userRoutes.get("/");
 userRoutes.get("/:userId");
 userRoutes.put("/:userId", checkAuthentication, userController.updateUser);
