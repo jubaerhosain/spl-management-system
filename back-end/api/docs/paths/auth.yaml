@@ -24,14 +24,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success: 
-                    type: boolean
-                    default: true
-                  message:
-                    type: string
-
+                $ref: '#/components/common/schemas/SuccessResponse'
+                
   /auth/logout:
     delete: 
       summary: Logout from the system

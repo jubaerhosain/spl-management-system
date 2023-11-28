@@ -79,6 +79,10 @@ Object.entries(models).forEach(([name, model]) => {
     }
 });
 
+// Object.entries(models).forEach(([name, model]) => {
+//     console.log(model.associations);
+// });
+
 console.log("Number of table: ", Object.keys(models).length);
 
 // Test the connection

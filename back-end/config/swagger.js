@@ -3,6 +3,7 @@ import YAML from "yamljs";
 
 import path from "path";
 import { getDirectoryName } from "../utils/fileUtils.js";
+
 const mainSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/main.yaml");
 const authSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/auth.yaml");
 const usersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/user.yaml");
@@ -12,6 +13,7 @@ const splsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/pa
 const teamsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/team.yaml");
 const noticesSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/notice.yaml");
 
+const commonComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/common.yaml");
 const authComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/auth.yaml");
 const studentComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/student.yaml");
 
@@ -24,6 +26,7 @@ const splsSpec = YAML.load(splsSpecUrl);
 const teamsSpec = YAML.load(teamsSpecUrl);
 const noticesSpec = YAML.load(noticesSpecUrl);
 
+const commonComponentSpec = YAML.load(commonComponentUrl);
 const authComponentSpec = YAML.load(authComponentUrl);
 const studentComponentSpec = YAML.load(studentComponentUrl);
 
@@ -41,6 +44,7 @@ const apiSpec = {
     },
     components: {
         ...mainSpec.components,
+        ...commonComponentSpec.components,
         ...authComponentSpec.components,
         ...studentComponentSpec.components,
     },

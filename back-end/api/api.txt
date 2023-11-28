@@ -100,6 +100,11 @@ Notification will be created on some action. so there no need to post/put api en
     get: spl/{splId}/presentation/ {get all presentations of that spl} 
     delete: spl/{splId}/presentation/{presentationNo}
 
+    // presentation evaluator related apis
+    post: spl/{splId}/presentation/evaluator body{email[]} // add presentation evaluator
+    get: spl/{splId}/presentation/evaluator {get all presentation evaluator of that spl} 
+    delete: spl/{splId}/presentation/evaluator/{evaluatorId}
+
     // mark related
     // atomic marks related
     get: spl/{splId}/mark/  // get mark of all student for a specific spl
@@ -134,8 +139,7 @@ Notification will be created on some action. so there no need to post/put api en
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-    post: team/{teamId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
-    get: team/{teamId}/supervisor/ {supervisor of that team}
+    put: team/{teamId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
     delete: team/{teamId}/supervisor/{supervisorId} // remove supervisor of that team
 
 7. Notice 

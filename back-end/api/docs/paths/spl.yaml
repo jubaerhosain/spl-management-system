@@ -108,6 +108,23 @@ paths:
         - SPL
       summary: Delete a presentation event from a SPL
 
+  spl/{splId}/presentation/evaluator:
+    post:
+      tags:
+        - SPL
+      summary: Add one or more presentation evaluator to a SPL
+
+    get:
+      tags:
+        - SPL
+      summary: Get a list of presentation evaluator of a SPL
+
+  spl/{splId}/presentation/evaluator/{evaluatorId}:
+    delete:
+      tags:
+        - SPL
+      summary: Remove a presentation evaluator 
+
   /spl/{splId}/mark:
     get:
       tags:
