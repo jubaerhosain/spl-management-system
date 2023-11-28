@@ -8,6 +8,8 @@ async function createSPL(req, res) {
         const { error } = splValidator.createSPLSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
+        await splService.createSPL(req.body);
+
         res.json(GenericResponse.success("SPL created successfully"));
     } catch (err) {
         if (err instanceof CustomError) {

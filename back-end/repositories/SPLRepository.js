@@ -1,30 +1,7 @@
 import { models, sequelize } from "../config/mysql.js";
 
-async function create(committee) {
-    const memberIds = committee.memberIds;
-    delete committee.memberIds;
-
-    const transaction = await sequelize.transaction();
-    try {
-        const spl = await models.SPL.create(committee, { transaction });
-
-        const teacherId_splId = memberIds.map((teacherId) => {
-            return {
-                splId: spl.splId,
-                teacherId: teacherId,
-            };
-        });
-
-        await models.TeacherSPL_CommitteeMember.bulkCreate(teacherId_splId, {
-            transaction,
-        });
-
-        await transaction.commit();
-    } catch (err) {
-        await transaction.rollback();
-        console.log(err);
-        throw new Error(err.message);
-    }
+async function create(spl) {
+    await models.SPL.create(spl);
 }
 
 async function findById(splId) {
@@ -35,7 +12,15 @@ async function findById(splId) {
     return spl;
 }
 
-async function findActiveSPLByName(splName) {}
+async function findActiveSPLByName(splName) {
+    const spl = await models.SPL.findOne({
+        where: {
+            splName,
+            active: true,
+        },
+    });
+    return spl;
+}
 
 async function findActiveSPLByStudentId(studentId) {}
 
@@ -95,8 +80,5 @@ export default {
     create,
     findById,
     findActiveSPLByName,
-    findActiveSPLByStudentId,
-    findActiveSPLByStudentId,
-    findAllSPLByStudentId,
     removeStudentFromSPL,
 };

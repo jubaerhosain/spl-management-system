@@ -25,14 +25,14 @@ export default (options) => {
                     isIn: [["spl1", "spl2", "spl3"]],
                 },
             },
-            splManager: {
+            head: {
                 type: DataTypes.UUID,
                 references: {
                     model: "Teachers",
                     key: "teacherId",
                 },
             },
-            committeeHead: {
+            manager: {
                 type: DataTypes.UUID,
                 references: {
                     model: "Teachers",
@@ -43,7 +43,7 @@ export default (options) => {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: true,
-                comment: "Indicates current SPL is running or not",
+                comment: "Indicates current SPL is running or ended",
             },
         },
         {

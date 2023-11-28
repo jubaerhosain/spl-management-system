@@ -12,15 +12,7 @@ import { validateSPLName, validateAcademicYear, validateEmail } from "./common/c
 
 const createSPLSchema = Joi.object({
     splName: Joi.string().trim().custom(validateSPLName).required(),
-    academicYear: Joi.string().trim().custom(validateAcademicYear).required(),
-    head: Joi.string().trim().email().custom(validateEmail).required(),
-    manager: Joi.string().trim().email().custom(validateEmail).required(),
-    member1: Joi.string().trim().email().custom(validateEmail).required(),
-    member2: Joi.string().trim().email().custom(validateEmail).required(),
-    member3: Joi.string().trim().email().custom(validateEmail).required(),
-    member4: Joi.string().trim().email().custom(validateEmail).optional(),
-    member5: Joi.string().trim().email().custom(validateEmail).optional(),
-    member6: Joi.string().trim().email().custom(validateEmail).optional(),
+    academicYear: Joi.string().trim().custom(validateAcademicYear).required(),    
 });
 
 const updateSPLSchema = Joi.object({
@@ -30,8 +22,14 @@ const updateSPLSchema = Joi.object({
     splManager: Joi.string().trim().email().custom(validateEmail).required(),
 });
 
-const addCommitteeHeadSchema = Joi.object({});
-const addSPLManagerSchema = Joi.object({});
+const addSPLHeadSchema = Joi.object({
+    email: Joi.string().trim().email().custom(validateEmail).required(),
+});
+
+const addSPLManagerSchema = Joi.object({
+    email: Joi.string().trim().email().custom(validateEmail).required(),
+});
+
 const addCommitteeMemberSchema = Joi.array().items(
     Joi.object({
         email: Joi.string().trim().email().custom(validateEmail).required(),

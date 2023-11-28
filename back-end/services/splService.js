@@ -5,45 +5,18 @@ import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
 import emailService from "./emailServices/emailService.js";
 
-async function createSPL(spl) {
-    // check if any splName is currently active or not
-    
-    
+async function createSPL(data) {
+    const spl = await SPLRepository.findActiveSPLByName(data.splName);
+    if (spl) {
+        throw new CustomError(`${data.splName} already exists`, 400, {
+            splName: {
+                msg: `${data.splName} already exists`,
+                value: data.splName,
+            },
+        });
+    }
 
-
-    // find id's of corresponding email
-    const headId = await UserRepository.findUserIdByEmail(committee.headEmail);
-    const managerId = await UserRepository.findUserIdByEmail(committee.managerEmail);
-    const memberIds = await UserRepository.findAllUserIdByEmail(committee.memberEmails);
-
-    await SPLRepository.create({
-        splName: committee.splName,
-        academicYear: committee.academicYear,
-        committeeHead: headId,
-        splManager: managerId,
-        memberIds: memberIds,
-    });
-
-    // intentionally without await
-    emailService.sendCommitteeCreationEmailToHead(
-        committee.headEmail,
-        committee.splName,
-        committee.academicYear
-    );
-
-    emailService.sendCommitteeCreationEmailToManager(
-        committee.managerEmail,
-        committee.splName,
-        committee.academicYear
-    );
-
-    emailService.sendCommitteeCreationEmailToMembers(
-        committee.memberEmails,
-        committee.splName,
-        committee.academicYear
-    );
-
-    // send notification to the head, manager, and members
+    await SPLRepository.create(data);
 }
 
 async function assignStudents(splName) {
@@ -55,14 +28,13 @@ async function assignStudents(splName) {
         throw new CustomError("SPL does not exist", 400);
     }
 
-    const { unassignedStudentIds, unassignedStudentEmails } =
-        await StudentRepository.findAllUnassignedStudentIdAndEmail(spl.splId, curriculumYear);
+    const { unassignedStudentIds, unassignedStudentEmails } = await StudentRepository.findAllUnassignedStudentIdAndEmail(
+        spl.splId,
+        curriculumYear
+    );
 
     if (unassignedStudentIds.length <= 0) {
-        throw new CustomError(
-            `There is no ${curriculumYear} year student to assign to ${splName.toUpperCase()}`,
-            400
-        );
+        throw new CustomError(`There is no ${curriculumYear} year student to assign to ${splName.toUpperCase()}`, 400);
     }
 
     await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
