@@ -30,7 +30,7 @@ paths:
     put:
       tags:
         - Team
-      summary: Add member to a team
+      summary: Add one or more members to a team
 
     get:
       tags:
@@ -51,12 +51,12 @@ paths:
     get:
       tags:
         - Team
-      summary: Get all given requests of a team
+      summary: Get a list request given by a team
 
     delete:
       tags:
         - Team
-      summary: Delete a request of a team
+      summary: Delete a request given by a team
 
   team/{teamId}/supervisor/:
     post:

@@ -14,60 +14,60 @@ paths:
     get:
       tags:
         - Teacher
-      summary: Get details of a specific teacher
+      summary: Get details of a teacher
 
     put:
       tags:
         - Teacher
-      summary: Update teacher details of a specific teacher
+      summary: Update details of a teacher
 
     delete:
       tags:
         - Teacher
-      summary: Delete a teacher (by admin)
+      summary: Delete a teacher 
 
   /teacher/{teacherId}/student:
     get:
       tags:
         - Teacher
-      summary: Get all students under the supervision of a specific teacher (with optional splName query)
+      summary: Get a list of student under the supervision of a teacher
 
   /teacher/{teacherId}/team:
     get:
       tags:
         - Teacher
-      summary: Get all teams under the supervision of a specific teacher (with optional splName query)
+      summary: Get a list of team under the supervision of a teacher
 
   /teacher/{teacherId}/request/team:
     get:
       tags:
         - Teacher
-      summary: Get all teams that requested the specific teacher (with optional splName=spl2 query)
+      summary: Get a list of team who requested the teacher
 
   /teacher/{teacherId}/request/team{teamId}:
     put:
       tags:
         - Teacher
-      summary: Accept or Reject a team request from a teacher
+      summary: Accept a team request
 
     delete:
       tags:
         - Teacher
-      summary: Reject a team request from a teacher
+      summary: Reject a team request
 
   /teacher/{teacherId}/request/student:
     get:
       tags:
         - Teacher
-      summary: Get all students who requested the specific teacher (with optional splName=spl3 query)
+      summary: Get a list of student who requested the teacher
 
   /teacher/{teacherId}/request/student{studentId}:
     put:
       tags:
         - Teacher
-      summary: Accept or Reject a student request from a teacher
+      summary: Accept a student request
 
     delete:
       tags:
         - Teacher
-      summary: Reject a student request from a teacher
+      summary: Reject a student request

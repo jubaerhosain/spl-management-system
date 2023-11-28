@@ -8,7 +8,7 @@ paths:
     get:
       tags:
         - Notice
-      summary: Get all notices
+      summary: Get a list of notices
 
   /notice/{noticeId}:
     get:

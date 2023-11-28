@@ -8,74 +8,74 @@ paths:
     get:
       tags:
         - Student
-      summary: Get a list of students (with optional query parameters)
+      summary: Get a list of students
 
   /student/{studentId}:
     get:
       tags:
         - Student
-      summary: Get details of a specific student
+      summary: Get details of a student
 
     put:
       tags:
         - Student
-      summary: Update student details
+      summary: Update a student details
 
     delete:
       tags:
         - Student
-      summary: Delete a student (by admin)
+      summary: Delete a student
 
   /student/{studentId}/spl:
     get:
       tags:
         - Student
-      summary: Get all SPLs with progress data for a student
+      summary: Get a list of SPLs of a student
 
   /student/{studentId}/spl/{splId}:
     get:
       tags:
         - Student
-      summary: Get a SPL information with progress data for a student
+      summary: Get a SPL information of a student
 
   /student/{studentId}/team/:
     get:
       tags:
         - Student
-      summary: Get all teams of a specific student
+      summary: Get a list of teams of a student
 
   /student/{studentId}/team/{teamId}:
     get:
       tags:
         - Student
-      summary: Get the full info of a team of a specific student
+      summary: Get details of a team of a student
 
   /student/{studentId}/request:
     post:
       tags:
         - Student
-      summary: Request a teacher to be a supervisor for the student
+      summary: Request a teacher to be a supervisor of current spl
 
     get:
       tags:
         - Student
-      summary: Get all teacher requests made by the student
+      summary: Get a list of requests made by the student
 
     delete:
       tags:
         - Student
-      summary: Delete a request made by the student to a teacher
+      summary: Delete a request made by the student
 
   /student/{studentId}/supervisor/:
     post:
       tags:
         - Student
-      summary: Add a supervisor manually for a student
+      summary: Assign a supervisor for a student
 
     get:
       tags:
         - Student
-      summary: Get all supervisors for a student
+      summary: Get a list of supervisors for a student
 
   /student/{studentId}/supervisor/{supervisorId}:
     delete:

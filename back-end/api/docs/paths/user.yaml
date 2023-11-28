@@ -14,12 +14,12 @@ paths:
     get:
       tags:
         - User
-      summary: Get details of a specific user
+      summary: Get details of a user
 
     put:
       tags:
         - User
-      summary: Update user details
+      summary: Update a user details
 
     delete:
       tags:
@@ -30,30 +30,30 @@ paths:
     put:
       tags:
         - User
-      summary: Update user avatar
+      summary: Update a user avatar
 
     delete:
       tags:
         - User
-      summary: Delete user avatar
+      summary: Delete a user avatar
 
   /user/{userId}/activate:
     put:
       tags:
         - User
-      summary: Activate user
+      summary: Activate a user
 
   /user/{userId}/deactivate:
     delete:
       tags:
         - User
-      summary: Deactivate user
+      summary: Deactivate a user
 
   /user/{userId}/notification:
     get:
       tags:
         - User
-      summary: Get user notifications
+      summary: Get a list of notification of a user
 
   /user/{userId}/notification/{notificationId}:
     put:
