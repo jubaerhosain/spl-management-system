@@ -41,8 +41,7 @@ async function addCommitteeHead(splId, data) {
 
     const notification = {
         userId: user.userId,
-        title: `Committee head ${spl.splName} ${spl.academicYear}`,
-        content: `You have added as Committee head of ${spl.splName} ${spl.academicYear}`,
+        content: `You have assigned as Committee head of ${spl.splName} ${spl.academicYear}`,
         type: "info",
     };
 
@@ -70,8 +69,7 @@ async function addSPLManager(splId, data) {
 
     const notification = {
         userId: user.userId,
-        title: `SPL manager ${spl.splName} ${spl.academicYear}`,
-        content: `You have added as spl manager of ${spl.splName} ${spl.academicYear}`,
+        content: `You have assigned as spl manager of ${spl.splName} ${spl.academicYear}`,
         type: "info",
     };
 

@@ -16,10 +16,6 @@ export default (options) => {
                 key: "userId",
             },
         },
-        title: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        },
         content: {
             type: DataTypes.TEXT,
         },
