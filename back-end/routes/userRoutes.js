@@ -5,10 +5,10 @@ import userController from "../controllers/userController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
 // user related routes
-userRoutes.post("/", checkAuthentication, isAdmin, userController.createUser);
+userRoutes.post("/", userController.createUser);
 userRoutes.get("/");
 userRoutes.get("/:userId");
-userRoutes.put("/:userId", checkAuthentication, isAdmin, userController.updateUser);
+userRoutes.put("/:userId", checkAuthentication, userController.updateUser);
 userRoutes.put("/:userId/avatar");
 userRoutes.put("/:userId/activate");
 userRoutes.delete("/:userId/deactivate");

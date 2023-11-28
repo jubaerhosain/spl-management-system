@@ -1,17 +1,15 @@
 GET: query param or param (never use body)
 POST: always use body to create resource {in case of child resource can use param to identify parent resource}
 PUT, DELETE: try to use body but some cases you can use param to "locate resource"
-document with swagger
 Notification will be created on some action. so there no need to post/put api end point for them
 
-use plural names for end points
 
 1. Authentication [done]
     post: auth/login   body{email, password}
     get: auth/                             // get authenticated user
     delete: auth/logout
 
-    put: auth/change-password
+    put: auth/change-password body{oldPassword, newPassword}
 
     post: auth/forgot-password/generate-otp      body{email}
     put: auth/forgot-password/verify-otp        body{email, otp}
@@ -27,34 +25,31 @@ use plural names for end points
     delete: user/{userId}/deactivate
     delete: user/{userId}
 
-    get: user/{userId}/notification/ {query params: optional read/unread etc}
-    put: user/{userId}/notification/{notificationId} {body {mark as read}}
+    get: user/{userId}/notification/ { query params: optional read/unread etc }
+    put: user/{userId}/notification/{notificationId} { read: true }
     delete: user/{userId}/notification/{notificationId} 
 
 3. Student
     post: student/
-    put: student/{studentId} {studentId from logged in user, from body if updateBy Admin} 
+    get: student/ {query params: optional}
     get: student/{studentId}
+    put: student/{studentId} 
+    delete: student/{studentId} {by admin}
+
     get: student/{studentId}/spl/current {current spl, with progress data}
     get: student/{studentId}/spl {all spl, with progress data}
+
     get: student/{studentId}/team/ {all teams of that student}
     get: student/{studentId}/team/current {get current team of that student}
-    get: student/ {query params: optional}
-    delete: student/{studentId} {by admin}
 
     post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
-    // get all types of marks (including continuous and presentation)
-    // allowed marks
-    get: student/{studentId}/mark {all 3 spl marks of a student} query 
-    get: student/{studentId}/mark/:splName
-
-    post: student/{studentId}/supervisor/ {splName, teacherEmail} // add supervisor manually
+    post: student/{studentId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
     get: student/{studentId}/supervisor/current {current supervisor}
     get: student/{studentId}/supervisor/ {all supervisor}
-    delete: student/{studentId}/supervisor/current // remove current supervisor of that student
+    delete: student/{studentId}/supervisor/{supervisorId} // remove A supervisor of that student
 
 4. Teacher
     post: teacher/
@@ -84,9 +79,13 @@ use plural names for end points
     delete: spl/{splId}
 
     // ASSIGN/remove STUDENTS TO/from THE SPL Manually
-    post: spl/{splId}/student/ // create mark table also for each student
+    post: spl/{splId}/student/ 
     get: spl/{splId}/student/ // get all student under spl
-    delete: spl/{splId}/student/{studentId}  // delete mark table also for that student
+    delete: spl/{splId}/student/{studentId} // delete supervisor also if have
+
+    post: spl/{splId}/team/  // Manually create a team by committeeHead for that spl
+    get: spl/{splId}/team/ // get all team under spl
+    delete: spl/{splId}/team/{teamId}  // delete supervisor also if have
 
     put: spl/{splId}/head
     delete: spl/{splId}/head/{headId}
@@ -98,8 +97,6 @@ use plural names for end points
     // randomize supervisor
     post: spl/{splId}/supervisor/randomize
 
-    // presentation related
-
     // create presentation event (announcement)
     post: spl/{splId}/presentation/ // generate presentationNo automatically
     get: spl/{splId}/presentation/ {get all presentations of that spl} 
@@ -108,16 +105,14 @@ use plural names for end points
     // mark related
     // atomic marks related
     get: spl/{splId}/marks/  // get mark of all student for a specific spl
+    get: spl/{splId}/marks/student/{studentId}  // get mark of a student for a specific spl // by stud
     put: spl/{splId}/marks body {markName, studentId} // update atomic mark of that student 
 
-    // by presentation evaluator
-    post: spl/{splId}/presentation/{presentationNo}/marks [body{mark, studentId}] 
-    // for splManager/committeeHead find all mark
-    get: spl/{splId}/presentation/{presentationNo}/marks
-    // for presentation evaluator | given by that teacher
-    get: spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId}
-    // by presentation evaluator
-    put: spl/{splId}/presentation/{presentationNo}/marks body{mark, studentId} 
+    // presentation mark related
+    post: spl/{splId}/presentation/{presentationNo}/marks [body{mark, studentId}] // by presentation evaluator
+    get: spl/{splId}/presentation/{presentationNo}/marks // for splManager/committeeHead find all mark
+    get: spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId} // for presentation evaluator | given by that teacher
+    put: spl/{splId}/presentation/{presentationNo}/marks body{mark, studentId}  // by presentation evaluator
 
     // continuous mark related
     post: spl/{splId}/continuous/marks [body{mark, classNo, studentId}]
@@ -134,11 +129,16 @@ use plural names for end points
 
     put: team/{teamId}/member {all members under that team}
     get: team/{teamId}/member
-    delete: team/{teamId}/member/{memberId}
+    delete: team/{teamId}/member/{memberId} // by committeeHead
 
     post: team/{teamId}/request body{teacherId} // request a teacher to be supervisor
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
+
+    post: team/{teamId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
+    get: team/{teamId}/supervisor/current {current supervisor}
+    get: team/{teamId}/supervisor/ {all supervisor}
+    delete: team/{teamId}/supervisor/{supervisorId} // remove A supervisor of that team
 
 7. Notice 
     post: notice/
