@@ -47,7 +47,7 @@ paths:
     delete:
       tags:
         - SPL
-      summary: Remove a student from an SPL and delete the mark table for that student
+      summary: Remove a student from an SPL and remove supervisor of that student also
 
   /spl/{splId}/head:
     put:
@@ -55,34 +55,35 @@ paths:
         - SPL
       summary: Assign a head to an SPL
 
-  /spl/{splId}/manager:
-    put:
-      tags:
-        - SPL
-      summary: Assign a manager to an SPL
-
-  /spl/{splId}/member/{email}:
-    put:
-      tags:
-        - SPL
-      summary: Assign a member by email to an SPL
-
-    delete:
-      tags:
-        - SPL
-      summary: Remove a member by memberId from an SPL
-
   /spl/{splId}/head/{headId}:
     delete:
       tags:
         - SPL
       summary: Remove the head from an SPL
 
+  /spl/{splId}/manager:
+    put:
+      tags:
+        - SPL
+      summary: Add a manager to an SPL
+
   /spl/{splId}/manager/{managerId}:
     delete:
       tags:
         - SPL
       summary: Remove the manager from an SPL
+
+  /spl/{splId}/member/:
+    put:
+      tags:
+        - SPL
+      summary: Assign a member by email to an SPL
+
+  /spl/{splId}/member/{memberId}:
+    delete:
+      tags:
+        - SPL
+      summary: Remove a member by memberId from an SPL
 
   /spl/{splId}/supervisor/randomize:
     post:
@@ -107,7 +108,7 @@ paths:
         - SPL
       summary: Delete a presentation event from an SPL
 
-  /spl/{splId}/marks:
+  /spl/{splId}/mark:
     get:
       tags:
         - SPL
@@ -118,29 +119,29 @@ paths:
         - SPL
       summary: Update atomic marks of a student for a specific SPL 
 
-  /spl/{splId}/presentation/{presentationNo}/marks:
+  /spl/{splId}/mark/presentation/{presentationNo}:
     post:
       tags:
         - SPL
       summary: Add marks given by presentation evaluator for an SPL 
-
-    put:
-      tags:
-        - SPL
-      summary: Update marks given by presentation evaluator for a specific presentation 
 
     get:
       tags:
         - SPL
       summary: Get marks of all students given by presentation evaluators for a specific presentation
 
-  /spl/{splId}/presentation/{presentationNo}/marks/teacher/{teacherId}:
+    put:
+      tags:
+        - SPL
+      summary: Update marks given by presentation evaluator for a specific presentation 
+
+  /spl/{splId}/mark/presentation/{presentationNo}/teacher/{teacherId}:
     get:
       tags:
         - SPL
       summary: Get marks given by a specific teacher for a specific presentation
 
-  /spl/{splId}/continuous/marks:
+  /spl/{splId}/mark/continuous/:
     post:
       tags:
         - SPL
@@ -151,13 +152,12 @@ paths:
         - SPL
       summary: Get all continuous class marks for all students of an SPL
 
-  /spl/{splId}/continuous/{classNo}/marks:
+  /spl/{splId}/mark/continuous/{classNo}:
     get:
       tags:
         - SPL
       summary: Get continuous marks of all students for a specific classNo of an SPL
 
-  
     put:
       tags:
         - SPL

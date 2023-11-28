@@ -9,21 +9,22 @@ Notification will be created on some action. so there no need to post/put api en
     get: auth/                             // get authenticated user
     delete: auth/logout
 
-    put: auth/change-password body{oldPassword, newPassword}
+    patch: auth/change-password body{oldPassword, newPassword}
 
     post: auth/forgot-password/generate-otp      body{email}
     put: auth/forgot-password/verify-otp        body{email, otp}
     put: auth/forgot-password/reset-password    body{email, otp, password}
 
 2. User
-    post: users
-    get: users/
+    post: user
+    get: user/
     get: user/{userId}
     put: user/{userId}
+    delete: user/{userId}
     put: user/{userId}/avatar
+    delete: user/{userId}/avatar
     put: user/{userId}/activate
     delete: user/{userId}/deactivate
-    delete: user/{userId}
 
     get: user/{userId}/notification/ { query params: optional read/unread etc }
     put: user/{userId}/notification/{notificationId} { read: true }
@@ -32,15 +33,16 @@ Notification will be created on some action. so there no need to post/put api en
 3. Student
     post: student/
     get: student/ {query params: optional}
+
     get: student/{studentId}
     put: student/{studentId} 
     delete: student/{studentId} {by admin}
 
     get: student/{studentId}/spl {all spl, with progress data}
-    get: student/{studentId}/spl/{splId} {a spl, with progress data}
+    get: student/{studentId}/spl/{splName} {a spl, with progress data}
 
     get: student/{studentId}/team/ {all teams of that student}
-    get: student/{studentId}/team/{teamId} 
+    get: student/{studentId}/team/{teamId} // team info of a specific team
 
     post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
     get: student/{studentId}/request  // all teacher requested by that student
@@ -61,23 +63,25 @@ Notification will be created on some action. so there no need to post/put api en
     get: teacher/{teacherId}/team // all teams under supervision, query{splName, current: true/false}
 
     get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
-    put: teacher/{teacherId}/request/team body{teamId, accept: true} // accept team request
-    delete: teacher/{teacherId}/request/team body{teamId}  // reject team request
+    put: teacher/{teacherId}/request/team{teamId} body{accept: true} // accept team request
+    delete: teacher/{teacherId}/request/team/{teamId} body{reject: true}  // reject team request
+
     get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
-    put: teacher/{teacherId}/request/student body{studentId, accept: true} // accept student request
-    delete: teacher/{teacherId}/request/student/ body{studentId} // reject student request
+    put: teacher/{teacherId}/request/student/{studentId} body{accept: true} // accept student request
+    delete: teacher/{teacherId}/request/student/{studentId} body{reject: true} // reject student request
 
 // to resource identification use splId, can use splName in other places
 5. SPL 
     post: spl/ // create a new spl committee
-    get: spl/ {query params: optional, active: true/false}
-    get: spl/{splName} query {active: } // get active spl info by splName
+    get: spl/ {query params: optional, splName, active: true/false}
+    get: spl/{splName}/active // get active spl info by splName
+
     get: spl/{splId}  
     put: spl/{splId} {data in body}
     delete: spl/{splId}
 
     // ASSIGN/remove STUDENTS TO/from THE SPL Manually
-    post: spl/{splId}/student/ 
+    post: spl/{splId}/student/ body{curriculumYear} 
     get: spl/{splId}/student/ // get all student under spl
     delete: spl/{splId}/student/{studentId} // delete supervisor also if have
 
@@ -85,7 +89,7 @@ Notification will be created on some action. so there no need to post/put api en
     delete: spl/{splId}/head/{headId}
     put: spl/{splId}/manager
     delete: spl/{splId}/manager{managerId}
-    put: spl/{splId}/member/ //by email
+    put: spl/{splId}/member/ body{emails: []}
     delete: spl/{splId}/member/{memberId}
 
     // randomize supervisor
@@ -103,16 +107,16 @@ Notification will be created on some action. so there no need to post/put api en
     put: spl/{splId}/mark body {markName, studentId} // update atomic mark of that student 
 
     // presentation mark related
-    post: spl/{splId}/presentation/{presentationNo}/mark [body{mark, studentId}] // by presentation evaluator
-    get: spl/{splId}/presentation/{presentationNo}/mark // for splManager/committeeHead find all mark
-    get: spl/{splId}/presentation/{presentationNo}/mark/teacher/{teacherId} // for presentation evaluator | given by that teacher
-    put: spl/{splId}/presentation/{presentationNo}/mark body{mark, studentId}  // by presentation evaluator
+    post: spl/{splId}/mark/presentation/{presentationNo} [body{mark, studentId}] // by presentation evaluator
+    get: spl/{splId}/mark/presentation/{presentationNo} // for splManager/committeeHead find all mark
+    put: spl/{splId}/mark/presentation/{presentationNo} body{mark, studentId}  // by presentation evaluator
+    get: spl/{splId}/mark/presentation/{presentationNo}/teacher/{teacherId} // for presentation evaluator | given by that teacher
 
     // continuous mark related
-    post: spl/{splId}/continuous/mark [body{mark, classNo, studentId}]
-    get: spl/{splId}/continuous/mark // all continuous class mark for all student of that spl
-    get: spl/{splId}/continuous/{classNo}/mark // continuous mark of all students of that classNo
-    put: spl/{splId}/continuous/{classNo}/mark body{mark, studentId} // by splManager
+    post: spl/{splId}/mark/continuous [body{mark, classNo, studentId}]
+    get: spl/{splId}/mark/continuous // all continuous class mark for all student of that spl
+    get: spl/{splId}/mark/continuous/{classNo} // continuous mark of all students of that classNo
+    put: spl/{splId}/mark/continuous/{classNo} body{mark, studentId} // by splManager
 
 6. Team
     post: team/

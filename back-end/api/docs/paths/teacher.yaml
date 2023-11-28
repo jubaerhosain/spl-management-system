@@ -5,11 +5,6 @@ paths:
         - Teacher
       summary: Create a new teacher
 
-    put:
-      tags:
-        - Teacher
-      summary: Update teacher details (teacherId from logged in user)
-
     get:
       tags:
         - Teacher
@@ -20,6 +15,11 @@ paths:
       tags:
         - Teacher
       summary: Get details of a specific teacher
+
+    put:
+      tags:
+        - Teacher
+      summary: Update teacher details of a specific teacher
 
     delete:
       tags:
@@ -32,23 +32,11 @@ paths:
         - Teacher
       summary: Get all students under the supervision of a specific teacher (with optional splName query)
 
-  /teacher/{teacherId}/student/current:
-    get:
-      tags:
-        - Teacher
-      summary: Get all students of the current active SPLs under the supervision of a specific teacher (with optional splName query)
-
   /teacher/{teacherId}/team:
     get:
       tags:
         - Teacher
       summary: Get all teams under the supervision of a specific teacher (with optional splName query)
-
-  /teacher/{teacherId}/team/current:
-    get:
-      tags:
-        - Teacher
-      summary: Get all teams of the current active SPLs under the supervision of a specific teacher (with optional splName query)
 
   /teacher/{teacherId}/request/team:
     get:
@@ -56,6 +44,7 @@ paths:
         - Teacher
       summary: Get all teams that requested the specific teacher (with optional splName=spl2 query)
 
+  /teacher/{teacherId}/request/team{teamId}:
     put:
       tags:
         - Teacher
@@ -72,6 +61,7 @@ paths:
         - Teacher
       summary: Get all students who requested the specific teacher (with optional splName=spl3 query)
 
+  /teacher/{teacherId}/request/student{studentId}:
     put:
       tags:
         - Teacher

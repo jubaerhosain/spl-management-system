@@ -10,7 +10,6 @@ const studentsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/doc
 const teachersSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/teacher.yaml");
 const splsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/spl.yaml");
 const teamsSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/team.yaml");
-const marksSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/mark.yaml");
 const noticesSpecUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/paths/notice.yaml");
 
 const authComponentUrl = path.join(getDirectoryName(import.meta.url), "../api/docs/components/auth.yaml");
@@ -22,7 +21,6 @@ const usersSpec = YAML.load(usersSpecUrl);
 const studentsSpec = YAML.load(studentsSpecUrl);
 const teachersSpec = YAML.load(teachersSpecUrl);
 const splsSpec = YAML.load(splsSpecUrl);
-const marksSpec = YAML.load(marksSpecUrl);
 const teamsSpec = YAML.load(teamsSpecUrl);
 const noticesSpec = YAML.load(noticesSpecUrl);
 
@@ -35,12 +33,11 @@ const apiSpec = {
         ...mainSpec.paths,
         ...authSpec.paths,
         ...usersSpec.paths,
-        ...teachersSpec.paths,
         ...studentsSpec.paths,
-        ...teamsSpec.paths,
+        ...teachersSpec.paths,
         ...splsSpec.paths,
+        ...teamsSpec.paths,
         ...noticesSpec.paths,
-        ...marksSpec.paths,
     },
     components: {
         ...mainSpec.components,

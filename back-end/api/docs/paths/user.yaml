@@ -32,6 +32,11 @@ paths:
         - User
       summary: Update user avatar
 
+    delete:
+      tags:
+        - User
+      summary: Delete user avatar
+
   /user/{userId}/activate:
     put:
       tags:
