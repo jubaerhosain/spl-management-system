@@ -83,10 +83,6 @@ Notification will be created on some action. so there no need to post/put api en
     get: spl/{splId}/student/ // get all student under spl
     delete: spl/{splId}/student/{studentId} // delete supervisor also if have
 
-    post: spl/{splId}/team/  // Manually create a team by committeeHead for that spl
-    get: spl/{splId}/team/ // get all team under spl
-    delete: spl/{splId}/team/{teamId}  // delete supervisor also if have
-
     put: spl/{splId}/head
     delete: spl/{splId}/head/{headId}
     put: spl/{splId}/manager
@@ -129,16 +125,16 @@ Notification will be created on some action. so there no need to post/put api en
 
     put: team/{teamId}/member {all members under that team}
     get: team/{teamId}/member
-    delete: team/{teamId}/member/{memberId} // by committeeHead
+    delete: team/{teamId}/member/{memberId} // by committeeHead 
+    // by student itself, if supervisor is allocated then student cannot leave team 
 
     post: team/{teamId}/request body{teacherId} // request a teacher to be supervisor
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
     post: team/{teamId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
-    get: team/{teamId}/supervisor/current {current supervisor}
-    get: team/{teamId}/supervisor/ {all supervisor}
-    delete: team/{teamId}/supervisor/{supervisorId} // remove A supervisor of that team
+    get: team/{teamId}/supervisor/ {supervisor of that team}
+    delete: team/{teamId}/supervisor/{supervisorId} // remove supervisor of that team
 
 7. Notice 
     post: notice/
