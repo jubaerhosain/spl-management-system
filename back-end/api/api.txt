@@ -143,5 +143,6 @@ Notification will be created on some action. so there no need to post/put api en
     get: notice/ {query params: optional, splName}
     get: notice/{noticeId}
     put: notice/{noticeId} {notice}
+    delete: notice/{noticeId} 
    
 

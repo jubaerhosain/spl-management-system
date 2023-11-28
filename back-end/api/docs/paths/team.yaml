@@ -8,18 +8,18 @@ paths:
     get:
       tags:
         - Team
-      summary: Get a list of teams with optional query parameters (splName)
+      summary: Get a list of teams
 
   /team/{teamId}:
     get:
       tags:
         - Team
-      summary: Get details of a specific team
+      summary: Get details of a team
 
     put:
       tags:
         - Team
-      summary: Update details of a specific team
+      summary: Update details of a team
 
     delete:
       tags:
@@ -30,30 +30,47 @@ paths:
     put:
       tags:
         - Team
-      summary: Get all members under a specific team
+      summary: Add member to a team
 
     get:
       tags:
         - Team
-      summary: Get all members under a specific team
+      summary: Get all members of a team
 
     delete:
       tags:
         - Team
-      summary: Remove a member from a specific team
+      summary: Remove a member from a team
 
   /team/{teamId}/request:
     post:
       tags:
         - Team
-      summary: Request a teacher to be a supervisor for a specific team
+      summary: Request a teacher to be supervisor 
 
     get:
       tags:
         - Team
-      summary: Get all requested teachers by a specific team
+      summary: Get all given requests of a team
 
     delete:
       tags:
         - Team
-      summary: Delete a team request
+      summary: Delete a request of a team
+
+  team/{teamId}/supervisor/:
+    post:
+      tags:
+        - Team
+      summary: Assign supervisor to a team
+
+    get:  
+      tags:
+        - Team
+      summary: Get supervisor of a team
+
+  team/{teamId}/supervisor/{supervisorId}: 
+    delete: 
+      tags:
+        - Team
+      summary: Remove supervisor of a team

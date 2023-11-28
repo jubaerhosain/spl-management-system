@@ -8,15 +8,20 @@ paths:
     get:
       tags:
         - Notice
-      summary: Get a list of notices with optional query parameters (splName)
+      summary: Get all notices
 
   /notice/{noticeId}:
     get:
       tags:
         - Notice
-      summary: Get details of a specific notice
+      summary: Get details of a notice
 
     put:
       tags:
         - Notice
-      summary: Update details of a specific notice
+      summary: Update details of a notice
+
+    delete: 
+      tags:
+        - Notice
+      summary: Delete a notice
