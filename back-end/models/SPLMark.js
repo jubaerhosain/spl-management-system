@@ -2,7 +2,7 @@
 
 export default (options) => {
     const { sequelize, DataTypes } = options;
-    const Mark = sequelize.define("Marks", {
+    const SPLMark = sequelize.define("SPLMarks", {
         studentId: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -31,21 +31,21 @@ export default (options) => {
         },
     });
 
-    Mark.associate = (models) => {
-        // Student - Mark [one to many]
-        Mark.belongsTo(models.Student, {
+    SPLMark.associate = (models) => {
+        // Student - SPLMark [one to many]
+        SPLMark.belongsTo(models.Student, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",
         });
 
-        // SPL - Mark [one to many]
-        Mark.belongsTo(models.SPL, {
+        // SPL - SPLMark [one to many]
+        SPLMark.belongsTo(models.SPL, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",
         });
     };
 
-    return Mark;
+    return SPLMark;
 };

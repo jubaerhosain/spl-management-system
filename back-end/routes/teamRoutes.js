@@ -8,7 +8,7 @@ import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 teamRoutes.post("/", teamController.createTeam);
 teamRoutes.get("/", teamController.getAllTeam);
 teamRoutes.get("/:teamId", teamController.getTeam);
-teamRoutes.put("/", teamController.updateTeam);
+teamRoutes.put("/:teamId", teamController.updateTeam);
 teamRoutes.delete("/:teamId", teamController.deleteTeam);
 
 // routes related to team member
@@ -20,5 +20,9 @@ teamRoutes.delete("/:teamId/member/:memberId", teamController.removeTeamMember);
 teamRoutes.post("/team/:teamId/request", teamController.requestTeacher);
 teamRoutes.get("/team/:teamId/request", teamController.getAllRequest);
 teamRoutes.delete("/team/:teamId/request", teamController.deleteRequest);
+
+// supervisor routes related
+teamRoutes.put("/team/:teamId/supervisor");
+teamRoutes.delete("/team/:teamId/supervisor/:supervisorId");
 
 export default teamRoutes;

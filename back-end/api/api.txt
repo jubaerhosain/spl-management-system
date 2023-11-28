@@ -96,7 +96,7 @@ Notification will be created on some action. so there no need to post/put api en
     post: spl/{splId}/supervisor/randomize
 
     // create presentation event (announcement)
-    post: spl/{splId}/presentation/ // generate presentationNo automatically
+    post: spl/{splId}/presentation/ 
     get: spl/{splId}/presentation/ {get all presentations of that spl} 
     delete: spl/{splId}/presentation/{presentationNo}
 

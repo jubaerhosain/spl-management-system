@@ -9,10 +9,11 @@ userRoutes.post("/", checkAuthentication, isAdmin, userController.createUser);
 userRoutes.get("/");
 userRoutes.get("/:userId");
 userRoutes.put("/:userId", checkAuthentication, userController.updateUser);
+userRoutes.delete("/:userId", checkAuthentication, isAdmin, userController.deleteUser);
 userRoutes.put("/:userId/avatar");
+userRoutes.delete("/:userId/avatar");
 userRoutes.put("/:userId/activate");
 userRoutes.delete("/:userId/deactivate");
-userRoutes.delete("/:userId", checkAuthentication, isAdmin, userController.deleteUser);
 
 // notification related routes
 userRoutes.get("/:userId/notification");

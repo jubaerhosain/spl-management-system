@@ -13,25 +13,20 @@ studentRoutes.delete("/:studentId", checkAuthentication, isAdmin, studentControl
 
 // routes related to spl
 studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
-studentRoutes.get("/:studentId/spl/current", studentController.getCurrentSPL);
+studentRoutes.get("/:studentId/spl/:splName", studentController.getCurrentSPL);
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor"); //studentController.assignSupervisor
 studentRoutes.get("/:studentId/supervisor", studentController.getAllSupervisor);
-studentRoutes.get("/:studentId/supervisor/current", studentController.getCurrentSupervisor);
-studentRoutes.delete("/:studentId/supervisor/current"); // studentController.removeCurrentSupervisor
+studentRoutes.delete("/:studentId/supervisor/:supervisorId"); 
 
 // routes related to team
 studentRoutes.get("/:studentId/team", studentController.getAllTeam);
-studentRoutes.get("/:studentId/team/current", studentController.getCurrentTeam);
+studentRoutes.get("/:studentId/team/:teamId", studentController.getCurrentTeam);
 
 // route related to request
 studentRoutes.post("/:studentId/request", studentController.requestTeacher);
 studentRoutes.get("/:studentId/request", studentController.getAllRequest);
 studentRoutes.delete("/:studentId/request", studentController.deleteRequest);
-
-// routes related to mark
-studentRoutes.get("/:studentId/mark", studentController.getAllSPLMark);
-studentRoutes.get("/:studentId/mark/:splName", studentController.getSPLMark);
 
 export default studentRoutes;

@@ -4,8 +4,8 @@ const authRoutes = express.Router();
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
 import authController from "../controllers/authController.js";
 
-authRoutes.get("/");
 authRoutes.post("/login", authController.login);
+authRoutes.get("/");
 authRoutes.delete("/logout", authController.logout);
 
 authRoutes.put("/change-password", checkAuthentication, authController.changePassword);

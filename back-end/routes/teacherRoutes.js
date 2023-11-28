@@ -8,16 +8,14 @@ import { checkAuthentication, isAdmin, isTeacher } from "../middlewares/authMidd
 teacherRoutes.post("/", checkAuthentication, isAdmin, teacherController.createTeacher);
 teacherRoutes.get("/", teacherController.getAllTeacher);
 teacherRoutes.get("/:teacherId", teacherController.getTeacher);
-teacherRoutes.put("/", checkAuthentication, isTeacher, teacherController.updateTeacher);
-teacherRoutes.delete("/", checkAuthentication, isAdmin, teacherController.deleteTeacher);
+teacherRoutes.put("/:teacherId", checkAuthentication, isTeacher, teacherController.updateTeacher);
+teacherRoutes.delete("/:teacherId", checkAuthentication, isAdmin, teacherController.deleteTeacher);
 
 // routes related to student supervision
 teacherRoutes.get("/:teacherId/student", teacherController.getAllStudentUnderSupervision);
-teacherRoutes.get("/:teacherId/student/current", teacherController.getAllCurrentStudentUnderSupervision);
 
 // routes related to team supervision
 teacherRoutes.get("/:teacherId/team", teacherController.getAllTeamUnderSupervision);
-teacherRoutes.get("/:teacherId/team/current", teacherController.getAllCurrentTeamUnderSupervision);
 
 // routes related to team request
 teacherRoutes.get("/:teacherId/request/team", teacherController.getAllTeamRequestedTeacher);

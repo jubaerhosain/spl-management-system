@@ -26,7 +26,7 @@ import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
 import Notice from "../models/Notice.js";
 import Presentation from "../models/Presentation.js";
-import Mark from "../models/Mark.js";
+import SPLMark from "../models/SPLMark.js";
 import PresentationMark from "../models/PresentationMark.js";
 import ContinuousMark from "../models/ContinuousMark.js";
 import OTP from "../models/OTP.js";
@@ -55,7 +55,7 @@ const models = {
     Notification: Notification(options),
     Notice: Notice(options),
     Presentation: Presentation(options),
-    Mark: Mark(options),
+    SPLMark: SPLMark(options),
     PresentationMark: PresentationMark(options),
     ContinuousMark: ContinuousMark(options),
     OTP: OTP(options),

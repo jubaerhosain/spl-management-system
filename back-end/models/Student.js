@@ -94,8 +94,8 @@ export default (options) => {
             foreignKey: "studentId",
         });
 
-        // Student - Mark [one to many]
-        Student.hasMany(models.Mark, {
+        // Student - SPLMark [one to many]
+        Student.hasMany(models.SPLMark, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",

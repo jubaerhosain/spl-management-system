@@ -7,7 +7,6 @@ import teacherRoutes from "./teacherRoutes.js";
 import userRoutes from "./userRoutes.js";
 import splRoutes from "./splRoutes.js";
 import teamRoutes from "./teamRoutes.js";
-import markRoutes from "./markRoutes.js";
 import noticeRoutes from "./noticeRoutes.js";
 
 apiRoutes.use("/auth", authRoutes);
@@ -16,7 +15,6 @@ apiRoutes.use("/student", studentRoutes);
 apiRoutes.use("/teacher", teacherRoutes); 
 apiRoutes.use("/spl", splRoutes);
 apiRoutes.use("/team", teamRoutes);
-apiRoutes.use("/mark", markRoutes);
 apiRoutes.use("/notice", noticeRoutes);
 
 
