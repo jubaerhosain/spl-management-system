@@ -1,3 +1,9 @@
 import { models } from "../database/db.js";
 
-export default {};
+async function create(data) {
+    await models.Notification.create(data);
+}
+
+export default {
+    create,
+};

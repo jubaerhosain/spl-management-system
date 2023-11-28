@@ -1,3 +1,4 @@
+import NotificationRepository from "../repositories/NotificationRepository.js";
 import SPLRepository from "../repositories/SPLRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
@@ -39,12 +40,13 @@ async function addCommitteeHead(splId, data) {
     await SPLRepository.update(splId, head);
 
     const notification = {
+        userId: user.userId,
         title: `Committee head ${spl.splName} ${spl.academicYear}`,
-        content: "You have added as Committee head of ${spl.splName} ${spl.academicYear}",
-        type: "info"
-    }
+        content: `You have added as Committee head of ${spl.splName} ${spl.academicYear}`,
+        type: "info",
+    };
 
-    // set a notification
+    await NotificationRepository.create(notification);
 }
 
 async function addSPLManager(splId, data) {
@@ -66,10 +68,15 @@ async function addSPLManager(splId, data) {
     const manager = { manager: user.userId };
     await SPLRepository.update(splId, manager);
 
-    // set a notification
+    const notification = {
+        userId: user.userId,
+        title: `SPL manager ${spl.splName} ${spl.academicYear}`,
+        content: `You have added as spl manager of ${spl.splName} ${spl.academicYear}`,
+        type: "info",
+    };
+
+    await NotificationRepository.create(notification);
 }
-
-
 
 async function assignStudents(splName) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
