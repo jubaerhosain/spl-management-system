@@ -40,7 +40,6 @@ import StudentTeam from "../models/junctions/StudentTeam.js";
 import TeacherSPL_PresentationEvaluator from "../models/junctions/TeacherSPL_PresentationEvaluator.js";
 import TeacherSPL_CommitteeMember from "../models/junctions/TeacherSPL_CommitteeMember.js";
 import TeamTeacher_Request from "../models/junctions/TeamTeacher_Request.js";
-import UserNotification from "../models/junctions/UserNotification.js";
 
 const options = { sequelize, DataTypes, Sequelize, Op };
 
@@ -69,7 +68,6 @@ const models = {
     TeacherSPL_PresentationEvaluator: TeacherSPL_PresentationEvaluator(options),
     TeacherSPL_CommitteeMember: TeacherSPL_CommitteeMember(options),
     TeamTeacher_Request: TeamTeacher_Request(options),
-    UserNotification: UserNotification(options),
 };
 
 // initialize associations

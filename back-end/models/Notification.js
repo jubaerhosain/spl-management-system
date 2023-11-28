@@ -8,6 +8,14 @@ export default (options) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
+        userId: {
+            type: DataTypes.UUID,
+            allowNull: false,
+            references: {
+                model: "Users",
+                key: "userId",
+            },
+        },
         title: {
             type: DataTypes.STRING(100),
             allowNull: false,
@@ -30,12 +38,11 @@ export default (options) => {
     });
 
     Notification.associate = (models) => {
-        // User - Notification [many to many]
-        Notification.belongsToMany(models.User, {
+        // User - Notification [one to many]
+        Notification.belongsTo(models.User, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            through: models.UserNotification,
-            foreignKey: "notificationId",
+            foreignKey: "userId",
         });
     };
 

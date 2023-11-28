@@ -37,6 +37,14 @@ async function addCommitteeHead(splId, data) {
 
     const head = { head: user.userId };
     await SPLRepository.update(splId, head);
+
+    const notification = {
+        title: `Committee head ${spl.splName} ${spl.academicYear}`,
+        content: "You have added as Committee head of ${spl.splName} ${spl.academicYear}",
+        type: "info"
+    }
+
+    // set a notification
 }
 
 async function addSPLManager(splId, data) {
@@ -57,6 +65,8 @@ async function addSPLManager(splId, data) {
 
     const manager = { manager: user.userId };
     await SPLRepository.update(splId, manager);
+
+    // set a notification
 }
 
 

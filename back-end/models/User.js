@@ -93,11 +93,10 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // User - Notification [many to many]
-        User.belongsToMany(models.Notification, {
+        // User - Notification [one to many]
+        User.hasMany(models.Notification, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            through: models.UserNotification,
             foreignKey: "userId",
         });
 
