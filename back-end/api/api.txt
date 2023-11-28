@@ -106,10 +106,10 @@ Notification will be created on some action. so there no need to post/put api en
     delete: spl/{splId}/presentation/evaluator/{evaluatorId}
 
     // mark related
-    // atomic marks related
-    get: spl/{splId}/mark/  // get mark of all student for a specific spl
-    get: spl/{splId}/mark/student/{studentId}  // get mark of a student for a specific spl // by stud
-    put: spl/{splId}/mark body {markName, studentId} // update atomic mark of that student 
+    get: spl/{splId}/mark/  // get mark of all student under a spl [allowed mark if user is a student]
+    get: spl/{splId}/mark/combined/ // combined mark of all students
+    put: spl/{splId}/mark body {markName1, markName2,....} // update atomic mark of a student 
+
 
     // presentation mark related
     post: spl/{splId}/mark/presentation/{presentationNo} [body{mark, studentId}] // by presentation evaluator

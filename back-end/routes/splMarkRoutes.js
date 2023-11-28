@@ -4,18 +4,19 @@ const markRoutes = express.Router();
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
 import markController from "../controllers/splMarkController.js";
 
-// mark related routes
-markRoutes.put("/:markId");
+// atomic mark related routes
 markRoutes.get("/");
+markRoutes.put("/");
 
 // presentation mark related routes
-markRoutes.post("/presentation/:presentationId"); 
-markRoutes.get("/presentation/:presentationId"); 
-markRoutes.put("/:markId/presentation/:presentationId"); 
+markRoutes.post("/presentation/:presentationNo"); 
+markRoutes.get("/presentation/:presentationNo"); 
+markRoutes.put("/presentation/:presentationNo"); 
 
 // continuous mark related routes
-markRoutes.post("/continuous/:weekNo");
-markRoutes.get("/continuous/:weekNo");
-markRoutes.put("/:markId/continuous/:weekNo");
+markRoutes.post("/continuous/");
+markRoutes.get("/continuous/");
+markRoutes.get("/continuous/:classNo");
+markRoutes.put("/continuous/:classNo");
 
 export default markRoutes;
