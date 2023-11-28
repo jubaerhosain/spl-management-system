@@ -22,7 +22,7 @@ const updateSPLSchema = Joi.object({
     splManager: Joi.string().trim().email().custom(validateEmail).required(),
 });
 
-const addSPLHeadSchema = Joi.object({
+const addCommitteeHeadSchema = Joi.object({
     email: Joi.string().trim().email().custom(validateEmail).required(),
 });
 
@@ -38,5 +38,8 @@ const addCommitteeMemberSchema = Joi.array().items(
 
 export default {
     createSPLSchema,
+    addCommitteeHeadSchema,
+    addSPLManagerSchema,
+    addCommitteeMemberSchema,
     updateSPLSchema,
 };

@@ -19,6 +19,48 @@ async function createSPL(data) {
     await SPLRepository.create(data);
 }
 
+async function addCommitteeHead(splId, data) {
+    const user = await UserRepository.findByEmail(data.email);
+    if (!user || user.userType != "teacher") {
+        throw new CustomError("Invalid email", 400, {
+            email: {
+                msg: "committee head must be a teacher",
+                value: data.email,
+            },
+        });
+    }
+
+    const spl = await SPLRepository.findById(splId);
+    if (spl?.head) {
+        throw new CustomError("already have a committee head", 400);
+    }
+
+    const head = { head: user.userId };
+    await SPLRepository.update(splId, head);
+}
+
+async function addSPLManager(splId, data) {
+    const user = await UserRepository.findByEmail(data.email);
+    if (!user || user.userType != "teacher") {
+        throw new CustomError("Invalid email", 400, {
+            email: {
+                msg: "spl manager must be a teacher",
+                value: data.email,
+            },
+        });
+    }
+
+    const spl = await SPLRepository.findById(splId);
+    if (spl?.manager) {
+        throw new CustomError("already have a spl manager", 400);
+    }
+
+    const manager = { manager: user.userId };
+    await SPLRepository.update(splId, manager);
+}
+
+
+
 async function assignStudents(splName) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
 
@@ -55,6 +97,8 @@ async function unassignStudent(splId, studentId) {
 
 export default {
     createSPL,
+    addCommitteeHead,
+    addSPLManager,
     assignStudents,
     unassignStudent,
 };

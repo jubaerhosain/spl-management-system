@@ -76,9 +76,14 @@ async function removeStudentFromSPL(splId, studentId) {
     });
 }
 
+async function update(splId, data) {
+    await models.SPL.update(data, { where: { splId } });
+}
+
 export default {
     create,
     findById,
     findActiveSPLByName,
     removeStudentFromSPL,
+    update
 };
