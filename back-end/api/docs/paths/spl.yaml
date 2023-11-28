@@ -129,12 +129,18 @@ paths:
     get:
       tags:
         - SPL
-      summary: Get a list of marks of all students for a SPL
+      summary: Get a list of atomic marks of all students for a SPL
 
     put:
       tags:
         - SPL
-      summary: Update marks of a student for a SPL 
+      summary: Update atomic marks of a student for a SPL 
+
+  /spl/{splId}/mark/combined:
+    get:
+      tags:
+        - SPL
+      summary: get a list of combined mark of all students
 
   /spl/{splId}/mark/presentation/{presentationNo}:
     post:

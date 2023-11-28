@@ -8,6 +8,8 @@ import markController from "../controllers/splMarkController.js";
 markRoutes.get("/");
 markRoutes.put("/");
 
+markRoutes.get("/combined");
+
 // presentation mark related routes
 markRoutes.post("/presentation/:presentationNo"); 
 markRoutes.get("/presentation/:presentationNo"); 
