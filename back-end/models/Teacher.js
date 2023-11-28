@@ -62,6 +62,13 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
+        // Teacher - Team [one to many]
+        Teacher.hasMany(models.Team, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teacherId",
+        });
+
         // SPL - Teacher [many to many] as Presentation Evaluator
         Teacher.belongsToMany(models.SPL, {
             through: models.TeacherSPL_PresentationEvaluator,

@@ -16,6 +16,14 @@ export default (options) => {
                 key: "splId",
             },
         },
+        supervisorId: {
+            type: DataTypes.UUID,
+            allowNull: false,
+            references: {
+                model: "Teachers",
+                key: "teacherId",
+            },
+        },
         teamName: {
             type: DataTypes.STRING(40),
             allowNull: false,
@@ -32,6 +40,13 @@ export default (options) => {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",
+        });
+
+        // Teacher - Team [one to many]
+        Team.belongsTo(models.Teacher, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "supervisorId",
         });
 
         // Team - Student [many to many]
