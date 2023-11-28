@@ -64,6 +64,7 @@ export default (options) => {
 
         // Teacher - Team [one to many]
         Teacher.hasMany(models.Team, {
+            as: "SupervisedTeams",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",

@@ -44,6 +44,7 @@ export default (options) => {
 
         // Teacher - Team [one to many]
         Team.belongsTo(models.Teacher, {
+            as: "Supervisor",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "supervisorId",
