@@ -46,25 +46,45 @@ export async function isAdmin(req, res, next) {
     if (user.userType === "admin") {
         next();
     } else {
-        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
+        return res.status(403).json(GenericResponse.error("You are not allowed"));
     }
 }
 
 export async function isTeacher(req, res, next) {
+    // if teacherId is provided in url then it must be match match with actual id
     const user = req.user;
+    const { teacherId } = req.params;
     if (user.userType === "teacher") {
-        next();
+        if (teacherId) {
+            if (teacherId != user.userId) {
+                return res.status(403).json(GenericResponse.error("You are not allowed"));
+            } else {
+                next();
+            }
+        } else {
+            next();
+        }
     } else {
-        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
+        return res.status(403).json(GenericResponse.error("You are not allowed"));
     }
 }
 
 export async function isStudent(req, res, next) {
+    // if studentId is provided in url then it must be match match with actual id
     const user = req.user;
+    const { studentId } = req.params;
     if (user.userType === "student") {
-        next();
+        if (studentId) {
+            if (studentId != user.userId) {
+                return res.status(403).json(GenericResponse.error("You are not allowed"));
+            } else {
+                next();
+            }
+        } else {
+            next();
+        }
     } else {
-        res.status(403).json(GenericResponse.error("You are not allowed", GenericResponse.FORBIDDEN));
+        return res.status(403).json(GenericResponse.error("You are not allowed"));
     }
 }
 
