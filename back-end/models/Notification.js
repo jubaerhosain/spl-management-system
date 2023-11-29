@@ -31,6 +31,10 @@ export default (options) => {
                 isIn: [["info", "warning", "success", "error"]],
             },
         },
+        isRead: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     });
 
     Notification.associate = (models) => {

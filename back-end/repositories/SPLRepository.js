@@ -26,7 +26,7 @@ async function findSplWithCommitteeDetail(splId) {
 }
 
 async function findAllMemberId(splId) {
-    const members = await models.TeacherSPL_CommitteeMember.findAll({ where: { splId } });
+    const members = await models.TeacherSPL_CommitteeMember.findAll({ where: { splId: splId } });
     if (members.length == 0) return [];
     return members.map((member) => member.teacherId);
 }

@@ -26,7 +26,6 @@ async function getAllSPL(req, res) {}
 async function getSPL(req, res) {}
 async function getAllStudentUnderSPL(req, res) {}
 async function updateSPL(req, res) {}
-async function assignStudentToSPL(req, res) {}
 
 async function addCommitteeHead(req, res) {
     try {
@@ -78,7 +77,6 @@ async function addCommitteeMember(req, res) {
         const error1 = splValidator.validateMemberEmailDuplicates(members);
         if (error1) return res.status(400).json(GenericResponse.error("duplicate email", error1));
 
-
         const { splId } = req.params;
         await splService.addCommitteeMember(splId, members);
 
@@ -94,7 +92,10 @@ async function addCommitteeMember(req, res) {
 }
 
 async function deleteSPL(req, res) {}
+
+async function assignStudentToSPL(req, res) {}
 async function removeStudentFromSPL(req, res) {}
+
 async function removeCommitteeMember(req, res) {}
 async function removeCommitteeHead(req, res) {}
 async function removeSPLManager(req, res) {}

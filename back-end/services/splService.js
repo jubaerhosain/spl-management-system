@@ -27,10 +27,9 @@ async function addCommitteeHead(splId, data) {
     }
 
     const spl = await SPLRepository.findById(splId);
-    if(!spl) {
+    if (!spl) {
         throw new CustomError("spl does not exist", 400);
-    }
-    else if (spl.head) {
+    } else if (spl.head) {
         throw new CustomError("already have a committee head", 400);
     }
 
@@ -39,11 +38,11 @@ async function addCommitteeHead(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You have assigned as Head of ${spl.splName}, ${spl.academicYear}.`,
+        content: `You are assigned as Head of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
-    await NotificationRepository.create(notification);
+    await NotificationRepository.createNotification(notification);
 }
 
 async function addSPLManager(splId, data) {
@@ -58,10 +57,9 @@ async function addSPLManager(splId, data) {
     }
 
     const spl = await SPLRepository.findById(splId);
-    if(!spl) {
+    if (!spl) {
         throw new CustomError("spl does not exist", 400);
-    }
-    else if (spl.manager) {
+    } else if (spl.manager) {
         throw new CustomError("already have a spl manager", 400);
     }
 
@@ -70,16 +68,16 @@ async function addSPLManager(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You have assigned as Manager of ${spl.splName}, ${spl.academicYear}.`,
+        content: `You are assigned as Manager of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
-    await NotificationRepository.create(notification);
+    await NotificationRepository.createNotification(notification);
 }
 
 async function addCommitteeMember(splId, members) {
-    // const spl = await SPLRepository.findById(splId);
-    // if (!spl) throw new CustomError("spl does not exists", 400);
+    const spl = await SPLRepository.findById(splId);
+    if (!spl) throw new CustomError("spl does not exists", 400);
 
     const emails = members.map((member) => member.email);
     const users = await UserRepository.findAllExistedUserByEmail(emails);
@@ -114,7 +112,7 @@ async function addCommitteeMember(splId, members) {
     if (error) throw new CustomError("committee members must be teacher", 400, error);
 
     // {email, userId}
-    const membersWithId = emails.filter((email) => {
+    const membersWithId = emails.map((email) => {
         for (const user of users) {
             if (user.email == email) {
                 return {
@@ -125,9 +123,7 @@ async function addCommitteeMember(splId, members) {
         }
     });
 
-    // console.log(membersWithId);
-
-    const existedMemberIds = await SPLRepository.findAllMemberId();
+    const existedMemberIds = await SPLRepository.findAllMemberId(splId);
     const validateIsAlreadyMember = (membersWithId, existedMemberIds) => {
         const error = {};
         membersWithId.forEach((member, index) => {
@@ -136,7 +132,7 @@ async function addCommitteeMember(splId, members) {
                     error[index] = {};
                 }
                 error[index]["email"] = {
-                    msg: "committee member must be a teacher",
+                    msg: "already a member of this spl",
                     value: member.email,
                 };
             }
@@ -150,14 +146,23 @@ async function addCommitteeMember(splId, members) {
     const error1 = validateIsAlreadyMember(membersWithId, existedMemberIds);
     if (error1) throw new CustomError("already member", 400, error1);
 
-    console.log(users);
-
     const newMembers = membersWithId.map((member) => {
         return { splId, teacherId: member.userId };
     });
+
     await SPLRepository.createMembers(newMembers);
 
-    // push notifications
+    const notifications = [];
+    newMembers.forEach((member) => {
+        const notification = {
+            userId: member.teacherId,
+            content: `You are assigned as a Member of ${spl.splName}, ${spl.academicYear}.`,
+            type: "info",
+        };
+        notifications.push(notification);
+    });
+
+    await NotificationRepository.createMultipleNotification(notifications);
 }
 
 async function addPresentationEvaluator() {}

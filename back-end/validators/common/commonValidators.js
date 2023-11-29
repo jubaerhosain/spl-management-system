@@ -12,7 +12,7 @@ export const validatePassword = (password, helper) => {
 export const validateName = (name, helper) => {
     if (name.length < 3) return helper.message("name must be at least 3 character long");
 
-    let regex = /^[ \.a-zA-Z]{3,}$/;
+    let regex = /^[\d \.a-zA-Z]{3,}$/;
     if (!regex.test(name)) {
         return helper.message("Only characters, spaces and dots are allowed");
     }

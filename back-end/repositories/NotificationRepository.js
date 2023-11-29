@@ -1,9 +1,14 @@
 import { models } from "../config/mysql.js";
 
-async function create(data) {
-    await models.Notification.create(data);
+async function createNotification(notification) {
+    await models.Notification.create(notification);
+}
+
+async function createMultipleNotification(notifications) {
+    await models.Notification.bulkCreate(notifications);
 }
 
 export default {
-    create,
+    createNotification,
+    createMultipleNotification,
 };
