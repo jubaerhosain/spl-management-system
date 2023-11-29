@@ -8,7 +8,19 @@ async function createMembers(newMembers) {
     await models.TeacherSPL_CommitteeMember.bulkCreate(newMembers);
 }
 
-async function createMultipleSupervisor(splId, teacherStudentIds) {}
+async function isSupervisorRandomized(splId) {
+    const studentSupervisor = await models.StudentTeacher_Supervisor.findAll({ where: { splId } });
+    return studentSupervisor.length > 0;
+}
+
+async function createMultipleSupervisor(splId, teacherStudentIds) {
+    const splStudentTeacher = teacherStudentIds.map((element) => {
+        element.splId = splId;
+        return element;
+    });
+
+    await models.StudentTeacher_Supervisor.bulkCreate(splStudentTeacher);
+}
 
 async function findById(splId) {
     const spl = await models.SPL.findByPk(splId, {
@@ -75,6 +87,7 @@ async function deleteSPL(splId) {}
 export default {
     createSPL,
     createMembers,
+    isSupervisorRandomized,
     createMultipleSupervisor,
     assignStudents,
     findById,

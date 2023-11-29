@@ -2,6 +2,7 @@ import NotificationRepository from "../repositories/NotificationRepository.js";
 import SPLRepository from "../repositories/SPLRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
+import TeacherRepository from "../repositories/TeacherRepository.js";
 import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
 import lodash from "lodash";
@@ -39,7 +40,7 @@ async function addCommitteeHead(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You are assigned as Head of ${spl.splName}, ${spl.academicYear}.`,
+        content: `You have been assigned as Head of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
@@ -69,7 +70,7 @@ async function addSPLManager(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You are assigned as Manager of ${spl.splName}, ${spl.academicYear}.`,
+        content: `You have been assigned as Manager of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
@@ -157,7 +158,7 @@ async function addCommitteeMember(splId, members) {
     newMembers.forEach((member) => {
         const notification = {
             userId: member.teacherId,
-            content: `You are assigned as a Member of ${spl.splName}, ${spl.academicYear}.`,
+            content: `You have been assigned as a Member of ${spl.splName}, ${spl.academicYear}.`,
             type: "info",
         };
         notifications.push(notification);
@@ -215,12 +216,13 @@ async function removeStudentFromSPL(splId, studentId) {
 }
 
 async function randomizeSupervisor(splId) {
-    // randomize only for the first time. assign supervisor manually then if needed
-
     const spl = await SPLRepository.findById(splId);
     if (!spl) throw new CustomError("spl does not exist", 400);
 
     if (spl.splName != "spl1") throw new CustomError("randomization is only allowed for spl1", 400);
+
+    const randomized = await SPLRepository.isSupervisorRandomized(splId);
+    if (randomized) throw new CustomError(`Randomization already done for ${spl.splName}, ${spl.academicYear}.`, 400);
 
     const teachers = await TeacherRepository.findAllAvailableTeacher();
     const students = await StudentRepository.findAllStudentUnderSPL(splId);
@@ -236,25 +238,43 @@ async function randomizeSupervisor(splId) {
         const studentTeachers = [];
         for (let i = 0; i < students.length; i++) {
             studentTeachers.push({
-                studentId: students[i].userId,
-                teacherId: teachers[i].userId,
+                student: students[i],
+                teacher: teachers[i],
             });
         }
 
         return studentTeachers;
     };
 
-    // teacher length may be increased inside randomize function
-    const teacherLength = teachers.length;
+    const studentTeacher = randomize(students, teachers);
 
-    const studentTeacherIds = randomize(students, teachers);
+    const studentTeacherIds = studentTeacher.map((element) => {
+        return {
+            studentId: element.student.userId,
+            teacherId: element.teacher.userId,
+        };
+    });
 
-    // await SPLRepository.createMultipleSupervisor(splId, studentTeacherIds);
+    await SPLRepository.createMultipleSupervisor(splId, studentTeacherIds);
 
-    // push notification to the student and teacher both [loop through length and index]
-    const teacherNotifications = [];
+    const notifications = [];
+    studentTeacher.forEach((element) => {
+        const { student, teacher } = element;
+        const studentNotification = {
+            userId: student.userId,
+            content: `<b>${teacher.name}</b> has been assigned as your <b>Supervisor</b> for <b>${spl.splName}, ${spl.academicYear}.</b>`,
+            type: "info",
+        };
+        const teacherNotification = {
+            userId: teacher.userId,
+            content: `You have been assigned as <b>Supervisor</b> of <b>${student.name}</b> for <b>${spl.splName}, ${spl.academicYear}.</b>`,
+            type: "info",
+        };
+        notifications.push(studentNotification);
+        notifications.push(teacherNotification);
+    });
 
-    const studentNotifications = [];
+    await NotificationRepository.createMultipleNotification(notifications);
 }
 
 export default {

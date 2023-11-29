@@ -68,7 +68,7 @@ async function findAll() {
     return teachers;
 }
 
-async function findAllAvailableTeachers() {
+async function findAllAvailableTeacher() {
     let teachers = await models.Teacher.findAll({
         include: {
             model: models.User,
@@ -125,6 +125,6 @@ export default {
     createTeacher,
     findById,
     findAll,
-    findAllAvailableTeachers,
+    findAllAvailableTeacher,
     updateTeacher,
 };
