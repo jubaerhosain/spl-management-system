@@ -168,7 +168,6 @@ async function addCommitteeMember(splId, members) {
 async function addPresentationEvaluator() {}
 
 async function assignStudentsToSPL(splId) {
-    
     const spl = await SPLRepository.findById(splId);
     if (!spl) {
         throw new CustomError("spl does not exist", 400);
@@ -176,23 +175,28 @@ async function assignStudentsToSPL(splId) {
 
     const curriculumYear = splUtils.getCurriculumYear(spl.splName);
 
-    const unassignedStudents = await StudentRepository.findAllStudentNotAssignedToSPL(
-        spl.splId,
-        curriculumYear,
-    );
+    const unassignedStudents = await StudentRepository.findAllStudentNotAssignedToSPL(spl.splId, curriculumYear);
 
     if (unassignedStudents.length <= 0) {
         throw new CustomError(`There is no ${curriculumYear} year student to assign to ${spl.splName}, ${spl.academicYear}`, 400);
     }
 
-    const unassignedStudentIds = unassignedStudents.map(student => student.studentId);
+    const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
+    await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
 
+    const notifications = [];
+    unassignedStudents.map((student) => {
+        const notification = {
+            userId: student.studentId,
+            content: `You have assigned to ${spl.splName}, ${spl.academicYear}.`,
+            type: "info",
+        };
+        notifications.push(notification);
+    });
 
-    // await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
+    await NotificationRepository.createMultipleNotification(notifications);
 
-    // await emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
-
-    // push notification
+    // emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
 }
 
 async function removeStudentFromSPL(splId, studentId) {
