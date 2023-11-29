@@ -1,6 +1,6 @@
 import { models, sequelize, Op } from "../config/mysql.js";
 
-async function create(teachers) {
+async function createTeacher(teachers) {
     const transaction = await sequelize.transaction();
     try {
         await models.User.bulkCreate(teachers, {
@@ -50,9 +50,6 @@ async function findAll() {
             where: {
                 active: true,
             },
-            attributes: {
-                exclude: ["password", "active"],
-            },
         },
         raw: true,
         nest: true,
@@ -62,7 +59,6 @@ async function findAll() {
     });
 
     if (teachers.length > 0) {
-        // copy the properties of the User to the teachers array
         for (const i in teachers) {
             teachers[i] = { ...teachers[i], ...teachers[i].User };
             delete teachers[i].User;
@@ -72,7 +68,33 @@ async function findAll() {
     return teachers;
 }
 
-async function update(userId, teacher) {
+async function findAllAvailableTeachers() {
+    let teachers = await models.Teacher.findAll({
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
+            },
+        },
+        raw: true,
+        nest: true,
+        where: {
+            available: true,
+        },
+    });
+
+    if (teachers.length > 0) {
+        for (const i in teachers) {
+            teachers[i] = { ...teachers[i], ...teachers[i].User };
+            delete teachers[i].User;
+        }
+    }
+
+    return teachers;
+}
+
+async function updateTeacher(userId, teacher) {
     const transaction = await sequelize.transaction();
     try {
         // update to User model
@@ -100,8 +122,9 @@ async function update(userId, teacher) {
 }
 
 export default {
-    create,
+    createTeacher,
     findById,
     findAll,
-    update,
+    findAllAvailableTeachers,
+    updateTeacher,
 };

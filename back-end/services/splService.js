@@ -4,6 +4,7 @@ import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
+import lodash from "lodash";
 import emailService from "./emailServices/emailService.js";
 
 async function createSPL(data) {
@@ -215,13 +216,45 @@ async function removeStudentFromSPL(splId, studentId) {
 
 async function randomizeSupervisor(splId) {
     // randomize only for the first time. assign supervisor manually then if needed
+
     const spl = await SPLRepository.findById(splId);
     if (!spl) throw new CustomError("spl does not exist", 400);
 
     if (spl.splName != "spl1") throw new CustomError("randomization is only allowed for spl1", 400);
 
-    // find all available teachers  
-    // find all students of that spl without supervisor
+    const teachers = await TeacherRepository.findAllAvailableTeacher();
+    const students = await StudentRepository.findAllStudentUnderSPL(splId);
+
+    const randomize = (students, teachers) => {
+        students = lodash.shuffle(students);
+        teachers = lodash.shuffle(teachers);
+
+        while (teachers.length < students.length) {
+            teachers = teachers.concat(teachers);
+        }
+
+        const studentTeachers = [];
+        for (let i = 0; i < students.length; i++) {
+            studentTeachers.push({
+                studentId: students[i].userId,
+                teacherId: teachers[i].userId,
+            });
+        }
+
+        return studentTeachers;
+    };
+
+    // teacher length may be increased inside randomize function
+    const teacherLength = teachers.length;
+
+    const studentTeacherIds = randomize(students, teachers);
+
+    // await SPLRepository.createMultipleSupervisor(splId, studentTeacherIds);
+
+    // push notification to the student and teacher both [loop through length and index]
+    const teacherNotifications = [];
+
+    const studentNotifications = [];
 }
 
 export default {

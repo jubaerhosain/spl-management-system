@@ -8,6 +8,8 @@ async function createMembers(newMembers) {
     await models.TeacherSPL_CommitteeMember.bulkCreate(newMembers);
 }
 
+async function createMultipleSupervisor(splId, teacherStudentIds) {}
+
 async function findById(splId) {
     const spl = await models.SPL.findByPk(splId, {
         raw: true,
@@ -73,6 +75,7 @@ async function deleteSPL(splId) {}
 export default {
     createSPL,
     createMembers,
+    createMultipleSupervisor,
     assignStudents,
     findById,
     findSplWithCommitteeDetail,

@@ -31,7 +31,7 @@ async function createTeacher(teachers) {
         return user;
     });
 
-    await TeacherRepository.create(newTeachers);
+    await TeacherRepository.createTeacher(newTeachers);
 
     try {
         emailService.sendAccountCreationEmail(credentials);
@@ -49,7 +49,7 @@ async function createTeacher(teachers) {
 }
 
 async function updateTeacher(userId, teacher) {
-    await TeacherRepository.update(userId, teacher);
+    await TeacherRepository.updateTeacher(userId, teacher);
 }
 
 export default {
