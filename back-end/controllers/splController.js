@@ -16,7 +16,7 @@ async function createSPL(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while creating student account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
@@ -132,6 +132,22 @@ async function getAllStudentUnderSPL(req, res) {
 
 async function removeStudentFromSPL(req, res) {}
 
+async function randomizeSupervisor(req, res) {
+    try {
+        const { splId } = req.params;
+        await splService.randomizeSupervisor(splId);
+
+        res.json(GenericResponse.success("Assigned supervisor successfully for all students under spl"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
 export default {
     createSPL,
     updateSPL,
@@ -148,4 +164,5 @@ export default {
     removeSPLManager,
     addCommitteeMember,
     removeCommitteeMember,
+    randomizeSupervisor,
 };

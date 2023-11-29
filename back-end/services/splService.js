@@ -213,6 +213,17 @@ async function removeStudentFromSPL(splId, studentId) {
     await SPLRepository.removeStudent(splId, studentId);
 }
 
+async function randomizeSupervisor(splId) {
+    // randomize only for the first time. assign supervisor manually then if needed
+    const spl = await SPLRepository.findById(splId);
+    if (!spl) throw new CustomError("spl does not exist", 400);
+
+    if (spl.splName != "spl1") throw new CustomError("randomization is only allowed for spl1", 400);
+
+    // find all available teachers  
+    // find all students of that spl without supervisor
+}
+
 export default {
     createSPL,
     addCommitteeHead,
@@ -221,4 +232,5 @@ export default {
     assignStudentsToSPL,
     getAllStudentUnderSPL,
     removeStudentFromSPL,
+    randomizeSupervisor,
 };

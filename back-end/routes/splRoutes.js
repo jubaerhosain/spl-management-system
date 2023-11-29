@@ -27,7 +27,7 @@ splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStuden
 splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
 // supervisor randomization
-splRoutes.post("/:splId/supervisor/randomize");
+splRoutes.post("/:splId/supervisor/randomize", checkAuthentication, splController.randomizeSupervisor);
 
 // presentation event related routes
 splRoutes.post("/:splId/presentation"); // createPresentationEvent
