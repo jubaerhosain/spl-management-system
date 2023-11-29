@@ -151,7 +151,10 @@ async function addCommitteeMember(splId, members) {
 
     console.log(users);
 
-    await SPLRepository.createMembers(membersWithId.map((member) => member.userId));
+    const newMembers = membersWithId.map((member) => {
+        return { splId, teacherId: member.userId };
+    });
+    await SPLRepository.createMembers(newMembers);
 }
 
 async function assignStudents(splName) {

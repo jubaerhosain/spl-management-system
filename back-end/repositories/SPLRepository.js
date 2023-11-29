@@ -4,8 +4,8 @@ async function createSPL(spl) {
     await models.SPL.create(spl);
 }
 
-async function createMembers(memberIds) {
-
+async function createMembers(newMembers) {
+    await models.TeacherSPL_CommitteeMember.bulkCreate(newMembers);
 }
 
 async function findById(splId) {
@@ -26,7 +26,9 @@ async function findSplWithCommitteeDetail(splId) {
 }
 
 async function findAllMemberId(splId) {
-
+    const members = await models.TeacherSPL_CommitteeMember.findAll({ where: { splId } });
+    if (members.length == 0) return [];
+    return members.map((member) => member.teacherId);
 }
 
 async function findActiveSPLByName(splName) {
@@ -38,8 +40,6 @@ async function findActiveSPLByName(splName) {
     });
     return spl;
 }
-
-
 
 async function findAllActiveSPL() {}
 
