@@ -39,7 +39,7 @@ Notification will be created on some action. so there no need to post/put api en
     delete: student/{studentId} {by admin}
 
     get: student/{studentId}/spl {all spl, with progress data}
-    get: student/{studentId}/spl/{splName} {a spl, with progress data}
+    get: student/{studentId}/spl/:splId {a spl, with progress data}
 
     get: student/{studentId}/team/ {all teams of that student}
     get: student/{studentId}/team/{teamId} // team info of a specific team
@@ -48,8 +48,8 @@ Notification will be created on some action. so there no need to post/put api en
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
-    post: student/{studentId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
-    get: student/{studentId}/supervisor/   query{current: true/false, splName: , splId: }
+    post: student/{studentId}/supervisor/ {splId, teacherEmail} // add supervisor manually
+    get: student/{studentId}/supervisor/   query{current: true/false}
     delete: student/{studentId}/supervisor/{supervisorId} // remove A supervisor of that student
 
 4. Teacher
@@ -70,11 +70,11 @@ Notification will be created on some action. so there no need to post/put api en
     put: teacher/{teacherId}/request/student/{studentId} body{accept: true} // accept student request
     delete: teacher/{teacherId}/request/student/{studentId} body{reject: true} // reject student request
 
-// to resource identification use splId, can use splName in other places
+// to resource identification use splId, can use splName in other places such as query param
 5. SPL 
-    post: spl/ // create a new spl committee
+    post: spl/ // create a new spl
     get: spl/ {query params: optional, splName, active: true/false}
-    get: spl/{splName}/active // get active spl info by splName
+    // get: spl/{splName}/active // get active spl info by splName
 
     get: spl/{splId}  
     put: spl/{splId} {data in body}
@@ -85,6 +85,7 @@ Notification will be created on some action. so there no need to post/put api en
     get: spl/{splId}/student/ // get all student under spl
     delete: spl/{splId}/student/{studentId} // delete supervisor also if have
 
+    // committee related routes 
     put: spl/{splId}/head
     delete: spl/{splId}/head/{headId}
     put: spl/{splId}/manager
@@ -140,7 +141,7 @@ Notification will be created on some action. so there no need to post/put api en
     get: team/{teamId}/request //get all requested teachers by that team
     delete: team/{teamId}/request body{teacherId} // delete a team request
 
-    put: team/{teamId}/supervisor/ {splName|splId, teacherEmail} // add supervisor manually
+    put: team/{teamId}/supervisor/ {splId, teacherEmail} // add supervisor manually
     delete: team/{teamId}/supervisor/{supervisorId} // remove supervisor of that team
 
 7. Notice 

@@ -17,7 +17,7 @@ async function createSPL(data) {
         });
     }
 
-    await SPLRepository.create(data);
+    await SPLRepository.createSPL(data);
 }
 
 async function addCommitteeHead(splId, data) {
@@ -37,7 +37,7 @@ async function addCommitteeHead(splId, data) {
     }
 
     const head = { head: user.userId };
-    await SPLRepository.update(splId, head);
+    await SPLRepository.updateSPL(splId, head);
 
     const notification = {
         userId: user.userId,
@@ -65,7 +65,7 @@ async function addSPLManager(splId, data) {
     }
 
     const manager = { manager: user.userId };
-    await SPLRepository.update(splId, manager);
+    await SPLRepository.updateSPL(splId, manager);
 
     const notification = {
         userId: user.userId,
@@ -83,7 +83,7 @@ async function addCommitteeMember(splId, members) {
     const emails = members.map((member) => member.email);
     const users = await UserRepository.findAllExistedUserByEmail(emails);
 
-    const validateIfAllAreTeacher = async () => {
+    const validateIsAllTeacher = (users, emails) => {
         const isTeacherEmail = (users, email) => {
             for (const user of users) {
                 if (email === user.email && user.userType == "teacher") return true;
@@ -109,12 +109,49 @@ async function addCommitteeMember(splId, members) {
         return error;
     };
 
-    const error = await validateIfAllAreTeacher();
+    const error = validateIsAllTeacher(users, emails);
     if (error) throw new CustomError("committee members must be teacher", 400, error);
 
-    // check if anyone is already member or not
+    // {email, userId}
+    const membersWithId = emails.filter((email) => {
+        for (const user of users) {
+            if (user.email == email) {
+                return {
+                    email: email,
+                    userId: user.userId,
+                };
+            }
+        }
+    });
+
+    // console.log(membersWithId);
+
+    const existedMemberIds = await SPLRepository.findAllMemberId();
+    const validateIsAlreadyMember = (membersWithId, existedMemberIds) => {
+        const error = {};
+        membersWithId.forEach((member, index) => {
+            if (existedMemberIds.includes(member.userId)) {
+                if (!error[index]) {
+                    error[index] = {};
+                }
+                error[index]["email"] = {
+                    msg: "committee member must be a teacher",
+                    value: member.email,
+                };
+            }
+        });
+
+        if (Object.keys(error).length === 0) return null;
+
+        return error;
+    };
+
+    const error1 = validateIsAlreadyMember(membersWithId, existedMemberIds);
+    if (error1) throw new CustomError("committee members must be teacher", 400, error1);
 
     console.log(users);
+
+    await SPLRepository.createMembers(membersWithId.map((member) => member.userId));
 }
 
 async function assignStudents(splName) {

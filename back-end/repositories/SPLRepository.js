@@ -1,7 +1,11 @@
 import { models, sequelize } from "../config/mysql.js";
 
-async function create(spl) {
+async function createSPL(spl) {
     await models.SPL.create(spl);
+}
+
+async function createMembers(memberIds) {
+
 }
 
 async function findById(splId) {
@@ -10,6 +14,19 @@ async function findById(splId) {
     });
 
     return spl;
+}
+
+async function findSplWithCommitteeDetail(splId) {
+    // include head, manger, committee member details
+    const spl = await models.SPL.findByPk(splId, {
+        raw: true,
+    });
+
+    return spl;
+}
+
+async function findAllMemberId(splId) {
+
 }
 
 async function findActiveSPLByName(splName) {
@@ -22,50 +39,21 @@ async function findActiveSPLByName(splName) {
     return spl;
 }
 
-async function findActiveSPLByStudentId(studentId) {}
 
-async function findAllSPLByStudentId(studentId) {}
-
-async function findAll() {}
 
 async function findAllActiveSPL() {}
 
-// async function assignStudents(splId, studentIds) {
-//     const studentId_splId = [];
-//     for (const studentId of studentIds) {
-//         studentId_splId.push({
-//             studentId,
-//             splId,
-//         });
-//     }
+async function assignStudents(splId, studentIds) {
+    const studentId_splId = [];
+    for (const studentId of studentIds) {
+        studentId_splId.push({
+            studentId,
+            splId,
+        });
+    }
 
-//     await models.StudentSPL.bulkCreate(studentId_splId);
-// }
-
-// async function isExists(splName) {
-//     const spl = await models.SPL.findOne({
-//         where: {
-//             splName: splName,
-//         },
-//         raw: true,
-//         attributes: ["splId"],
-//     });
-
-//     if (spl) return true;
-//     else return false;
-// }
-
-// async function isStudentBelongsToSPL(splId, studentId) {
-//     const studentSPL = await models.StudentSPL.findOne({
-//         where: {
-//             splId,
-//             studentId,
-//         },
-//     });
-
-//     if (studentSPL) return true;
-//     else return false;
-// }
+    await models.StudentSPL.bulkCreate(studentId_splId);
+}
 
 async function removeStudentFromSPL(splId, studentId) {
     await models.StudentSPL.destroy({
@@ -76,14 +64,20 @@ async function removeStudentFromSPL(splId, studentId) {
     });
 }
 
-async function update(splId, data) {
+async function updateSPL(splId, data) {
     await models.SPL.update(data, { where: { splId } });
 }
 
+async function deleteSPL(splId) {}
+
 export default {
-    create,
+    createSPL,
+    createMembers,
     findById,
+    findSplWithCommitteeDetail,
+    findAllMemberId,
     findActiveSPLByName,
     removeStudentFromSPL,
-    update
+    updateSPL,
+    deleteSPL,
 };

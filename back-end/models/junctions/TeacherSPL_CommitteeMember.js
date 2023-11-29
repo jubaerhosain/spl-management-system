@@ -1,6 +1,5 @@
 "use strict";
 
-// [Committee Members]
 export default (options) => {
     const { sequelize, DataTypes } = options;
     const TeacherSPL_CommitteeMember = sequelize.define("TeacherSPL_CommitteeMembers", {
