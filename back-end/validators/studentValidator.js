@@ -42,7 +42,7 @@ const updateStudentSchema = Joi.object({
 });
 
 const updateStudentByAdminSchema = Joi.object({
-    studentId: Joi.number().required(),
+    studentId: Joi.string().uuid().required(),
     name: Joi.string().trim().custom(validateName).optional(),
     rollNo: Joi.string().trim().custom(validateRollNo).optional(),
     registrationNo: Joi.string().trim().custom(validateRegistrationNo).optional(),
@@ -99,8 +99,8 @@ function validateCreateStudentDuplicates(students) {
 
 /**
  * Checks whether email, rollNo, registrationNo already exists or not.
- * @param {*} students 
- * @returns 
+ * @param {*} students
+ * @returns
  */
 async function validateCreateStudentExistence(students) {
     const error = {};

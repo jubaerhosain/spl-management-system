@@ -62,6 +62,10 @@ async function getAllStudent(options) {
     return students;
 }
 
+async function requestTeacher(studentId, teacherId) {
+
+}
+
 async function getAllStudentByCurriculumYear(curriculumYear) {
     const students = await StudentRepository.findAllByCurriculumYear(curriculumYear);
     return students;
@@ -113,6 +117,7 @@ async function updateStudentByAdmin(studentId, student) {
 }
 
 export default {
+    requestTeacher,
     createStudent,
     getStudent,
     getAllStudent,

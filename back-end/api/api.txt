@@ -3,10 +3,12 @@ POST: always use body to create resource {in case of child resource can use para
 PUT, DELETE: try to use body but some cases you can use param to "locate resource"
 Notification will be created on some action. so there no need to post/put api end point for them
 
+move description of swagger documentation to postman
+
 
 1. Authentication [done]
     post: auth/login   body{email, password}
-    get: auth/                             // get authenticated user
+    get: auth/user                             // get authenticated user details
     delete: auth/logout
 
     patch: auth/change-password body{oldPassword, newPassword}
@@ -44,7 +46,7 @@ Notification will be created on some action. so there no need to post/put api en
     get: student/{studentId}/team/ {all teams of that student}
     get: student/{studentId}/team/{teamId} // team info of a specific student
 
-    post: student{studentId}/request body{teacherId} // request a teacher to be supervisor
+    post: student/{studentId}/request body{teacherId} // request a teacher to be supervisor
     get: student/{studentId}/request  // all teacher requested by that student
     delete: student/{studentId}/request body{teacherId} // delete request
 
