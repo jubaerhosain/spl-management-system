@@ -114,7 +114,21 @@ async function assignStudentToSPL(req, res) {
     }
 }
 
-async function getAllStudentUnderSPL(req, res) {}
+async function getAllStudentUnderSPL(req, res) {
+    try {
+        const { splId } = req.params;
+        const students = await splService.getAllStudentUnderSPL(splId);
+
+        res.json(GenericResponse.success("successfully get all students", students));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function removeStudentFromSPL(req, res) {}
 

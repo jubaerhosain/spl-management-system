@@ -175,7 +175,7 @@ async function assignStudentsToSPL(splId) {
 
     const curriculumYear = splUtils.getCurriculumYear(spl.splName);
 
-    const unassignedStudents = await StudentRepository.findAllStudentNotAssignedToSPL(spl.splId, curriculumYear);
+    const unassignedStudents = await StudentRepository.findAllStudentNotUnderSPL(spl.splId, curriculumYear);
 
     if (unassignedStudents.length <= 0) {
         throw new CustomError(`There is no ${curriculumYear} year student to assign to ${spl.splName}, ${spl.academicYear}`, 400);
@@ -199,6 +199,11 @@ async function assignStudentsToSPL(splId) {
     // emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
 }
 
+async function getAllStudentUnderSPL(splId) {
+    const students = await StudentRepository.findAllStudentUnderSPL(splId);
+    return students;
+}
+
 async function removeStudentFromSPL(splId, studentId) {
     const belongs = await SPLRepository.isStudentBelongsToSPL(splId, studentId);
     if (!belongs) {
@@ -214,5 +219,6 @@ export default {
     addSPLManager,
     addCommitteeMember,
     assignStudentsToSPL,
+    getAllStudentUnderSPL,
     removeStudentFromSPL,
 };

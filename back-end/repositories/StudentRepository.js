@@ -139,7 +139,49 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     return [];
 }
 
-async function findAllStudentNotAssignedToSPL(splId, curriculumYear) {
+async function findAllStudentUnderSPL(splId) {
+    const students = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+                where: {
+                    active: true,
+                },
+                required: true,
+            },
+            {
+                model: models.SPL,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                where: {
+                    splId: splId,
+                },
+                required: true,
+            },
+        ],
+        raw: true,
+        nest: true,
+    });
+
+    if (students.length == 0) return [];
+
+    const flattened = [];
+    students.forEach((student) => {
+        const temp = {
+            ...student,
+            ...student.User,
+        };
+        delete temp.User;
+        delete temp.SPLs;
+        flattened.push(temp);
+    });
+
+    return flattened;
+}
+
+async function findAllStudentNotUnderSPL(splId, curriculumYear) {
     // find all active students of ${curriculumYear} left join with ${splId}
     const students = await models.Student.findAll({
         include: [
@@ -179,8 +221,8 @@ async function findAllStudentNotAssignedToSPL(splId, curriculumYear) {
     unassignedStudents.forEach((student) => {
         const temp = {
             ...student,
-            ...student.User
-        } 
+            ...student.User,
+        };
         delete temp.User;
         delete temp.SPLs;
         flattened.push(temp);
@@ -216,7 +258,8 @@ export default {
     findAllByCurriculumYear,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
-    findAllStudentNotAssignedToSPL,
+    findAllStudentUnderSPL,
+    findAllStudentNotUnderSPL,
     updateStudent,
     updateByAdmin,
 };

@@ -22,7 +22,7 @@ splRoutes.put("/:splId/member", checkAuthentication, splController.addCommitteeM
 splRoutes.delete("/:splId/member/:memberId", checkAuthentication, splController.removeCommitteeMember);
 
 // student related routes
-splRoutes.post("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
+splRoutes.put("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
 splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStudentUnderSPL);
 splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
