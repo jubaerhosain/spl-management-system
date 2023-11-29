@@ -25,7 +25,7 @@ studentRoutes.get("/:studentId/team", studentController.getAllTeam);
 studentRoutes.get("/:studentId/team/:teamId", studentController.getCurrentTeam);
 
 // route related to request
-studentRoutes.post("/:studentId/request", studentController.requestTeacher);
+studentRoutes.post("/:studentId/request", checkAuthentication, isStudent, studentController.requestTeacher);
 studentRoutes.get("/:studentId/request", studentController.getAllRequest);
 studentRoutes.delete("/:studentId/request", studentController.deleteRequest);
 
