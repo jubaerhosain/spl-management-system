@@ -7,9 +7,9 @@ import splUtils from "../utils/splUtils.js";
 import emailService from "./emailServices/emailService.js";
 
 async function createSPL(data) {
-    const spl = await SPLRepository.findSPLByNameAndYear(data.splName, data.curriculumYear);
+    const spl = await SPLRepository.findSPLByNameAndYear(data.splName, data.academicYear);
     if (spl) {
-        throw new CustomError(`${data.splName} ${data.curriculumYear} already exists`, 400);
+        throw new CustomError(`${data.splName} ${data.academicYear} already exists`, 400);
     }
 
     await SPLRepository.createSPL(data);
@@ -27,7 +27,10 @@ async function addCommitteeHead(splId, data) {
     }
 
     const spl = await SPLRepository.findById(splId);
-    if (spl?.head) {
+    if(!spl) {
+        throw new CustomError("spl does not exist", 400);
+    }
+    else if (spl.head) {
         throw new CustomError("already have a committee head", 400);
     }
 
@@ -36,7 +39,7 @@ async function addCommitteeHead(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You have assigned as Committee head of ${spl.splName} ${spl.academicYear}`,
+        content: `You have assigned as Head of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
@@ -55,7 +58,10 @@ async function addSPLManager(splId, data) {
     }
 
     const spl = await SPLRepository.findById(splId);
-    if (spl?.manager) {
+    if(!spl) {
+        throw new CustomError("spl does not exist", 400);
+    }
+    else if (spl.manager) {
         throw new CustomError("already have a spl manager", 400);
     }
 
@@ -64,7 +70,7 @@ async function addSPLManager(splId, data) {
 
     const notification = {
         userId: user.userId,
-        content: `You have assigned as spl manager of ${spl.splName} ${spl.academicYear}`,
+        content: `You have assigned as Manager of ${spl.splName}, ${spl.academicYear}.`,
         type: "info",
     };
 
@@ -150,6 +156,8 @@ async function addCommitteeMember(splId, members) {
         return { splId, teacherId: member.userId };
     });
     await SPLRepository.createMembers(newMembers);
+
+    // push notifications
 }
 
 async function addPresentationEvaluator() {}

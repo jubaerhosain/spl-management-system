@@ -48,18 +48,18 @@ export default (options) => {
     SPL.associate = (models) => {
         // Teacher - SPL [one to many]
         SPL.belongsTo(models.Teacher, {
-            as: "SPLManager",
+            as: "Manager",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "splManager",
+            foreignKey: "manager",
         });
 
         // Teacher - SPL [one to many]
         SPL.belongsTo(models.Teacher, {
-            as: "CommitteeHead",
+            as: "Head",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "committeeHead",
+            foreignKey: "head",
         });
 
         // Teacher - SPL [many to many]

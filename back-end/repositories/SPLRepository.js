@@ -31,10 +31,11 @@ async function findAllMemberId(splId) {
     return members.map((member) => member.teacherId);
 }
 
-async function findSPLByNameAndYear(splName, curriculumYear) {
+async function findSPLByNameAndYear(splName, academicYear) {
     const spl = await models.SPL.findOne({
         where: {
             splName,
+            academicYear,
         },
     });
     return spl;

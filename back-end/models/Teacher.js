@@ -34,7 +34,7 @@ export default (options) => {
             as: "ManagedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "splManager",
+            foreignKey: "manager",
         });
 
         // Teacher - SPL [one to many] as Committee Head
@@ -42,7 +42,7 @@ export default (options) => {
             as: "LeadedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "committeeHead",
+            foreignKey: "head",
         });
 
         // Teacher - SPL [many to many]
