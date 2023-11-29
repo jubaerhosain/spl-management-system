@@ -22,8 +22,8 @@ splRoutes.put("/:splId/member", checkAuthentication, splController.addCommitteeM
 splRoutes.delete("/:splId/member/:memberId", checkAuthentication, splController.removeCommitteeMember);
 
 // student related routes
+splRoutes.post("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
 splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStudentUnderSPL);
-splRoutes.put("/:splId/student", checkAuthentication, splController.assignStudentToSPL);
 splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
 // supervisor randomization
@@ -38,7 +38,7 @@ splRoutes.post("/:splId/presentation/evaluator");
 splRoutes.get("/:splId/presentation/evaluator"); 
 splRoutes.delete("/:splId/presentation/evaluator/:evaluatorId"); 
 
-// spl mark related routes
+// spl mark related routes (add a common middleware to check if spl is exist or not)
 splRoutes.get("/:splId/mark", splMarkRoutes); 
 
 export default splRoutes;

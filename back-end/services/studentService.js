@@ -34,7 +34,7 @@ async function createStudent(students) {
         return user;
     });
 
-    await StudentRepository.create(newStudents);
+    await StudentRepository.createStudent(newStudents);
 
     try {
         emailService.sendAccountCreationEmail(credentials);
@@ -79,7 +79,7 @@ async function getCurrentSPL(studentId) {
 
 async function updateStudent(userId, student) {
     // update in user table [only those fields are allowed]
-    await UserRepository.updateAccount(userId, student);
+    await UserRepository.update(userId, student);
 }
 
 async function updateStudentByAdmin(studentId, student) {
@@ -109,7 +109,7 @@ async function updateStudentByAdmin(studentId, student) {
     if (Object.keys(error).length > 0) throw new CustomError("invalid data", 400, error);
 
     // update to Student table [only those fields are allowed]
-    await StudentRepository.update(studentId, student);
+    await StudentRepository.updateByAdmin(studentId, student);
 }
 
 export default {

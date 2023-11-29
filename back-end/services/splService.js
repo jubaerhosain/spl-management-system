@@ -167,27 +167,30 @@ async function addCommitteeMember(splId, members) {
 
 async function addPresentationEvaluator() {}
 
-async function assignStudentsToSPL(splId, curriculumYearI) {
-    const curriculumYear = splUtils.getCurriculumYear(splName);
-
-    const spl = await SPLRepository.findByName(splName);
-
+async function assignStudentsToSPL(splId) {
+    
+    const spl = await SPLRepository.findById(splId);
     if (!spl) {
-        throw new CustomError("SPL does not exist", 400);
+        throw new CustomError("spl does not exist", 400);
     }
 
-    const { unassignedStudentIds, unassignedStudentEmails } = await StudentRepository.findAllUnassignedStudentIdAndEmail(
+    const curriculumYear = splUtils.getCurriculumYear(spl.splName);
+
+    const unassignedStudents = await StudentRepository.findAllStudentNotAssignedToSPL(
         spl.splId,
-        curriculumYear
+        curriculumYear,
     );
 
-    if (unassignedStudentIds.length <= 0) {
-        throw new CustomError(`There is no ${curriculumYear} year student to assign to ${splName.toUpperCase()}`, 400);
+    if (unassignedStudents.length <= 0) {
+        throw new CustomError(`There is no ${curriculumYear} year student to assign to ${spl.splName}, ${spl.academicYear}`, 400);
     }
 
-    await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
+    const unassignedStudentIds = unassignedStudents.map(student => student.studentId);
 
-    await emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
+
+    // await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
+
+    // await emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
 
     // push notification
 }

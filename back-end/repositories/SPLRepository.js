@@ -47,8 +47,8 @@ async function assignStudents(splId, studentIds) {
     const studentId_splId = [];
     for (const studentId of studentIds) {
         studentId_splId.push({
-            studentId,
             splId,
+            studentId,
         });
     }
 
@@ -73,6 +73,7 @@ async function deleteSPL(splId) {}
 export default {
     createSPL,
     createMembers,
+    assignStudents,
     findById,
     findSplWithCommitteeDetail,
     findAllMemberId,

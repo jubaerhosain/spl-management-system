@@ -1,6 +1,6 @@
 import { sequelize, models, Op } from "../config/mysql.js";
 
-async function create(students) {
+async function createStudent(students) {
     const transaction = await sequelize.transaction();
     try {
         await models.User.bulkCreate(students, {
@@ -139,48 +139,57 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     return [];
 }
 
-// async function findAllUnassignedStudent(splId, curriculumYear) {
-//     // find all active students of ${curriculumYear} left join with ${splName}
-//     const students = await models.Student.findAll({
-//         include: [
-//             {
-//                 model: models.User,
-//                 where: {
-//                     active: true,
-//                 },
-//                 required: true,
-//             },
-//             {
-//                 model: models.SPL,
-//                 through: {
-//                     model: models.StudentSPL,
-//                     attributes: [],
-//                 },
-//                 where: {
-//                     splId: splId,
-//                 },
-//                 required: false,
-//             },
-//         ],
-//         where: {
-//             curriculumYear,
-//         },
-//         raw: true,
-//         nest: true,
-//         attributes: ["studentId"],
-//     });
+async function findAllStudentNotAssignedToSPL(splId, curriculumYear) {
+    // find all active students of ${curriculumYear} left join with ${splId}
+    const students = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+                where: {
+                    active: true,
+                },
+                required: true,
+            },
+            {
+                model: models.SPL,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                where: {
+                    splId: splId,
+                },
+                required: false,
+            },
+        ],
+        where: {
+            curriculumYear,
+        },
+        raw: true,
+        nest: true,
+    });
 
-//     const unassignedStudents = students.filter((student) => {
-//         return !student.SPLs.splId;
-//     });
+    const unassignedStudents = students.filter((student) => {
+        return !student.SPLs.splId;
+    });
 
-//     const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
-//     const unassignedStudentEmails = unassignedStudents.map((student) => student.User.email);
+    if (unassignedStudents.length == 0) return [];
 
-//     return { unassignedStudentIds, unassignedStudentEmails };
-// }
+    const flattened = [];
+    unassignedStudents.forEach((student) => {
+        const temp = {
+            ...student,
+            ...student.User
+        } 
+        delete temp.User;
+        delete temp.SPLs;
+        flattened.push(temp);
+    });
 
-async function update(studentId, student) {
+    return flattened;
+}
+
+async function updateStudent(studentId, student) {
     // update to Student table
     // await models.Student.update(student, {
     //     where: {
@@ -199,7 +208,7 @@ async function updateByAdmin(student, studentId) {
 }
 
 export default {
-    create,
+    createStudent,
     findAll,
     findById,
     findByRoll,
@@ -207,6 +216,7 @@ export default {
     findAllByCurriculumYear,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
-    update,
+    findAllStudentNotAssignedToSPL,
+    updateStudent,
     updateByAdmin,
 };

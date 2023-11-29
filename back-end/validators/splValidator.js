@@ -14,10 +14,8 @@ const createSPLSchema = Joi.object({
 });
 
 const updateSPLSchema = Joi.object({
-    splName: Joi.string().trim().custom(validateSPLName).required(),
-    academicYear: Joi.string().trim().custom(validateAcademicYear).required(),
-    committeeHead: Joi.string().trim().email().custom(validateEmail).required(),
-    splManager: Joi.string().trim().email().custom(validateEmail).required(),
+    splName: Joi.string().trim().custom(validateSPLName).optional(),
+    academicYear: Joi.string().trim().custom(validateAcademicYear).optional(),
 });
 
 const addCommitteeHeadSchema = Joi.object({
@@ -56,9 +54,9 @@ function validateMemberEmailDuplicates(members) {
 
 export default {
     createSPLSchema,
+    updateSPLSchema,
     addCommitteeHeadSchema,
     addSPLManagerSchema,
     addCommitteeMemberSchema,
     validateMemberEmailDuplicates,
-    updateSPLSchema,
 };
