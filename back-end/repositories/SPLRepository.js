@@ -31,11 +31,10 @@ async function findAllMemberId(splId) {
     return members.map((member) => member.teacherId);
 }
 
-async function findActiveSPLByName(splName) {
+async function findSPLByNameAndYear(splName, curriculumYear) {
     const spl = await models.SPL.findOne({
         where: {
             splName,
-            active: true,
         },
     });
     return spl;
@@ -76,7 +75,7 @@ export default {
     findById,
     findSplWithCommitteeDetail,
     findAllMemberId,
-    findActiveSPLByName,
+    findSPLByNameAndYear,
     removeStudentFromSPL,
     updateSPL,
     deleteSPL,

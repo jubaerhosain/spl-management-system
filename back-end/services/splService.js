@@ -7,14 +7,9 @@ import splUtils from "../utils/splUtils.js";
 import emailService from "./emailServices/emailService.js";
 
 async function createSPL(data) {
-    const spl = await SPLRepository.findActiveSPLByName(data.splName);
+    const spl = await SPLRepository.findSPLByNameAndYear(data.splName, data.curriculumYear);
     if (spl) {
-        throw new CustomError(`${data.splName} already exists`, 400, {
-            splName: {
-                msg: `${data.splName} already exists`,
-                value: data.splName,
-            },
-        });
+        throw new CustomError(`${data.splName} ${data.curriculumYear} already exists`, 400);
     }
 
     await SPLRepository.createSPL(data);
@@ -147,7 +142,7 @@ async function addCommitteeMember(splId, members) {
     };
 
     const error1 = validateIsAlreadyMember(membersWithId, existedMemberIds);
-    if (error1) throw new CustomError("committee members must be teacher", 400, error1);
+    if (error1) throw new CustomError("already member", 400, error1);
 
     console.log(users);
 
@@ -157,7 +152,9 @@ async function addCommitteeMember(splId, members) {
     await SPLRepository.createMembers(newMembers);
 }
 
-async function assignStudents(splName) {
+async function addPresentationEvaluator() {}
+
+async function assignStudentsToSPL(splId, curriculumYearI) {
     const curriculumYear = splUtils.getCurriculumYear(splName);
 
     const spl = await SPLRepository.findByName(splName);
@@ -182,7 +179,7 @@ async function assignStudents(splName) {
     // push notification
 }
 
-async function unassignStudent(splId, studentId) {
+async function removeStudentFromSPL(splId, studentId) {
     const belongs = await SPLRepository.isStudentBelongsToSPL(splId, studentId);
     if (!belongs) {
         throw new CustomError("Invalid student or spl", 400);
@@ -196,6 +193,6 @@ export default {
     addCommitteeHead,
     addSPLManager,
     addCommitteeMember,
-    assignStudents,
-    unassignStudent,
+    assignStudentsToSPL,
+    removeStudentFromSPL,
 };
