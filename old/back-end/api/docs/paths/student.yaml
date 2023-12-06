@@ -1,0 +1,84 @@
+paths:
+  /student:
+    post:
+      tags:
+        - Student
+      summary: Create a new student
+
+    get:
+      tags:
+        - Student
+      summary: Get a list of students
+
+  /student/{studentId}:
+    get:
+      tags:
+        - Student
+      summary: Get details of a student
+
+    put:
+      tags:
+        - Student
+      summary: Update a student details
+
+    delete:
+      tags:
+        - Student
+      summary: Delete a student
+
+  /student/{studentId}/spl:
+    get:
+      tags:
+        - Student
+      summary: Get a list of SPLs of a student
+
+  /student/{studentId}/spl/{splId}:
+    get:
+      tags:
+        - Student
+      summary: Get a SPL information of a student
+
+  /student/{studentId}/team/:
+    get:
+      tags:
+        - Student
+      summary: Get a list of teams of a student
+
+  /student/{studentId}/team/{teamId}:
+    get:
+      tags:
+        - Student
+      summary: Get details of a team of a student
+
+  /student/{studentId}/request:
+    post:
+      tags:
+        - Student
+      summary: Request a teacher to be a supervisor of current spl
+
+    get:
+      tags:
+        - Student
+      summary: Get a list of requests made by the student
+
+    delete:
+      tags:
+        - Student
+      summary: Delete a request made by the student
+
+  /student/{studentId}/supervisor/:
+    post:
+      tags:
+        - Student
+      summary: Assign a supervisor for a student
+
+    get:
+      tags:
+        - Student
+      summary: Get a list of supervisors for a student
+
+  /student/{studentId}/supervisor/{supervisorId}:
+    delete:
+      tags:
+        - Student
+      summary: Remove a supervisor of a student

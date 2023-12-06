@@ -1,0 +1,5 @@
+1. create account
+2. spl committee
+3. assign studnets to spl
+4. marking
+5. notices

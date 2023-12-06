@@ -1,0 +1,27 @@
+paths:
+  /notice:
+    post:
+      tags:
+        - Notice
+      summary: Create a new notice
+
+    get:
+      tags:
+        - Notice
+      summary: Get a list of notices
+
+  /notice/{noticeId}:
+    get:
+      tags:
+        - Notice
+      summary: Get details of a notice
+
+    put:
+      tags:
+        - Notice
+      summary: Update details of a notice
+
+    delete: 
+      tags:
+        - Notice
+      summary: Delete a notice

@@ -1,0 +1,20 @@
+.rememberAndForgotDiv {
+  @apply flex items-center justify-between;
+}
+
+.forgotPasswordLink {
+  @apply text-sm lg:ml-20 md:ml-16 sm:ml-10 font-medium text-blue-900 hover:underline 
+   dark:text-blue-500;
+}
+
+.registerDiv {
+  @apply text-sm font-light text-blue-900 dark:text-gray-400;
+}
+
+.registerLink {
+  @apply font-medium ml-1 text-blue-900 hover:underline dark:text-blue-500;
+}
+
+.error {
+  @apply p-2 text-center text-red-400 border border-red-500 rounded bg-red-50;
+}

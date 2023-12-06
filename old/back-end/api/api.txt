@@ -1,0 +1,156 @@
+GET: query param or param (never use body)
+POST: always use body to create resource {in case of child resource can use param to identify parent resource}
+PUT, DELETE: try to use body but some cases you can use param to "locate resource"
+Notification will be created on some action. so there no need to post/put api end point for them
+
+move description of swagger documentation to postman
+
+
+1. Authentication [done]
+    post: auth/login   body{email, password}
+    get: auth/user                             // get authenticated user details
+    delete: auth/logout
+
+    patch: auth/change-password body{oldPassword, newPassword}
+
+    post: auth/forgot-password/generate-otp      body{email}
+    put: auth/forgot-password/verify-otp        body{email, otp}
+    put: auth/forgot-password/reset-password    body{email, otp, password}
+
+2. User
+    post: user
+    get: user/
+    get: user/{userId}
+    put: user/{userId}
+    delete: user/{userId}
+    put: user/{userId}/avatar
+    delete: user/{userId}/avatar
+    put: user/{userId}/activate
+    delete: user/{userId}/deactivate
+
+    get: user/{userId}/notification/ { query params: optional read/unread etc }
+    put: user/{userId}/notification/{notificationId} { read: true }
+    delete: user/{userId}/notification/{notificationId} 
+
+3. Student
+    post: student/
+    get: student/ {query params: optional}
+
+    get: student/{studentId}
+    put: student/{studentId} 
+    delete: student/{studentId} {by admin}
+
+    get: student/{studentId}/spl {all spl, with progress data}
+    get: student/{studentId}/spl/:splId {a spl, with progress data}
+
+    get: student/{studentId}/team/ {all teams of that student}
+    get: student/{studentId}/team/{teamId} // team info of a specific student
+
+    post: student/{studentId}/request body{teacherId} // request a teacher to be supervisor
+    get: student/{studentId}/request  // all teacher requested by that student
+    delete: student/{studentId}/request body{teacherId} // delete request
+
+    post: student/{studentId}/supervisor/ {splId, teacherEmail} // add supervisor manually
+    get: student/{studentId}/supervisor/   query{current: true/false}
+    delete: student/{studentId}/supervisor/{supervisorId} // remove A supervisor of that student
+
+4. Teacher
+    post: teacher/
+    get: teacher/ {query params: optional}
+    get: teacher/{teacherId}
+    put: teacher/{teacherId} 
+    delete: teacher/{teacherId} {by admin}
+
+    get: teacher/{teacherId}/student // all student under supervision, query{splName, current: true/false}
+    get: teacher/{teacherId}/team // all teams under supervision, query{splName, current: true/false}
+
+    get: teacher/{teacherId}/request/team {all teams who requested that teacher, splName=spl2}
+    put: teacher/{teacherId}/request/team{teamId} body{accept: true} // accept team request
+    delete: teacher/{teacherId}/request/team/{teamId} body{reject: true}  // reject team request
+
+    get: teacher/{teacherId}/request/student {all students who requested that teacher, splName=spl3}
+    put: teacher/{teacherId}/request/student/{studentId} body{accept: true} // accept student request
+    delete: teacher/{teacherId}/request/student/{studentId} body{reject: true} // reject student request
+
+// to resource identification use splId, can use splName in other places such as query param
+5. SPL 
+    post: spl/ // create a new spl
+    get: spl/ {query params: optional, splName, active: true/false}
+    // get: spl/{splName}/active // get active spl info by splName
+
+    get: spl/{splId}  
+    put: spl/{splId} {data in body}
+    delete: spl/{splId}
+
+    // ASSIGN/remove STUDENTS TO/from THE SPL Manually
+    post: spl/{splId}/student/ body{curriculumYear} 
+    get: spl/{splId}/student/ // get all student under spl
+    delete: spl/{splId}/student/{studentId} // delete supervisor also if have
+
+    // committee related routes 
+    put: spl/{splId}/head
+    delete: spl/{splId}/head/{headId}
+    put: spl/{splId}/manager
+    delete: spl/{splId}/manager{managerId}
+    put: spl/{splId}/member/ body{emails: []}
+    delete: spl/{splId}/member/{memberId}
+
+    // randomize supervisor
+    post: spl/{splId}/supervisor/randomize
+
+    // create presentation event (announcement)
+    post: spl/{splId}/presentation/ 
+    get: spl/{splId}/presentation/ {get all presentations of that spl} 
+    delete: spl/{splId}/presentation/{presentationNo}
+
+    // presentation evaluator related apis
+    post: spl/{splId}/presentation/evaluator body{email[]} // add presentation evaluator
+    get: spl/{splId}/presentation/evaluator {get all presentation evaluator of that spl} 
+    delete: spl/{splId}/presentation/evaluator/{evaluatorId}
+
+    // mark related
+    get: spl/{splId}/mark/  // get atomic mark of all student under a spl [allowed mark if user is a student]
+    put: spl/{splId}/mark body {markName1, markName2,....} // update atomic mark of a student
+
+    get: spl/{splId}/mark/combined/ // combined mark of all students
+
+
+    // presentation mark related
+    post: spl/{splId}/mark/presentation/{presentationNo} [body{mark, studentId}] // by presentation evaluator
+    get: spl/{splId}/mark/presentation/{presentationNo} // for splManager/committeeHead find all mark
+    put: spl/{splId}/mark/presentation/{presentationNo} body{mark, studentId}  // by presentation evaluator
+    get: spl/{splId}/mark/presentation/{presentationNo}/teacher/{teacherId} // for presentation evaluator | given by that teacher
+
+    // continuous mark related
+    post: spl/{splId}/mark/continuous [body{mark, classNo, studentId}]
+    get: spl/{splId}/mark/continuous // all continuous class mark for all student of that spl
+    get: spl/{splId}/mark/continuous/{classNo} // continuous mark of all students of that classNo
+    put: spl/{splId}/mark/continuous/{classNo} body{mark, studentId} // by splManager
+
+6. Team
+    post: team/
+    get: team/{params: optional, splName}
+    get: team/{teamId}
+    put: team/{teamId}
+    delete: team/{teamId}
+
+    put: team/{teamId}/member {all members under that team}
+    get: team/{teamId}/member
+    delete: team/{teamId}/member/{memberId} // by committeeHead 
+    // by student itself, if supervisor is allocated then student cannot leave team 
+
+    post: team/{teamId}/request body{teacherId} // request a teacher to be supervisor
+    get: team/{teamId}/request //get all requested teachers by that team
+    delete: team/{teamId}/request body{teacherId} // delete a team request
+
+    put: team/{teamId}/supervisor/ {splId, teacherEmail} // add supervisor manually
+    delete: team/{teamId}/supervisor/{supervisorId} // remove supervisor of that team
+
+7. Notice 
+    post: notice/
+    get: notice/ {query params: optional, splName}
+    get: notice/{noticeId}
+    put: notice/{noticeId} {notice}
+    delete: notice/{noticeId} 
+   
+

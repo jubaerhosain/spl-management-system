@@ -1,0 +1,39 @@
+.navContainer {
+  @apply max-w-custom sticky top-0 z-50 bg-white border-gray-200 shadow-sm border-y dark:border-gray-600;
+}
+
+.navContainer > div {
+  @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 nv:px-6 py-3;
+}
+
+.logo {
+  @apply flex items-center;
+}
+
+.logo img {
+  @apply h-8 w-12 mr-2 md:mr-3;
+}
+
+.logo span {
+  @apply self-center text-xl font-semibold whitespace-nowrap text-blue-900 dark:text-white;
+}
+
+.userControl {
+  @apply flex items-center nv:order-2 space-x-4 sm:space-x-4;
+}
+
+.navLinks {
+  @apply items-center justify-between hidden w-auto nv:flex nv:w-auto nv:order-1;
+}
+
+.navLinks > ul {
+  @apply px-2 rounded-lg flex flex-row space-x-6 md:space-x-8 border-0 bg-white;
+}
+
+.navLinks > ul > li {
+  @apply text-sm leading-6 font-semibold text-slate-700 dark:text-slate-200 hover:text-sky-500;
+}
+
+.login {
+  @apply text-blue-900 font-normal underline py-1 px-4 rounded nv:no-underline nv:bg-blue-900 nv:text-white nv:hover:bg-blue-950;
+}

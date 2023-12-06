@@ -1,0 +1,7 @@
+.loginPageContainer {
+  @apply max-w-md min-w-full flex flex-col items-center justify-around flex-grow;
+}
+
+.loginPageContainer > div {
+  @apply w-full;
+}

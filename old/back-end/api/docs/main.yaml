@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: SPL Management System API
+  version: 1.0.0
+
+servers:
+  - url: /api
+
+security:
+  - jwt: []
+
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

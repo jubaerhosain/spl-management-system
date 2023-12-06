@@ -1,0 +1,44 @@
+User management:
+    * Create accounts for teachers, students, and admin.
+    * Allow users to change their passwords.
+    
+Notice posting:
+    Allow managers to post notices.
+    Allow supervisors to post notices.
+    Make notices visible to all users.
+
+SPL Supervisor:
+    Randomize the SPL-1 supervisor.
+    Suggest a supervisor to the student.
+    Allow the student to request teachers to be supervisor.
+    Allow the teacher to accept or skip the request.
+
+Student progress tracking:
+    Allow supervisors and SPL managers to track student progress through GitHub repository or 
+    weekly reporting, documentation progress and code progress. Pie char for weekly, documentation
+    and code progress.
+
+Attendance and marks:
+    Allow SPL managers to maintain student attendance records.
+    Allow Course faculty to add marks to students continuous evaluation.
+    Allow supervisors to upload marks of the students.
+    Allow committee members to mark students in presentations individually.
+    Allow the Committee Head to add an extra evaluator for presentations.
+    Make continuous evaluation visible to students after publishing the marks.
+    Make final marks visible to only committee members.
+    Generate a final mark sheet by adding all other marks.
+
+Supervisor suggestions:
+    Suggest a supervisor to the committee for students who won't be able to convince any supervisor for SPL-3 according to students ideas.
+
+Additional features:
+    Allow teachers and students to share their interested fields.
+    Allow admin to assign any supervisor manually.
+    Allow admin to modify any marks manually (will notify committee head).
+    Implement a data archive for previous year students.
+    Make all projects (current and previous students) available for students.
+
+New requirements:
+    Customize visibility of notices from coordinator or admin.
+    Make information regarding faculty members available for students.
+    Implement a messaging system.
