@@ -3,12 +3,11 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import apiRoutes from "./routes/apiRoutes.js";
-import { defaultErrorHandler } from "./middlewares/common/defaultErrorHandler.js";
-import { notFoundHandler } from "./middlewares/common/notFoundHandler.js";
-import fileUtils from "./utils/fileUtils.js";
-import config from "./config/config.js";
-import swaggerConfig from "./config/swagger.js";
+import rootRoutes from "./src/routes/rootRoutes.js";
+import { defaultErrorHandler } from "./src/middlewares/common/defaultErrorHandler.js";
+import { notFoundHandler } from "./src/middlewares/common/notFoundHandler.js";
+import fileUtils from "./src/utils/fileUtils.js";
+import config from "./src/configs/config.js";
 
 const app = express();
 
@@ -26,9 +25,7 @@ app.use(express.static(path.join(fileUtils.getDirectoryName(import.meta.url), "p
 
 app.use(cookieParser(config.cookie.secret));
 
-app.use("/api", apiRoutes);
-
-app.use("/api/docs", swaggerConfig.swaggerServe, swaggerConfig.swaggerSetup);
+app.use("/api", rootRoutes);
 
 app.use(notFoundHandler);
 
