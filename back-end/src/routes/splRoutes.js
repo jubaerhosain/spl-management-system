@@ -30,9 +30,8 @@ splRoutes.post("/:splId/presentation/evaluator");
 splRoutes.get("/:splId/presentation/evaluator");
 splRoutes.delete("/:splId/presentation/evaluator/:evaluatorId");
 
-splRoutes.delete("/:splId/committee", splCommitteeRoutes);
-
 // spl mark related routes (add a common middleware to check if spl is exist or not)
+splRoutes.delete("/:splId/committee", splCommitteeRoutes);
 // splRoutes.get("/:splId/mark", splMarkRoutes);
 
 export default splRoutes;

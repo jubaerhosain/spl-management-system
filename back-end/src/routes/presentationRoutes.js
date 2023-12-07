@@ -1,19 +1,21 @@
 import express from "express";
 const presentationRoutes = express.Router();
 
+import presentationController from "../controllers/presentationController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
-presentationRoutes.post("/presentation"); // createPresentationEvent
-presentationRoutes.get("/presentation/:presentationId"); // getPresentation
-presentationRoutes.delete("/presentation/:presentationId");
+presentationRoutes.post("/", presentationController.createPresentationEvent); 
+presentationRoutes.get("/"); // createPresentationEvent
+presentationRoutes.get("/:presentationId"); // getPresentation
+presentationRoutes.delete("/:presentationId");
 
-presentationRoutes.post("/presentation/:presentationId/evaluator");
-presentationRoutes.get("/presentation/:presentationId/evaluator");
-presentationRoutes.delete("/presentation/:presentationId/evaluator/:evaluatorId");
+presentationRoutes.post("/:presentationId/evaluator");
+presentationRoutes.get("/:presentationId/evaluator");
+presentationRoutes.delete("/:presentationId/evaluator/:evaluatorId");
 
-presentationRoutes.post("/presentation/:presentationId/mark");
-presentationRoutes.get("/presentation/:presentationId/mark");
-presentationRoutes.put("/presentation/:presentationId/mark");
+presentationRoutes.post("/:presentationId/mark");
+presentationRoutes.get("/:presentationId/mark");
+presentationRoutes.put("/:presentationId/mark");
 
 
 export default presentationRoutes;
