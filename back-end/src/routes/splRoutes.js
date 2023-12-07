@@ -1,7 +1,8 @@
 import express from "express";
 const splRoutes = express.Router();
 
-// import splMarkRoutes from "./mark/index.js";
+import splCommitteeRoutes from "./splCommitteeRoutes.js";
+
 import splController from "../controllers/splController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -13,13 +14,7 @@ splRoutes.get("/:splId", checkAuthentication, splController.getSPL);
 splRoutes.put("/:splId", checkAuthentication, splController.updateSPL);
 splRoutes.delete("/:splId", checkAuthentication, splController.deleteSPL);
 
-// committee related routes
-splRoutes.put("/:splId/head", checkAuthentication, splController.addCommitteeHead);
-splRoutes.delete("/:splId/head/:headId", checkAuthentication, splController.removeCommitteeHead);
-splRoutes.put("/:splId/manager", checkAuthentication, splController.addSPLManager);
-splRoutes.delete("/:splId/manager/:managerId", checkAuthentication, splController.removeSPLManager);
-splRoutes.put("/:splId/member", checkAuthentication, splController.addCommitteeMember);
-splRoutes.delete("/:splId/member/:memberId", checkAuthentication, splController.removeCommitteeMember);
+// spl committee 
 
 // student related routes
 splRoutes.put("/:splId/student", splController.assignStudentToSPL);
@@ -38,6 +33,8 @@ splRoutes.delete("/:splId/presentation/:presentationId");
 splRoutes.post("/:splId/presentation/evaluator");
 splRoutes.get("/:splId/presentation/evaluator");
 splRoutes.delete("/:splId/presentation/evaluator/:evaluatorId");
+
+splRoutes.delete("/:splId/committee", splCommitteeRoutes);
 
 // spl mark related routes (add a common middleware to check if spl is exist or not)
 // splRoutes.get("/:splId/mark", splMarkRoutes);

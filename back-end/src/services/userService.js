@@ -35,4 +35,4 @@ async function deleteUserAccount(userId) {
     await UserRepository.remove(userId);
 }
 
-export { createUserAccount, updateUserAccount, deleteUserAccount };
+export default { createUserAccount, updateUserAccount, deleteUserAccount };

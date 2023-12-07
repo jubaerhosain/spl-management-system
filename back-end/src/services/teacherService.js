@@ -52,7 +52,7 @@ async function updateTeacher(userId, teacher) {
     await TeacherRepository.updateTeacher(userId, teacher);
 }
 
-export {
+export default {
     createTeacher,
     updateTeacher,
 };

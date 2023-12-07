@@ -1,5 +1,5 @@
 import { GenericResponse } from "../utils/responseUtils.js";
-import studentService from "../services/student/index.js";
+import studentService from "../services/studentService.js";
 import CustomError from "../utils/CustomError.js";
 import studentValidator from "../validators/studentValidator.js";
 import utils from "../utils/utils.js";

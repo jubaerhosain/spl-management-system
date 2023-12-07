@@ -1,6 +1,6 @@
 import { GenericResponse } from "../utils/responseUtils.js";
 import userValidator from "../validators/userValidator.js";
-import userService from "../services/user/index.js";
+import userService from "../services/userService.js";
 import CustomError from "../utils/CustomError.js";
 
 async function createUser(req, res) {
