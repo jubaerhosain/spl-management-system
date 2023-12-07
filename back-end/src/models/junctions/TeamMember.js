@@ -1,8 +1,9 @@
 "use strict";
 
+// StudentTeam
 export default (options) => {
     const { sequelize, DataTypes } = options;
-    const StudentTeam_TeamMember = sequelize.define("StudentTeam_TeamMembers", {
+    const TeamMember = sequelize.define("TeamMembers", {
         teamId: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -21,5 +22,15 @@ export default (options) => {
         },
     });
 
-    return StudentTeam_TeamMember;
+    TeamMember.associate = (models) => {
+        // Team - TeamMember [One to many]
+        TeamMember.belongsTo(models.Team, {
+            as: "Members",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teamId",
+        });
+    };
+
+    return TeamMember;
 };

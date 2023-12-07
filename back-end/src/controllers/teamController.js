@@ -8,9 +8,12 @@ async function createTeam(req, res) {
         const { error } = teamValidator.createTeamSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
-        await teamService.createTeam();
+        const error1 = teamValidator.validateTeamMemberEmailDuplicates(req.body.teams);
+        if(error1) return res.status(400).json(GenericResponse.error("Invalid data", error1));
 
-        return res.json(GenericResponse.success("Team created successfully"));
+        await teamService.createTeam(req.body);
+
+        return res.json(GenericResponse.success("Teams are created successfully"));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));

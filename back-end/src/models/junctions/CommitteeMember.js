@@ -2,7 +2,7 @@
 
 export default (options) => {
     const { sequelize, DataTypes } = options;
-    const TeacherSPL_CommitteeMember = sequelize.define("TeacherSPL_CommitteeMembers", {
+    const CommitteeMember = sequelize.define("CommitteeMembers", {
         splId: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -21,5 +21,5 @@ export default (options) => {
         },
     });
 
-    return TeacherSPL_CommitteeMember;
+    return CommitteeMember;
 };

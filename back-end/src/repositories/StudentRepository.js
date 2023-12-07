@@ -102,6 +102,8 @@ async function findAllByCurriculumYear(curriculumYear) {
         return user;
     });
 
+    if (flattened.length == 0) return [];
+
     return flattened;
 }
 

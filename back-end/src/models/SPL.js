@@ -64,8 +64,7 @@ export default (options) => {
 
         // Teacher - SPL [many to many]
         SPL.belongsToMany(models.Teacher, {
-            as: "CommitteeMembers",
-            through: models.TeacherSPL_CommitteeMember,
+            through: models.CommitteeMember,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",
@@ -80,9 +79,8 @@ export default (options) => {
         });
 
         // SPL - Teacher [many to many]
-        SPL.belongsToMany(models.Teacher, {
-            as: "PresentationEvaluators",
-            through: models.TeacherSPL_PresentationEvaluator,
+        SPL.belongsToMany(models.Teacher, { // move this relation to the presentation
+            through: models.PresentationEvaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",

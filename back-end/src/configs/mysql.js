@@ -33,12 +33,12 @@ import SupervisorRequest from "../models/SupervisorRequest.js";
 import OTP from "../models/OTP.js";
 
 // junction tables
-import StudentTeacher_Supervisor from "../models/junctions/StudentTeacher_Supervisor.js";
-import StudentProject_ProjectContributor from "../models/junctions/StudentProject_ProjectContributor.js";
+import Supervisor from "../models/junctions/Supervisor.js";
+import ProjectContributor from "../models/junctions/ProjectContributor.js";
 import StudentSPL from "../models/junctions/StudentSPL.js";
-import StudentTeam_TeamMember from "../models/junctions/StudentTeam_TeamMember.js";
-import TeacherSPL_PresentationEvaluator from "../models/junctions/TeacherSPL_PresentationEvaluator.js";
-import TeacherSPL_CommitteeMember from "../models/junctions/TeacherSPL_CommitteeMember.js";
+import TeamMember from "../models/junctions/TeamMember.js";
+import PresentationEvaluator from "../models/junctions/PresentationEvaluator.js";
+import CommitteeMember from "../models/junctions/CommitteeMember.js";
 
 const options = { sequelize, DataTypes, Sequelize, Op };
 
@@ -60,12 +60,12 @@ const models = {
     OTP: OTP(options),
 
     // junctions
-    StudentTeam_TeamMember: StudentTeam_TeamMember(options),
-    StudentProject_ProjectContributor: StudentProject_ProjectContributor(options),
-    StudentTeacher_Supervisor: StudentTeacher_Supervisor(options),
+    TeamMember: TeamMember(options),
+    ProjectContributor: ProjectContributor(options),
+    Supervisor: Supervisor(options),
     StudentSPL: StudentSPL(options),
-    TeacherSPL_PresentationEvaluator: TeacherSPL_PresentationEvaluator(options),
-    TeacherSPL_CommitteeMember: TeacherSPL_CommitteeMember(options),
+    PresentationEvaluator: PresentationEvaluator(options),
+    CommitteeMember: CommitteeMember(options),
 };
 
 // initialize associations

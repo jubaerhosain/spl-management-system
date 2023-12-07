@@ -3,7 +3,7 @@
 export default (options) => {
     const { sequelize, DataTypes } = options;
     // a student can have only one supervisor for a specific SPL
-    const StudentTeacher_Supervisor = sequelize.define("StudentTeacher_Supervisors", {
+    const Supervisor = sequelize.define("Supervisors", {
         teacherId: {
             type: DataTypes.UUID,
             allowNull: false,
@@ -30,5 +30,5 @@ export default (options) => {
         },
     });
 
-    return StudentTeacher_Supervisor;
+    return Supervisor;
 };

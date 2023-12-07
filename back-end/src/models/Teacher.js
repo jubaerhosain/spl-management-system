@@ -47,7 +47,7 @@ export default (options) => {
 
         // Teacher - SPL [many to many]
         Teacher.belongsToMany(models.SPL, {
-            through: models.TeacherSPL_CommitteeMember,
+            through: models.CommitteeMember,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -56,7 +56,7 @@ export default (options) => {
         // Student - Teacher [many to many] as Supervisor
         Teacher.belongsToMany(models.Student, {
             as: "SupervisedStudents",
-            through: models.StudentTeacher_Supervisor,
+            through: models.Supervisor,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -80,7 +80,7 @@ export default (options) => {
 
         // SPL - Teacher [many to many] as Presentation Evaluator
         Teacher.belongsToMany(models.SPL, {
-            through: models.TeacherSPL_PresentationEvaluator,
+            through: models.PresentationEvaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
