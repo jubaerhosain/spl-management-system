@@ -3,6 +3,7 @@ import TeamRepository from "../repositories/TeamRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import CustomError from "../utils/CustomError.js";
 import utils from "../utils/utils.js";
+import NotificationRepository from "../repositories/NotificationRepository.js";
 
 async function createTeam(data) {
     const { splId } = data;
@@ -80,16 +81,19 @@ async function createTeam(data) {
     };
 
     const newTeams = [];
-    teams.forEach((team) => {
+    teams.forEach((team, index) => {
         const temp = {};
         temp.teamName = team.teamName;
         temp.splId = splId;
         temp.details = team.details;
 
         const teamMembers = [];
-        team.teamMembers.forEach((member) => {
+        team.teamMembers.forEach((member, memberIndex) => {
+            const studentId = findStudentId(assignedStudents, member.email);
+            // map studentId
+            teams[index].teamMembers[memberIndex].studentId = studentId;
             teamMembers.push({
-                studentId: findStudentId(assignedStudents, member.email),
+                studentId: studentId,
             });
         });
         temp.Members = teamMembers;
@@ -97,7 +101,23 @@ async function createTeam(data) {
     });
 
     await TeamRepository.createTeam(newTeams);
+
+    const notifications = [];
+    teams.forEach((team) => {
+        team.teamMembers.forEach((member) => {
+            const notification = {
+                userId: member.studentId,
+                content: `Your team <b>${team.teamName}</b> is created for ${spl.splName}, ${spl.academicYear}. Now you can request supervisor`,
+                type: "info",
+            };
+            notifications.push(notification);
+        });
+    });
+
+    await NotificationRepository.createMultipleNotification(notifications);
 }
+
+async function updateTeam(teamId, team) {}
 
 export default {
     createTeam,

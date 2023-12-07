@@ -20,20 +20,7 @@ async function createTeam(teams) {
     }
 }
 
-async function updateTeam(teamId, teamName) {
-    /// edit
-    const team1 = {
-        teamName: teamName,
-    };
-    await models.Team.update(team, {
-        where: {
-            teamId,
-        },
-    });
-
-    const team = {
-        details: details,
-    };
+async function updateTeam(teamId, team) {
     await models.Team.update(team, {
         where: {
             teamId,
