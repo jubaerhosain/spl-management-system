@@ -8,7 +8,7 @@ async function createTeam(teams) {
     const transaction = await sequelize.transaction();
     try {
         await models.Team.bulkCreate(teams, {
-            include: [{ model: models.StudentTeam_TeamMember, as: "Members" }],
+            include: [{ model: models.TeamMember, as: "Members" }],
             transaction: transaction,
         });
 
@@ -62,7 +62,7 @@ async function findAllTeamMemberUnderSPL(splId) {
             {
                 model: models.Team,
                 through: {
-                    model: models.StudentTeam_TeamMember,
+                    model: models.TeamMember,
                     attributes: [],
                 },
                 where: {
@@ -87,8 +87,6 @@ async function findAllTeamMemberUnderSPL(splId) {
         delete temp.Teams;
         flattened.push(temp);
     });
-
-    console.log(flattened);
 
     return flattened;
 }

@@ -42,7 +42,7 @@ async function createTeam(data) {
     };
 
     let error = await validateAssignedToSPL(teams, splId);
-    if (error) throw new CustomError("Must be assigned to this spl", 400, data);
+    if (error) throw new CustomError("Must be assigned to this spl", 400, error);
 
     const validateAnotherTeamMember = async (teams, splId) => {
         const isAnotherTeamMember = (anotherTeamMembers, email) => {
@@ -70,7 +70,7 @@ async function createTeam(data) {
     };
 
     error = await validateAnotherTeamMember(teams, splId);
-    if (error) throw new CustomError("Must not be member of another team of same spl", 400, data);
+    if (error) throw new CustomError("Must not be member of another team of same spl", 400, error);
 
     // normalize team data to create by a single query
     const findStudentId = (assignedStudents, email) => {
