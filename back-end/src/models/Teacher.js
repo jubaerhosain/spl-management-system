@@ -78,8 +78,8 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // SPL - Teacher [many to many] as Presentation Evaluator
-        Teacher.belongsToMany(models.SPL, {
+        // Presentation - Teacher [many to many] as Presentation Evaluator
+        Teacher.belongsToMany(models.Presentation, {
             through: models.PresentationEvaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",

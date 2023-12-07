@@ -7,6 +7,7 @@ export default (options) => {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
+            unique: true
         },
         studentId: {
             type: DataTypes.UUID,

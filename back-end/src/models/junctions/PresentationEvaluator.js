@@ -3,12 +3,12 @@
 export default (options) => {
     const { sequelize, DataTypes } = options;
     const PresentationEvaluator = sequelize.define("PresentationEvaluators", {
-        splId: {
+        presentationId: {
             type: DataTypes.UUID,
             primaryKey: true,
             references: {
-                model: "SPLs",
-                key: "splId",
+                model: "Presentations",
+                key: "presentationId",
             },
         },
         teacherId: {

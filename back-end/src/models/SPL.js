@@ -78,14 +78,6 @@ export default (options) => {
             foreignKey: "splId",
         });
 
-        // SPL - Teacher [many to many]
-        SPL.belongsToMany(models.Teacher, { // move this relation to the presentation
-            through: models.PresentationEvaluator,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "splId",
-        });
-
         // SPL - Project [one to many]
         SPL.hasMany(models.Project, {
             onDelete: "CASCADE",

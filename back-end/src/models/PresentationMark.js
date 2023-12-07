@@ -7,8 +7,16 @@ export default (options) => {
             type: DataTypes.UUID,
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
+            unique: true
         },
-        // add presentationId INSTEAD OF COMBINED PK (splId, presentationNo)
+        presentationId: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            references: {            
+                model: "Presentations",
+                key: "presentationId",
+            },
+        },
         studentId: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -16,22 +24,6 @@ export default (options) => {
                 model: "Students",
                 key: "studentId",
             },
-        },
-        splId: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-            // references: {            // don't works if I use those references
-            //     model: "Presentations",
-            //     key: "splId",
-            // },
-        },
-        presentationNo: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            // references: {
-            //     model: "Presentations",
-            //     key: "presentationNo",
-            // },
         },
         teacherId: {
             type: DataTypes.UUID,
@@ -60,7 +52,7 @@ export default (options) => {
         PresentationMark.belongsTo(models.Presentation, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: ["presentationNo", "splId"],
+            foreignKey: "presentationId",
         });
 
         // Teacher - PresentationMark [one to many]

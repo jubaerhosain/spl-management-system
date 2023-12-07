@@ -7,6 +7,7 @@ export default (options) => {
             type: DataTypes.UUID,
             allowNull: false,
             defaultValue: Sequelize.UUIDV4,
+            unique: true
         },
         splId: {
             type: DataTypes.UUID,
@@ -33,11 +34,19 @@ export default (options) => {
             foreignKey: "splId",
         });
 
+        // Presentation - Teacher [many to many]
+        Presentation.belongsToMany(models.Teacher, { 
+            through: models.PresentationEvaluator,
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "presentationId",
+        });
+
         // Presentation - PresentationMark [one to many]
         Presentation.hasMany(models.PresentationMark, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            primaryKey: ["presentationNo", "splId"],
+            foreignKey: "presentationId",
         });
     };
 
