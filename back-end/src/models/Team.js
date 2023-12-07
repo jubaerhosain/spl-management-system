@@ -18,7 +18,7 @@ export default (options) => {
         },
         supervisorId: {
             type: DataTypes.UUID,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: "Teachers",
                 key: "teacherId",

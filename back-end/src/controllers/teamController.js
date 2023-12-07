@@ -1,7 +1,24 @@
 import { GenericResponse } from "../utils/responseUtils.js";
+import teamValidator from "../validators/teamValidator.js";
+import teamService from "../services/teamService.js";
+import CustomError from "../utils/CustomError.js";
 
 async function createTeam(req, res) {
-    // Logic to create a new team
+    try {
+        const { error } = teamValidator.createTeamSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
+
+        await teamService.createTeam();
+
+        return res.json(GenericResponse.success("Team created successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred while creating team"));
+        }
+    }
 }
 
 async function getAllTeam(req, res) {
@@ -55,5 +72,5 @@ export default {
     getAllTeamMember,
     getAllRequest,
     deleteRequest,
-    removeTeamMember
+    removeTeamMember,
 };

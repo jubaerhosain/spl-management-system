@@ -1,7 +1,7 @@
 import { Router } from "express";
 const teamRoutes = Router();
 
-import teamController from "../../controllers/team/teamController.js";
+import teamController from "../controllers/teamController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
 // routes related to team
