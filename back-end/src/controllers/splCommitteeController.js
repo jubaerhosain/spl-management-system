@@ -1,5 +1,5 @@
 import { GenericResponse } from "../utils/responseUtils.js";
-import splService from "../services/splService.js";
+import splService from "../services/splCommitteeService.js";
 import CustomError from "../utils/CustomError.js";
 import splValidator from "../validators/splValidator.js";
 
