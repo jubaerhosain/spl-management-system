@@ -16,20 +16,19 @@ async function createTeam(data) {
 
     const { teams } = data;
 
-    let assignedStudents = [];
+    const assignedStudents = await StudentRepository.findAllStudentUnderSPL(splId);
     const validateAssignedToSPL = async (teams, splId) => {
-        const isAssignedToSPL = (assignedStudents, email) => {
+        const isAssignedToSPL = (email) => {
             for (const student of assignedStudents) {
                 if (student.email == email) return true;
             }
             return false;
         };
 
-        assignedStudents = await StudentRepository.findAllStudentUnderSPL(splId);
         const errors = {};
         teams.forEach((team, teamIndex) => {
             team.teamMembers.forEach((member, memberIndex) => {
-                if (!isAssignedToSPL(assignedStudents, member.email)) {
+                if (!isAssignedToSPL(member.email)) {
                     errors[`teams[${teamIndex}].teamMembers[${memberIndex}].email`] = {
                         msg: "student must be assigned to this spl",
                         value: member.email,
@@ -45,19 +44,19 @@ async function createTeam(data) {
     let error = await validateAssignedToSPL(teams, splId);
     if (error) throw new CustomError("Must be assigned to this spl", 400, error);
 
+    const allTeamMembers = await TeamRepository.findAllTeamMemberUnderSPL(splId);
     const validateAnotherTeamMember = async (teams, splId) => {
-        const isAnotherTeamMember = (anotherTeamMembers, email) => {
-            for (const student of anotherTeamMembers) {
+        const isAnotherTeamMember = (email) => {
+            for (const student of allTeamMembers) {
                 if (student.email == email) return true;
             }
             return false;
         };
 
-        const anotherTeamMembers = await TeamRepository.findAllTeamMemberUnderSPL(splId);
         const errors = {};
         teams.forEach((team, teamIndex) => {
             team.teamMembers.forEach((member, memberIndex) => {
-                if (isAnotherTeamMember(anotherTeamMembers, member.email)) {
+                if (isAnotherTeamMember(member.email)) {
                     errors[`teams[${teamIndex}].teamMembers[${memberIndex}].email`] = {
                         msg: "already member of another team of same spl",
                         value: member.email,
