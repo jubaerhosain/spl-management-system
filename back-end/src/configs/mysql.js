@@ -27,19 +27,18 @@ import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
 import Notice from "../models/Notice.js";
 import Presentation from "../models/Presentation.js";
-import SPLMark from "../models/SPLMark.js";
 import PresentationMark from "../models/PresentationMark.js";
 import ContinuousMark from "../models/ContinuousMark.js";
 import SupervisorRequest from "../models/SupervisorRequest.js";
 import OTP from "../models/OTP.js";
 
 // junction tables
-import Supervisor from "../models/junctions/Supervisor.js";
-import ProjectContributor from "../models/junctions/ProjectContributor.js";
-import StudentSPL from "../models/junctions/StudentSPL.js";
-import TeamMember from "../models/junctions/TeamMember.js";
-import PresentationEvaluator from "../models/junctions/PresentationEvaluator.js";
-import CommitteeMember from "../models/junctions/CommitteeMember.js";
+import Supervisor from "../models/Supervisor.js";
+import ProjectContributor from "../models/ProjectContributor.js";
+import StudentSPL from "../models/StudentSPL.js";
+import TeamMember from "../models/TeamMember.js";
+import PresentationEvaluator from "../models/PresentationEvaluator.js";
+import CommitteeMember from "../models/CommitteeMember.js";
 
 const options = { sequelize, DataTypes, Sequelize, Op };
 
@@ -51,7 +50,6 @@ const models = {
     SupervisorRequest: SupervisorRequest(options),
     SPL: SPL(options),
     SPLCommittee: SPLCommittee(options),
-    SPLMark: SPLMark(options),
     Team: Team(options),
     Project: Project(options),
     Presentation: Presentation(options),

@@ -61,13 +61,6 @@ export default (options) => {
             foreignKey: "splId",
         });
 
-        // SPL - SPLMark [one to many]
-        SPL.hasMany(models.SPLMark, {
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "splId",
-        });
-
         // SPL - ContinuousMark [one to many]
         SPL.hasMany(models.ContinuousMark, {
             onDelete: "CASCADE",

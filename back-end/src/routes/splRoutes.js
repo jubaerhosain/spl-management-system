@@ -1,6 +1,7 @@
 import express from "express";
 const splRoutes = express.Router();
 
+import splMarkRoutes from "./splMarkRoutes.js";
 import splController from "../controllers/splController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -28,7 +29,6 @@ splRoutes.post("/:splId/presentation/evaluator");
 splRoutes.get("/:splId/presentation/evaluator");
 splRoutes.delete("/:splId/presentation/evaluator/:evaluatorId");
 
-// spl mark related routes (add a common middleware to check if spl is exist or not)
-// splRoutes.get("/:splId/mark", splMarkRoutes);
+splRoutes.get("/:splId/mark", splMarkRoutes);
 
 export default splRoutes;

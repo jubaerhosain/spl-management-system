@@ -19,6 +19,16 @@ export default (options) => {
                 key: "splId",
             },
         },
+        supervisorMark: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        codingMark: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
+        },
         documentationProgress: {
             type: DataTypes.INTEGER,
             allowNull: false,
