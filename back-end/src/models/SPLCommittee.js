@@ -49,7 +49,7 @@ export default (options) => {
             through: models.CommitteeMember,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "splId",
+            foreignKey: "teacherId",
         });
     };
 

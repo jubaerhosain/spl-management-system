@@ -23,9 +23,9 @@ async function createSPLCommittee(data) {
     });
 
     const existedTeachers = await TeacherRepository.findAllExistedTeacherByEmail(emails);
-    console.log(existedTeachers);
+    // console.log(existedTeachers);
 
-    const validateIsAllTeacher = (data) => {
+    const validateTeacher = (data) => {
         const isTeacher = (email) => {
             for (const teacher of existedTeachers) {
                 if (teacher.email == email) return true;
@@ -60,10 +60,30 @@ async function createSPLCommittee(data) {
         return error;
     };
 
-    const error = validateIsAllTeacher(data);
+    const error = validateTeacher(data);
     if (error) throw new CustomError("Committee persons must be teachers", 400, error);
 
-    console.log(data);
+    const findTeacherId = (email) => {
+        for (const teacher of existedTeachers) {
+            if (teacher.email == email) return teacher.teacherId;
+        }
+    };
+
+    const newCommittee = {
+        splId,
+        head: findTeacherId(data.head),
+        manager: findTeacherId(data.manager),
+        members: data.members.map((member) => {
+            return { memberId: findTeacherId(member.email) };
+        }),
+    };
+
+    // console.log(newCommittee);
+
+    await SPLCommitteeRepository.createCommittee(newCommittee);
+
+    // console.log(data);
+    // send notification....
 }
 
 async function addCommitteeHead(splId, data) {

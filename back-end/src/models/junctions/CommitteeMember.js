@@ -3,12 +3,12 @@
 export default (options) => {
     const { sequelize, DataTypes } = options;
     const CommitteeMember = sequelize.define("CommitteeMembers", {
-        splId: {
+        committeeId: {
             type: DataTypes.UUID,
             primaryKey: true,
             references: {
-                model: "SPLs",
-                key: "splId",
+                model: "SPLCommittees",
+                key: "committeeId",
             },
         },
         teacherId: {
