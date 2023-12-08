@@ -1,9 +1,26 @@
 import { GenericResponse } from "../utils/responseUtils.js";
-import splService from "../services/splCommitteeService.js";
+import splCommitteeService from "../services/splCommitteeService.js";
 import CustomError from "../utils/CustomError.js";
-import splValidator from "../validators/splValidator.js";
+import splCommitteeValidator from "../validators/splCommitteeValidator.js";
 
-async function createSPLCommittee(req, res) {}
+async function createSPLCommittee(req, res) {
+    try {
+        const { error } = splCommitteeValidator.createCommitteeSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("invalid data"));
+
+        await splCommitteeService.createSPLCommittee();
+
+
+        return res.json(GenericResponse.success("Committee created successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function addCommitteeHead(req, res) {
     try {
@@ -75,6 +92,7 @@ async function addCommitteeMember(req, res) {
 async function removeCommitteeMember(req, res) {}
 
 export default {
+    createSPLCommittee,
     addCommitteeHead,
     removeCommitteeHead,
     addSPLManager,

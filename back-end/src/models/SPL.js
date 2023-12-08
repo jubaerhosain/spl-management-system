@@ -23,20 +23,6 @@ export default (options) => {
                 isIn: [["spl1", "spl2", "spl3"]],
             },
         },
-        head: {
-            type: DataTypes.UUID,
-            references: {
-                model: "Teachers",
-                key: "teacherId",
-            },
-        },
-        manager: {
-            type: DataTypes.UUID,
-            references: {
-                model: "Teachers",
-                key: "teacherId",
-            },
-        },
         active: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
@@ -46,30 +32,6 @@ export default (options) => {
     });
 
     SPL.associate = (models) => {
-        // Teacher - SPL [one to many]
-        SPL.belongsTo(models.Teacher, {
-            as: "Manager",
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "manager",
-        });
-
-        // Teacher - SPL [one to many]
-        SPL.belongsTo(models.Teacher, {
-            as: "Head",
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "head",
-        });
-
-        // Teacher - SPL [many to many]
-        SPL.belongsToMany(models.Teacher, {
-            through: models.CommitteeMember,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "splId",
-        });
-
         // Student - SPL [many to many]
         SPL.belongsToMany(models.Student, {
             through: models.StudentSPL,

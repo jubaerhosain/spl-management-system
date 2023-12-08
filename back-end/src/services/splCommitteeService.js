@@ -8,6 +8,10 @@ import splUtils from "../utils/splUtils.js";
 import lodash from "lodash";
 // import emailService from "../emailServices/emailService.js";
 
+async function createSPLCommittee(data) {
+    
+}
+
 async function addCommitteeHead(splId, data) {
     const user = await UserRepository.findByEmail(data.email);
     if (!user || user.userType != "teacher") {
@@ -159,6 +163,7 @@ async function addCommitteeMember(splId, members) {
 }
 
 export default {
+    createSPLCommittee,
     addCommitteeHead,
     addSPLManager,
     addCommitteeMember,

@@ -4,19 +4,17 @@ const splCommitteeRoutes = express.Router();
 import splCommitteeController from "../controllers/splCommitteeController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
-splCommitteeRoutes.put("/committee/head", checkAuthentication, splCommitteeController.addCommitteeHead);
-splCommitteeRoutes.delete("/committee/head/:headId", checkAuthentication, splCommitteeController.removeCommitteeHead);
-splCommitteeRoutes.put("/committee/manager", checkAuthentication, splCommitteeController.addSPLManager);
-splCommitteeRoutes.delete(
-    "/committee/manager/:managerId",
-    checkAuthentication,
-    splCommitteeController.removeSPLManager
-);
-splCommitteeRoutes.put("/committee/member", checkAuthentication, splCommitteeController.addCommitteeMember);
-splCommitteeRoutes.delete(
-    "/committee/member/:memberId",
-    checkAuthentication,
-    splCommitteeController.removeCommitteeMember
-);
+splCommitteeRoutes.post("/");
+splCommitteeRoutes.get("/");
+splCommitteeRoutes.get("/:committeeId");
+splCommitteeRoutes.put("/:committeeId");
+splCommitteeRoutes.delete("/:committeeId");
+
+splCommitteeRoutes.put("/:committeeId/head", splCommitteeController.addCommitteeHead);
+splCommitteeRoutes.delete("/:committeeId/head", splCommitteeController.removeCommitteeHead);
+splCommitteeRoutes.put("/:committeeId/manager", splCommitteeController.addSPLManager);
+splCommitteeRoutes.delete("/:committeeId/manager", splCommitteeController.removeSPLManager);
+splCommitteeRoutes.put("/:committeeId/member", splCommitteeController.addCommitteeMember);
+splCommitteeRoutes.delete("/:committeeId/member/:memberId", splCommitteeController.removeCommitteeMember);
 
 export default splCommitteeRoutes;

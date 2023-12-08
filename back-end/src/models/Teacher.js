@@ -29,24 +29,24 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // Teacher - SPL [one to many] as SPL Manager
-        Teacher.hasMany(models.SPL, {
+        // Teacher - SPLCommittee [one to many] as SPL Manager
+        Teacher.hasMany(models.SPLCommittee, {
             as: "ManagedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "manager",
         });
 
-        // Teacher - SPL [one to many] as Committee Head
-        Teacher.hasMany(models.SPL, {
+        // Teacher - SPLCommittee [one to many] as Committee Head
+        Teacher.hasMany(models.SPLCommittee, {
             as: "LeadedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "head",
         });
 
-        // Teacher - SPL [many to many]
-        Teacher.belongsToMany(models.SPL, {
+        // Teacher - SPLCommittee [many to many]
+        Teacher.belongsToMany(models.SPLCommittee, {
             through: models.CommitteeMember,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",

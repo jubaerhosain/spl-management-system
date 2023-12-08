@@ -21,6 +21,7 @@ import User from "../models/User.js";
 import Teacher from "../models/Teacher.js";
 import Student from "../models/Student.js";
 import SPL from "../models/SPL.js";
+import SPLCommittee from "../models/SPLCommittee.js";
 import Team from "../models/Team.js";
 import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
@@ -49,6 +50,7 @@ const models = {
     Student: Student(options),
     SupervisorRequest: SupervisorRequest(options),
     SPL: SPL(options),
+    SPLCommittee: SPLCommittee(options),
     SPLMark: SPLMark(options),
     Team: Team(options),
     Project: Project(options),
