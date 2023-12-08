@@ -45,20 +45,20 @@ const options = { sequelize, DataTypes, Sequelize, Op };
 const models = {
     // entity tables
     User: User(options),
-    Teacher: Teacher(options),
     Student: Student(options),
-    SupervisorRequest: SupervisorRequest(options),
+    Teacher: Teacher(options),
     SPL: SPL(options),
     SPLCommittee: SPLCommittee(options),
-    Team: Team(options),
-    Project: Project(options),
     Presentation: Presentation(options),
     PresentationMark: PresentationMark(options),
     ContinuousMark: ContinuousMark(options),
+    Team: Team(options),
+    Project: Project(options),
     Notification: Notification(options),
     Notice: Notice(options),
     OTP: OTP(options),
-
+    SupervisorRequest: SupervisorRequest(options),
+    
     // junctions
     TeamMember: TeamMember(options),
     ProjectContributor: ProjectContributor(options),
