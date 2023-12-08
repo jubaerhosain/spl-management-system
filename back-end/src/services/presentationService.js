@@ -3,12 +3,12 @@ import CustomError from "../utils/CustomError.js";
 import PresentationRepository from "../repositories/PresentationRepository.js"
 
 async function createPresentationEvent(data) {
-    const {splId} = data;
+    const {splId, presentationNo} = data;
     const spl = await SPLRepository.findById(splId);
     if (!spl) throw new CustomError("SPL does not exist", 400);
 
-    const presentation = await PresentationRepository.findPresentation(data.splId, data.presentationNo);
-    if(presentation) throw new CustomError(`Presentation ${data.presentationNo} already exists`, 400);
+    const presentation = await PresentationRepository.findPresentation(splId, presentationNo);
+    if(presentation) throw new CustomError(`Presentation ${presentationNo} already exists`, 400);
 
     // create
     await PresentationRepository.createPresentation(data);
