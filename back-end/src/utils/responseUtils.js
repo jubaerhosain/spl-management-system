@@ -25,7 +25,7 @@ class GenericResponse {
                 let msg = detail.message.replace(/(\")/g, "");
                 normalizedErrors[detail.context.label] = {
                     msg: msg.replace(/.*\.(.*)$/, "$1"),
-                    value: error.context?.value,
+                    value: detail.context?.value,
                 };
             }
         });

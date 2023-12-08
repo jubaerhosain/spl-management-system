@@ -4,7 +4,7 @@ const splCommitteeRoutes = express.Router();
 import splCommitteeController from "../controllers/splCommitteeController.js";
 import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
-splCommitteeRoutes.post("/");
+splCommitteeRoutes.post("/", splCommitteeController.createSPLCommittee);
 splCommitteeRoutes.get("/");
 splCommitteeRoutes.get("/:committeeId");
 splCommitteeRoutes.put("/:committeeId");

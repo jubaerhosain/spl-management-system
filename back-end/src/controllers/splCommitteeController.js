@@ -6,10 +6,9 @@ import splCommitteeValidator from "../validators/splCommitteeValidator.js";
 async function createSPLCommittee(req, res) {
     try {
         const { error } = splCommitteeValidator.createCommitteeSchema.validate(req.body);
-        if (error) return res.status(400).json(GenericResponse.error("invalid data"));
+        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
-        await splCommitteeService.createSPLCommittee();
-
+        await splCommitteeService.createSPLCommittee(req.body);
 
         return res.json(GenericResponse.success("Committee created successfully"));
     } catch (err) {

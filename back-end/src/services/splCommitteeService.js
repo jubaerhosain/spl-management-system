@@ -4,12 +4,66 @@ import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import CustomError from "../utils/CustomError.js";
-import splUtils from "../utils/splUtils.js";
+import utils from "../utils/utils.js";
 import lodash from "lodash";
+import SPLCommitteeRepository from "../repositories/SPLCommitteeRepository.js";
 // import emailService from "../emailServices/emailService.js";
 
 async function createSPLCommittee(data) {
-    
+    const { splId } = data;
+    const spl = await SPLRepository.findById(splId);
+    if (!spl) throw new CustomError("SPL does not exist", 400);
+
+    const committee = await SPLCommitteeRepository.findById(spl.splId);
+    if (committee) throw new CustomError("Committee already exist", 400);
+
+    const emails = [data.head, data.manager];
+    data.members.forEach((member) => {
+        emails.push(member.email);
+    });
+
+    const existedTeachers = await TeacherRepository.findAllExistedTeacherByEmail(emails);
+    console.log(existedTeachers);
+
+    const validateIsAllTeacher = (data) => {
+        const isTeacher = (email) => {
+            for (const teacher of existedTeachers) {
+                if (teacher.email == email) return true;
+            }
+            return false;
+        };
+
+        const error = {};
+        if (!isTeacher(data.head)) {
+            error.head = {
+                msg: "Head must be a teacher",
+                value: data.head,
+            };
+        }
+        if (!isTeacher(data.manager)) {
+            error.manager = {
+                msg: "Head must be a teacher",
+                value: data.manager,
+            };
+        }
+
+        data.members.forEach((member, index) => {
+            if (!isTeacher(member.email)) {
+                error[`members[${index}].email`] = {
+                    msg: "Member must be a teacher",
+                    value: member.email,
+                };
+            }
+        });
+
+        if (utils.isObjectEmpty(error)) return null;
+        return error;
+    };
+
+    const error = validateIsAllTeacher(data);
+    if (error) throw new CustomError("Committee persons must be teachers", 400, error);
+
+    console.log(data);
 }
 
 async function addCommitteeHead(splId, data) {
@@ -167,4 +221,4 @@ export default {
     addCommitteeHead,
     addSPLManager,
     addCommitteeMember,
-}
+};

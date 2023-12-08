@@ -68,6 +68,35 @@ async function findAll() {
     return teachers;
 }
 
+async function findAllExistedTeacherByEmail(emails) {
+    const users = await models.User.findAll({
+        include: {
+            model: models.Teacher,
+            required: true,
+        },
+        where: {
+            email: {
+                [Op.in]: emails,
+            },
+            userType: "teacher",
+        },
+        raw: true,
+        nest: true,
+    });
+
+    const flattened = [];
+    users.forEach((user) => {
+        const teacher = {
+            ...user,
+            ...user.Teacher,
+        };
+        delete teacher.Teacher;
+        flattened.push(teacher);
+    });
+
+    return flattened;
+}
+
 async function findAllAvailableTeacher() {
     let teachers = await models.Teacher.findAll({
         include: {
@@ -111,8 +140,7 @@ async function findAvailableTeacher(teacherId) {
         },
     });
 
-    if(!availableTeacher)
-        return null;
+    if (!availableTeacher) return null;
 
     availableTeacher = {
         ...availableTeacher,
@@ -156,5 +184,6 @@ export default {
     findAll,
     findAvailableTeacher,
     findAllAvailableTeacher,
+    findAllExistedTeacherByEmail,
     updateTeacher,
 };
