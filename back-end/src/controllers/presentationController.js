@@ -8,9 +8,7 @@ async function createPresentationEvent(req, res) {
         const { error } = presentationValidator.createPresentationSchema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
-        const {splId} = req.body
-        delete req.body.splId;
-        await presentationService.createPresentationEvent(splId, req.body);
+        await presentationService.createPresentationEvent(req.body);
 
         res.json(GenericResponse.success("Presentation event created successfully"));
     } catch (err) {
