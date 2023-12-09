@@ -9,7 +9,7 @@ markRoutes.get("/supervisor"); // all student mark under supervisor of that spl
 markRoutes.put("/supervisor", splMarkController.updateSupervisorMark);
 
 markRoutes.get("/coding"); // all student under spl
-markRoutes.put("/coding"); // bulk for all student under spl
+markRoutes.put("/coding", splMarkController.updateCodingMark); // bulk for all student under spl
 
 // continuous mark related routes
 markRoutes.post("/continuous/"); // must bulkCreate of all student of that spl

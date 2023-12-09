@@ -284,7 +284,7 @@ async function findSupervisor(studentId, splId) {}
 async function findCurrentSupervisor(studentId) {}
 
 async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
-    const students = await models.Supervisor.findOne({ where: { teacherId: supervisorId, splId } });
+    const students = await models.Supervisor.findAll({ where: { teacherId: supervisorId, splId } });
     if (students.length == 0) return [];
     return students.map((student) => student.studentId);
 }

@@ -5,9 +5,18 @@ async function updateSupervisorMark(splId, marks) {
         mark.splId = splId;
         return mark;
     });
-    models.StudentSPL.bulkUpdate(marks, { updateOnDuplicate: ["splId", "studentId"] });
+    models.StudentSPL.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "supervisorMark"] });
+}
+
+async function updateCodingMark(splId, marks) {
+    marks = marks.map((mark) => {
+        mark.splId = splId;
+        return mark;
+    });
+    models.StudentSPL.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "codingMark"] });
 }
 
 export default {
     updateSupervisorMark,
+    updateCodingMark,
 };
