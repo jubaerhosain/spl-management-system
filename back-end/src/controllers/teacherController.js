@@ -1,18 +1,80 @@
 import { GenericResponse } from "../utils/responseUtils.js";
 import teacherService from "../services/teacherService.js";
 import CustomError from "../utils/CustomError.js";
-import teacherValidator from "../validators/teacherValidator.js";
+import Joi from "../utils/validator/Joi.js";
+import {
+    validateName,
+    validateEmail,
+    validateDesignation,
+    validateGender,
+    validatePhoneNumber,
+} from "../utils/validator/JoiValidationFunction.js";
+
+function validateCreateTeacherDuplicates(teachers) {
+    const error = {};
+    const emails = teachers.map((teacher) => teacher.email);
+    emails.forEach((email, index) => {
+        if (utils.countOccurrences(emails, email) > 1) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["email"] = {
+                msg: "duplicate email not allowed",
+                value: email,
+            };
+        }
+    });
+
+    if (Object.keys(error).length === 0) return null;
+
+    return error;
+}
+
+/**
+ * Checks whether emails are already exists or not.
+ * @param {*} teachers
+ * @returns
+ */
+async function validateCreateTeacherExistence(teachers) {
+    const error = {};
+    const emails = teachers.map((teacher) => teacher.email);
+    const existedEmails = await UserRepository.findAllExistedEmail(emails);
+    emails.forEach((email, index) => {
+        if (existedEmails.includes(email)) {
+            if (!error[index]) {
+                error[index] = {};
+            }
+            error[index]["email"] = {
+                msg: "email already exists",
+                value: email,
+            };
+        }
+    });
+
+    if (Object.keys(error).length === 0) return null;
+
+    return error;
+}
 
 async function createTeacher(req, res) {
     try {
+        const schema = Joi.object({
+            teachers: Joi.array()
+                .min(1)
+                .items(
+                    Joi.object({
+                        name: Joi.string().trim().custom(validateName).required(),
+                        email: Joi.string().trim().email().custom(validateEmail).required(),
+                        designation: Joi.string().trim().custom(validateDesignation).required(),
+                    })
+                )
+                .required(),
+        }).required();
+
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
         const { teachers } = req.body;
-
-        if (!teachers || teachers.length === 0)
-            return res.status(400).json(GenericResponse.error("At least one teacher information must be provided"));
-
-        const { error } = teacherValidator.createTeacherSchema.validate(teachers);
-        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
-
         const error1 = teacherValidator.validateCreateTeacherDuplicates(teachers);
         if (error1) return res.status(400).json(GenericResponse.error("duplicate emails are not allowed", error1));
 
@@ -47,6 +109,19 @@ async function getAllTeamRequestedTeacher(req, res) {}
 
 async function updateTeacher(req, res) {
     try {
+        const schema = Joi.object({
+            name: Joi.string().trim().custom(validateName).optional(),
+            gender: Joi.string().trim().custom(validateGender).optional(),
+            phone: Joi.string().trim().custom(validatePhoneNumber).optional(),
+            details: Joi.string().trim().min(5).max(600).optional(),
+            designation: Joi.string().trim().custom(validateDesignation).optional(),
+            available: Joi.boolean().optional(),
+        })
+            .min(1)
+            .required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
+
         const teacher = req.body;
         const { userId } = req.user;
 
