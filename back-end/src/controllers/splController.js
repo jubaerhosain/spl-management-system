@@ -1,11 +1,16 @@
 import { GenericResponse } from "../utils/responseUtils.js";
 import splService from "../services/splService.js";
 import CustomError from "../utils/CustomError.js";
-import splValidator from "../validators/splValidator.js";
+import Joi from "../utils/validator/Joi.js";
+import { validateSPLName, validateAcademicYear } from "../utils/validator/JoiValidationFunction.js";
 
 async function createSPL(req, res) {
     try {
-        const { error } = splValidator.createSPLSchema.validate(req.body);
+        const schema = Joi.object({
+            splName: Joi.string().trim().custom(validateSPLName).required(),
+            academicYear: Joi.string().trim().custom(validateAcademicYear).required(),
+        }).required();
+        const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
         await splService.createSPL(req.body);

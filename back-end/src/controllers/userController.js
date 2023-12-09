@@ -1,12 +1,19 @@
 import { GenericResponse } from "../utils/responseUtils.js";
-import userValidator from "../validators/userValidator.js";
 import userService from "../services/userService.js";
 import CustomError from "../utils/CustomError.js";
+import Joi from "../utils/validator/Joi.js";
+import { validateName, validateEmail, validateUserType } from "../utils/validator/JoiValidationFunction.js";
 
 async function createUser(req, res) {
     try {
-        const { error } = userValidator.createUserSchema.validate(req.body);
-        if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
+        const schema = Joi.object({
+            name: Joi.string().trim().custom(validateName).required(),
+            email: Joi.string().trim().email().custom(validateEmail).required(),
+            userType: Joi.string().trim().custom(validateUserType).required(),
+        }).required();
+
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         await userService.createUserAccount(req.body);
 
@@ -23,8 +30,12 @@ async function createUser(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { error } = userValidator.updateUserSchema.validate(req.body);
-        if (error) return res.status(400).json(GenericResponse.error("validation failed", error));
+        const schema = Joi.object({
+            name: Joi.string().trim().custom(validateName).required(),
+            // add more fields
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         const user = req.user;
         await userService.updateUserAccount(user.userId, req.body);
