@@ -98,7 +98,7 @@ async function verifyOTP(req, res) {
         const schema = Joi.object({
             email: Joi.string().trim().email().required(),
             otp: Joi.string().trim().custom(validateOTP).required(),
-        });
+        }).required();
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
@@ -122,7 +122,7 @@ async function resetPassword(req, res) {
             email: Joi.string().trim().email().required(),
             otp: Joi.string().trim().custom(validateOTP).required(),
             password: Joi.string().trim().custom(validatePassword).required(),
-        });
+        }).required();
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 

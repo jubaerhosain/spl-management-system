@@ -9,7 +9,7 @@ async function createPresentationEvent(req, res) {
             splId: Joi.string().trim().uuid().required(),
             presentationNo: Joi.number().required(),
             details: Joi.string().trim().optional(),
-        });
+        }).required();
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
@@ -26,7 +26,13 @@ async function createPresentationEvent(req, res) {
     }
 }
 
-async function updatePresentation() {}
+async function updatePresentation(req, res) {}
+
+async function createPresentationMark(req, res) {
+    // add marks to the table with default values for a teacher
+}
+
+async function updatePresentationMark(req, res) {}
 
 export default {
     createPresentationEvent,
