@@ -144,5 +144,6 @@ export default {
     updateSupervisorMark,
     updateCodingMark,
     createContinuousClassWithMark,
+    updateContinuousClassNo,
     updateContinuousMark,
 };
