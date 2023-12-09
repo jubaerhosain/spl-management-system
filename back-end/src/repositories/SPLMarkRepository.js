@@ -16,7 +16,26 @@ async function updateCodingMark(splId, marks) {
     models.StudentSPL.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "codingMark"] });
 }
 
+async function createContinuousClassWithMark(splId, classNo, studentIds) {
+    const continuousMarks = [];
+    studentIds.forEach((studentId) => {
+        continuousMarks.push({
+            splId,
+            classNo,
+            studentId,
+        });
+    });
+    await models.ContinuousMark.bulkCreate(continuousMarks);
+}
+
+async function findContinuousClass(splId, classNo) {
+    const continuousClass = await models.ContinuousMark.findOne({ where: { splId, classNo }, raw: true });
+    return continuousClass;
+}
+
 export default {
     updateSupervisorMark,
     updateCodingMark,
+    findContinuousClass,
+    createContinuousClassWithMark,
 };

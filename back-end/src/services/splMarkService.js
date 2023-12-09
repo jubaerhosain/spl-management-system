@@ -45,7 +45,29 @@ async function updateCodingMark(splId, marks) {
     await SPLMarkRepository.updateCodingMark(splId, marks);
 }
 
+async function createContinuousClassWithMark(splId, classNo) {
+    const spl = await SPLRepository.findById(splId);
+    if (!spl) throw new CustomError("SPL does not exist", 400);
+
+    const continuousClass = await SPLMarkRepository.findContinuousClass(splId, classNo);
+    if (continuousClass) throw new CustomError(`Class ${classNo} already exists`, 400);
+
+    const studentIds = await StudentRepository.findAllStudentIdUnderSPL(splId);
+
+    await SPLMarkRepository.createContinuousClassWithMark(splId, classNo, studentIds);
+}
+
+async function updateContinuousClassNo(splId, oldClassNo, newClassNo) {
+
+}
+
+async function updateContinuousMark(splId, marks) {
+
+}
+
 export default {
     updateSupervisorMark,
-    updateCodingMark
+    updateCodingMark,
+    createContinuousClassWithMark,
+    updateContinuousClassNo,
 };

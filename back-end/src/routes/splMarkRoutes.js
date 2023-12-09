@@ -12,7 +12,7 @@ markRoutes.get("/coding"); // all student under spl
 markRoutes.put("/coding", splMarkController.updateCodingMark); // bulk for all student under spl
 
 // continuous mark related routes
-markRoutes.post("/continuous/"); // must bulkCreate of all student of that spl
+markRoutes.post("/continuous/", splMarkController.createContinuousClassWithMark);
 markRoutes.get("/continuous/");
 markRoutes.get("/continuous/:classNo");
 markRoutes.put("/continuous/:classNo");
