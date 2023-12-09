@@ -1,7 +1,13 @@
-import { models } from "../database/mysql.js";
+import { models } from "../configs/mysql.js";
 
-async function createIfNotExists(splId, studentId) {}
+async function updateSupervisorMark(splId, marks) {
+    marks = marks.map((mark) => {
+        mark.splId = splId;
+        return mark;
+    });
+    models.StudentSPL.bulkUpdate(marks, { updateOnDuplicate: ["splId", "studentId"] });
+}
 
 export default {
-    createIfNotExists,
+    updateSupervisorMark,
 };

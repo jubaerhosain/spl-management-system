@@ -1,37 +1,20 @@
-import { param, body_param } from "./custom-validator.js";
+import joi from "joi";
+const Joi = joi.defaults((schema) => {
+    return schema.options({
+        abortEarly: false,
+    });
+});
 
+const updateMarkSchema = Joi.object({
+    marks: Joi.array()
+        .min(1)
+        .items({
+            studentId: Joi.string().trim().uuid().required(),
+            mark: Joi.number().required(),
+        })
+        .required(),
+}).required();
 
-const markValidator = body_param("mark").trim().isNumeric().withMessage("Must be a number");
-
-const addPresentationMarkValidator = [, markValidator];
-
-const updatePresentationMarkValidator = [
-    param("presentationMarkId").trim().isInt().withMessage("Must be an integer"),
-    markValidator,
-];
-
-const addSupervisorMarkValidator = [markValidator];
-
-const updateSupervisorMarkValidator = [markValidator];
-
-const addCodingMarkValidator = [markValidator];
-
-const updateCodingMarkValidator = [markValidator];
-
-const addContinuousMarkValidator = [ markValidator];
-
-const updateContinuousMarkValidator = [
-    param("continuousMarkId").trim().isInt().withMessage("Must be an integer"),
-    markValidator,
-];
-
-export {
-    addPresentationMarkValidator,
-    updatePresentationMarkValidator,
-    addSupervisorMarkValidator,
-    updateSupervisorMarkValidator,
-    addCodingMarkValidator,
-    updateCodingMarkValidator,
-    addContinuousMarkValidator,
-    updateContinuousMarkValidator,
+export default {
+    updateMarkSchema,
 };

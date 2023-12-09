@@ -1,12 +1,12 @@
 import express from "express";
-const markRoutes = express.Router();
+const markRoutes = express.Router({ mergeParams: true });
 
+import splMarkController from "../controllers/splMarkController.js";
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
-import markController from "../controllers/splMarkController.js";
 
 // atomic mark related routes
-markRoutes.get("/supervisor"); // all student under supervisor of that spl
-markRoutes.put("/supervisor");
+markRoutes.get("/supervisor"); // all student mark under supervisor of that spl
+markRoutes.put("/supervisor", splMarkController.updateSupervisorMark);
 
 markRoutes.get("/coding"); // all student under spl
 markRoutes.put("/coding"); // bulk for all student under spl

@@ -20,7 +20,7 @@ splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splControlle
 
 // supervisor related
 splRoutes.get("/:splId/supervisor/", checkAuthentication);
-splRoutes.post("/:splId/supervisor/randomize", checkAuthentication, splController.randomizeSupervisor);
+splRoutes.post("/:splId/supervisor/randomize", splController.randomizeSupervisor);
 
 // presentation event related routes
 splRoutes.get("/:splId/presentation");
@@ -29,6 +29,6 @@ splRoutes.post("/:splId/presentation/evaluator");
 splRoutes.get("/:splId/presentation/evaluator");
 splRoutes.delete("/:splId/presentation/evaluator/:evaluatorId");
 
-splRoutes.get("/:splId/mark", splMarkRoutes);
+splRoutes.use("/:splId/mark", splMarkRoutes);
 
 export default splRoutes;

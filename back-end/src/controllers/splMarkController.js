@@ -1,18 +1,34 @@
-async function getSupervisorMark(req, res) {
+import splMarkValidator from "../validators/splMarkValidator.js";
+import splMarkService from "../services/splMarkService.js";
+import CustomError from "../utils/CustomError.js";
+import { GenericResponse } from "../utils/responseUtils.js";
 
-}
+async function getSupervisorMark(req, res) {}
 
 async function updateSupervisorMark(req, res) {
+    try {
+        const { error } = splMarkValidator.updateMarkSchema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
+        const { splId } = req.params;
+        const user = req.user;
+        const { marks } = req.body;
+        await splMarkService.updateSupervisorMark(3445, splId, marks);
+
+        return res.json(GenericResponse.success("Mark updated successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
 }
 
-async function getCodingMark(req, res) {
+async function getCodingMark(req, res) {}
 
-}
-
-async function updateCodingMark(req, res) {
-
-}
+async function updateCodingMark(req, res) {}
 
 export default {
     updateSupervisorMark,

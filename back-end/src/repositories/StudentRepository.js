@@ -233,12 +233,22 @@ async function findAllStudentNotUnderSPL(splId, curriculumYear) {
     return flattened;
 }
 
+async function findAllStudentIdUnderSPL(splId) {
+    const students = await models.StudentSPL.findAll({
+        where: { splId },
+        attributes: ["studentId"],
+    });
+    const ids = students.map((student) => student.studentId);
+    if (!ids) return [];
+    return ids;
+}
+
 async function createStudentRequest(studentId, teacherId, splId) {
     await models.SupervisorRequest.create({ studentId, teacherId, splId });
 }
 
 async function createStudentSupervisor(studentId, teacherId, splId) {
-    await models.StudentTeacher_Supervisor.create({ studentId, teacherId, splId });
+    await models.Supervisor.create({ studentId, teacherId, splId });
 }
 
 async function findStudentRequest(studentId, teacherId) {
@@ -263,7 +273,7 @@ async function updateByAdmin(student, studentId) {
 }
 
 async function findSupervisorId(studentId, splId) {
-    const supervisor = await models.StudentTeacher_Supervisor.findOne({ where: { studentId, splId } });
+    const supervisor = await models.Supervisor.findOne({ where: { studentId, splId } });
     if (!supervisor) return null;
     const supervisorId = supervisor.teacherId;
     return supervisorId;
@@ -272,6 +282,12 @@ async function findSupervisorId(studentId, splId) {
 async function findSupervisor(studentId, splId) {}
 
 async function findCurrentSupervisor(studentId) {}
+
+async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
+    const students = await models.Supervisor.findOne({ where: { teacherId: supervisorId, splId } });
+    if (students.length == 0) return [];
+    return students.map((student) => student.studentId);
+}
 
 export default {
     createStudent,
@@ -284,6 +300,8 @@ export default {
     findAllExistedRegistrationNo,
     findAllStudentUnderSPL,
     findAllStudentNotUnderSPL,
+    findAllStudentIdUnderSPL,
+    findAllStudentIdUnderSupervisor,
     updateStudent,
     updateByAdmin,
     createStudentRequest,

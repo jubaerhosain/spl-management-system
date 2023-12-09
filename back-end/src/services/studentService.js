@@ -1,4 +1,5 @@
 import StudentRepository from "../repositories/StudentRepository.js";
+import TeacherRepository from "../repositories/TeacherRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import CustomError from "../utils/CustomError.js";
 import SPLRepository from "../repositories/SPLRepository.js";

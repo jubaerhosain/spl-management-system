@@ -5,11 +5,11 @@ async function createSPL(spl) {
 }
 
 async function createMembers(newMembers) {
-    await models.TeacherSPL_CommitteeMember.bulkCreate(newMembers);
+    await models.CommitteeMember.bulkCreate(newMembers);
 }
 
 async function isSupervisorRandomized(splId) {
-    const studentSupervisor = await models.StudentTeacher_Supervisor.findAll({ where: { splId } });
+    const studentSupervisor = await models.Supervisor.findAll({ where: { splId } });
     return studentSupervisor.length > 0;
 }
 
@@ -19,7 +19,7 @@ async function createMultipleSupervisor(splId, teacherStudentIds) {
         return element;
     });
 
-    await models.StudentTeacher_Supervisor.bulkCreate(splStudentTeacher);
+    await models.Supervisor.bulkCreate(splStudentTeacher);
 }
 
 async function findById(splId) {
