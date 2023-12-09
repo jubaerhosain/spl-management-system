@@ -1,7 +1,7 @@
 import splMarkService from "../services/splMarkService.js";
 import CustomError from "../utils/CustomError.js";
 import { GenericResponse } from "../utils/responseUtils.js";
-import Joi from "../configs/Joi.js";
+import Joi from "../utils/validator/Joi.js";
 
 async function getSupervisorMark(req, res) {}
 

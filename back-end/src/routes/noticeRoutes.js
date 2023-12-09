@@ -2,7 +2,7 @@ import express from "express";
 const noticeRoutes = express.Router();
 
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
-import noticeController from "../../controllers/notice/noticeController.js";
+import noticeController from "../controllers/noticeController.js";
 
 noticeRoutes.post("notice");
 noticeRoutes.get("notice");

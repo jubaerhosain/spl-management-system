@@ -1,12 +1,18 @@
 import config from "../configs/config.js";
 import { GenericResponse } from "../utils/responseUtils.js";
-import authService from "../services/auth/index.js";
-import authValidator from "../validators/authValidator.js";
+import authService from "../services/authService.js";
 import CustomError from "../utils/CustomError.js";
+import Joi from "../utils/validator/Joi.js";
+import { validatePassword, validateOTP } from "../utils/validator/JoiValidationFunction.js";
 
 async function login(req, res) {
     try {
-        const { error } = authValidator.loginFormSchema.validate(req.body);
+        const schema = Joi.object({
+            email: Joi.string().trim().email().required(),
+            password: Joi.string().trim().empty().required(),
+            checked: Joi.boolean().optional(),
+        }).required();
+        const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
         const { email, password, checked } = req.body;
@@ -41,7 +47,11 @@ async function logout(req, res) {
 
 async function changePassword(req, res) {
     try {
-        const { error } = authValidator.changePasswordFormSchema.validate(req.body);
+        const schema = Joi.object({
+            oldPassword: Joi.string().trim().required(),
+            newPassword: Joi.string().trim().custom(validatePassword).required(),
+        }).required();
+        const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
         const { userId } = req.user;
@@ -62,6 +72,12 @@ async function changePassword(req, res) {
 
 async function generateOTP(req, res) {
     try {
+        const schema = Joi.object({
+            email: Joi.string().trim().email().required(),
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
+
         const { email } = req.body;
 
         await authService.generateOTP(email);
@@ -79,8 +95,14 @@ async function generateOTP(req, res) {
 
 async function verifyOTP(req, res) {
     try {
-        const { email, otp } = req.body;
+        const schema = Joi.object({
+            email: Joi.string().trim().email().required(),
+            otp: Joi.string().trim().custom(validateOTP).required(),
+        });
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
+        const { email, otp } = req.body;
         await authService.verifyOTP(email, otp);
 
         res.json(GenericResponse.success("OTP verified successfully"));
@@ -96,6 +118,14 @@ async function verifyOTP(req, res) {
 
 async function resetPassword(req, res) {
     try {
+        const schema = Joi.object({
+            email: Joi.string().trim().email().required(),
+            otp: Joi.string().trim().custom(validateOTP).required(),
+            password: Joi.string().trim().custom(validatePassword).required(),
+        });
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
+
         const { email, otp, password } = req.body;
 
         await authService.resetPassword(email, otp, password);

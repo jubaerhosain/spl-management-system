@@ -1,5 +1,5 @@
 import jwtUtils from "../utils/jwtUtils.js";
-import emailService from "../emailServices/emailService.js";
+// import emailService from "../emailServices/emailService.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import OTPRepository from "../repositories/OTPRepository.js";

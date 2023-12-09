@@ -2,7 +2,7 @@ import express from "express";
 const authRoutes = express.Router();
 
 import { checkAuthentication } from "../middlewares/authMiddleware.js";
-import authController from "../../controllers/auth/authController.js";
+import authController from "../controllers/authController.js";
 
 authRoutes.post("/login", authController.login);
 authRoutes.get("/");

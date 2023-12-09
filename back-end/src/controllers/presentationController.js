@@ -1,7 +1,7 @@
 import { GenericResponse } from "../utils/responseUtils.js";
 import presentationService from "../services/presentationService.js";
 import CustomError from "../utils/CustomError.js";
-import Joi from "../configs/Joi.js";
+import Joi from "../utils/validator/Joi.js";
 
 async function createPresentationEvent(req, res) {
     try {
