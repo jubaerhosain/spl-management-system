@@ -14,10 +14,24 @@ async function findPresentation(splId, presentationNo) {
     return presentation;
 }
 
-async function findPresentationById(presentationId) {}
+async function findById(presentationId) {
+    const presentation = await models.Presentation.findOne({ where: { presentationId } });
+    return presentation;
+}
+
+async function isPresentationMarkCreated(teacherId, presentationId) {
+    const mark = await models.PresentationMark.findOne({ where: { presentationId, teacherId } });
+    return mark;
+}
+
+async function createPresentationMark(marks) {
+    await models.PresentationMark.bulkCreate(marks);
+}
 
 export default {
     createPresentation,
     findPresentation,
-    findPresentationById,
+    findById,
+    isPresentationMarkCreated,
+    createPresentationMark,
 };

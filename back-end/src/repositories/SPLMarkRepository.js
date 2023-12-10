@@ -28,7 +28,7 @@ async function createContinuousClassWithMark(splId, classNo, studentIds) {
     await models.ContinuousMark.bulkCreate(continuousMarks);
 }
 
-async function findContinuousClass(splId, classNo) {
+async function isContinuousClassExist(splId, classNo) {
     const continuousClass = await models.ContinuousMark.findOne({ where: { splId, classNo }, raw: true });
     return continuousClass;
 }
@@ -36,6 +36,6 @@ async function findContinuousClass(splId, classNo) {
 export default {
     updateSupervisorMark,
     updateCodingMark,
-    findContinuousClass,
+    isContinuousClassExist,
     createContinuousClassWithMark,
 };

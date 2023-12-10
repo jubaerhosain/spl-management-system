@@ -13,7 +13,7 @@ presentationRoutes.post("/:presentationId/evaluator");
 presentationRoutes.get("/:presentationId/evaluator");
 presentationRoutes.delete("/:presentationId/evaluator/:evaluatorId");
 
-presentationRoutes.post("/:presentationId/mark");
+presentationRoutes.post("/:presentationId/mark", presentationController.addPresentationMark);
 presentationRoutes.get("/:presentationId/mark");
 presentationRoutes.put("/:presentationId/mark");
 

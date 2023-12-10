@@ -28,12 +28,27 @@ async function createPresentationEvent(req, res) {
 
 async function updatePresentation(req, res) {}
 
-async function createPresentationMark(req, res) {
+async function addPresentationMark(req, res) {
     // add marks to the table with default values for a teacher
+    try {
+        const userId = req.user?.userId;
+        const { presentationId } = req.params;
+        await presentationService.addPresentationMark("0175f873-25c0-4fe0-9969-c7737c6bb7b3", presentationId);
+
+        res.json(GenericResponse.success("Presentation mark added successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
 }
 
 async function updatePresentationMark(req, res) {}
 
 export default {
     createPresentationEvent,
+    addPresentationMark,
 };

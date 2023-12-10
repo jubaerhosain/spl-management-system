@@ -49,8 +49,8 @@ async function createContinuousClassWithMark(splId, classNo) {
     const spl = await SPLRepository.findById(splId);
     if (!spl) throw new CustomError("SPL does not exist", 400);
 
-    const continuousClass = await SPLMarkRepository.findContinuousClass(splId, classNo);
-    if (continuousClass) throw new CustomError(`Class ${classNo} already exists`, 400);
+    const exist = await SPLMarkRepository.isContinuousClassExist(splId, classNo);
+    if (exist) throw new CustomError(`Class ${classNo} already exists`, 400);
 
     const studentIds = await StudentRepository.findAllStudentIdUnderSPL(splId);
 
