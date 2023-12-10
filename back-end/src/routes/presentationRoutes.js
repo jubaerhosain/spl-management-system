@@ -15,7 +15,7 @@ presentationRoutes.delete("/:presentationId/evaluator/:evaluatorId");
 
 presentationRoutes.post("/:presentationId/mark", presentationController.addPresentationMark);
 presentationRoutes.get("/:presentationId/mark");
-presentationRoutes.put("/:presentationId/mark");
+presentationRoutes.put("/:presentationId/mark", presentationController.updatePresentationMark);
 
 
 export default presentationRoutes;

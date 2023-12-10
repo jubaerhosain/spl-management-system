@@ -28,10 +28,17 @@ async function createPresentationMark(marks) {
     await models.PresentationMark.bulkCreate(marks);
 }
 
+async function updatePresentationMark(marks) {
+    await models.PresentationMark.bulkCreate(marks, {
+        updateOnDuplicate: ["presentationMarkId", "presentationId", "studentId", "teacherId", "mark"],
+    });
+}
+
 export default {
     createPresentation,
     findPresentation,
     findById,
     isPresentationMarkCreated,
     createPresentationMark,
+    updatePresentationMark,
 };

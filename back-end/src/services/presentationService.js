@@ -33,7 +33,28 @@ async function addPresentationMark(teacherId, presentationId) {
     await PresentationRepository.createPresentationMark(marks);
 }
 
+async function updatePresentationMark(teacherId, presentationId, marks) {
+    const presentation = await PresentationRepository.findById(presentationId);
+    if (!presentation) throw new CustomError("Presentation does not exist", 400);
+
+    const studentIds = await StudentRepository.findAllStudentIdUnderSPL(presentation.splId);
+    for (const mark of marks) {
+        if (mark.presentationId !== presentationId)
+            throw new CustomError(
+                `PresentationMarkId '${mark.presentationMarkId}' does not belongs to this presentation`,
+                400
+            );
+        if (mark.teacherId !== teacherId)
+            throw new CustomError(`PresentationMarkId '${mark.presentationMarkId}' does not belongs to you`, 400);
+        if (!studentIds.includes(mark.studentId))
+            throw new CustomError(`Student '${mark.studentId}' does not belong to this spl`, 400);
+    }
+
+    await PresentationRepository.updatePresentationMark(marks);
+}
+
 export default {
     createPresentationEvent,
     addPresentationMark,
+    updatePresentationMark,
 };
