@@ -8,8 +8,43 @@ import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 
 async function createStudent(students) {
-    const passwords = await passwordUtils.generatePassword(students.length);
+    const validateExistence = async (students) => {
+        const error = {};
+        const existedEmails = await UserRepository.findAllExistedEmail(students.map((student) => student.email));
+        const existedRollNos = await StudentRepository.findAllExistedRollNo(students.map((student) => student.rollNo));
+        const existedRegistrationNos = await StudentRepository.findAllExistedRegistrationNo(
+            students.map((student) => student.registrationNo)
+        );
+        students.forEach((student, index) => {
+            if (existedEmails.includes(student.email)) {
+                error[`students[${index}].email`] = {
+                    msg: "email already exists",
+                    value: student.email,
+                };
+            }
+            if (existedRollNos.includes(student.rollNo)) {
+                error[`students[${index}].rollNo`] = {
+                    msg: "rollNo already exists",
+                    value: student.rollNo,
+                };
+            }
+            if (existedRegistrationNos.includes(student.registrationNo)) {
+                error[`students[${index}].registrationNo`] = {
+                    msg: "registrationNo already exists",
+                    value: student.registrationNo,
+                };
+            }
+        });
 
+        if (Object.keys(error).length === 0) return null;
+
+        return error;
+    };
+
+    const error = await validateExistence(students);
+    if (error) throw new CustomError("existed email, roll, registration are not allowed", 400, error);
+
+    const passwords = await passwordUtils.generatePassword(students.length);
     const credentials = [];
 
     // normalize students to add both to User and Student table in a single query

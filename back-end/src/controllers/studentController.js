@@ -15,110 +15,6 @@ import {
     validateGender,
 } from "../utils/validator/JoiValidationFunction.js";
 
-import UserRepository from "../repositories/UserRepository.js";
-import StudentRepository from "../repositories/StudentRepository.js";
-
-// change them according to new joi error structure
-function validateCreateStudentDuplicates(students) {
-    const error = {};
-    const emails = students.map((student) => student.email);
-    emails.forEach((email, index) => {
-        if (utils.countOccurrences(emails, email) > 1) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["email"] = {
-                msg: "duplicate email not allowed",
-                value: email,
-            };
-        }
-    });
-
-    const rollNos = students.map((student) => student.rollNo);
-    rollNos.forEach((rollNo, index) => {
-        if (utils.countOccurrences(rollNos, rollNo) > 1) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["rollNo"] = {
-                msg: "duplicate roll not allowed",
-                value: rollNo,
-            };
-        }
-    });
-
-    const registrationNos = students.map((student) => student.registrationNo);
-    registrationNos.forEach((registrationNo, index) => {
-        if (utils.countOccurrences(registrationNos, registrationNo) > 1) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["registrationNo"] = {
-                msg: "duplicate registration not allowed",
-                value: registrationNo,
-            };
-        }
-    });
-
-    if (Object.keys(error).length === 0) return null;
-
-    return error;
-}
-
-/**
- * Checks whether email, rollNo, registrationNo already exists or not.
- * @param {*} students
- * @returns
- */
-async function validateCreateStudentExistence(students) {
-    const error = {};
-    const emails = students.map((student) => student.email);
-    const existedEmails = await UserRepository.findAllExistedEmail(emails);
-    emails.forEach((email, index) => {
-        if (existedEmails.includes(email)) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["email"] = {
-                msg: "email already exists",
-                value: email,
-            };
-        }
-    });
-
-    const rollNos = students.map((student) => student.rollNo);
-    const existedRollNos = await StudentRepository.findAllExistedRollNo(rollNos);
-    rollNos.forEach((rollNo, index) => {
-        if (existedRollNos.includes(rollNo)) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["rollNo"] = {
-                msg: "rollNo already exists",
-                value: rollNo,
-            };
-        }
-    });
-
-    const registrationNos = students.map((student) => student.registrationNo);
-    const existedRegistrationNos = await StudentRepository.findAllExistedRegistrationNo(registrationNos);
-    registrationNos.forEach((registrationNo, index) => {
-        if (existedRegistrationNos.includes(registrationNo)) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["registrationNo"] = {
-                msg: "registrationNo already exists",
-                value: registrationNo,
-            };
-        }
-    });
-
-    if (Object.keys(error).length === 0) return null;
-
-    return error;
-}
-
 async function createStudent(req, res) {
     try {
         const schema = Joi.object({
@@ -139,20 +35,46 @@ async function createStudent(req, res) {
         }).required();
 
         const { error } = schema.validate(req.body);
-        if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const validateDuplicate = (students) => {
+            const error = {};
+            const emails = students.map((student) => student.email);
+            const rollNos = students.map((student) => student.rollNo);
+            const registrationNos = students.map((student) => student.registrationNo);
+
+            students.forEach((student, index) => {
+                if (utils.countOccurrences(emails, student.email) > 1) {
+                    error[`students[${index}].email`] = {
+                        msg: "duplicate email not allowed",
+                        value: student.email,
+                    };
+                }
+                if (utils.countOccurrences(rollNos, student.rollNo) > 1) {
+                    error[`students[${index}].rollNo`] = {
+                        msg: "duplicate roll not allowed",
+                        value: student.rollNo,
+                    };
+                }
+                if (utils.countOccurrences(registrationNos, student.registrationNo) > 1) {
+                    error[`students[${index}].registrationNo`] = {
+                        msg: "duplicate registration not allowed",
+                        value: student.registrationNo,
+                    };
+                }
+            });
+
+            if (Object.keys(error).length === 0) return null;
+
+            return error;
+        };
 
         const { students } = req.body;
-        const error1 = validateCreateStudentDuplicates(students);
+        const error1 = validateDuplicate(students);
         if (error1)
             return res
                 .status(400)
-                .json(GenericResponse.error("duplicate email, roll, registration are not allowed", error1));
-
-        const error2 = await validateCreateStudentExistence(students);
-        if (error2)
-            return res
-                .status(400)
-                .json(GenericResponse.error("existed email, roll, registration are not allowed", error2));
+                .json(GenericResponse.error("Duplicate email, roll, registration are not allowed", error1));
 
         await studentService.createStudent(students);
 
@@ -162,7 +84,7 @@ async function createStudent(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while creating student account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
