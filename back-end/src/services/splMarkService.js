@@ -25,7 +25,13 @@ async function updateSupervisorMark(userId, splId, marks) {
         }
     }
 
-    await SPLMarkRepository.updateSupervisorMark(splId, marks);
+    const supervisorMarks = marks.map((mark) => {
+        return {
+            ...mark,
+            splId,
+        };
+    });
+    await SPLMarkRepository.updateSupervisorMark(supervisorMarks);
 }
 
 async function updateCodingMark(splId, marks) {
@@ -42,7 +48,13 @@ async function updateCodingMark(splId, marks) {
         }
     }
 
-    await SPLMarkRepository.updateCodingMark(splId, marks);
+    const codingMarks = marks.map((mark) => {
+        return {
+            ...mark,
+            splId,
+        };
+    });
+    await SPLMarkRepository.updateCodingMark(codingMarks);
 }
 
 async function createContinuousClassWithMark(splId, classNo) {
@@ -54,16 +66,20 @@ async function createContinuousClassWithMark(splId, classNo) {
 
     const studentIds = await StudentRepository.findAllStudentIdUnderSPL(splId);
 
-    await SPLMarkRepository.createContinuousClassWithMark(splId, classNo, studentIds);
+    const continuousMarks = [];
+    studentIds.forEach((studentId) => {
+        continuousMarks.push({
+            splId,
+            classNo,
+            studentId,
+        });
+    });
+    await SPLMarkRepository.createContinuousClassWithMark(continuousMarks);
 }
 
-async function updateContinuousClassNo(splId, oldClassNo, newClassNo) {
+async function updateContinuousClassNo(splId, oldClassNo, newClassNo) {}
 
-}
-
-async function updateContinuousMark(splId, marks) {
-
-}
+async function updateContinuousMark(splId, marks) {}
 
 export default {
     updateSupervisorMark,

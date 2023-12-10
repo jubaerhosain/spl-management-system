@@ -1,30 +1,14 @@
 import { models } from "../configs/mysql.js";
 
-async function updateSupervisorMark(splId, marks) {
-    marks = marks.map((mark) => {
-        mark.splId = splId;
-        return mark;
-    });
+async function updateSupervisorMark(marks) {
     models.StudentSPL.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "supervisorMark"] });
 }
 
-async function updateCodingMark(splId, marks) {
-    marks = marks.map((mark) => {
-        mark.splId = splId;
-        return mark;
-    });
+async function updateCodingMark(marks) {
     models.StudentSPL.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "codingMark"] });
 }
 
-async function createContinuousClassWithMark(splId, classNo, studentIds) {
-    const continuousMarks = [];
-    studentIds.forEach((studentId) => {
-        continuousMarks.push({
-            splId,
-            classNo,
-            studentId,
-        });
-    });
+async function createContinuousClassWithMark(continuousMarks) {
     await models.ContinuousMark.bulkCreate(continuousMarks);
 }
 
