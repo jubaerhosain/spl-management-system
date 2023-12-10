@@ -66,9 +66,10 @@ async function updatePresentationMark(req, res) {
 
         const userId = req.user?.userId;
         const { presentationId } = req.params;
+        const {marks} = req.body;
         await presentationService.updatePresentationMark("0175f873-25c0-4fe0-9969-c7737c6bb7b3", presentationId, marks);
 
-        res.json(GenericResponse.success("Presentation mark added successfully"));
+        res.json(GenericResponse.success("Presentation mark updated successfully"));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
