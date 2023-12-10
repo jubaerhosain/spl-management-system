@@ -2,6 +2,7 @@ import { GenericResponse } from "../utils/responseUtils.js";
 import teacherService from "../services/teacherService.js";
 import CustomError from "../utils/CustomError.js";
 import Joi from "../utils/validator/Joi.js";
+import utils from "../utils/utils.js";
 import {
     validateName,
     validateEmail,
@@ -9,52 +10,6 @@ import {
     validateGender,
     validatePhoneNumber,
 } from "../utils/validator/JoiValidationFunction.js";
-
-function validateCreateTeacherDuplicates(teachers) {
-    const error = {};
-    const emails = teachers.map((teacher) => teacher.email);
-    emails.forEach((email, index) => {
-        if (utils.countOccurrences(emails, email) > 1) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["email"] = {
-                msg: "duplicate email not allowed",
-                value: email,
-            };
-        }
-    });
-
-    if (Object.keys(error).length === 0) return null;
-
-    return error;
-}
-
-/**
- * Checks whether emails are already exists or not.
- * @param {*} teachers
- * @returns
- */
-async function validateCreateTeacherExistence(teachers) {
-    const error = {};
-    const emails = teachers.map((teacher) => teacher.email);
-    const existedEmails = await UserRepository.findAllExistedEmail(emails);
-    emails.forEach((email, index) => {
-        if (existedEmails.includes(email)) {
-            if (!error[index]) {
-                error[index] = {};
-            }
-            error[index]["email"] = {
-                msg: "email already exists",
-                value: email,
-            };
-        }
-    });
-
-    if (Object.keys(error).length === 0) return null;
-
-    return error;
-}
 
 async function createTeacher(req, res) {
     try {
@@ -74,12 +29,26 @@ async function createTeacher(req, res) {
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-        const { teachers } = req.body;
-        const error1 = teacherValidator.validateCreateTeacherDuplicates(teachers);
-        if (error1) return res.status(400).json(GenericResponse.error("duplicate emails are not allowed", error1));
+        const validateDuplicate = (teachers) => {
+            const error = {};
+            const emails = teachers.map((teacher) => teacher.email);
+            teachers.forEach((teacher, index) => {
+                if (utils.countOccurrences(emails, teacher.email) > 1) {
+                    error[`teachers[${index}].email`] = {
+                        msg: "duplicate email not allowed",
+                        value: teacher.email,
+                    };
+                }
+            });
 
-        const error2 = await teacherValidator.validateCreateTeacherExistence(teachers);
-        if (error2) return res.status(400).json(GenericResponse.error("existed emails are not allowed", error2));
+            if (Object.keys(error).length === 0) return null;
+
+            return error;
+        };
+
+        const { teachers } = req.body;
+        const error1 = validateDuplicate(teachers);
+        if (error1) return res.status(400).json(GenericResponse.error("Duplicate emails are not allowed", error1));
 
         await teacherService.createTeacher(teachers);
 

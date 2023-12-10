@@ -42,7 +42,7 @@ async function createStudent(students) {
     };
 
     const error = await validateExistence(students);
-    if (error) throw new CustomError("existed email, roll, registration are not allowed", 400, error);
+    if (error) throw new CustomError("Existed email, roll, registration are not allowed", 400, error);
 
     const passwords = await passwordUtils.generatePassword(students.length);
     const credentials = [];

@@ -1,11 +1,32 @@
 import passwordUtils from "../utils/passwordUtils.js";
+import UserRepository from "../repositories/UserRepository.js"
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import emailUtils from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
+import CustomError from "../utils/CustomError.js";
 
 async function createTeacher(teachers) {
-    const passwords = await passwordUtils.generatePassword(teachers.length);
+    const validateExistence = async (teachers) => {
+        const error = {};
+        const existedEmails = await UserRepository.findAllExistedEmail(teachers.map((teacher) => teacher.email));
+        teachers.forEach((teacher, index) => {
+            if (existedEmails.includes(teacher.email)) {
+                error[`teachers[${index}].email`] = {
+                    msg: "email already exists",
+                    value: teacher.email,
+                };
+            }
+        });
 
+        if (Object.keys(error).length === 0) return null;
+
+        return error;
+    };
+
+    const error = await validateExistence(teachers);
+    if(error) throw new CustomError("Existed emails are not allowed", 400, error);
+
+    const passwords = await passwordUtils.generatePassword(teachers.length);
     const credentials = [];
 
     // normalize teacher to add both to User and Teacher table in a single query
