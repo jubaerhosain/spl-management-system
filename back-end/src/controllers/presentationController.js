@@ -2,6 +2,7 @@ import { GenericResponse } from "../utils/responseUtils.js";
 import presentationService from "../services/presentationService.js";
 import CustomError from "../utils/CustomError.js";
 import Joi from "../utils/validator/Joi.js";
+import utils from "../utils/utils.js";
 
 async function createPresentationEvent(req, res) {
     try {
@@ -66,10 +67,76 @@ async function updatePresentationMark(req, res) {
 
         const userId = req.user?.userId;
         const { presentationId } = req.params;
-        const {marks} = req.body;
+        const { marks } = req.body;
         await presentationService.updatePresentationMark("0175f873-25c0-4fe0-9969-c7737c6bb7b3", presentationId, marks);
 
         res.json(GenericResponse.success("Presentation mark updated successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function addPresentationEvaluator(req, res) {
+    try {
+        const schema = Joi.object({
+            evaluators: Joi.array()
+                .min(1)
+                .items(
+                    Joi.object({
+                        email: Joi.string().trim().email().required(),
+                    })
+                )
+                .required(),
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const { evaluators } = req.body;
+        const validateDuplicate = (evaluators) => {
+            const emails = evaluators.map((evaluator) => evaluator.email);
+            const error = {};
+            evaluators.forEach((evaluator, index) => {
+                if (utils.countOccurrences(emails, evaluator.email) > 1) {
+                    error[`evaluators[${index}].email`] = {
+                        msg: "duplicate email not allowed",
+                        value: evaluator.email,
+                    };
+                }
+            });
+
+            if (utils.isObjectEmpty(error)) return null;
+            return error;
+        };
+
+        const err = validateDuplicate(evaluators);
+        if (err) return res.status(400).json(GenericResponse.error("Duplicate emails are not allowed", err));
+
+        const { presentationId } = req.params;
+        await presentationService.addPresentationEvaluator(presentationId, evaluators);
+
+        res.json(GenericResponse.success("Presentation evaluator added successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function removePresentationEvaluator(req, res) {
+    try {
+        const { presentationId, evaluatorId } = req.params;
+
+        await presentationService.removePresentationEvaluator(presentationId, evaluatorId);
+
+        res.json(GenericResponse.success("Presentation evaluator removed successfully"));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -84,4 +151,6 @@ export default {
     createPresentationEvent,
     addPresentationMark,
     updatePresentationMark,
+    addPresentationEvaluator,
+    removePresentationEvaluator,
 };

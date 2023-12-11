@@ -87,12 +87,12 @@ export function initializeMySqlConnection() {
         .authenticate()
         .then(() => {
             console.log("MySql connection has been established successfully.");
+            sequelize.sync();
         })
         .catch((err) => {
             console.error("Unable to connect to the database:", err);
         });
 
-    sequelize.sync();
 }
 
 function dropAllTable() {
@@ -100,5 +100,6 @@ function dropAllTable() {
 }
 
 // dropAllTable();
+// initializeMySqlConnection();
 
 export { Op, Sequelize, sequelize, models };

@@ -5,13 +5,12 @@ export default (options) => {
     const Presentation = sequelize.define("Presentations", {
         presentationId: {
             type: DataTypes.UUID,
-            allowNull: false,
+            primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
-            unique: true
         },
         splId: {
             type: DataTypes.UUID,
-            primaryKey: true,
+            allowNull: false,
             references: {
                 model: "SPLs",
                 key: "splId",
@@ -19,7 +18,7 @@ export default (options) => {
         },
         presentationNo: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
+            allowNull: false,
         },
         details: {
             type: DataTypes.TEXT,
@@ -35,7 +34,7 @@ export default (options) => {
         });
 
         // Presentation - Teacher [many to many]
-        Presentation.belongsToMany(models.Teacher, { 
+        Presentation.belongsToMany(models.Teacher, {
             through: models.PresentationEvaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",

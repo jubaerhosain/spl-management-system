@@ -14,6 +14,12 @@ async function findPresentation(splId, presentationNo) {
     return presentation;
 }
 
+async function findAllEvaluatorId(presentationId) {
+    const evaluators = await models.PresentationEvaluator.findAll({ where: { presentationId } });
+    if (evaluators.length == 0) return [];
+    return evaluators.map((evaluator) => evaluator.teacherId);
+}
+
 async function findById(presentationId) {
     const presentation = await models.Presentation.findOne({ where: { presentationId } });
     return presentation;
@@ -34,11 +40,22 @@ async function updatePresentationMark(marks) {
     });
 }
 
+async function createPresentationEvaluator(evaluators) {
+    await models.PresentationEvaluator.bulkCreate(evaluators);
+}
+
+async function deletePresentationEvaluator(presentationId, teacherId) {
+    await models.PresentationEvaluator.delete({ where: { presentationId, teacherId } });
+}
+
 export default {
+    findById,
     createPresentation,
     findPresentation,
-    findById,
+    findAllEvaluatorId,
     isPresentationMarkCreated,
     createPresentationMark,
     updatePresentationMark,
+    createPresentationEvaluator,
+    deletePresentationEvaluator
 };

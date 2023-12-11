@@ -9,8 +9,8 @@ presentationRoutes.get("/"); // createPresentationEvent
 presentationRoutes.get("/:presentationId"); // getPresentation
 presentationRoutes.delete("/:presentationId");
 
-presentationRoutes.post("/:presentationId/evaluator");
-presentationRoutes.get("/:presentationId/evaluator");
+presentationRoutes.post("/:presentationId/evaluator", presentationController.addPresentationEvaluator);
+presentationRoutes.get("/:presentationId/evaluator", presentationController.removePresentationEvaluator);
 presentationRoutes.delete("/:presentationId/evaluator/:evaluatorId");
 
 presentationRoutes.post("/:presentationId/mark", presentationController.addPresentationMark);

@@ -86,7 +86,7 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // Teacher - PresentationMark [one to many] as PresentationEvaluator
+        // Teacher - PresentationMark [one to many]
         Teacher.hasMany(models.PresentationMark, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
