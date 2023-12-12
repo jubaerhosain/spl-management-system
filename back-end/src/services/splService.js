@@ -19,6 +19,16 @@ async function createSPL(data) {
     await SPLRepository.create(data);
 }
 
+async function getSPL(splId) {
+    const spl = await SPLRepository.findById(splId);
+    return spl;
+}
+
+async function getAllSPL(options) {
+    const spls = await SPLRepository.findAll(options);
+    return spls;
+}
+
 async function assignStudentsToSPL(splId, curriculumYear, students) {
     const spl = await SPLRepository.findById(splId);
     if (!spl) {
@@ -33,14 +43,14 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
     const curriculumYearStudents = await StudentRepository.findAll({ curriculumYear });
     const isValidStudent = (studentId) => {
         for (const student of curriculumYearStudents) {
-            if (student.studentId == studentId) return true;
-            return false;
+            if (student.userId == studentId) return true;
         }
+        return false;
     };
     const validateStudent = (students) => {
         const error = {};
         students.forEach((student, index) => {
-            if (isValidStudent(student.studentId)) {
+            if (!isValidStudent(student.studentId)) {
                 error[`students[${index}].studentId`] = {
                     msg: `not a ${curriculumYear} year student`,
                     value: student.studentId,
@@ -91,6 +101,15 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
 async function getAllStudentUnderSPL(splId) {
     const students = await StudentRepository.findAllStudentUnderSPL(splId);
     return students;
+}
+
+async function getAllProjectUnderSPL(splId) {
+    // with project contributors
+    return "Projects with project contributors";
+}
+
+async function getAllPresentationUnderSPL(splId) {
+    return "Presentations";
 }
 
 async function removeStudentFromSPL(splId, studentId) {
@@ -166,8 +185,12 @@ async function randomizeSupervisor(splId) {
 
 export default {
     createSPL,
+    getSPL,
+    getAllSPL,
     assignStudentsToSPL,
     getAllStudentUnderSPL,
+    getAllProjectUnderSPL,
+    getAllPresentationUnderSPL,
     removeStudentFromSPL,
     randomizeSupervisor,
 };

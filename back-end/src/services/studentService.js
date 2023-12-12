@@ -75,7 +75,8 @@ async function createStudent(students) {
     await StudentRepository.create(newStudents);
 
     try {
-        await emailService.sendAccountCreationEmail(credentials);
+        // handle error inside called function
+        emailService.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);
         console.log("Accounts are created successfully but failed to send email with credential");
@@ -164,13 +165,8 @@ async function getStudentRequest() {
 async function getAllStudentRequest() {}
 async function deleteStudentRequest() {}
 
-async function getCurrentSPL(studentId) {
-    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
-    return spl;
-}
-
-async function getAllSPL(studentId) {
-    const spls = await SPLRepository.findAllSPLOfStudent(studentId);
+async function getAllSPL(studentId, options) {
+    const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
     return spls;
 }
 
@@ -187,13 +183,13 @@ async function assignSupervisorToStudent(splId, studentId, teacherId) {
     await StudentRepository.createStudentSupervisor(studentId, teacherId, splId);
 }
 
-async function getCurrentTeam(studentId) {
-    const team = await TeamRepository.findCurrentTeamOfStudent(studentId);
-    return team;
-}
-
-async function getAllTeam(studentId) {
-    const teams = await TeamRepository.findAllTeamOfStudent(studentId);
+async function getAllTeam(studentId, options) {
+    if (options?.current) {
+        const currentSPL = await SPLRepository.findAllSPLOfStudent(studentId, { active: true });
+        delete options.current;
+        if (currentSPL[0]) options.splId = currentSPL[0].splId;
+    }
+    const teams = await TeamRepository.findAllTeamOfStudent(studentId, options);
     return teams;
 }
 
@@ -206,9 +202,7 @@ export default {
     getStudentRequest,
     getAllStudentRequest,
     deleteStudentRequest,
-    getCurrentSPL,
     getAllSPL,
     assignSupervisorToStudent,
     getAllTeam,
-    getCurrentTeam,
 };

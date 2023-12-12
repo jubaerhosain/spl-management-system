@@ -52,9 +52,10 @@ async function createTeacher(teachers) {
         return user;
     });
 
-    await TeacherRepository.createTeacher(newTeachers);
+    await TeacherRepository.create(newTeachers);
 
     try {
+        // handle error inside called function
         emailUtils.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);

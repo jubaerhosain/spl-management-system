@@ -4,10 +4,6 @@ async function create(spl) {
     await models.SPL.create(spl);
 }
 
-async function createMembers(newMembers) {
-    await models.CommitteeMember.bulkCreate(newMembers);
-}
-
 async function isSupervisorRandomized(splId) {
     const studentSupervisor = await models.Supervisor.findAll({ where: { splId } });
     return studentSupervisor.length > 0;
@@ -20,6 +16,17 @@ async function findById(splId) {
     return spl;
 }
 
+async function findAll(options) {
+    const splOptions = {};
+    if (options?.active) splOptions.active = 1;
+    if (options?.splName) splOptions.splName = options.splName;
+    if (options?.academicYear) splOptions.academicYear = options.academicYear;
+
+    const spls = await models.SPL.findAll({
+        where: splOptions,
+    });
+    return spls;
+}
 
 async function findSPLByNameAndYear(splName, academicYear) {
     const spl = await models.SPL.findOne({
@@ -30,8 +37,6 @@ async function findSPLByNameAndYear(splName, academicYear) {
     });
     return spl;
 }
-
-async function findAllActiveSPL() {}
 
 async function assignStudentAndCreateSPLMark(splId, studentIds) {
     const transaction = await sequelize.transaction();
@@ -73,27 +78,15 @@ async function update(splId, spl) {
 
 async function remove(splId) {}
 
-async function findCurrentSPLOfStudent(studentId) {
-    const spl = await models.Student.findByPk(studentId, {
-        include: {
-            model: models.SPL,
-            through: {
-                model: models.StudentSPL,
-                attributes: [],
-            },
-        },
-        raw: true,
-        nest: true,
-        attributes: [],
-    });
-    if (!spl) return null;
-    return spl.SPLs;
-}
+async function findAllSPLOfStudent(studentId, options) {
+    const splOptions = {};
+    if (options?.active) splOptions.active = 1;
+    if (options?.splName) splOptions.splName = options.splName;
 
-async function findAllSPLOfStudent(studentId) {
     const spls = await models.Student.findAll({
         include: {
             model: models.SPL,
+            where: splOptions,
             through: {
                 model: models.StudentSPL,
                 attributes: [],
@@ -112,13 +105,11 @@ export default {
     create,
     update,
     findById,
+    findAll,
     remove,
     assignStudentAndCreateSPLMark,
     findAllSPLOfStudent,
-    findCurrentSPLOfStudent,
-    // createMembers,
+    findSPLByNameAndYear,
     // isSupervisorRandomized,
-    // findSPLByNameAndYear,
-    // findCurrentActiveSPL,
     // removeStudentFromSPL,
 };

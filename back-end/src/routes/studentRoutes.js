@@ -20,11 +20,9 @@ studentRoutes.put(
 
 // routes related to spl
 studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
-studentRoutes.get("/:studentId/spl/current", studentController.getCurrentSPL);
 
 // routes related to team
-studentRoutes.get("/:studentId/team", studentController.getAllTeam);
-studentRoutes.get("/:studentId/team/current", studentController.getCurrentTeam);
+studentRoutes.get("/:studentId/team", studentController.getAllTeam); 
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor", studentController.assignSupervisorToStudent);
