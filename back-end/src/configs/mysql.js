@@ -26,6 +26,7 @@ import Team from "../models/Team.js";
 import Project from "../models/Project.js";
 import Notification from "../models/Notification.js";
 import Notice from "../models/Notice.js";
+import SPLMark from "../models/SPLMark.js";
 import Presentation from "../models/Presentation.js";
 import PresentationMark from "../models/PresentationMark.js";
 import ContinuousMark from "../models/ContinuousMark.js";
@@ -49,6 +50,7 @@ const models = {
     Teacher: Teacher(options),
     SPL: SPL(options),
     SPLCommittee: SPLCommittee(options),
+    SPLMark: SPLMark(options),
     Presentation: Presentation(options),
     PresentationMark: PresentationMark(options),
     ContinuousMark: ContinuousMark(options),

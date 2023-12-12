@@ -104,8 +104,8 @@ export default (options) => {
         User.hasOne(models.OTP, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "email",
             sourceKey: "email",
+            foreignKey: "email",
         });
     };
 

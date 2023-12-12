@@ -16,14 +16,14 @@ export default (options) => {
                 key: "splId",
             },
         },
-        supervisorId: {
+        teacherId: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
                 model: "Teachers",
                 key: "teacherId",
             },
-            comment: "Supervisor for team members also have in the student-teacher relationship, did intentionally",
+            comment: "Supervisor for team members also have in the supervisors relationship, did intentionally",
         },
         projectName: {
             type: DataTypes.STRING(40),
@@ -47,6 +47,21 @@ export default (options) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        documentationProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        codeProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        weeklyProgress: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
     });
 
     Project.associate = (models) => {
@@ -62,7 +77,7 @@ export default (options) => {
             as: "Supervisor",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "supervisorId",
+            foreignKey: "teacherId",
         });
 
         // Student - Project [many to many]

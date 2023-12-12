@@ -2,12 +2,12 @@
 
 export default (options) => {
     const { sequelize, DataTypes, Sequelize } = options;
-    const ContinuousMark = sequelize.define("ContinuousMarks", {
-        continuousMarkId: {
+    const SPLMark = sequelize.define("SPLMarks", {
+        splMarkId: {
             type: DataTypes.UUID,
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
-            unique: true,
+            unique: true
         },
         splId: {
             type: DataTypes.UUID,
@@ -25,32 +25,31 @@ export default (options) => {
                 key: "studentId",
             },
         },
-        classNo: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
+        supervisorMark: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
         },
-        mark: {
+        codingMark: {
             type: DataTypes.FLOAT,
             allowNull: false,
             defaultValue: 0,
         },
     });
 
-    ContinuousMark.associate = (models) => {
-        // Student - ContinuousMark [one to many]
-        ContinuousMark.belongsTo(models.Student, {
+    SPLMark.associate = (models) => {
+        SPLMark.belongsTo(models.SPL, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "studentId",
+            foreignKey: "splId"
         });
 
-        // SPL - ContinuousMark [one to many]
-        ContinuousMark.belongsTo(models.SPL, {
+        SPLMark.belongsTo(models.Student, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "splId",
+            foreignKey: "studentId"
         });
-    };
+    }
 
-    return ContinuousMark;
+    return SPLMark;
 };
