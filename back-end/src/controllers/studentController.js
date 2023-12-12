@@ -187,7 +187,7 @@ async function requestTeacher(req, res) {
     try {
         const schema = Joi.object({
             teacherId: Joi.string().uuid().required(),
-        });
+        }).required();
 
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
@@ -207,11 +207,6 @@ async function requestTeacher(req, res) {
     }
 }
 
-async function getStudentRequest(req, res) {
-    // if a teacher requested this student or not providing teacherId
-}
-
-async function getAllStudentRequest(req, res) {}
 async function deleteStudentRequest(req, res) {}
 
 async function getAllSPL(req, res) {
@@ -289,8 +284,6 @@ export default {
     updateStudent,
     deleteStudent,
     requestTeacher,
-    getStudentRequest,
-    getAllStudentRequest,
     deleteStudentRequest,
     getAllSPL,
     assignSupervisorToStudent,

@@ -93,6 +93,14 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
+        // Teacher - SupervisorRequest [One to many]
+        Teacher.hasMany(models.SupervisorRequest, {
+            as: "Requests",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teacherId",
+        });
+
         // Student - Teacher [many to many] as Request Receiver
         Teacher.belongsToMany(models.Student, {
             as: "StudentRequests",

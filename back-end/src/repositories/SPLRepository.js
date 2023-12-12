@@ -78,6 +78,24 @@ async function update(splId, spl) {
 
 async function remove(splId) {}
 
+async function findCurrentSPLOfStudent(studentId) {
+    const spl = await models.Student.findOne({
+        include: {
+            model: models.SPL,
+            where: { active: true },
+            through: {
+                model: models.StudentSPL,
+                attributes: [],
+            },
+        },
+        raw: true,
+        nest: true,
+        attributes: [],
+        where: { studentId },
+    });
+    return spl.SPLs;
+}
+
 async function findAllSPLOfStudent(studentId, options) {
     const splOptions = {};
     if (options?.active) splOptions.active = 1;
@@ -109,6 +127,7 @@ export default {
     remove,
     assignStudentAndCreateSPLMark,
     findAllSPLOfStudent,
+    findCurrentSPLOfStudent,
     findSPLByNameAndYear,
     // isSupervisorRandomized,
     // removeStudentFromSPL,

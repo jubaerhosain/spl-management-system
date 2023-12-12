@@ -58,14 +58,48 @@ async function createTeacher(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("Internal Server Error", GenericResponse.SERVER_ERROR));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
 
-async function getTeacher(req, res) {}
+async function getTeacher(req, res) {
+    try {
+        const { teacherId } = req.params;
+        const teacher = await teacherService.getTeacher(teacherId);
+        res.json(GenericResponse.success("Teacher retrieved successfully", teacher));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
-async function getAllTeacher(req, res) {}
+async function getAllTeacher(req, res) {
+    try {
+        const schema = Joi.object({
+            available: Joi.boolean().optional(),
+            studentId: Joi.string().trim().uuid().optional(), // for student, find teacher with requested flag
+            teamId: Joi.string().trim().uuid().optional(), // for student, find teacher with requested flag
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const options = req.query;
+        const teachers = await teacherService.getAllTeacher(options);
+        res.json(GenericResponse.success("Teachers are retrieved successfully", teachers));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function getAllStudentUnderSupervision(req, res) {}
 async function getAllCurrentStudentUnderSupervision(req, res) {}

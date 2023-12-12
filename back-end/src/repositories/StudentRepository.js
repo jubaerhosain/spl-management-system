@@ -126,7 +126,13 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
     return [];
 }
 
-async function findAllStudentUnderSPL(splId) {
+async function findAllStudentUnderSPL(splId, options) {
+
+    if(options?.supervisor) {
+        const a = 4;
+        // supervisor id, name, designation, img url
+    }
+
     const students = await models.Student.findAll({
         include: [
             {
@@ -241,29 +247,25 @@ async function createStudentSupervisor(studentId, teacherId, splId) {
     await models.Supervisor.create({ studentId, teacherId, splId });
 }
 
-async function findStudentRequest(studentId, teacherId) {
+async function isRequestSent(studentId, teacherId) {
     const request = await models.SupervisorRequest.findOne({ where: { studentId, teacherId } });
-    return request;
+    return request ? true : false;
 }
-
-async function findAllStudentRequest(studentId, teacherId) {}
 
 async function update(studentId, student, userType) {
     if (userType == "student") await models.User.update(student, { where: { userId: studentId } });
     else if (userType == "admin") await models.Student.update(student, { where: { studentId } });
 }
 
-async function findSupervisorId(studentId, splId) {
-    const supervisor = await models.Supervisor.findOne({ where: { studentId, splId } });
-    if (!supervisor) return null;
-    const supervisorId = supervisor.teacherId;
-    return supervisorId;
-}
-
 async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
     const students = await models.Supervisor.findAll({ where: { teacherId: supervisorId, splId } });
     if (students.length == 0) return [];
     return students.map((student) => student.studentId);
+}
+
+async function isSupervisorExist(studentId, splId) {
+    const supervisor = await models.Supervisor.findOne({ where: { studentId, splId }, raw: true});
+    return supervisor ? true : false;
 }
 
 export default {
@@ -275,11 +277,7 @@ export default {
     findAllStudentNotUnderSPL,
     createStudentRequest,
     createStudentSupervisor,
-    findStudentRequest,
-    findAllStudentRequest,
-    // findSupervisorId, // move to supervisor repository
-    // findCurrentSupervisor, // move to supervisor repository
-
+    
     // utility methods
     isRollNoExist,
     isRegistrationNoExist,
@@ -287,4 +285,6 @@ export default {
     findAllStudentIdUnderSupervisor,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
+    isRequestSent,
+    isSupervisorExist, 
 };

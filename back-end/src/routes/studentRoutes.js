@@ -31,7 +31,6 @@ studentRoutes.delete("/:studentId/supervisor/:supervisorId");
 
 // route related to request
 studentRoutes.post("/:studentId/request", studentController.requestTeacher);
-studentRoutes.get("/:studentId/request", studentController.getAllStudentRequest);
 studentRoutes.delete("/:studentId/request", studentController.deleteStudentRequest);
 
 export default studentRoutes;

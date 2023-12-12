@@ -1,5 +1,5 @@
 import passwordUtils from "../utils/passwordUtils.js";
-import UserRepository from "../repositories/UserRepository.js"
+import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import emailUtils from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
@@ -24,7 +24,7 @@ async function createTeacher(teachers) {
     };
 
     const error = await validateExistence(teachers);
-    if(error) throw new CustomError("Existed emails are not allowed", 400, error);
+    if (error) throw new CustomError("Existed emails are not allowed", 400, error);
 
     const passwords = await passwordUtils.generatePassword(teachers.length);
     const credentials = [];
@@ -74,7 +74,24 @@ async function updateTeacher(userId, teacher) {
     await TeacherRepository.updateTeacher(userId, teacher);
 }
 
+async function getTeacher(teacherId) {
+    const teacher = await TeacherRepository.findById(teacherId);
+    return teacher;
+}
+
+async function getAllTeacher(options) {
+    if(options?.studentId || options?.teamId) {
+        const teachers = await TeacherRepository.findAllWithRequestedFlag(options);
+        return teachers;
+    }
+
+    const teachers = await TeacherRepository.findAll(options);
+    return teachers;
+}
+
 export default {
     createTeacher,
     updateTeacher,
+    getTeacher,
+    getAllTeacher,
 };

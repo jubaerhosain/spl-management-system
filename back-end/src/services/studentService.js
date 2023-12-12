@@ -143,29 +143,31 @@ async function requestTeacher(studentId, teacherId) {
     const student = await StudentRepository.findById(studentId);
     if (student.curriculumYear != "4th") throw new CustomError("Only 4th year student can request for supervisor", 400);
 
-    const request = await StudentRepository.findStudentRequest(studentId, teacherId);
-    if (request) throw new CustomError("Request already sent", 400);
+    const sent = await StudentRepository.isRequestSent(studentId, teacherId);
+    if (sent) throw new CustomError("Request already sent", 400);
 
-    const currentSPL = await SPLRepository.findCurrentActiveSPL(studentId);
+    const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
     if (!currentSPL || currentSPL.splName != "spl3") throw new CustomError("You are not assigned to spl3", 400);
 
-    const currentSupervisor = await StudentRepository.findSupervisorId(studentId, currentSPL.splId);
-    if (currentSupervisor) throw new CustomError("Already have supervisor");
+    const exist = await StudentRepository.isSupervisorExist(studentId, currentSPL.splId);
+    if (exist)
+        throw new CustomError(`Already have supervisor for ${currentSPL.splName}, ${currentSPL.academicYear}`, 400);
 
-    const availableTeacher = await TeacherRepository.findAvailableTeacher(teacherId);
+    const availableTeacher = await TeacherRepository.findById(teacherId, { available: true });
     if (!availableTeacher) throw new CustomError("Teacher is not available to be supervisor", 400);
 
     await StudentRepository.createStudentRequest(studentId, teacherId, currentSPL.splId);
+
+    // send email to teacher???
 }
 
-async function getStudentRequest() {
-    // if a teacher requested this student or not providing teacherId
-}
-
-async function getAllStudentRequest() {}
 async function deleteStudentRequest() {}
 
 async function getAllSPL(studentId, options) {
+    if (options?.active) {
+        const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+        return spl;
+    }
     const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
     return spls;
 }
@@ -185,9 +187,9 @@ async function assignSupervisorToStudent(splId, studentId, teacherId) {
 
 async function getAllTeam(studentId, options) {
     if (options?.current) {
-        const currentSPL = await SPLRepository.findAllSPLOfStudent(studentId, { active: true });
+        const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
         delete options.current;
-        if (currentSPL[0]) options.splId = currentSPL[0].splId;
+        if (currentSPL) options.splId = currentSPL.splId;
     }
     const teams = await TeamRepository.findAllTeamOfStudent(studentId, options);
     return teams;
@@ -199,8 +201,6 @@ export default {
     getAllStudent,
     updateStudent,
     requestTeacher,
-    getStudentRequest,
-    getAllStudentRequest,
     deleteStudentRequest,
     getAllSPL,
     assignSupervisorToStudent,

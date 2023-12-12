@@ -1,4 +1,5 @@
 import { models, sequelize, Op } from "../configs/mysql.js";
+import utils from "../utils/utils.js";
 
 async function create(teachers) {
     const transaction = await sequelize.transaction();
@@ -36,6 +37,8 @@ async function findById(userId, options) {
         where: teacherOptions,
     });
 
+    if (!teacher) return null;
+
     let flattened = {};
     if (teacher) {
         flattened = { ...teacher, ...teacher.User };
@@ -68,6 +71,53 @@ async function findAll(options) {
 
     if (teachers.length > 0) {
         for (const i in teachers) {
+            teachers[i] = { ...teachers[i], ...teachers[i].User };
+            delete teachers[i].User;
+        }
+    }
+
+    return teachers;
+}
+
+async function findAllWithRequestedFlag(options) {
+    const teacherOption = {};
+    if (options?.available) teacherOption.available = 1;
+
+    const requestOptions = {};
+    if (options?.studentId) requestOptions.studentId = options.studentId;
+    if (options?.teamId) requestOptions.teamId = options.teamId;
+
+    let teachers = await models.Teacher.findAll({
+        include: [
+            {
+                model: models.User,
+                required: true,
+                where: {
+                    active: true,
+                },
+            },
+            {
+                model: models.SupervisorRequest,
+                as: "Requests",
+                required: false,
+                where: requestOptions,
+            },
+        ],
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["teacherId"],
+        },
+        where: teacherOption,
+    });
+
+    if (teachers.length > 0) {
+        for (const i in teachers) {
+            const request = teachers[i].Requests;
+            delete teachers[i].Requests;
+            if (!utils.areAllKeysNull(request)) {
+                teachers[i].requested = true;
+            }
             teachers[i] = { ...teachers[i], ...teachers[i].User };
             delete teachers[i].User;
         }
@@ -140,5 +190,6 @@ export default {
     findById,
     update,
     findAll,
+    findAllWithRequestedFlag,
     // findAllExistedTeacherByEmail,
 };

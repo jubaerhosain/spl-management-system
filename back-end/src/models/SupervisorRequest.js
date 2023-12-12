@@ -48,5 +48,14 @@ export default (options) => {
         },
     });
 
+    SupervisorRequest.associate = (models) => {
+        // Teacher - SupervisorRequest [One to many]
+        SupervisorRequest.belongsTo(models.Teacher, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teacherId",
+        });
+    }
+
     return SupervisorRequest;
 };

@@ -24,9 +24,16 @@ function isObjectEmpty(object) {
     return !object || Object.keys(object).length == 0;
 }
 
+function areAllKeysNull(obj) {
+    const values = Object.values(obj);
+    const allNull = values.every((value) => value === null);
+    return allNull;
+}
+
 export default {
     isUnique,
     getCurrentDate,
     countOccurrences,
     isObjectEmpty,
+    areAllKeysNull,
 };
