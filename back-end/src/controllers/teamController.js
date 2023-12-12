@@ -2,6 +2,7 @@ import { GenericResponse } from "../utils/responseUtils.js";
 import teamService from "../services/teamService.js";
 import CustomError from "../utils/CustomError.js";
 import utils from "../utils/utils.js";
+import Joi from "../utils/validator/Joi.js";
 
 async function createTeam(req, res) {
     try {
@@ -96,7 +97,24 @@ async function removeTeamMember(req, res) {
 }
 
 async function requestTeacher(req, res) {
-    // Logic to handle a teacher request for a team
+    try {
+        const schema = Joi.object({
+            teacherId: Joi.string().trim().uuid().required(),
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        await teamService.requestTeacher(teamId, teacherId);
+
+        res.json(GenericResponse.success("Supervisor request send successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
 }
 
 async function getAllRequest(req, res) {

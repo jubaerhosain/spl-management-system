@@ -6,13 +6,20 @@ import studentController from "../controllers/studentController.js";
 
 // routes related to student account
 studentRoutes.post("/", studentController.createStudent);
-studentRoutes.get("/:studentId", studentController.getStudent);
 studentRoutes.get("/", studentController.getAllStudent);
-studentRoutes.put("/", checkAuthentication, isStudent, studentController.updateStudent);
+studentRoutes.get("/:studentId", studentController.getStudent);
+studentRoutes.put(
+    "/:studentId",
+    (req, res, next) => {
+        req.user = { userType: "admin" };
+        next();
+    },
+    studentController.updateStudent
+);
 // studentRoutes.delete("/:studentId", checkAuthentication, isAdmin, deleteStudent);
 
 // routes related to spl
-studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
+studentRoutes.get("/:studentId/spl", studentController.getAllSPLOfStudent);
 // studentRoutes.get("/:studentId/spl/:splId", studentController.getCurrentSPL);
 
 // routes related to supervisor

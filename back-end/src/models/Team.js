@@ -16,7 +16,7 @@ export default (options) => {
                 key: "splId",
             },
         },
-        supervisorId: {
+        teacherId: {
             type: DataTypes.UUID,
             allowNull: true,
             references: {
@@ -48,7 +48,7 @@ export default (options) => {
             as: "Supervisor",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "supervisorId",
+            foreignKey: "teacherId",
         });
 
         // Team - Student [many to many]

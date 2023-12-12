@@ -6,6 +6,7 @@ import SPLRepository from "../repositories/SPLRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
+import utils from "../utils/utils.js";
 
 async function createStudent(students) {
     const validateExistence = async (students) => {
@@ -70,10 +71,10 @@ async function createStudent(students) {
         return user;
     });
 
-    await StudentRepository.createStudent(newStudents);
+    await StudentRepository.create(newStudents);
 
     try {
-        emailService.sendAccountCreationEmail(credentials);
+        await emailService.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);
         console.log("Accounts are created successfully but failed to send email with credential");
@@ -94,48 +95,46 @@ async function getStudent(studentId) {
 
 async function getAllStudent(options) {
     // options { page=10, count=10 } etc
-    const students = await StudentRepository.findAll();
+
+    const students = await StudentRepository.findAll(options);
+
     return students;
 }
 
-async function getAllStudentByCurriculumYear(curriculumYear) {
-    const students = await StudentRepository.findAllByCurriculumYear(curriculumYear);
-    return students;
-}
+async function getAllInactiveStudent() {}
 
-async function updateStudent(userId, student) {
-    // update in user table [only those fields are allowed]
-    await UserRepository.update(userId, student);
-}
-
-async function updateStudentByAdmin(studentId, student) {
-    // check roll and registration number existence
-    // if same as the current student then no need to throw error
-    const { rollNo, registrationNo } = student;
-    const error = {};
-    if (rollNo) {
-        const info = await StudentRepository.findByRoll(rollNo);
-        if (info && info.studentId != studentId) {
-            error["rollNo"] = {
-                msg: "rollNo already exists",
-                value: rollNo,
-            };
+async function updateStudent(studentId, student, userType) {
+    const validateExistence = async (rollNo, registrationNo) => {
+        const error = {};
+        if (rollNo) {
+            const exist = await StudentRepository.isRollNoExist(rollNo);
+            if (exist) {
+                error["rollNo"] = {
+                    msg: "rollNo already exists",
+                    value: rollNo,
+                };
+            }
         }
-    }
-    if (registrationNo) {
-        const info = await StudentRepository.findByRegistration(registrationNo);
-        if (info && info.studentId != studentId) {
-            error["registrationNo"] = {
-                msg: "registrationNo already exists",
-                value: registrationNo,
-            };
+        if (registrationNo) {
+            const exist = await StudentRepository.isRegistrationNoExist(registrationNo);
+            if (exist) {
+                error["registrationNo"] = {
+                    msg: "registrationNo already exists",
+                    value: registrationNo,
+                };
+            }
         }
+
+        if (utils.isObjectEmpty(error)) return null;
+        return error;
+    };
+
+    if (userType == "admin") {
+        const error = await validateExistence(student.rollNo, student.registrationNo);
+        if (error) throw new CustomError("Roll or Registration already exist", 400, error);
     }
 
-    if (Object.keys(error).length > 0) throw new CustomError("invalid data", 400, error);
-
-    // update to Student table [only those fields are allowed]
-    await StudentRepository.updateByAdmin(studentId, student);
+    await StudentRepository.update(studentId, student, userType);
 }
 
 async function requestTeacher(studentId, teacherId) {
@@ -164,8 +163,8 @@ async function getStudentRequest() {
 async function getAllStudentRequest() {}
 async function deleteStudentRequest() {}
 
-async function getAllSPL(studentId) {
-    const spls = await SPLRepository.findAllSPLByStudentId(studentId);
+async function getAllSPLOfStudent(studentId, options) {
+    const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
     return spls;
 }
 
@@ -191,14 +190,12 @@ export default {
     createStudent,
     getStudent,
     getAllStudent,
-    getAllStudentByCurriculumYear,
     updateStudent,
-    updateStudentByAdmin,
     requestTeacher,
     getStudentRequest,
     getAllStudentRequest,
     deleteStudentRequest,
-    getAllSPL,
+    getAllSPLOfStudent,
     getCurrentSPL,
     assignSupervisorToStudent,
 };

@@ -20,6 +20,13 @@ async function createTeam(teams) {
     }
 }
 
+async function findById(teamId, options) {
+    if (!options) {
+        const team = await models.Team.findByPk(teamId, { raw: true });
+        return team;
+    }
+}
+
 async function updateTeam(teamId, team) {
     await models.Team.update(team, {
         where: {
@@ -78,9 +85,13 @@ async function findAllTeamMemberUnderSPL(splId) {
     return flattened;
 }
 
+async function createTeamRequest(teamId, teacherId, splId) {}
+
 export default {
     createTeam,
+    findById,
     updateTeam,
     findAllTeamUnderSPL,
     findAllTeamMemberUnderSPL,
+    createTeamRequest,
 };

@@ -17,12 +17,12 @@ teamRoutes.put("/:teamId/member", teamController.addTeamMember);
 teamRoutes.delete("/:teamId/member/:memberId", teamController.removeTeamMember);
 
 // routes related to request
-teamRoutes.post("/team/:teamId/request", teamController.requestTeacher);
-teamRoutes.get("/team/:teamId/request", teamController.getAllRequest);
-teamRoutes.delete("/team/:teamId/request", teamController.deleteRequest);
+teamRoutes.post("/:teamId/request", teamController.requestTeacher);
+teamRoutes.get("/:teamId/request", teamController.getAllRequest);
+teamRoutes.delete("/:teamId/request", teamController.deleteRequest);
 
 // supervisor routes related
-teamRoutes.put("/team/:teamId/supervisor");
-teamRoutes.delete("/team/:teamId/supervisor/:supervisorId");
+teamRoutes.put("/:teamId/supervisor");
+teamRoutes.delete("/:teamId/supervisor/:supervisorId");
 
 export default teamRoutes;

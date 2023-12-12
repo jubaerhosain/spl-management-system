@@ -95,50 +95,46 @@ async function updateSPL(splId, data) {
     await models.SPL.update(data, { where: { splId } });
 }
 
-async function findCurrentActiveSPL(studentId) {
-    const spl = await models.Student.findOne({
-        include: [
-            {
-                model: models.SPL,
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                where: {
-                    active: true,
-                },
-                required: true,
-            },
-        ],
-        where: {
-            studentId,
-        },
-        attributes: ["studentId"],
-        raw: true,
-        nest: true,
-    });
-
-    if (!spl) return null;
-
-    const currentSPL = { ...spl.SPLs };
-
-    return currentSPL;
-}
-
 async function deleteSPL(splId) {}
 
+async function findAllSPLOfStudent(studentId, options) {
+    const splOptions = {};
+    // active: 'true' not works
+    if (options?.active) splOptions.active = 1;
+
+    const spls = await models.Student.findAll({
+        include: {
+            model: models.SPL,
+            where: splOptions,
+            through: {
+                model: models.StudentSPL,
+                attributes: [],
+            },
+            // required: true,
+        },
+        raw: true,
+        nest: true,
+        attributes: [],
+        where: { studentId },
+    });
+    if (!spls) return [];
+    return spls.map((spl) => spl.SPLs);
+}
+
 export default {
-    createSPL,
-    createMembers,
-    isSupervisorRandomized,
-    createMultipleSupervisor,
-    assignStudentAndCreateSPLMark,
     findById,
-    findSplWithCommitteeDetail,
-    findAllMemberId,
-    findSPLByNameAndYear,
-    findCurrentActiveSPL,
-    removeStudentFromSPL,
-    updateSPL,
-    deleteSPL,
+    assignStudentAndCreateSPLMark,
+    findAllSPLOfStudent,
+    // findAllSPLOfStudentId,
+    // createSPL,
+    // createMembers,
+    // isSupervisorRandomized,
+    // createMultipleSupervisor,
+    // findSplWithCommitteeDetail,
+    // findAllMemberId,
+    // findSPLByNameAndYear,
+    // findCurrentActiveSPL,
+    // removeStudentFromSPL,
+    // updateSPL,
+    // deleteSPL,
 };

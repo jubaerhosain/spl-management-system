@@ -110,15 +110,16 @@ async function getStudent(req, res) {
 async function getAllStudent(req, res) {
     try {
         // add pagination logic later
+        const schema = Joi.object({
+            curriculumYear: Joi.string().trim().custom(validateCurriculumYear).optional(),
+            inactive: Joi.boolean().optional(),
+            batch: Joi.number().integer().optional(),
+        });
         const options = req.query;
-        let students;
-        if (utils.isObjectEmpty(options)) {
-            students = await studentService.getAllStudent();
-        } else if (options.curriculumYear) {
-            students = await studentService.getAllStudentByCurriculumYear(options.curriculumYear);
-        } else if (options.inactive) {
-            students = await studentService.getAllInactiveStudents();
-        }
+        const { error } = schema.validate(options);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const students = await studentService.getAllStudent(options);
 
         res.json(GenericResponse.success("Students are retrieved successfully", students));
     } catch (err) {
@@ -134,38 +135,38 @@ async function getAllStudent(req, res) {
 async function updateStudent(req, res) {
     try {
         const updateStudentSchema = Joi.object({
-            name: Joi.string().trim().custom(validateName).optional(),
             gender: Joi.string().trim().custom(validateGender).optional(),
             phone: Joi.string().trim().custom(validatePhoneNumber).optional(),
             details: Joi.string().trim().min(5).max(600).optional(),
-        }).required();
+        })
+            .min(1)
+            .required();
 
         const updateStudentByAdminSchema = Joi.object({
-            studentId: Joi.string().uuid().required(),
             name: Joi.string().trim().custom(validateName).optional(),
             rollNo: Joi.string().trim().custom(validateRollNo).optional(),
             registrationNo: Joi.string().trim().custom(validateRegistrationNo).optional(),
             batch: Joi.string().trim().custom(validateBatch).optional(),
             session: Joi.string().trim().custom(validateSession).optional(),
             curriculumYear: Joi.string().trim().custom(validateCurriculumYear).optional(),
-        }).required();
+        })
+            .min(1)
+            .required();
 
         const student = req.body;
-
-        if (utils.isObjectEmpty(student)) {
-            return res.status(400).json(GenericResponse.error("At least one field must be provided"));
-        }
-
+        const { studentId } = req.params;
         if (req.user.userType === "admin") {
             const { error } = updateStudentByAdminSchema.validate(student);
-            if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
+            if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-            await studentService.updateStudentByAdmin(student.studentId, student);
+            await studentService.updateStudent(studentId, student, "admin");
         } else if (req.user.userType === "student") {
             const { error } = updateStudentSchema.validate(student);
-            if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
+            if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-            await studentService.updateStudent(req.user.userId, student);
+            await studentService.updateStudent(studentId, student, "student");
+        } else {
+            return res.status(401).json(GenericResponse.error("You are not allowed to update"));
         }
 
         res.json(GenericResponse.success("Account is updated successfully"));
@@ -227,7 +228,27 @@ async function getCurrentSPL(req, res) {
     }
 }
 
-async function getAllSPL(req, res) {}
+async function getAllSPLOfStudent(req, res) {
+    try {
+        const schema = Joi.object({
+            active: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const options = req.query;
+        const { studentId } = req.params;
+        const spl = await studentService.getAllSPLOfStudent(studentId, options);
+        res.json(GenericResponse.success("SPLs retrieved successfully", spl));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred while updating account"));
+        }
+    }
+}
 
 async function assignSupervisorToStudent(req, res) {
     try {
@@ -265,8 +286,8 @@ export default {
     getStudentRequest,
     getAllStudentRequest,
     deleteStudentRequest,
-    getCurrentSPL,
-    getAllSPL,
+    // getCurrentSPL,
+    getAllSPLOfStudent,
     assignSupervisorToStudent,
     getAllSupervisor,
     getCurrentSupervisor,

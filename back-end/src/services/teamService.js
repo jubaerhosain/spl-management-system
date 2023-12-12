@@ -4,6 +4,7 @@ import StudentRepository from "../repositories/StudentRepository.js";
 import CustomError from "../utils/CustomError.js";
 import utils from "../utils/utils.js";
 import NotificationRepository from "../repositories/NotificationRepository.js";
+import TeacherRepository from "../repositories/TeacherRepository.js";
 
 async function createTeam(data) {
     const { splId } = data;
@@ -116,8 +117,21 @@ async function createTeam(data) {
     await NotificationRepository.createMultipleNotification(notifications);
 }
 
-async function updateTeam(teamId, team) {}
+async function updateTeam(teamId, team) {
+    
+}
+
+async function requestTeacher(teamId, teacherId) {
+    const team = await TeamRepository.findById(teamId);
+    if (!team) throw new CustomError("Team does not exist", 400);
+
+    const teacher = await TeacherRepository.findById(teacherId);
+    if (!teacher) throw new CustomError("Teacher does not exist", 400);
+
+    await TeamRepository.createTeamRequest(teamId, teacherId, team.splId);
+}
 
 export default {
     createTeam,
+    requestTeacher,
 };

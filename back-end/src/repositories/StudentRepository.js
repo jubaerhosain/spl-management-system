@@ -1,6 +1,6 @@
 import { sequelize, models, Op } from "../configs/mysql.js";
 
-async function createStudent(students) {
+async function create(students) {
     const transaction = await sequelize.transaction();
     try {
         await models.User.bulkCreate(students, {
@@ -42,29 +42,26 @@ async function findById(studentId) {
     return flattened;
 }
 
-async function findByRoll(rollNo) {
-    const student = await models.Student.findOne({ where: { rollNo } });
-    return student;
-}
+async function findAll(options) {
+    const studentOptions = {};
+    if (options?.curriculumYear) studentOptions.curriculumYear = options.curriculumYear;
+    if (options?.batch) studentOptions.batch = options.batch;
 
-async function findByRegistration(registrationNo) {
-    const student = await models.Student.findOne({ where: { registrationNo } });
-    return student;
-}
-
-async function findAll() {
     const students = await models.Student.findAll({
         include: {
             model: models.User,
             required: true,
             where: {
-                active: true,
+                active: options?.inactive ? false : true,
             },
         },
         raw: true,
         nest: true,
         attributes: {
             exclude: ["studentId"],
+        },
+        where: {
+            ...studentOptions,
         },
     });
 
@@ -77,34 +74,22 @@ async function findAll() {
     return flattened || [];
 }
 
-async function findAllByCurriculumYear(curriculumYear) {
-    let students = await models.Student.findAll({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
-            },
-        },
+async function isRollNoExist(rollNo) {
+    const roll = await models.Student.findOne({
+        where: { rollNo },
+        attributes: ["rollNo"],
         raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["studentId"],
-        },
-        where: {
-            curriculumYear: curriculumYear,
-        },
     });
+    return roll ? true : false;
+}
 
-    const flattened = students.map((student) => {
-        const user = { ...student, ...student.User };
-        delete user.User;
-        return user;
+async function isRegistrationNoExist(registrationNo) {
+    const registration = await models.Student.findOne({
+        where: { registrationNo },
+        attributes: ["registrationNo"],
+        raw: true,
     });
-
-    if (flattened.length == 0) return [];
-
-    return flattened;
+    return registration ? true : false;
 }
 
 async function findAllExistedRollNo(rollNumbers) {
@@ -267,9 +252,9 @@ async function updateStudent(studentId, student) {
     // });
 }
 
-async function updateByAdmin(student, studentId) {
-    // update to Student table
-    await models.Student.update(student, { where: { studentId } });
+async function update(studentId, student, userType) {
+    if (userType == "student") await models.User.update(student, { where: { userId: studentId } });
+    else if (userType == "admin") await models.Student.update(student, { where: { studentId } });
 }
 
 async function findSupervisorId(studentId, splId) {
@@ -290,24 +275,26 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
 }
 
 export default {
-    createStudent,
-    findAll,
+    create,
     findById,
-    findByRoll,
-    findByRegistration,
-    findAllByCurriculumYear,
-    findAllExistedRollNo,
-    findAllExistedRegistrationNo,
-    findAllStudentUnderSPL,
-    findAllStudentNotUnderSPL,
+    findAll,
+    update,
+    // findAllExistedRollNo,
+    // findAllExistedRegistrationNo,
+    // findAllStudentUnderSPL,
+    // findAllStudentNotUnderSPL,
+    // findAllStudentIdUnderSupervisor,
+    // updateStudent,
+    // updateByAdmin,
+    // createStudentRequest,
+    // createStudentSupervisor,
+    // findStudentRequest,
+    // findAllStudentRequest,
+    // findSupervisorId, // move to supervisor repository
+    // findCurrentSupervisor,
+
+    // utility methods
+    isRollNoExist,
+    isRegistrationNoExist,
     findAllStudentIdUnderSPL,
-    findAllStudentIdUnderSupervisor,
-    updateStudent,
-    updateByAdmin,
-    createStudentRequest,
-    createStudentSupervisor,
-    findStudentRequest,
-    findAllStudentRequest,
-    findSupervisorId,
-    findCurrentSupervisor,
 };

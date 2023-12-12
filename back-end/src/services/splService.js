@@ -30,7 +30,7 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
         throw new CustomError(`Only ${actualCurriculumYear} curriculum is year allowed`, 400);
     }
 
-    const curriculumYearStudents = await StudentRepository.findAllByCurriculumYear(curriculumYear);
+    const curriculumYearStudents = await StudentRepository.findAll({ curriculumYear });
     const isValidStudent = (studentId) => {
         for (const student of curriculumYearStudents) {
             if (student.studentId == studentId) return true;
