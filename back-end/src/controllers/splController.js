@@ -7,6 +7,7 @@ import {
     validateAcademicYear,
     validateCurriculumYear,
 } from "../utils/validator/JoiValidationFunction.js";
+import utils from "../utils/utils.js";
 
 async function createSPL(req, res) {
     try {
@@ -55,7 +56,27 @@ async function assignStudentToSPL(req, res) {
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
+        const validateDuplicate = (students) => {
+            const error = {};
+            const studentIds = students.map(student => student.studentId);
+            students.forEach((student, index) => {
+                if (utils.countOccurrences(studentIds, student.studentId) > 1) {
+                    error[`students[${index}].studentId`] = {
+                        msg: "duplicate studentId not allowed",
+                        value: student.studentId,
+                    };
+                }
+            });
+
+            if (utils.isObjectEmpty(error)) return null;
+            return error;
+        };
+
         const { curriculumYear, students } = req.body;
+
+        const err = validateDuplicate(students);
+        if (err) return res.status(400).json(GenericResponse.error("Validation failed", err));
+
         await splService.assignStudentsToSPL(splId, curriculumYear, students);
 
         res.json(GenericResponse.success("student are assigned successfully to the spl"));
