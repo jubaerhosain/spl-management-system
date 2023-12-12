@@ -6,6 +6,7 @@ import SPLMarkRepository from "../repositories/SPLMarkRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
+import utils from "../utils/utils.js";
 import lodash from "lodash";
 // import emailService from "../emailServices/emailService.js";
 
@@ -26,40 +27,51 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
 
     const actualCurriculumYear = splUtils.getCurriculumYear(spl.splName);
     if (curriculumYear != actualCurriculumYear) {
-        throw new CustomError(`Only ${actualCurriculumYear} year students are allowed`, 400);
+        throw new CustomError(`Only ${actualCurriculumYear} curriculum is year allowed`, 400);
     }
 
-    const curriculumYearStudents = StudentRepository.findAllByCurriculumYear(curriculumYear);
+    const curriculumYearStudents = await StudentRepository.findAllByCurriculumYear(curriculumYear);
     const isValidStudent = (studentId) => {
         for (const student of curriculumYearStudents) {
             if (student.studentId == studentId) return true;
             return false;
         }
     };
-    for (const student of students) {
-        if (!isValidStudent(student.studentId))
-            throw new CustomError(`${student.studentId} is not a ${curriculumYear} student`);
-    }
+    const validateStudent = (students) => {
+        const error = {};
+        students.forEach((student, index) => {
+            if (isValidStudent(student.studentId)) {
+                error[`students[${index}].studentId`] = {
+                    msg: `not a ${curriculumYear} year student`,
+                    value: student.studentId,
+                };
+            }
+        });
+        if (utils.isObjectEmpty(error)) return null;
+        return error;
+    };
+    let error = validateStudent(students);
+    if (error) throw new CustomError("Invalid student", 400, error);
 
-    // check already assigned students or not
-    const assignedStudentIds = StudentRepository.findAllStudentIdUnderSPL(splId);
-    for (const student of students) {
-        if (assignedStudentIds.includes(student.studentId))
-            throw new CustomError(`Student ${student.studentId} is already assigned to spl`);
-    }
+    const assignedStudentIds = await StudentRepository.findAllStudentIdUnderSPL(splId);
+    const validateAlreadyAssigned = (students) => {
+        const error = {};
+        students.forEach((student, index) => {
+            if (assignedStudentIds.includes(student.studentId)) {
+                error[`students[${index}].studentId`] = {
+                    msg: `already assigned to ${spl.splName}`,
+                    value: student.studentId,
+                };
+            }
+        });
+        if (utils.isObjectEmpty(error)) return null;
+        return error;
+    };
+    error = validateAlreadyAssigned(students);
+    if (error) throw new CustomError("Already assigned to spl", 400, error);
 
     const unassignedStudentIds = students.map((student) => student.studentId);
-    await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
-
-    // create atomic marks in mark table
-    const splMarks = {};
-    template.forEach((student) => {
-        splMarks.push({
-            splId,
-            studentId: student.studentId,
-        });
-    });
-    await SPLMarkRepository.createSPLMark(splMarks);
+    await SPLRepository.assignStudentAndCreateSPLMark(spl.splId, unassignedStudentIds);
 
     const notifications = [];
     students.map((student) => {

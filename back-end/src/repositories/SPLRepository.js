@@ -57,16 +57,29 @@ async function findSPLByNameAndYear(splName, academicYear) {
 
 async function findAllActiveSPL() {}
 
-async function assignStudents(splId, studentIds) {
-    const studentId_splId = [];
-    for (const studentId of studentIds) {
-        studentId_splId.push({
+async function assignStudentAndCreateSPLMark(splId, studentIds) {
+    const transaction = await sequelize.transaction();
+
+    try {
+        const studentId_splId = studentIds.map((studentId) => ({
             splId,
             studentId,
-        });
-    }
+        }));
 
-    await models.StudentSPL.bulkCreate(studentId_splId);
+        await models.StudentSPL.bulkCreate(studentId_splId, { transaction });
+
+        const splMarks = studentIds.map((studentId) => ({
+            splId,
+            studentId,
+        }));
+        await models.SPLMark.bulkCreate(splMarks, { transaction });
+
+        await transaction.commit();
+    } catch (error) {
+        await transaction.rollback();
+        console.log(error);
+        throw new Error("An error occurred while assigning to the spl");
+    }
 }
 
 async function removeStudentFromSPL(splId, studentId) {
@@ -119,7 +132,7 @@ export default {
     createMembers,
     isSupervisorRandomized,
     createMultipleSupervisor,
-    assignStudents,
+    assignStudentAndCreateSPLMark,
     findById,
     findSplWithCommitteeDetail,
     findAllMemberId,
