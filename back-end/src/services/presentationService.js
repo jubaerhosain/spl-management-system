@@ -14,7 +14,7 @@ async function createPresentationEvent(data) {
     if (presentation) throw new CustomError(`Presentation ${presentationNo} already exists`, 400);
 
     // create
-    await PresentationRepository.createPresentation(data);
+    await PresentationRepository.create(data);
 
     // notify corresponding users(committeeMembers, students under spl)
 }

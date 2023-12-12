@@ -5,7 +5,7 @@ import { models, Op } from "../configs/mysql.js";
  * @param {String} otp
  * @param {Date} expiresAt
  */
-async function createOTP(email, otp, expiresAt) {
+async function create(email, otp, expiresAt) {
     const OTP = await models.OTP.findOne({
         where: {
             email: email,
@@ -27,7 +27,7 @@ async function createOTP(email, otp, expiresAt) {
     }
 }
 
-async function findOTP(email) {
+async function findByEmail(email) {
     const otp = await models.OTP.findOne({
         where: {
             email,
@@ -43,6 +43,6 @@ async function findOTP(email) {
 }
 
 export default {
-    createOTP,
-    findOTP,
+    create,
+    findByEmail,
 };

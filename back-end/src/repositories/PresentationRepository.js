@@ -1,8 +1,10 @@
 import { models } from "../configs/mysql.js";
 
-async function createPresentation(presentation) {
+async function create(presentation) {
     await models.Presentation.create(presentation);
 }
+
+async function update(presentationId, presentation) {}
 
 async function findPresentation(splId, presentationNo) {
     const presentation = await models.Presentation.findOne({
@@ -49,13 +51,14 @@ async function deletePresentationEvaluator(presentationId, teacherId) {
 }
 
 export default {
+    create,
+    update,
     findById,
-    createPresentation,
     findPresentation,
     findAllEvaluatorId,
     isPresentationMarkCreated,
     createPresentationMark,
     updatePresentationMark,
     createPresentationEvaluator,
-    deletePresentationEvaluator
+    deletePresentationEvaluator,
 };
