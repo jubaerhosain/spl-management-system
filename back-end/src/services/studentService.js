@@ -3,6 +3,7 @@ import TeacherRepository from "../repositories/TeacherRepository.js";
 import passwordUtils from "../utils/passwordUtils.js";
 import CustomError from "../utils/CustomError.js";
 import SPLRepository from "../repositories/SPLRepository.js";
+import TeamRepository from "../repositories/TeamRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
@@ -163,14 +164,14 @@ async function getStudentRequest() {
 async function getAllStudentRequest() {}
 async function deleteStudentRequest() {}
 
-async function getAllSPLOfStudent(studentId, options) {
-    const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
-    return spls;
+async function getCurrentSPL(studentId) {
+    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    return spl;
 }
 
-async function getCurrentSPL(studentId) {
-    const spl = await SPLRepository.findActiveSPLByStudentId(studentId);
-    return spl;
+async function getAllSPL(studentId) {
+    const spls = await SPLRepository.findAllSPLOfStudent(studentId);
+    return spls;
 }
 
 async function assignSupervisorToStudent(splId, studentId, teacherId) {
@@ -186,6 +187,16 @@ async function assignSupervisorToStudent(splId, studentId, teacherId) {
     await StudentRepository.createStudentSupervisor(studentId, teacherId, splId);
 }
 
+async function getCurrentTeam(studentId) {
+    const team = await TeamRepository.findCurrentTeamOfStudent(studentId);
+    return team;
+}
+
+async function getAllTeam(studentId) {
+    const teams = await TeamRepository.findAllTeamOfStudent(studentId);
+    return teams;
+}
+
 export default {
     createStudent,
     getStudent,
@@ -195,7 +206,9 @@ export default {
     getStudentRequest,
     getAllStudentRequest,
     deleteStudentRequest,
-    getAllSPLOfStudent,
     getCurrentSPL,
+    getAllSPL,
     assignSupervisorToStudent,
+    getAllTeam,
+    getCurrentTeam,
 };

@@ -217,35 +217,28 @@ async function getCurrentSPL(req, res) {
     try {
         const { studentId } = req.params;
         const spl = await studentService.getCurrentSPL(studentId);
-        res.json(GenericResponse.success("Retrieved successfully", spl));
+        res.json(GenericResponse.success("SPL retrieved successfully", spl));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while updating account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
 
-async function getAllSPLOfStudent(req, res) {
+async function getAllSPL(req, res) {
     try {
-        const schema = Joi.object({
-            active: Joi.boolean().optional(),
-        });
-        const { error } = schema.validate(req.query);
-        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
-
-        const options = req.query;
         const { studentId } = req.params;
-        const spl = await studentService.getAllSPLOfStudent(studentId, options);
-        res.json(GenericResponse.success("SPLs retrieved successfully", spl));
+        const spls = await studentService.getAllSPL(studentId);
+        res.json(GenericResponse.success("SPLs retrieved successfully", spls));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while updating account"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
@@ -273,8 +266,35 @@ async function assignSupervisorToStudent(req, res) {
 async function getCurrentSupervisor(req, res) {}
 async function getAllSupervisor(req, res) {}
 
-async function getAllTeam(req, res) {}
-async function getCurrentTeam(req, res) {}
+async function getAllTeam(req, res) {
+    try {
+        const { studentId } = req.params;
+        const teams = await studentService.getAllTeam(studentId);
+        res.json(GenericResponse.success("Teams are retrieved successfully", teams));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function getCurrentTeam(req, res) {
+    try {
+        const { studentId } = req.params;
+        const team = await studentService.getCurrentTeam(studentId);
+        res.json(GenericResponse.success("Team retrieved successfully", team));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 export default {
     createStudent,
@@ -286,8 +306,8 @@ export default {
     getStudentRequest,
     getAllStudentRequest,
     deleteStudentRequest,
-    // getCurrentSPL,
-    getAllSPLOfStudent,
+    getAllSPL,
+    getCurrentSPL,
     assignSupervisorToStudent,
     getAllSupervisor,
     getCurrentSupervisor,

@@ -4,7 +4,7 @@ import { models, sequelize, Op } from "../configs/mysql.js";
  * Create one or more teams
  * @param {Array} teams
  */
-async function createTeam(teams) {
+async function create(teams) {
     const transaction = await sequelize.transaction();
     try {
         await models.Team.bulkCreate(teams, {
@@ -27,7 +27,7 @@ async function findById(teamId, options) {
     }
 }
 
-async function updateTeam(teamId, team) {
+async function update(teamId, team) {
     await models.Team.update(team, {
         where: {
             teamId,
@@ -87,11 +87,20 @@ async function findAllTeamMemberUnderSPL(splId) {
 
 async function createTeamRequest(teamId, teacherId, splId) {}
 
+async function findCurrentTeamOfStudent(studentId) {
+    // including all team members
+}
+async function findAllTeamOfStudent() {
+    // including all team members
+}
+
 export default {
-    createTeam,
+    create,
     findById,
-    updateTeam,
-    findAllTeamUnderSPL,
-    findAllTeamMemberUnderSPL,
-    createTeamRequest,
+    update,
+    // createTeamRequest,
+    // findAllTeamUnderSPL, // with team members
+    findCurrentTeamOfStudent,
+    findAllTeamOfStudent,
+    // findAllTeamMemberUnderSPL,
 };

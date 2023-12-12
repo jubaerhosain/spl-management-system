@@ -97,20 +97,31 @@ async function updateSPL(splId, data) {
 
 async function deleteSPL(splId) {}
 
-async function findAllSPLOfStudent(studentId, options) {
-    const splOptions = {};
-    // active: 'true' not works
-    if (options?.active) splOptions.active = 1;
-
-    const spls = await models.Student.findAll({
+async function findCurrentSPLOfStudent(studentId) {
+    const spl = await models.Student.findByPk(studentId, {
         include: {
             model: models.SPL,
-            where: splOptions,
             through: {
                 model: models.StudentSPL,
                 attributes: [],
             },
-            // required: true,
+        },
+        raw: true,
+        nest: true,
+        attributes: [],
+    });
+    if (!spl) return null;
+    return spl.SPLs;
+}
+
+async function findAllSPLOfStudent(studentId) {
+    const spls = await models.Student.findAll({
+        include: {
+            model: models.SPL,
+            through: {
+                model: models.StudentSPL,
+                attributes: [],
+            },
         },
         raw: true,
         nest: true,
@@ -125,7 +136,7 @@ export default {
     findById,
     assignStudentAndCreateSPLMark,
     findAllSPLOfStudent,
-    // findAllSPLOfStudentId,
+    findCurrentSPLOfStudent,
     // createSPL,
     // createMembers,
     // isSupervisorRandomized,

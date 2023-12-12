@@ -284,8 +284,6 @@ export default {
     // findAllStudentUnderSPL,
     // findAllStudentNotUnderSPL,
     // findAllStudentIdUnderSupervisor,
-    // updateStudent,
-    // updateByAdmin,
     // createStudentRequest,
     // createStudentSupervisor,
     // findStudentRequest,

@@ -19,17 +19,17 @@ studentRoutes.put(
 // studentRoutes.delete("/:studentId", checkAuthentication, isAdmin, deleteStudent);
 
 // routes related to spl
-studentRoutes.get("/:studentId/spl", studentController.getAllSPLOfStudent);
-// studentRoutes.get("/:studentId/spl/:splId", studentController.getCurrentSPL);
+studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
+studentRoutes.get("/:studentId/spl/current", studentController.getCurrentSPL);
+
+// routes related to team
+studentRoutes.get("/:studentId/team", studentController.getAllTeam);
+studentRoutes.get("/:studentId/team/current", studentController.getCurrentTeam);
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor", studentController.assignSupervisorToStudent);
 studentRoutes.get("/:studentId/supervisor"); // studentController.getAllSupervisor);
 studentRoutes.delete("/:studentId/supervisor/:supervisorId");
-
-// routes related to team
-studentRoutes.get("/:studentId/team"); // studentController.getAllTeam);
-studentRoutes.get("/:studentId/team/:teamId"); // studentController.getCurrentTeam);
 
 // route related to request
 studentRoutes.post("/:studentId/request", studentController.requestTeacher);
