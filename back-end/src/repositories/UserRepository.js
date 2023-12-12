@@ -4,7 +4,7 @@ async function create(user) {
     await models.User.create(user);
 }
 
-async function findById(userId) {
+async function findById(userId, userType) {
     const user = await models.User.findByPk(userId, {
         raw: true,
     });
@@ -14,7 +14,7 @@ async function findById(userId) {
     return user;
 }
 
-async function findByEmail(email) {
+async function findByEmail(email, userType) {
     const user = await models.User.findOne({
         where: {
             email: email,
@@ -46,8 +46,6 @@ async function findPasswordById(userId) {
     return null;
 }
 
-async function findPasswordByEmail(email) {}
-
 async function findLoginInfo(email) {
     const user = await models.User.findOne({
         where: { email },
@@ -72,7 +70,7 @@ async function findAllExistedEmail(emails) {
     return [];
 }
 
-async function findAllExistedUserByEmail(emails) {
+async function findAllExistedUserByEmail(emails, userType) {
     const users = await models.User.findAll({
         where: {
             email: {
@@ -101,21 +99,19 @@ async function updatePasswordByEmail(email, password) {
 }
 
 async function remove(userId) {
-    console.log(userId);
     await models.User.update({ active: false }, { where: { userId } });
 }
 
 export default {
     create,
+    update,
     findById,
     findByEmail,
     findUserId,
     findPasswordById,
-    findPasswordByEmail,
     findLoginInfo,
     findAllExistedEmail,
     findAllExistedUserByEmail,
-    update,
     updatePasswordById,
     updatePasswordByEmail,
     remove,

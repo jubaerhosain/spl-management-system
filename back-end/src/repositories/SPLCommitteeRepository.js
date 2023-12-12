@@ -1,6 +1,6 @@
 import { models, sequelize } from "../configs/mysql.js";
 
-async function createCommittee(data) {
+async function create(data) {
     const transaction = await sequelize.transaction();
     try {
         const committee = await models.SPLCommittee.create(
@@ -30,12 +30,18 @@ async function createCommittee(data) {
     }
 }
 
+async function findAllMemberId(splId) {
+    const members = await models.TeacherSPL_CommitteeMember.findAll({ where: { splId: splId } });
+    if (members.length == 0) return [];
+    return members.map((member) => member.teacherId);
+}
+
 async function findById(committeeId) {
     const committee = await models.SPLCommittee.findOne({ where: { committeeId } });
     return committee;
 }
 
 export default {
-    createCommittee,
+    create,
     findById,
 };

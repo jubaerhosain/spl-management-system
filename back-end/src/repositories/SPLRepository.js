@@ -1,6 +1,6 @@
 import { models, Op, sequelize } from "../configs/mysql.js";
 
-async function createSPL(spl) {
+async function create(spl) {
     await models.SPL.create(spl);
 }
 
@@ -13,37 +13,13 @@ async function isSupervisorRandomized(splId) {
     return studentSupervisor.length > 0;
 }
 
-async function createMultipleSupervisor(splId, teacherStudentIds) {
-    const splStudentTeacher = teacherStudentIds.map((element) => {
-        element.splId = splId;
-        return element;
-    });
-
-    await models.Supervisor.bulkCreate(splStudentTeacher);
-}
-
 async function findById(splId) {
     const spl = await models.SPL.findByPk(splId, {
         raw: true,
     });
-
     return spl;
 }
 
-async function findSplWithCommitteeDetail(splId) {
-    // include head, manger, committee member details
-    const spl = await models.SPL.findByPk(splId, {
-        raw: true,
-    });
-
-    return spl;
-}
-
-async function findAllMemberId(splId) {
-    const members = await models.TeacherSPL_CommitteeMember.findAll({ where: { splId: splId } });
-    if (members.length == 0) return [];
-    return members.map((member) => member.teacherId);
-}
 
 async function findSPLByNameAndYear(splName, academicYear) {
     const spl = await models.SPL.findOne({
@@ -91,11 +67,11 @@ async function removeStudentFromSPL(splId, studentId) {
     });
 }
 
-async function updateSPL(splId, data) {
-    await models.SPL.update(data, { where: { splId } });
+async function update(splId, spl) {
+    await models.SPL.update(spl, { where: { splId } });
 }
 
-async function deleteSPL(splId) {}
+async function remove(splId) {}
 
 async function findCurrentSPLOfStudent(studentId) {
     const spl = await models.Student.findByPk(studentId, {
@@ -133,19 +109,16 @@ async function findAllSPLOfStudent(studentId) {
 }
 
 export default {
+    create,
+    update,
     findById,
+    remove,
     assignStudentAndCreateSPLMark,
     findAllSPLOfStudent,
     findCurrentSPLOfStudent,
-    // createSPL,
     // createMembers,
     // isSupervisorRandomized,
-    // createMultipleSupervisor,
-    // findSplWithCommitteeDetail,
-    // findAllMemberId,
     // findSPLByNameAndYear,
     // findCurrentActiveSPL,
     // removeStudentFromSPL,
-    // updateSPL,
-    // deleteSPL,
 };

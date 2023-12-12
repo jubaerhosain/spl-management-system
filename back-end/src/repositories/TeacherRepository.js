@@ -1,6 +1,6 @@
 import { models, sequelize, Op } from "../configs/mysql.js";
 
-async function createTeacher(teachers) {
+async function create(teachers) {
     const transaction = await sequelize.transaction();
     try {
         await models.User.bulkCreate(teachers, {
@@ -16,7 +16,10 @@ async function createTeacher(teachers) {
     }
 }
 
-async function findById(userId) {
+async function findById(userId, options) {
+    const teacherOptions = {};
+    if (options?.available) teacherOptions.available = 1;
+
     const teacher = await models.Teacher.findByPk(userId, {
         include: {
             model: models.User,
@@ -30,6 +33,7 @@ async function findById(userId) {
         attributes: {
             exclude: ["teacherId"],
         },
+        where: teacherOptions,
     });
 
     let flattened = {};
@@ -42,7 +46,10 @@ async function findById(userId) {
     return flattened;
 }
 
-async function findAll() {
+async function findAll(options) {
+    const teacherOption = {};
+    if (options?.available) teacherOption.available = 1;
+
     let teachers = await models.Teacher.findAll({
         include: {
             model: models.User,
@@ -56,6 +63,7 @@ async function findAll() {
         attributes: {
             exclude: ["teacherId"],
         },
+        where: teacherOption,
     });
 
     if (teachers.length > 0) {
@@ -73,6 +81,9 @@ async function findAllExistedTeacherByEmail(emails) {
         include: {
             model: models.Teacher,
             required: true,
+            attributes: {
+                exclude: ["teacherId"],
+            },
         },
         where: {
             email: {
@@ -97,61 +108,7 @@ async function findAllExistedTeacherByEmail(emails) {
     return flattened;
 }
 
-async function findAllAvailableTeacher() {
-    let teachers = await models.Teacher.findAll({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
-            },
-        },
-        raw: true,
-        nest: true,
-        where: {
-            available: true,
-        },
-    });
-
-    if (teachers.length > 0) {
-        for (const i in teachers) {
-            teachers[i] = { ...teachers[i], ...teachers[i].User };
-            delete teachers[i].User;
-        }
-    }
-
-    return teachers;
-}
-
-async function findAvailableTeacher(teacherId) {
-    let availableTeacher = await models.Teacher.findOne({
-        include: {
-            model: models.User,
-            required: true,
-            where: {
-                active: true,
-            },
-        },
-        raw: true,
-        nest: true,
-        where: {
-            teacherId,
-            available: true,
-        },
-    });
-
-    if (!availableTeacher) return null;
-
-    availableTeacher = {
-        ...availableTeacher,
-        ...availableTeacher.User,
-    };
-    delete availableTeacher.User;
-
-    return availableTeacher;
-}
-
-async function updateTeacher(userId, teacher) {
+async function update(userId, teacher) {
     const transaction = await sequelize.transaction();
     try {
         // update to User model
@@ -179,11 +136,9 @@ async function updateTeacher(userId, teacher) {
 }
 
 export default {
-    createTeacher,
+    create,
     findById,
+    update,
     findAll,
-    findAvailableTeacher,
-    findAllAvailableTeacher,
-    findAllExistedTeacherByEmail,
-    updateTeacher,
+    // findAllExistedTeacherByEmail,
 };

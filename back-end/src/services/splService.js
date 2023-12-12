@@ -16,7 +16,7 @@ async function createSPL(data) {
         throw new CustomError(`${data.splName} ${data.academicYear} already exists`, 400);
     }
 
-    await SPLRepository.createSPL(data);
+    await SPLRepository.create(data);
 }
 
 async function assignStudentsToSPL(splId, curriculumYear, students) {

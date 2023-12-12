@@ -150,6 +150,9 @@ async function findAllStudentUnderSPL(splId) {
         ],
         raw: true,
         nest: true,
+        attributes: {
+            exclude: ["studentId"],
+        },
     });
 
     if (students.length == 0) return [];
@@ -169,7 +172,6 @@ async function findAllStudentUnderSPL(splId) {
 }
 
 async function findAllStudentNotUnderSPL(splId, curriculumYear) {
-    // find all active students of ${curriculumYear} left join with ${splId}
     const students = await models.Student.findAll({
         include: [
             {
@@ -196,6 +198,9 @@ async function findAllStudentNotUnderSPL(splId, curriculumYear) {
         },
         raw: true,
         nest: true,
+        attributes: {
+            exclude: ["studentId"],
+        },
     });
 
     const unassignedStudents = students.filter((student) => {
@@ -243,15 +248,6 @@ async function findStudentRequest(studentId, teacherId) {
 
 async function findAllStudentRequest(studentId, teacherId) {}
 
-async function updateStudent(studentId, student) {
-    // update to Student table
-    // await models.Student.update(student, {
-    //     where: {
-    //         studentId: studentId,
-    //     },
-    // });
-}
-
 async function update(studentId, student, userType) {
     if (userType == "student") await models.User.update(student, { where: { userId: studentId } });
     else if (userType == "admin") await models.Student.update(student, { where: { studentId } });
@@ -264,10 +260,6 @@ async function findSupervisorId(studentId, splId) {
     return supervisorId;
 }
 
-async function findSupervisor(studentId, splId) {}
-
-async function findCurrentSupervisor(studentId) {}
-
 async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
     const students = await models.Supervisor.findAll({ where: { teacherId: supervisorId, splId } });
     if (students.length == 0) return [];
@@ -276,23 +268,23 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
 
 export default {
     create,
+    update,
     findById,
     findAll,
-    update,
-    // findAllExistedRollNo,
-    // findAllExistedRegistrationNo,
-    // findAllStudentUnderSPL,
-    // findAllStudentNotUnderSPL,
-    // findAllStudentIdUnderSupervisor,
-    // createStudentRequest,
-    // createStudentSupervisor,
-    // findStudentRequest,
-    // findAllStudentRequest,
+    findAllStudentUnderSPL,
+    findAllStudentNotUnderSPL,
+    createStudentRequest,
+    createStudentSupervisor,
+    findStudentRequest,
+    findAllStudentRequest,
     // findSupervisorId, // move to supervisor repository
-    // findCurrentSupervisor,
+    // findCurrentSupervisor, // move to supervisor repository
 
     // utility methods
     isRollNoExist,
     isRegistrationNoExist,
     findAllStudentIdUnderSPL,
+    findAllStudentIdUnderSupervisor,
+    findAllExistedRollNo,
+    findAllExistedRegistrationNo,
 };
