@@ -11,6 +11,7 @@ async function updateSupervisorMark(req, res) {
             marks: Joi.array()
                 .min(1)
                 .items({
+                    splMarkId: Joi.string().trim().uuid().required(),
                     studentId: Joi.string().trim().uuid().required(),
                     supervisorMark: Joi.number().required(),
                 })
@@ -43,6 +44,7 @@ async function updateCodingMark(req, res) {
             marks: Joi.array()
                 .min(1)
                 .items({
+                    splMarkId: Joi.string().trim().uuid().required(),
                     studentId: Joi.string().trim().uuid().required(),
                     codingMark: Joi.number().required(),
                 })

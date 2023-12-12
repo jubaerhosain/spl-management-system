@@ -1,11 +1,15 @@
 import { models } from "../configs/mysql.js";
 
+async function createSPLMark(splMarks) {
+    await models.SPLMark.bulkCreate(splMarks);
+}
+
 async function updateSupervisorMark(marks) {
-    models.SPLMark.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "supervisorMark"] });
+    await models.SPLMark.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "supervisorMark"] });
 }
 
 async function updateCodingMark(marks) {
-    models.SPLMark.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "codingMark"] });
+    await models.SPLMark.bulkCreate(marks, { updateOnDuplicate: ["splId", "studentId", "codingMark"] });
 }
 
 async function createContinuousClassWithMark(continuousMarks) {

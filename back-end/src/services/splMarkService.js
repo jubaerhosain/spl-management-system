@@ -27,7 +27,8 @@ async function updateSupervisorMark(userId, splId, marks) {
 
     const supervisorMarks = marks.map((mark) => {
         return {
-            ...mark,
+            studentId: mark.studentId,
+            supervisorMark: mark.supervisorMark,
             splId,
         };
     });

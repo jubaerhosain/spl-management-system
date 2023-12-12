@@ -2,6 +2,7 @@ import NotificationRepository from "../repositories/NotificationRepository.js";
 import SPLRepository from "../repositories/SPLRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
+import SPLMarkRepository from "../repositories/SPLMarkRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
@@ -17,25 +18,51 @@ async function createSPL(data) {
     await SPLRepository.createSPL(data);
 }
 
-async function assignStudentsToSPL(splId) {
+async function assignStudentsToSPL(splId, curriculumYear, students) {
     const spl = await SPLRepository.findById(splId);
     if (!spl) {
         throw new CustomError("spl does not exist", 400);
     }
 
-    const curriculumYear = splUtils.getCurriculumYear(spl.splName);
-
-    const unassignedStudents = await StudentRepository.findAllStudentNotUnderSPL(spl.splId, curriculumYear);
-
-    if (unassignedStudents.length <= 0) {
-        throw new CustomError(`There is no ${curriculumYear} year student to assign to ${spl.splName}, ${spl.academicYear}`, 400);
+    const actualCurriculumYear = splUtils.getCurriculumYear(spl.splName);
+    if (curriculumYear != actualCurriculumYear) {
+        throw new CustomError(`Only ${actualCurriculumYear} year students are allowed`, 400);
     }
 
-    const unassignedStudentIds = unassignedStudents.map((student) => student.studentId);
+    const curriculumYearStudents = StudentRepository.findAllByCurriculumYear(curriculumYear);
+    const isValidStudent = (studentId) => {
+        for (const student of curriculumYearStudents) {
+            if (student.studentId == studentId) return true;
+            return false;
+        }
+    };
+    for (const student of students) {
+        if (!isValidStudent(student.studentId))
+            throw new CustomError(`${student.studentId} is not a ${curriculumYear} student`);
+    }
+
+    // check already assigned students or not
+    const assignedStudentIds = StudentRepository.findAllStudentIdUnderSPL(splId);
+    for (const student of students) {
+        if (assignedStudentIds.includes(student.studentId))
+            throw new CustomError(`Student ${student.studentId} is already assigned to spl`);
+    }
+
+    const unassignedStudentIds = students.map((student) => student.studentId);
     await SPLRepository.assignStudents(spl.splId, unassignedStudentIds);
 
+    // create atomic marks in mark table
+    const splMarks = {};
+    template.forEach((student) => {
+        splMarks.push({
+            splId,
+            studentId: student.studentId,
+        });
+    });
+    await SPLMarkRepository.createSPLMark(splMarks);
+
     const notifications = [];
-    unassignedStudents.map((student) => {
+    students.map((student) => {
         const notification = {
             userId: student.studentId,
             content: `You have assigned to ${spl.splName}, ${spl.academicYear}.`,

@@ -175,7 +175,6 @@ async function getCurrentSPL(studentId) {
 }
 
 async function assignSupervisorToStudent(splId, studentId, teacherId) {
-    // check if already have supervisor or not for that spl
     const supervisor = await StudentRepository.findSupervisorId(studentId, splId);
     if (supervisor) throw new CustomError("Already have supervisor for this spl", 400);
 

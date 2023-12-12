@@ -2,7 +2,11 @@ import { GenericResponse } from "../utils/responseUtils.js";
 import splService from "../services/splService.js";
 import CustomError from "../utils/CustomError.js";
 import Joi from "../utils/validator/Joi.js";
-import { validateSPLName, validateAcademicYear } from "../utils/validator/JoiValidationFunction.js";
+import {
+    validateSPLName,
+    validateAcademicYear,
+    validateCurriculumYear,
+} from "../utils/validator/JoiValidationFunction.js";
 
 async function createSPL(req, res) {
     try {
@@ -37,8 +41,22 @@ async function getActiveSPL(req, res) {}
 async function assignStudentToSPL(req, res) {
     try {
         const { splId } = req.params;
+        const schema = Joi.object({
+            curriculumYear: Joi.string().trim().custom(validateCurriculumYear).required(),
+            students: Joi.array()
+                .min(1)
+                .items(
+                    Joi.object({
+                        studentId: Joi.string().trim().uuid().required(),
+                    })
+                )
+                .required(),
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-        await splService.assignStudentsToSPL(splId);
+        const { curriculumYear, students } = req.body;
+        await splService.assignStudentsToSPL(splId, curriculumYear, students);
 
         res.json(GenericResponse.success("student are assigned successfully to the spl"));
     } catch (err) {
