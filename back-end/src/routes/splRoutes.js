@@ -14,7 +14,7 @@ splRoutes.put("/:splId", checkAuthentication, splController.updateSPL);
 splRoutes.delete("/:splId", checkAuthentication, splController.deleteSPL);
 
 // student related routes
-splRoutes.put("/:splId/student", splController.assignStudentToSPL);
+splRoutes.post("/:splId/student", splController.assignStudentToSPL);
 splRoutes.get("/:splId/student", checkAuthentication, splController.getAllStudentUnderSPL);
 splRoutes.delete("/:splId/student/:studentId", checkAuthentication, splController.removeStudentFromSPL);
 
