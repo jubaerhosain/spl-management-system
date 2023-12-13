@@ -8,6 +8,7 @@ import UserRepository from "../repositories/UserRepository.js";
 import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import utils from "../utils/utils.js";
+import SupervisorRepository from "../repositories/SupervisorRepository.js";
 
 async function createStudent(students) {
     const validateExistence = async (students) => {
@@ -143,20 +144,20 @@ async function requestTeacher(studentId, teacherId) {
     const student = await StudentRepository.findById(studentId);
     if (student.curriculumYear != "4th") throw new CustomError("Only 4th year student can request for supervisor", 400);
 
-    const sent = await StudentRepository.isRequestSent(studentId, teacherId);
+    const sent = await SupervisorRepository.isStudentRequestSent(studentId, teacherId);
     if (sent) throw new CustomError("Request already sent", 400);
 
     const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
     if (!currentSPL || currentSPL.splName != "spl3") throw new CustomError("You are not assigned to spl3", 400);
 
-    const exist = await StudentRepository.isSupervisorExist(studentId, currentSPL.splId);
+    const exist = await SupervisorRepository.isStudentSupervisorExist(studentId, currentSPL.splId);
     if (exist)
         throw new CustomError(`Already have supervisor for ${currentSPL.splName}, ${currentSPL.academicYear}`, 400);
 
     const availableTeacher = await TeacherRepository.findById(teacherId, { available: true });
     if (!availableTeacher) throw new CustomError("Teacher is not available to be supervisor", 400);
 
-    await StudentRepository.createStudentRequest(studentId, teacherId, currentSPL.splId);
+    await SupervisorRepository.createStudentRequest(studentId, teacherId, currentSPL.splId);
 
     // send email to teacher???
 }
@@ -182,7 +183,7 @@ async function assignSupervisorToStudent(splId, studentId, teacherId) {
     const availableTeacher = await TeacherRepository.findAvailableTeacher(teacherId);
     if (!availableTeacher) throw new CustomError("Teacher is not available to be supervisor", 400);
 
-    await StudentRepository.createStudentSupervisor(studentId, teacherId, splId);
+    await SupervisorRepository.create(studentId, teacherId, splId);
 }
 
 async function getAllTeam(studentId, options) {

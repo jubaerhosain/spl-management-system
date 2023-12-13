@@ -25,6 +25,7 @@ function isObjectEmpty(object) {
 }
 
 function areAllKeysNull(obj) {
+    if (isObjectEmpty(obj)) return true;
     const values = Object.values(obj);
     const allNull = values.every((value) => value === null);
     return allNull;

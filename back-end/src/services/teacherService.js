@@ -1,6 +1,7 @@
 import passwordUtils from "../utils/passwordUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
+import SupervisorRepository from "../repositories/SupervisorRepository.js";
 import emailUtils from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import CustomError from "../utils/CustomError.js";
@@ -70,8 +71,8 @@ async function createTeacher(teachers) {
     }
 }
 
-async function updateTeacher(userId, teacher) {
-    await TeacherRepository.updateTeacher(userId, teacher);
+async function updateTeacher(teacherId, teacher) {
+    await TeacherRepository.update(teacherId, teacher);
 }
 
 async function getTeacher(teacherId) {
@@ -80,7 +81,7 @@ async function getTeacher(teacherId) {
 }
 
 async function getAllTeacher(options) {
-    if(options?.studentId || options?.teamId) {
+    if (options?.studentId || options?.teamId) {
         const teachers = await TeacherRepository.findAllWithRequestedFlag(options);
         return teachers;
     }
@@ -89,9 +90,21 @@ async function getAllTeacher(options) {
     return teachers;
 }
 
+async function getAllSupervisorRequest(teacherId) {
+    const requests = await SupervisorRepository.findAllSupervisorRequest(teacherId);
+    return requests;
+}
+
+async function acceptSupervisorRequest(teacherId, requestId) {
+    // is valid request
+    // 
+}
+
 export default {
     createTeacher,
     updateTeacher,
     getTeacher,
     getAllTeacher,
+    getAllSupervisorRequest,
+    acceptSupervisorRequest,
 };

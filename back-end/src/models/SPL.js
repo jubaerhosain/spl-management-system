@@ -74,6 +74,13 @@ export default (options) => {
             onUpdate: "CASCADE",
             foreignKey: "splId",
         });
+
+        // SPL - SupervisorRequest [one to many]
+        SPL.hasMany(models.SupervisorRequest, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "splId",
+        });
     };
 
     return SPL;

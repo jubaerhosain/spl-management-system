@@ -7,7 +7,7 @@ export default (options) => {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
-            unique: true
+            unique: true,
         },
         studentId: {
             type: DataTypes.UUID,
@@ -55,7 +55,28 @@ export default (options) => {
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
         });
-    }
+
+        // Student - SupervisorRequest [One to many]
+        SupervisorRequest.belongsTo(models.Student, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "studentId",
+        });
+
+        // Team - SupervisorRequest [One to many]
+        SupervisorRequest.belongsTo(models.Team, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teamId",
+        });
+
+        // SPL - SupervisorRequest [one to many]
+        SupervisorRequest.belongsTo(models.SPL, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "splId",
+        });
+    };
 
     return SupervisorRequest;
 };

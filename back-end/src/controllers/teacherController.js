@@ -101,14 +101,11 @@ async function getAllTeacher(req, res) {
     }
 }
 
+// flag current
 async function getAllStudentUnderSupervision(req, res) {}
-async function getAllCurrentStudentUnderSupervision(req, res) {}
 
+// flag current
 async function getAllTeamUnderSupervision(req, res) {}
-async function getAllCurrentTeamUnderSupervision(req, res) {}
-
-async function getAllStudentRequestedTeacher(req, res) {}
-async function getAllTeamRequestedTeacher(req, res) {}
 
 async function updateTeacher(req, res) {
     try {
@@ -126,9 +123,9 @@ async function updateTeacher(req, res) {
         if (error) return res.status(400).json(GenericResponse.error("invalid data", error));
 
         const teacher = req.body;
-        const { userId } = req.user;
+        const { teacherId } = req.params;
 
-        await teacherService.updateTeacher(userId, teacher);
+        await teacherService.updateTeacher(teacherId, teacher);
 
         res.json(GenericResponse.success("Account updated successfully"));
     } catch (err) {
@@ -143,26 +140,53 @@ async function updateTeacher(req, res) {
 
 async function deleteTeacher(req, res) {}
 
-async function acceptStudentRequest(req, res) {}
-async function rejectStudentRequest(req, res) {}
+async function getAllSupervisorRequest(req, res) {
+    try {
+        const { teacherId } = req.params;
+        const requests = await teacherService.getAllSupervisorRequest(teacherId);
+        res.json(GenericResponse.success("Supervisor requests are retrieved successfully", requests));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
-async function acceptTeamRequest(req, res) {}
-async function rejectTeamRequest(req, res) {}
+async function acceptSupervisorRequest(req, res) {
+    try {
+        const schema = Joi.object({
+            accept: Joi.boolean().valid(true).required(),
+        }).required();
+        const {error} = schema.validate(req.body);
+        if(error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const { teacherId, requestId } = req.params;
+        const requests = await teacherService.acceptSupervisorRequest(teacherId, requestId);
+        res.json(GenericResponse.success("Request accepted", requests));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function rejectSupervisorRequest(req, res) {}
 
 export default {
     createTeacher,
     getTeacher,
     getAllTeacher,
     getAllStudentUnderSupervision,
-    getAllCurrentStudentUnderSupervision,
     getAllTeamUnderSupervision,
-    getAllCurrentTeamUnderSupervision,
-    getAllStudentRequestedTeacher,
-    getAllTeamRequestedTeacher,
-    acceptStudentRequest,
-    rejectStudentRequest,
-    acceptTeamRequest,
-    rejectTeamRequest,
+    getAllSupervisorRequest,
+    acceptSupervisorRequest,
+    rejectSupervisorRequest,
     updateTeacher,
     deleteTeacher,
 };

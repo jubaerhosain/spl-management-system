@@ -8,7 +8,7 @@ import { checkAuthentication, isAdmin, isTeacher } from "../middlewares/authMidd
 teacherRoutes.post("/", teacherController.createTeacher);
 teacherRoutes.get("/", teacherController.getAllTeacher);
 teacherRoutes.get("/:teacherId", teacherController.getTeacher);
-teacherRoutes.put("/:teacherId", checkAuthentication, isTeacher, teacherController.updateTeacher);
+teacherRoutes.put("/:teacherId", teacherController.updateTeacher);
 teacherRoutes.delete("/:teacherId", checkAuthentication, isAdmin, teacherController.deleteTeacher);
 
 // routes related to student supervision
@@ -18,13 +18,8 @@ teacherRoutes.get("/:teacherId/student", teacherController.getAllStudentUnderSup
 teacherRoutes.get("/:teacherId/team", teacherController.getAllTeamUnderSupervision);
 
 // routes related to team request
-teacherRoutes.get("/:teacherId/request/team", teacherController.getAllTeamRequestedTeacher);
-teacherRoutes.put("/:teacherId/request/team", teacherController.acceptTeamRequest);
-teacherRoutes.delete("/:teacherId/request/team", teacherController.rejectTeamRequest);
-
-// routes related to student
-teacherRoutes.get("/:teacherId/request/student", teacherController.getAllStudentRequestedTeacher);
-teacherRoutes.put("/:teacherId/request/student", teacherController.acceptStudentRequest);
-teacherRoutes.delete("/:teacherId/request/student", teacherController.rejectStudentRequest);
+teacherRoutes.get("/:teacherId/request", teacherController.getAllSupervisorRequest);
+teacherRoutes.put("/:teacherId/request/:requestId", teacherController.acceptSupervisorRequest);
+teacherRoutes.delete("/:teacherId/request/:requestId", teacherController.rejectSupervisorRequest);
 
 export default teacherRoutes;

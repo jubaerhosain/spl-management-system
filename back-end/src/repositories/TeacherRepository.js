@@ -98,7 +98,6 @@ async function findAllWithRequestedFlag(options) {
             },
             {
                 model: models.SupervisorRequest,
-                as: "Requests",
                 required: false,
                 where: requestOptions,
             },
@@ -113,8 +112,8 @@ async function findAllWithRequestedFlag(options) {
 
     if (teachers.length > 0) {
         for (const i in teachers) {
-            const request = teachers[i].Requests;
-            delete teachers[i].Requests;
+            const request = teachers[i].SupervisorRequests;
+            delete teachers[i].SupervisorRequests;
             if (!utils.areAllKeysNull(request)) {
                 teachers[i].requested = true;
             }
@@ -158,13 +157,13 @@ async function findAllExistedTeacherByEmail(emails) {
     return flattened;
 }
 
-async function update(userId, teacher) {
+async function update(teacherId, teacher) {
     const transaction = await sequelize.transaction();
     try {
         // update to User model
         await models.User.update(teacher, {
             where: {
-                userId: userId,
+                userId: teacherId,
             },
             transaction: transaction,
         });
@@ -172,7 +171,7 @@ async function update(userId, teacher) {
         // update to Teacher model
         await models.Teacher.update(teacher, {
             where: {
-                teacherId: userId,
+                teacherId,
             },
             transaction: transaction,
         });
