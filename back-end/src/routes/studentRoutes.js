@@ -28,8 +28,6 @@ studentRoutes.get("/:studentId/team/current", studentController.getCurrentTeam);
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor", studentController.assignSupervisor);
-studentRoutes.get("/:studentId/supervisor", studentController.getAllSupervisor);
-studentRoutes.get("/:studentId/supervisor/current", studentController.getCurrentSupervisor);
 studentRoutes.delete("/:studentId/supervisor/:supervisorId");
 
 // route related to request
