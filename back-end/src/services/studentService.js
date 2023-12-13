@@ -8,7 +8,7 @@ import UserRepository from "../repositories/UserRepository.js";
 import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import utils from "../utils/utils.js";
-import SupervisorRepository from "../repositories/SupervisorRepository.js";
+import SupervisorRequestRepository from "../repositories/SupervisorRequestRepository.js";
 
 async function createStudent(students) {
     const validateExistence = async (students) => {
@@ -104,8 +104,6 @@ async function getAllStudent(options) {
     return students;
 }
 
-async function getAllInactiveStudent() {}
-
 async function updateStudent(studentId, student, userType) {
     const validateExistence = async (rollNo, registrationNo) => {
         const error = {};
@@ -165,35 +163,40 @@ async function requestTeacher(studentId, teacherId) {
 async function deleteStudentRequest() {}
 
 async function getAllSPL(studentId, options) {
-    const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
+    // with supervisor if exist
+    const spls = await SPLRepository.findAllSPLOfStudentWithSupervisor(studentId, options);
     return spls;
 }
 
 async function getCurrentSPL(studentId) {
-    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    // with supervisor if exist
+    const spl = await SPLRepository.findCurrentSPLOfStudentWithSupervisor(studentId);
     return spl;
 }
 
-async function assignSupervisorToStudent(studentId, data) {
+async function assignSupervisor(studentId, data) {
     const { splId, teacherEmail } = data;
 
-    const supervisor = await SupervisorRepository.isStudentSupervisorExist(studentId, splId);
+    const supervisor = await StudentRepository.isSupervisorExist(studentId, splId);
     if (supervisor) throw new CustomError("Already have supervisor for this spl", 400);
 
     // only 2nd and 4th year student supervisor (for 3rd year student add supervisor of team)
-    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
-    if (!spl || spl.splId != splId) throw new CustomError("Student is not assigned to this spl", 400);
+    const spl = await SPLRepository.findById(splId);
+    if (!spl) throw new CustomError("SPL does not exist", 400);
 
+    // assign same supervisor to team members also while assigning to team [for query simplicity]
     if (spl.splName == "spl2") throw new CustomError("Not allowed to add student supervisor for spl2");
 
+    const underSpl = StudentRepository.isStudentUnderSPL(studentId, splId);
+    if (!underSpl) throw new CustomError("Student not under spl", 400);
+
     const teacher = await TeacherRepository.findByEmail(teacherEmail, { available: true });
-    console.log(teacher);
     if (!teacher) throw new CustomError("Teacher does not exist", 400);
 
     const teacherId = teacher.userId;
-    await SupervisorRepository.create(studentId, teacherId, splId);
+    await StudentRepository.addSupervisor(studentId, teacherId, splId);
 
-    await SupervisorRepository.deleteAllStudentRequest(studentId);
+    await SupervisorRequestRepository.deleteAllStudentRequest(studentId);
 }
 
 async function getAllTeam(studentId) {
@@ -208,6 +211,8 @@ async function getCurrentTeam(studentId) {
     return team;
 }
 
+async function getAllSupervisor(studentId) {}
+
 export default {
     createStudent,
     getStudent,
@@ -217,7 +222,7 @@ export default {
     deleteStudentRequest,
     getAllSPL,
     getCurrentSPL,
-    assignSupervisorToStudent,
+    assignSupervisor,
     getAllTeam,
     getCurrentTeam,
 };

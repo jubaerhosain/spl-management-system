@@ -34,7 +34,6 @@ import SupervisorRequest from "../models/SupervisorRequest.js";
 import OTP from "../models/OTP.js";
 
 // junction tables
-import Supervisor from "../models/Supervisor.js";
 import ProjectContributor from "../models/ProjectContributor.js";
 import StudentSPL from "../models/StudentSPL.js";
 import TeamMember from "../models/TeamMember.js";
@@ -64,7 +63,6 @@ const models = {
     // junctions
     TeamMember: TeamMember(options),
     ProjectContributor: ProjectContributor(options),
-    Supervisor: Supervisor(options),
     StudentSPL: StudentSPL(options),
     PresentationEvaluator: PresentationEvaluator(options),
     CommitteeMember: CommitteeMember(options),

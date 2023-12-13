@@ -1,7 +1,7 @@
 import passwordUtils from "../utils/passwordUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
-import SupervisorRepository from "../repositories/SupervisorRepository.js";
+import SupervisorRequestRepository from "../repositories/SupervisorRequestRepository.js";
 import emailUtils from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import CustomError from "../utils/CustomError.js";
@@ -91,7 +91,7 @@ async function getAllTeacher(options) {
 }
 
 async function getAllSupervisorRequest(teacherId) {
-    const requests = await SupervisorRepository.findAllSupervisorRequest(teacherId);
+    const requests = await SupervisorRequestRepository.findAllSupervisorRequest(teacherId);
     return requests;
 }
 

@@ -247,7 +247,7 @@ async function getCurrentSPL(req, res) {
     }
 }
 
-async function assignSupervisorToStudent(req, res) {
+async function assignSupervisor(req, res) {
     try {
         const schema = Joi.object({
             splId: Joi.string().trim().uuid().required(),
@@ -257,7 +257,7 @@ async function assignSupervisorToStudent(req, res) {
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         const { studentId } = req.params;
-        await studentService.assignSupervisorToStudent(studentId, req.body);
+        await studentService.assignSupervisor(studentId, req.body);
 
         res.json(GenericResponse.success("Supervisor assigned successfully"));
     } catch (err) {
@@ -265,12 +265,27 @@ async function assignSupervisorToStudent(req, res) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
         } else {
             console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred while assigning supervisor"));
+            res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
 }
 async function getCurrentSupervisor(req, res) {}
-async function getAllSupervisor(req, res) {}
+async function getAllSupervisor(req, res) {
+    try {
+        const { studentId } = req.params;
+        // with spl data
+        const supervisors = await studentService.getAllSupervisor(studentId);
+
+        res.json(GenericResponse.success("Supervisors are retrieved successfully", supervisors));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function getAllTeam(req, res) {
     try {
@@ -312,7 +327,7 @@ export default {
     deleteStudentRequest,
     getAllSPL,
     getCurrentSPL,
-    assignSupervisorToStudent,
+    assignSupervisor,
     getAllSupervisor,
     getCurrentSupervisor,
     getAllTeam,

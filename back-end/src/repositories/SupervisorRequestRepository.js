@@ -1,11 +1,11 @@
 import { sequelize, models, Op } from "../configs/mysql.js";
 import utils from "../utils/utils.js";
 
-// Supervisor + Supervisor request related
-
-async function create(studentId, teacherId, splId) {
-    await models.Supervisor.create({ studentId, teacherId, splId });
+async function findAllSupervisor(studentId) {
+    // with spl data
 }
+
+async function findCurrentSupervisor(studentId, splId) {} 
 
 async function createStudentRequest(studentId, teacherId, splId) {
     await models.SupervisorRequest.create({ studentId, teacherId, splId });
@@ -67,13 +67,6 @@ async function findAllSupervisorRequest(teacherId) {
     return requests;
 }
 
-async function isStudentSupervisorExist(studentId, splId) {
-    const supervisor = await models.Supervisor.findOne({ where: { studentId, splId }, raw: true });
-    return supervisor ? true : false;
-}
-
-async function isTeamSupervisorExist(teamId, splId) {}
-
 async function isStudentRequestSent(studentId, teacherId) {
     const request = await models.SupervisorRequest.findOne({ where: { studentId, teacherId } });
     return request ? true : false;
@@ -85,7 +78,7 @@ async function isTeamRequestSent(teamId, teacherId) {
 }
 
 export default {
-    create,
+    // request related
     createStudentRequest,
     deleteAllStudentRequest,
     createTeamRequest,
@@ -93,8 +86,6 @@ export default {
     findAllSupervisorRequest,
 
     // utility methods
-    isStudentSupervisorExist,
-    isTeamSupervisorExist,
     isStudentRequestSent,
     isTeamRequestSent,
 };

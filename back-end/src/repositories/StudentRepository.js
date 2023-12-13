@@ -272,7 +272,19 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
     return students.map((student) => student.studentId);
 }
 
-async function isStudentUnderSPL(splId) {}
+async function isStudentUnderSPL(studentId, splId) {
+    const studentSpl = await models.StudentSPL.findOne({ where: { studentId, splId } });
+    return studentSpl ? true : false;
+}
+
+async function addSupervisor(studentId, teacherId, splId) {
+    await models.StudentSPL.update({ teacherId }, { where: { studentId, splId } });
+}
+
+async function isSupervisorExist(studentId, splId) {
+    const supervisor = await models.StudentSPL.findOne({ where: { studentId, splId }, raw: true });
+    return supervisor?.teacherId ? true : false;
+}
 
 export default {
     create,
@@ -282,6 +294,7 @@ export default {
     findAll,
     findAllStudentUnderSPL,
     findAllStudentNotUnderSPL,
+    addSupervisor,
 
     // utility methods
     isRollNoExist,
@@ -291,4 +304,5 @@ export default {
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
     isStudentUnderSPL,
+    isSupervisorExist,
 };

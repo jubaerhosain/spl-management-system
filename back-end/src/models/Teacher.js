@@ -56,7 +56,7 @@ export default (options) => {
         // Student - Teacher [many to many] as Supervisor
         Teacher.belongsToMany(models.Student, {
             as: "SupervisedStudents",
-            through: models.Supervisor,
+            through: models.StudentSPL,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",

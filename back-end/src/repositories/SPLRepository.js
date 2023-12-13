@@ -49,11 +49,7 @@ async function assignStudentAndCreateSPLMark(splId, studentIds) {
 
         await models.StudentSPL.bulkCreate(studentId_splId, { transaction });
 
-        const splMarks = studentIds.map((studentId) => ({
-            splId,
-            studentId,
-        }));
-        await models.SPLMark.bulkCreate(splMarks, { transaction });
+        await models.SPLMark.bulkCreate(studentId_splId, { transaction });
 
         await transaction.commit();
     } catch (error) {
@@ -78,45 +74,109 @@ async function update(splId, spl) {
 
 async function remove(splId) {}
 
-async function findCurrentSPLOfStudent(studentId) {
+async function findCurrentSPLOfStudentWithSupervisor(studentId) {
     const spl = await models.Student.findOne({
-        include: {
-            model: models.SPL,
-            where: { active: true },
-            through: {
-                model: models.StudentSPL,
-                attributes: [],
+        include: [
+            {
+                model: models.SPL,
+                where: {
+                    active: true,
+                },
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
             },
-        },
+            {
+                model: models.Teacher,
+                as: "Supervisors",
+                include: {
+                    model: models.User,
+                },
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                attributes: {
+                    exclude: ["teacherId"],
+                },
+            },
+        ],
         raw: true,
         nest: true,
         attributes: [],
         where: { studentId },
     });
-    return spl?.SPLs;
+
+    if (!spl) return null;
+
+    const tmpSpl = spl.SPLs;
+    const supervisor = spl.Supervisors;
+    let user = supervisor.User;
+    delete supervisor.User;
+    user = {
+        ...user,
+        ...supervisor,
+    };
+
+    return {
+        ...tmpSpl,
+        Supervisor: user,
+    };
 }
 
-async function findAllSPLOfStudent(studentId, options) {
+async function findAllSPLOfStudentWithSupervisor(studentId, options) {
     const splOptions = {};
     if (options?.active) splOptions.active = 1;
     if (options?.splName) splOptions.splName = options.splName;
 
     const spls = await models.Student.findAll({
-        include: {
-            model: models.SPL,
-            where: splOptions,
-            through: {
-                model: models.StudentSPL,
-                attributes: [],
+        include: [
+            {
+                model: models.SPL,
+                where: splOptions,
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
             },
-        },
+            {
+                model: models.Teacher,
+                as: "Supervisors",
+                include: {
+                    model: models.User,
+                },
+                through: {
+                    model: models.StudentSPL,
+                    attributes: [],
+                },
+                attributes: {
+                    exclude: ["teacherId"],
+                },
+            },
+        ],
         raw: true,
         nest: true,
         attributes: [],
         where: { studentId },
     });
+
     if (!spls) return [];
-    return spls.map((spl) => spl.SPLs);
+
+    return spls.map((spl) => {
+        const tmpSpl = spl.SPLs;
+        const supervisor = spl.Supervisors;
+        let user = supervisor.User;
+        delete supervisor.User;
+        user = {
+            ...user,
+            ...supervisor,
+        };
+        return {
+            ...tmpSpl,
+            Supervisor: user,
+        };
+    });
 }
 
 export default {
@@ -126,8 +186,8 @@ export default {
     findAll,
     remove,
     assignStudentAndCreateSPLMark,
-    findAllSPLOfStudent,
-    findCurrentSPLOfStudent,
+    findAllSPLOfStudentWithSupervisor,
+    findCurrentSPLOfStudentWithSupervisor,
     findSPLByNameAndYear,
     // isSupervisorRandomized,
     // removeStudentFromSPL,

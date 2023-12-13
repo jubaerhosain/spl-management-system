@@ -19,6 +19,15 @@ export default (options) => {
                 key: "studentId",
             },
         },
+        teacherId: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            references: {
+                model: "Teachers",
+                key: "teacherId",
+            },
+            comment: "Supervisor",
+        },
     });
 
     return StudentSPL;
