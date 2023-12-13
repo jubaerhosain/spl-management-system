@@ -11,7 +11,13 @@ async function createStudentRequest(studentId, teacherId, splId) {
     await models.SupervisorRequest.create({ studentId, teacherId, splId });
 }
 
+async function deleteAllStudentRequest(studentId) {
+    await models.SupervisorRequest.destroy({ where: { studentId } });
+}
+
 async function createTeamRequest(teamId, teacherId, splId) {}
+
+async function deleteAllTeamRequest(teamId) {}
 
 async function findAllSupervisorRequest(teacherId) {
     let requests = await models.SupervisorRequest.findAll({
@@ -81,7 +87,9 @@ async function isTeamRequestSent(teamId, teacherId) {
 export default {
     create,
     createStudentRequest,
+    deleteAllStudentRequest,
     createTeamRequest,
+    deleteAllTeamRequest,
     findAllSupervisorRequest,
 
     // utility methods

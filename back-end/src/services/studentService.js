@@ -165,35 +165,47 @@ async function requestTeacher(studentId, teacherId) {
 async function deleteStudentRequest() {}
 
 async function getAllSPL(studentId, options) {
-    if (options?.active) {
-        const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
-        return spl;
-    }
     const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
     return spls;
 }
 
-async function assignSupervisorToStudent(splId, studentId, teacherId) {
-    const supervisor = await StudentRepository.findSupervisorId(studentId, splId);
-    if (supervisor) throw new CustomError("Already have supervisor for this spl", 400);
-
-    const spl = await SPLRepository.findCurrentActiveSPL(studentId);
-    if (!spl) throw new CustomError("Student is not assigned to this spl", 400);
-
-    const availableTeacher = await TeacherRepository.findAvailableTeacher(teacherId);
-    if (!availableTeacher) throw new CustomError("Teacher is not available to be supervisor", 400);
-
-    await SupervisorRepository.create(studentId, teacherId, splId);
+async function getCurrentSPL(studentId) {
+    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    return spl;
 }
 
-async function getAllTeam(studentId, options) {
-    if (options?.current) {
-        const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
-        delete options.current;
-        if (currentSPL) options.splId = currentSPL.splId;
-    }
-    const teams = await TeamRepository.findAllTeamOfStudent(studentId, options);
+async function assignSupervisorToStudent(studentId, data) {
+    const { splId, teacherEmail } = data;
+
+    const supervisor = await SupervisorRepository.isStudentSupervisorExist(studentId, splId);
+    if (supervisor) throw new CustomError("Already have supervisor for this spl", 400);
+
+    // only 2nd and 4th year student supervisor (for 3rd year student add supervisor of team)
+    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    if (!spl || spl.splId != splId) throw new CustomError("Student is not assigned to this spl", 400);
+
+    if (spl.splName == "spl2") throw new CustomError("Not allowed to add student supervisor for spl2");
+
+    const teacher = await TeacherRepository.findByEmail(teacherEmail, { available: true });
+    console.log(teacher);
+    if (!teacher) throw new CustomError("Teacher does not exist", 400);
+
+    const teacherId = teacher.userId;
+    await SupervisorRepository.create(studentId, teacherId, splId);
+
+    await SupervisorRepository.deleteAllStudentRequest(studentId);
+}
+
+async function getAllTeam(studentId) {
+    const teams = await TeamRepository.findAllTeamOfStudent(studentId);
     return teams;
+}
+
+async function getCurrentTeam(studentId) {
+    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    if (!spl) throw new CustomError("Not assigned to any active spl", 400);
+    const team = await TeamRepository.findCurrentTeamOfStudent(studentId, spl.splId);
+    return team;
 }
 
 export default {
@@ -204,6 +216,8 @@ export default {
     requestTeacher,
     deleteStudentRequest,
     getAllSPL,
+    getCurrentSPL,
     assignSupervisorToStudent,
     getAllTeam,
+    getCurrentTeam,
 };

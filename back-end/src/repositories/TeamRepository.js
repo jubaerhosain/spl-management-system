@@ -87,19 +87,21 @@ async function findAllTeamMemberUnderSPL(splId) {
 
 async function createTeamRequest(teamId, teacherId, splId) {}
 
-async function findAllTeamOfStudent(studentId, options) {
-    const teamOptions = {};
-    if(options?.splId) teamOptions.splId = options.splId;
+async function findAllTeamOfStudent(studentId) {
     // including all team members
 }
 
+async function findCurrentTeamOfStudent(studentId, splId) {
+    // including team members
+}
 
 export default {
     create,
     findById,
     update,
-    // createTeamRequest,
+    // createTeamRequest, // move supervisor repository
     // findAllTeamUnderSPL, // with team members
     findAllTeamOfStudent,
+    findCurrentTeamOfStudent,
     // findAllTeamMemberUnderSPL,
 };

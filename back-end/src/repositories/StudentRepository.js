@@ -32,13 +32,36 @@ async function findById(studentId) {
         },
     });
 
-    let flattened = {};
-    if (student) {
-        flattened = { ...student, ...student.User };
-        delete flattened.User;
-        delete flattened.password;
-    }
+    if (!student) return null;
 
+    const flattened = { ...student, ...student.User };
+    delete flattened.User;
+    delete flattened.password;
+    return flattened;
+}
+
+async function findByEmail(email) {
+    const student = await models.Student.findOne({
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
+                email: email,
+            },
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["studentId"],
+        },
+    });
+
+    if (!student) return null;
+
+    const flattened = { ...student, ...student.User };
+    delete flattened.User;
+    delete flattened.password;
     return flattened;
 }
 
@@ -249,10 +272,13 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
     return students.map((student) => student.studentId);
 }
 
+async function isStudentUnderSPL(splId) {}
+
 export default {
     create,
     update,
     findById,
+    findByEmail,
     findAll,
     findAllStudentUnderSPL,
     findAllStudentNotUnderSPL,
@@ -264,4 +290,5 @@ export default {
     findAllStudentIdUnderSupervisor,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
+    isStudentUnderSPL,
 };

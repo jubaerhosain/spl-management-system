@@ -17,11 +17,11 @@ async function create(teachers) {
     }
 }
 
-async function findById(userId, options) {
+async function findById(teacherId, options) {
     const teacherOptions = {};
     if (options?.available) teacherOptions.available = 1;
 
-    const teacher = await models.Teacher.findByPk(userId, {
+    const teacher = await models.Teacher.findByPk(teacherId, {
         include: {
             model: models.User,
             required: true,
@@ -39,12 +39,39 @@ async function findById(userId, options) {
 
     if (!teacher) return null;
 
-    let flattened = {};
-    if (teacher) {
-        flattened = { ...teacher, ...teacher.User };
-        delete flattened.User;
-        delete flattened.password;
-    }
+    const flattened = { ...teacher, ...teacher.User };
+    delete flattened.User;
+    delete flattened.password;
+
+    return flattened;
+}
+
+async function findByEmail(email, options) {
+    const teacherOptions = {};
+    if (options?.available) teacherOptions.available = 1;
+
+    const teacher = await models.Teacher.findOne({
+        include: {
+            model: models.User,
+            required: true,
+            where: {
+                active: true,
+                email,
+            },
+        },
+        raw: true,
+        nest: true,
+        attributes: {
+            exclude: ["teacherId"],
+        },
+        where: teacherOptions,
+    });
+
+    if (!teacher) return null;
+
+    const flattened = { ...teacher, ...teacher.User };
+    delete flattened.User;
+    delete flattened.password;
 
     return flattened;
 }
@@ -187,6 +214,7 @@ async function update(teacherId, teacher) {
 export default {
     create,
     findById,
+    findByEmail,
     update,
     findAll,
     findAllWithRequestedFlag,

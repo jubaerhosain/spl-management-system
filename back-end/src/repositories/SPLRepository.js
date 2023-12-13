@@ -93,7 +93,7 @@ async function findCurrentSPLOfStudent(studentId) {
         attributes: [],
         where: { studentId },
     });
-    return spl.SPLs;
+    return spl?.SPLs;
 }
 
 async function findAllSPLOfStudent(studentId, options) {
