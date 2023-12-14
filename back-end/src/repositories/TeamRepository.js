@@ -1,4 +1,5 @@
 import { models, sequelize, Op } from "../configs/mysql.js";
+import utils from "../utils/utils.js";
 
 /**
  * Create one or more teams
@@ -141,11 +142,38 @@ async function findAllTeamOfStudent(studentId, options) {
         nest: true,
     });
 
-    console.log(teams);
+    const processed = {};
+    const mergedTeams = [];
+    let index = 1;
+    teams.forEach((team) => {
+        if (processed[team.teamId]) {
+            const inx = processed[team.teamId];
+            let student = team.Students;
+            delete student.Students;
+            let user = student.User;
+            delete student.User;
+            mergedTeams[inx - 1].teamMembers.push({ ...student, ...user });
+        } else {
+            processed[team.teamId] = index++;
+            let student = team.Students;
+            let user = student.User;
+            delete student.User;
+            team.teamMembers = [{ ...student, ...user }];
+            delete team.Students;
 
-    // merge team members for same team
+            if (team.Supervisor) {
+                let teacher = team.Supervisor;
+                let user = teacher.User;
+                delete teacher.User;
+                team.Supervisor = { ...teacher, ...user };
+                if (utils.areAllKeysNull(team.Supervisor)) delete team.Supervisor;
+            }
 
-    return teams;
+            mergedTeams.push(team);
+        }
+    });
+
+    return mergedTeams;
 }
 
 async function findCurrentTeamOfStudent(studentId, splId) {
