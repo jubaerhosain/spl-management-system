@@ -214,6 +214,7 @@ async function getAllSPL(req, res) {
         const schema = Joi.object({
             active: Joi.boolean().optional(),
             splName: Joi.string().trim().custom(validateSPLName).optional(),
+            supervisor: Joi.boolean().optional(),
         });
         const { error } = schema.validate(req.query);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
@@ -222,21 +223,6 @@ async function getAllSPL(req, res) {
         const options = req.query;
         const spls = await studentService.getAllSPL(studentId, options);
         res.json(GenericResponse.success("SPLs retrieved successfully", spls));
-    } catch (err) {
-        if (err instanceof CustomError) {
-            res.status(err.status).json(GenericResponse.error(err.message, err.data));
-        } else {
-            console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred"));
-        }
-    }
-}
-
-async function getCurrentSPL(req, res) {
-    try {
-        const { studentId } = req.params;
-        const spls = await studentService.getCurrentSPL(studentId);
-        res.json(GenericResponse.success("SPL retrieved successfully", spls));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -269,28 +255,21 @@ async function assignSupervisor(req, res) {
         }
     }
 }
-async function getCurrentSupervisor(req, res) {}
-async function getAllSupervisor(req, res) {
-    try {
-        const { studentId } = req.params;
-        // with spl data
-        const supervisors = await studentService.getAllSupervisor(studentId);
 
-        res.json(GenericResponse.success("Supervisors are retrieved successfully", supervisors));
-    } catch (err) {
-        if (err instanceof CustomError) {
-            res.status(err.status).json(GenericResponse.error(err.message, err.data));
-        } else {
-            console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred"));
-        }
-    }
-}
+async function removeSupervisor(req, res) {}
 
 async function getAllTeam(req, res) {
     try {
+        // (with team member, spl, project -> optional)
+        const schema = Joi.object({
+            project: Joi.boolean().optional(),
+        });
+        const {error} = schema.validate(req.query);
+        if(error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
         const { studentId } = req.params;
-        const teams = await studentService.getAllTeam(studentId);
+        const options = req.query;
+        const teams = await studentService.getAllTeam(studentId, options);
         res.json(GenericResponse.success("Teams are retrieved successfully", teams));
     } catch (err) {
         if (err instanceof CustomError) {
@@ -302,20 +281,7 @@ async function getAllTeam(req, res) {
     }
 }
 
-async function getCurrentTeam(req, res) {
-    try {
-        const { studentId } = req.params;
-        const teams = await studentService.getCurrentTeam(studentId);
-        res.json(GenericResponse.success("Team retrieved successfully", teams));
-    } catch (err) {
-        if (err instanceof CustomError) {
-            res.status(err.status).json(GenericResponse.error(err.message, err.data));
-        } else {
-            console.log(err);
-            res.status(500).json(GenericResponse.error("An error occurred"));
-        }
-    }
-}
+async function getAllProject(req, res) {}
 
 export default {
     createStudent,
@@ -326,10 +292,8 @@ export default {
     requestTeacher,
     deleteStudentRequest,
     getAllSPL,
-    getCurrentSPL,
     assignSupervisor,
-    getAllSupervisor,
-    getCurrentSupervisor,
+    removeSupervisor,
     getAllTeam,
-    getCurrentTeam,
+    getAllProject,
 };

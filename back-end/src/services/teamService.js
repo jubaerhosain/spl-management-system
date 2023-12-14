@@ -41,15 +41,14 @@ async function createTeam(data) {
         if (!utils.isObjectEmpty(errors)) return errors;
         return null;
     };
-
     let error = await validateAssignedToSPL(teams, splId);
     if (error) throw new CustomError("Must be assigned to this spl", 400, error);
 
-    const allTeamMembers = await TeamRepository.findAllTeamMemberUnderSPL(splId);
+    const allTeamMemberEmails = await TeamRepository.findAllTeamMemberEmailUnderSPL(splId);
     const validateAnotherTeamMember = async (teams, splId) => {
         const isAnotherTeamMember = (email) => {
-            for (const student of allTeamMembers) {
-                if (student.email == email) return true;
+            for (const memberEmail of allTeamMemberEmails) {
+                if (memberEmail == email) return true;
             }
             return false;
         };
@@ -69,14 +68,13 @@ async function createTeam(data) {
         if (!utils.isObjectEmpty(errors)) return errors;
         return null;
     };
-
     error = await validateAnotherTeamMember(teams, splId);
     if (error) throw new CustomError("Must not be member of another team of same spl", 400, error);
 
     // normalize team data to create by a single query
     const findStudentId = (assignedStudents, email) => {
         for (const student of assignedStudents) {
-            if (student.email == email) return student.studentId;
+            if (student.email == email) return student.userId;
         }
     };
 
@@ -100,7 +98,7 @@ async function createTeam(data) {
         newTeams.push(temp);
     });
 
-    await TeamRepository.createTeam(newTeams);
+    await TeamRepository.create(newTeams);
 
     const notifications = [];
     teams.forEach((team) => {
@@ -117,9 +115,7 @@ async function createTeam(data) {
     await NotificationRepository.createMultipleNotification(notifications);
 }
 
-async function updateTeam(teamId, team) {
-    
-}
+async function updateTeam(teamId, team) {}
 
 async function requestTeacher(teamId, teacherId) {
     const team = await TeamRepository.findById(teamId);

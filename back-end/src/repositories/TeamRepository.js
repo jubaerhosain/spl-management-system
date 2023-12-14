@@ -95,6 +95,42 @@ async function findCurrentTeamOfStudent(studentId, splId) {
     // including team members
 }
 
+async function findAllTeamMemberEmailUnderSPL(splId) {
+    const students = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+                where: {
+                    active: true,
+                },
+                attributes: ["email"],
+                required: true,
+            },
+            {
+                model: models.Team,
+                through: {
+                    model: models.TeamMember,
+                    attributes: [],
+                },
+                where: {
+                    splId: splId,
+                },
+                attributes: [],
+                required: true,
+            },
+        ],
+        raw: true,
+        nest: true,
+        attributes: [],
+    });
+
+    if (students.length == 0) return [];
+
+    return students.map((student) => {
+        return student?.User?.email;
+    });
+}
+
 export default {
     create,
     findById,
@@ -104,4 +140,7 @@ export default {
     findAllTeamOfStudent,
     findCurrentTeamOfStudent,
     // findAllTeamMemberUnderSPL,
+
+    // utility methods
+    findAllTeamMemberEmailUnderSPL,
 };

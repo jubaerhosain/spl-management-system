@@ -300,7 +300,7 @@ export default {
     isRollNoExist,
     isRegistrationNoExist,
     findAllStudentIdUnderSPL,
-    findAllStudentIdUnderSupervisor,
+    // findAllStudentIdUnderSupervisor,
     findAllExistedRollNo,
     findAllExistedRegistrationNo,
     isStudentUnderSPL,
