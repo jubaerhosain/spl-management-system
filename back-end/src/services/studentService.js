@@ -200,7 +200,10 @@ async function getAllTeam(studentId, options) {
     return teams;
 }
 
-async function getAllProject(studentId) {}
+async function getAllProject(studentId) {
+    const projects = await ProjectRepository.findAllProjectOfStudent(studentId);
+    return projects;
+}
 
 async function getCurrentProgress(studentId) {
     const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
@@ -221,5 +224,6 @@ export default {
     assignSupervisor,
     removeSupervisor,
     getAllTeam,
+    getAllProject,
     getCurrentProgress,
 };

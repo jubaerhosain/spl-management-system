@@ -89,6 +89,10 @@ async function findAllTeamMemberUnderSPL(splId) {
 async function createTeamRequest(teamId, teacherId, splId) {}
 
 async function findAllTeamOfStudent(studentId, options) {
+    const studentTeams = await models.TeamMember.findAll({ where: { studentId } });
+    if (studentTeams.length == 0) return [];
+    const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
+
     // include all team members
     const includes = [
         {
@@ -127,10 +131,6 @@ async function findAllTeamOfStudent(studentId, options) {
         includes.push(includeSPL);
     }
 
-    const studentTeams = await models.TeamMember.findAll({ where: { studentId } });
-    if (studentTeams.length == 0) return [];
-
-    const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
     const teams = await models.Team.findAll({
         include: includes,
         where: {
@@ -142,30 +142,23 @@ async function findAllTeamOfStudent(studentId, options) {
         nest: true,
     });
 
+    // merge teams
+    let index = 1;
     const processed = {};
     const mergedTeams = [];
-    let index = 1;
     teams.forEach((team) => {
         if (processed[team.teamId]) {
             const inx = processed[team.teamId];
-            let student = team.Students;
-            delete student.Students;
-            let user = student.User;
-            delete student.User;
-            mergedTeams[inx - 1].teamMembers.push({ ...student, ...user });
+            const student = utils.normalizeUserInclude(team.Students);
+            delete team.Students;
+            mergedTeams[inx - 1].teamMembers.push(student);
         } else {
             processed[team.teamId] = index++;
-            let student = team.Students;
-            let user = student.User;
-            delete student.User;
-            team.teamMembers = [{ ...student, ...user }];
+            const student = utils.normalizeUserInclude(team.Students);
             delete team.Students;
-
+            team.teamMembers = [student];
             if (team.Supervisor) {
-                let teacher = team.Supervisor;
-                let user = teacher.User;
-                delete teacher.User;
-                team.Supervisor = { ...teacher, ...user };
+                team.Supervisor = utils.normalizeUserInclude(team.Supervisor);
                 if (utils.areAllKeysNull(team.Supervisor)) delete team.Supervisor;
             }
 
