@@ -260,8 +260,9 @@ async function removeSupervisor(req, res) {}
 
 async function getAllTeam(req, res) {
     try {
-        // (with team member, spl, project -> optional)
         const schema = Joi.object({
+            spl: Joi.boolean().optional(),
+            supervisor: Joi.boolean().optional(),
             project: Joi.boolean().optional(),
         });
         const {error} = schema.validate(req.query);

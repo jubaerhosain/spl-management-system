@@ -87,8 +87,65 @@ async function findAllTeamMemberUnderSPL(splId) {
 
 async function createTeamRequest(teamId, teacherId, splId) {}
 
-async function findAllTeamOfStudent(studentId) {
-    // including all team members
+async function findAllTeamOfStudent(studentId, options) {
+    // include all team members
+    const includes = [
+        {
+            model: models.Student,
+            include: {
+                model: models.User,
+            },
+            through: {
+                model: models.TeamMember,
+                attributes: [],
+            },
+            attributes: {
+                exclude: ["studentId"],
+            },
+        },
+    ];
+
+    if (options?.supervisor) {
+        const includeSupervisor = {
+            model: models.Teacher,
+            include: {
+                model: models.User,
+            },
+            as: "Supervisor",
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        };
+        includes.push(includeSupervisor);
+    }
+
+    if (options?.spl) {
+        const includeSPL = {
+            model: models.SPL,
+        };
+        includes.push(includeSPL);
+    }
+
+    const studentTeams = await models.TeamMember.findAll({ where: { studentId } });
+    if (studentTeams.length == 0) return [];
+
+    const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
+    const teams = await models.Team.findAll({
+        include: includes,
+        where: {
+            teamId: {
+                [Op.in]: teamIds,
+            },
+        },
+        raw: true,
+        nest: true,
+    });
+
+    console.log(teams);
+
+    // merge team members for same team
+
+    return teams;
 }
 
 async function findCurrentTeamOfStudent(studentId, splId) {

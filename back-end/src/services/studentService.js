@@ -195,8 +195,6 @@ async function assignSupervisor(studentId, data) {
 async function removeSupervisor(studentId, supervisorId) {}
 
 async function getAllTeam(studentId, options) {
-    console.log(options);
-    // with project, members, spl
     const teams = await TeamRepository.findAllTeamOfStudent(studentId, options);
     return teams;
 }
