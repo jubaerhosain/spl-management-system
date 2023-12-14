@@ -292,8 +292,8 @@ async function getAllProject(req, res) {
 
         const { studentId } = req.params;
         const options = req.query;
-        const teams = await studentService.getAllProject(studentId, options);
-        res.json(GenericResponse.success("Projects are retrieved successfully", teams));
+        const projects = await studentService.getAllProject(studentId, options);
+        res.json(GenericResponse.success("Projects are retrieved successfully", projects));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -304,11 +304,11 @@ async function getAllProject(req, res) {
     }
 }
 
-async function getCurrentProjectWithProgress(req, res) {
+async function getCurrentProgress(req, res) {
     try {
         const { studentId } = req.params;
-        const teams = await studentService.getCurrentProjectWithProgress(studentId);
-        res.json(GenericResponse.success("Projects are retrieved successfully", teams));
+        const project = await studentService.getCurrentProgress(studentId);
+        res.json(GenericResponse.success("Progress retrieved successfully", project));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -332,5 +332,5 @@ export default {
     removeSupervisor,
     getAllTeam,
     getAllProject,
-    getCurrentProjectWithProgress,
+    getCurrentProgress,
 };

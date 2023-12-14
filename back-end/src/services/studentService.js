@@ -9,6 +9,7 @@ import emailService from "../utils/email/emailUtils.js";
 import fileUtils from "../utils/fileUtils.js";
 import utils from "../utils/utils.js";
 import SupervisorRequestRepository from "../repositories/SupervisorRequestRepository.js";
+import ProjectRepository from "../repositories/ProjectRepository.js";
 
 async function createStudent(students) {
     const validateExistence = async (students) => {
@@ -201,6 +202,14 @@ async function getAllTeam(studentId, options) {
 
 async function getAllProject(studentId) {}
 
+async function getCurrentProgress(studentId) {
+    const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
+    if(!currentSPL) throw new CustomError("Student does not belongs to any active spl", 400);
+    
+    const project = await ProjectRepository.findCurrentProgress(studentId, currentSPL.splId);
+    return project;
+}
+
 export default {
     createStudent,
     getStudent,
@@ -212,4 +221,5 @@ export default {
     assignSupervisor,
     removeSupervisor,
     getAllTeam,
+    getCurrentProgress,
 };
