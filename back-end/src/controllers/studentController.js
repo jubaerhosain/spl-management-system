@@ -281,7 +281,43 @@ async function getAllTeam(req, res) {
     }
 }
 
-async function getAllProject(req, res) {}
+async function getAllProject(req, res) {
+    try {
+        const schema = Joi.object({
+            spl: Joi.boolean().optional(),
+            supervisor: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const { studentId } = req.params;
+        const options = req.query;
+        const teams = await studentService.getAllProject(studentId, options);
+        res.json(GenericResponse.success("Projects are retrieved successfully", teams));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function getCurrentProjectWithProgress(req, res) {
+    try {
+        const { studentId } = req.params;
+        const teams = await studentService.getCurrentProjectWithProgress(studentId);
+        res.json(GenericResponse.success("Projects are retrieved successfully", teams));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 export default {
     createStudent,
@@ -296,4 +332,5 @@ export default {
     removeSupervisor,
     getAllTeam,
     getAllProject,
+    getCurrentProjectWithProgress,
 };

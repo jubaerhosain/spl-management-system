@@ -24,8 +24,9 @@ studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
 // routes related to team
 studentRoutes.get("/:studentId/team", studentController.getAllTeam);
 
-// routes related to project (spl, (team, teamMembers));
+// routes related to project
 studentRoutes.get("/:studentId/project", studentController.getAllProject);
+studentRoutes.get("/:studentId/project/current/progress", studentController.getCurrentProjectWithProgress); // for progress
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor", studentController.assignSupervisor);
