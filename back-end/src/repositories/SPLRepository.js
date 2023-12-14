@@ -74,34 +74,38 @@ async function update(splId, spl) {
 
 async function remove(splId) {}
 
-async function findCurrentSPLOfStudentWithSupervisor(studentId) {
+async function findCurrentSPLOfStudent(studentId, options) {
+    const includeSPL = {
+        model: models.SPL,
+        where: {
+            active: true,
+        },
+        through: {
+            model: models.StudentSPL,
+            attributes: [],
+        },
+    };
+
+    let includeSupervisor = null;
+    if (options?.supervisor) {
+        includeSupervisor = {
+            model: models.Teacher,
+            as: "Supervisors",
+            include: {
+                model: models.User,
+            },
+            through: {
+                model: models.StudentSPL,
+                attributes: [],
+            },
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        };
+    }
+
     const spl = await models.Student.findOne({
-        include: [
-            {
-                model: models.SPL,
-                where: {
-                    active: true,
-                },
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-            },
-            {
-                model: models.Teacher,
-                as: "Supervisors",
-                include: {
-                    model: models.User,
-                },
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                attributes: {
-                    exclude: ["teacherId"],
-                },
-            },
-        ],
+        include: includeSupervisor ? [includeSPL, includeSupervisor] : includeSPL,
         raw: true,
         nest: true,
         attributes: [],
@@ -109,6 +113,8 @@ async function findCurrentSPLOfStudentWithSupervisor(studentId) {
     });
 
     if (!spl) return null;
+
+    if (!includeSupervisor) return spl.SPLs;
 
     const tmpSpl = spl.SPLs;
     const supervisor = spl.Supervisors;
@@ -125,45 +131,50 @@ async function findCurrentSPLOfStudentWithSupervisor(studentId) {
     };
 }
 
-async function findAllSPLOfStudentWithSupervisor(studentId, options) {
+async function findAllSPLOfStudent(studentId, options) {
     const splOptions = {};
     if (options?.active) splOptions.active = 1;
     if (options?.splName) splOptions.splName = options.splName;
 
+    const includeSPL = {
+        model: models.SPL,
+        where: splOptions,
+        through: {
+            model: models.StudentSPL,
+            attributes: [],
+        },
+    };
+
+    let includeSupervisor = null;
+    if (options?.supervisor) {
+        includeSupervisor = {
+            model: models.Teacher,
+            as: "Supervisors",
+            include: {
+                model: models.User,
+            },
+            through: {
+                model: models.StudentSPL,
+                attributes: [],
+            },
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        };
+    }
+
     const spls = await models.Student.findAll({
-        include: [
-            {
-                model: models.SPL,
-                where: splOptions,
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-            },
-            {
-                model: models.Teacher,
-                as: "Supervisors",
-                include: {
-                    model: models.User,
-                },
-                through: {
-                    model: models.StudentSPL,
-                    attributes: [],
-                },
-                attributes: {
-                    exclude: ["teacherId"],
-                },
-            },
-        ],
+        include: includeSupervisor ? [includeSPL, includeSupervisor] : includeSPL,
         raw: true,
         nest: true,
         attributes: [],
         where: { studentId },
     });
 
-    if (!spls) return [];
+    if (!spls || spls.length == 0) return [];
 
     return spls.map((spl) => {
+        if (!includeSupervisor) return spl.SPLs;
         const tmpSpl = spl.SPLs;
         const supervisor = spl.Supervisors;
         let user = supervisor.User;
@@ -186,8 +197,8 @@ export default {
     findAll,
     remove,
     assignStudentAndCreateSPLMark,
-    findAllSPLOfStudentWithSupervisor,
-    findCurrentSPLOfStudentWithSupervisor,
+    findAllSPLOfStudent,
+    findCurrentSPLOfStudent,
     findSPLByNameAndYear,
     // isSupervisorRandomized,
     // removeStudentFromSPL,

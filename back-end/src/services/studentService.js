@@ -163,14 +163,12 @@ async function requestTeacher(studentId, teacherId) {
 async function deleteStudentRequest() {}
 
 async function getAllSPL(studentId, options) {
-    // with supervisor if exist
-    const spls = await SPLRepository.findAllSPLOfStudentWithSupervisor(studentId, options);
+    const spls = await SPLRepository.findAllSPLOfStudent(studentId, { ...options, supervisor: true });
     return spls;
 }
 
 async function getCurrentSPL(studentId) {
-    // with supervisor if exist
-    const spl = await SPLRepository.findCurrentSPLOfStudentWithSupervisor(studentId);
+    const spl = await SPLRepository.findCurrentSPLOfStudent(studentId, { supervisor: true });
     return spl;
 }
 
@@ -200,11 +198,13 @@ async function assignSupervisor(studentId, data) {
 }
 
 async function getAllTeam(studentId) {
+    // with project
     const teams = await TeamRepository.findAllTeamOfStudent(studentId);
     return teams;
 }
 
 async function getCurrentTeam(studentId) {
+    // with project
     const spl = await SPLRepository.findCurrentSPLOfStudent(studentId);
     if (!spl) throw new CustomError("Not assigned to any active spl", 400);
     const team = await TeamRepository.findCurrentTeamOfStudent(studentId, spl.splId);

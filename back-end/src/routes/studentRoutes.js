@@ -16,13 +16,13 @@ studentRoutes.put(
     },
     studentController.updateStudent
 );
-// studentRoutes.delete("/:studentId", checkAuthentication, isAdmin, deleteStudent);
+studentRoutes.delete("/:studentId", checkAuthentication, isAdmin);
 
-// routes related to spl
+// routes related to spl (with supervisor)
 studentRoutes.get("/:studentId/spl", studentController.getAllSPL);
 studentRoutes.get("/:studentId/spl/current", studentController.getCurrentSPL);
 
-// routes related to team
+// routes related to team (with team member, spl)
 studentRoutes.get("/:studentId/team", studentController.getAllTeam); 
 studentRoutes.get("/:studentId/team/current", studentController.getCurrentTeam); 
 
