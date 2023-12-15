@@ -2,10 +2,9 @@ import { models } from "../configs/mysql.js";
 import Project from "../models/Project.js";
 
 async function findAllProjectOfStudent(studentId, options) {
-    const studentProjects = await models.ProjectContributor.findAll({where: {studentId}, raw: true});
-    if(studentProjects.length == 0) return [];
+    const studentProjects = await models.ProjectContributor.findAll({ where: { studentId }, raw: true });
+    if (studentProjects.length == 0) return [];
     const projectIds = studentProjects.map((project) => project.projectId);
-    
 }
 
 async function findCurrentProgressOfStudent(studentId, splId) {
