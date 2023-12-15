@@ -34,7 +34,7 @@ import SupervisorRequest from "../models/SupervisorRequest.js";
 import OTP from "../models/OTP.js";
 
 // junction tables
-import ProjectContributor from "../models/ProjectContributor.js";
+import ProjectContributor from "../models/ProjectStudent.js";
 import StudentSPL from "../models/StudentSPL.js";
 import TeamMember from "../models/TeamMember.js";
 import PresentationEvaluator from "../models/PresentationEvaluator.js";

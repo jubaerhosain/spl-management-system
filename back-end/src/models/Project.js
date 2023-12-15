@@ -82,7 +82,8 @@ export default (options) => {
 
         // Student - Project [many to many]
         Project.belongsToMany(models.Student, {
-            through: models.ProjectContributor,
+            as: "ProjectContributor",
+            through: models.ProjectStudent,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "projectId",

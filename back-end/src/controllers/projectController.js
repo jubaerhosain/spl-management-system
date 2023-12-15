@@ -19,8 +19,8 @@ async function createProject(req, res) {
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Validation", error));
 
-        console.log(req.body);
-        await projectService.createProject(req.body);
+        const studentId = req.user?.userId ? req.user.userId : "2e9dd162-d495-4167-a66c-8aa96cba54db";
+        await projectService.createProject(studentId, req.body);
 
         return res.json(GenericResponse.success("Project created successfully"));
     } catch (err) {

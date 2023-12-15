@@ -2,7 +2,10 @@ import ProjectRepository from "../repositories/ProjectRepository.js";
 import CustomError from "../utils/CustomError.js";
 
 async function createProject(studentId, project) {
+    const splId = project.splId;
+    
     if (project.projectType == "individual") {
+
         await ProjectRepository.createIndividualProject();
     } else if (project.projectType == "team") {
         await ProjectRepository.createTeamProject();
@@ -11,4 +14,6 @@ async function createProject(studentId, project) {
     }
 }
 
-export default {};
+export default {
+    createProject
+};
