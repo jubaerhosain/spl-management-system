@@ -36,7 +36,7 @@ export default (options) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [["individual", "group"]],
+                isIn: [["individual", "team"]],
             },
         },
         github: {

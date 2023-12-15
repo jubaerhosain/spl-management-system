@@ -10,6 +10,7 @@ import splCommitteeRoutes from "./splCommitteeRoutes.js";
 import teamRoutes from "./teamRoutes.js";
 import presentationRoutes from "./presentationRoutes.js";
 import noticeRoutes from "./noticeRoutes.js";
+import projectRoutes from "./projectRoutes.js";
 
 apiRoutes.use("/auth", authRoutes);
 apiRoutes.use("/user", userRoutes);
@@ -20,5 +21,6 @@ apiRoutes.use("/committee", splCommitteeRoutes);
 apiRoutes.use("/team", teamRoutes);
 apiRoutes.use("/presentation", presentationRoutes);
 apiRoutes.use("/notice", noticeRoutes);
+apiRoutes.use("/project", projectRoutes);
 
 export default apiRoutes;

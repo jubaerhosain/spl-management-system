@@ -1,6 +1,9 @@
 import { models } from "../configs/mysql.js";
 import Project from "../models/Project.js";
 
+async function createIndividualProject() {}
+async function createTeamProject() {}
+
 async function findAllProjectOfStudent(studentId, options) {
     const studentProjects = await models.ProjectContributor.findAll({ where: { studentId }, raw: true });
     if (studentProjects.length == 0) return [];
@@ -49,6 +52,8 @@ async function findCurrentProgressOfStudent(studentId, splId) {
 }
 
 export default {
+    createIndividualProject,
+    createTeamProject,
     findAllProjectOfStudent,
     findCurrentProgressOfStudent,
 };
