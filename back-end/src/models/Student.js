@@ -63,7 +63,7 @@ export default (options) => {
 
         // Student - SPL [many to many]
         Student.belongsToMany(models.SPL, {
-            through: models.StudentSPL,
+            through: models.StudentSPL_Enrollment,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",
@@ -72,7 +72,7 @@ export default (options) => {
         // Student - Teacher [many to many]
         Student.belongsToMany(models.Teacher, {
             as: "Supervisors",
-            through: models.StudentSPL,
+            through: models.StudentSPL_Enrollment,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",
@@ -80,7 +80,7 @@ export default (options) => {
 
         // Student - Project [many to many]
         Student.belongsToMany(models.Project, {
-            through: models.ProjectStudent,
+            through: models.ProjectStudent_Contributor,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",
@@ -88,7 +88,7 @@ export default (options) => {
 
         // Team - Student [many to many]
         Student.belongsToMany(models.Team, {
-            through: models.TeamMember,
+            through: models.TeamStudent_Member,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "studentId",

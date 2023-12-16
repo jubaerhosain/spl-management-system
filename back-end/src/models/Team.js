@@ -53,15 +53,8 @@ export default (options) => {
 
         // Team - Student [many to many]
         Team.belongsToMany(models.Student, {
-            through: models.TeamMember,
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-            foreignKey: "teamId",
-        });
-
-        // Team - TeamMember [One to many]
-        Team.hasMany(models.TeamMember, {
-            as: "Members",
+            as: "TeamMembers",
+            through: models.TeamStudent_Member,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teamId",

@@ -23,7 +23,7 @@ export default (options) => {
                 model: "Teachers",
                 key: "teacherId",
             },
-            comment: "Supervisor for team members also have in the supervisors relationship, did intentionally",
+            comment: "Supervisor for team members also have in the StudentSPL relationship, did intentionally",
         },
         projectName: {
             type: DataTypes.STRING(40),
@@ -82,8 +82,8 @@ export default (options) => {
 
         // Student - Project [many to many]
         Project.belongsToMany(models.Student, {
-            as: "ProjectContributor",
-            through: models.ProjectStudent,
+            as: "ProjectContributors",
+            through: models.ProjectStudent_Contributor,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "projectId",

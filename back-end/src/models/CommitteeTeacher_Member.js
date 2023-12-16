@@ -2,24 +2,25 @@
 
 export default (options) => {
     const { sequelize, DataTypes } = options;
-    const PresentationEvaluator = sequelize.define("PresentationEvaluators", {
-        presentationId: {
+    const CommitteeTeacher_Member = sequelize.define("CommitteeTeacher_Members", {
+        committeeId: {
             type: DataTypes.UUID,
             primaryKey: true,
             references: {
-                model: "Presentations",
-                key: "presentationId",
+                model: "Committees",
+                key: "committeeId",
             },
         },
         teacherId: {
             type: DataTypes.UUID,
-            primaryKey: true,
+            allowNull: true,
             references: {
                 model: "Teachers",
                 key: "teacherId",
             },
+            comment: "Supervisor",
         },
     });
 
-    return PresentationEvaluator;
+    return CommitteeTeacher_Member;
 };

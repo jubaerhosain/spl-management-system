@@ -35,7 +35,8 @@ export default (options) => {
 
         // Presentation - Teacher [many to many]
         Presentation.belongsToMany(models.Teacher, {
-            through: models.PresentationEvaluator,
+            as: "PresentationEvaluators",
+            through: models.PresentationTeacher_Evaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "presentationId",

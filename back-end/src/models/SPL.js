@@ -8,13 +8,13 @@ export default (options) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
-        academicYear: {
-            type: DataTypes.STRING(8),
-            allowNull: false,
-            validate: {
-                is: /^[0-9]{4}$/,
+        splManager: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            references: {
+                model: "Teachers",
+                key: "teacherId",
             },
-            comment: "Academic year of SPL. Format: '2020'",
         },
         splName: {
             type: DataTypes.STRING(4),
@@ -22,6 +22,14 @@ export default (options) => {
             validate: {
                 isIn: [["spl1", "spl2", "spl3"]],
             },
+        },
+        academicYear: {
+            type: DataTypes.STRING(4),
+            allowNull: false,
+            validate: {
+                is: /^[0-9]{4}$/,
+            },
+            comment: "Academic year of SPL. Format: '2020'",
         },
         active: {
             type: DataTypes.BOOLEAN,
@@ -32,12 +40,27 @@ export default (options) => {
     });
 
     SPL.associate = (models) => {
+        // SPL - Committee
+        SPL.hasOne(models.Committee, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "committeeId",
+        });
+
         // Student - SPL [many to many]
         SPL.belongsToMany(models.Student, {
-            through: models.StudentSPL,
+            through: models.StudentSPL_Enrollment,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "splId",
+        });
+
+        // Teacher - SPL [one to many] as SPL Manager
+        SPL.belongsTo(models.Teacher, {
+            as: "SPLManager",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "splManager",
         });
 
         // SPL - Project [one to many]

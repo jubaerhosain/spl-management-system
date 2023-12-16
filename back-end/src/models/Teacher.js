@@ -29,25 +29,25 @@ export default (options) => {
             foreignKey: "teacherId",
         });
 
-        // Teacher - SPLCommittee [one to many] as SPL Manager
-        Teacher.hasMany(models.SPLCommittee, {
+        // Teacher - Committee [one to many] as SPL Manager
+        Teacher.hasMany(models.SPL, {
             as: "ManagedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "manager",
+            foreignKey: "splManager",
         });
 
-        // Teacher - SPLCommittee [one to many] as Committee Head
-        Teacher.hasMany(models.SPLCommittee, {
+        // Teacher - Committee [one to many] as Committee Head
+        Teacher.hasMany(models.Committee, {
             as: "LeadedSPLs",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "head",
+            foreignKey: "committeeHead",
         });
 
-        // Teacher - SPLCommittee [many to many]
-        Teacher.belongsToMany(models.SPLCommittee, {
-            through: models.CommitteeMember,
+        // Teacher - Committee [many to many]
+        Teacher.belongsToMany(models.Committee, {
+            through: models.CommitteeTeacher_Member,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -56,7 +56,7 @@ export default (options) => {
         // Student - Teacher [many to many] as Supervisor
         Teacher.belongsToMany(models.Student, {
             as: "SupervisedStudents",
-            through: models.StudentSPL,
+            through: models.StudentSPL_Enrollment,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
@@ -80,7 +80,7 @@ export default (options) => {
 
         // Presentation - Teacher [many to many] as Presentation Evaluator
         Teacher.belongsToMany(models.Presentation, {
-            through: models.PresentationEvaluator,
+            through: models.PresentationTeacher_Evaluator,
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",

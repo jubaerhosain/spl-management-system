@@ -20,52 +20,47 @@ const sequelize = new Sequelize(config.mysql.db_name, config.mysql.username, con
 import User from "../models/User.js";
 import Teacher from "../models/Teacher.js";
 import Student from "../models/Student.js";
+import StudentSPL_Enrollment from "../models/StudentSPL_Enrollment.js";
 import SPL from "../models/SPL.js";
-import SPLCommittee from "../models/SPLCommittee.js";
+import Committee from "../models/Committee.js";
+import CommitteeTeacher_Member from "../models/CommitteeTeacher_Member.js";
 import Team from "../models/Team.js";
+import TeamStudent_Member from "../models/TeamStudent_Member.js";
 import Project from "../models/Project.js";
+import ProjectStudent_Contributor from "../models/ProjectStudent_Contributor.js";
 import Notification from "../models/Notification.js";
 import Notice from "../models/Notice.js";
 import SPLMark from "../models/SPLMark.js";
 import Presentation from "../models/Presentation.js";
+import PresentationTeacher_Evaluator from "../models/PresentationTeacher_Evaluator.js";
 import PresentationMark from "../models/PresentationMark.js";
 import ContinuousMark from "../models/ContinuousMark.js";
 import SupervisorRequest from "../models/SupervisorRequest.js";
 import OTP from "../models/OTP.js";
 
-// junction tables
-import ProjectContributor from "../models/ProjectStudent.js";
-import StudentSPL from "../models/StudentSPL.js";
-import TeamMember from "../models/TeamMember.js";
-import PresentationEvaluator from "../models/PresentationEvaluator.js";
-import CommitteeMember from "../models/CommitteeMember.js";
-
 const options = { sequelize, DataTypes, Sequelize, Op };
 
 const models = {
-    // entity tables
     User: User(options),
-    Student: Student(options),
     Teacher: Teacher(options),
+    Student: Student(options),
+    StudentSPL_Enrollment: StudentSPL_Enrollment(options),
     SPL: SPL(options),
-    SPLCommittee: SPLCommittee(options),
-    SPLMark: SPLMark(options),
+    Committee: Committee(options),
+    CommitteeTeacher_Member: CommitteeTeacher_Member(options),
     Presentation: Presentation(options),
+    PresentationTeacher_Evaluator: PresentationTeacher_Evaluator(options),
+    SPLMark: SPLMark(options),
     PresentationMark: PresentationMark(options),
     ContinuousMark: ContinuousMark(options),
     Team: Team(options),
+    TeamStudent_Member: TeamStudent_Member(options),
     Project: Project(options),
+    ProjectStudent_Contributor: ProjectStudent_Contributor(options),
     Notification: Notification(options),
     Notice: Notice(options),
     OTP: OTP(options),
     SupervisorRequest: SupervisorRequest(options),
-    
-    // junctions
-    TeamMember: TeamMember(options),
-    ProjectContributor: ProjectContributor(options),
-    StudentSPL: StudentSPL(options),
-    PresentationEvaluator: PresentationEvaluator(options),
-    CommitteeMember: CommitteeMember(options),
 };
 
 // initialize associations
@@ -74,10 +69,6 @@ Object.entries(models).forEach(([name, model]) => {
         model.associate(models);
     }
 });
-
-// Object.entries(models).forEach(([name, model]) => {
-//     console.log(model.associations);
-// });
 
 console.log("Number of table: ", Object.keys(models).length);
 
@@ -92,7 +83,6 @@ export function initializeMySqlConnection() {
         .catch((err) => {
             console.error("Unable to connect to the database:", err);
         });
-
 }
 
 function dropAllTable() {
