@@ -5,7 +5,7 @@ async function findAllSupervisor(studentId) {
     // with spl data
 }
 
-async function findCurrentSupervisor(studentId, splId) {} 
+async function findCurrentSupervisor(studentId, splId) {}
 
 async function createStudentRequest(studentId, teacherId, splId) {
     await models.SupervisorRequest.create({ studentId, teacherId, splId });
@@ -17,7 +17,9 @@ async function deleteAllStudentRequest(studentId) {
 
 async function createTeamRequest(teamId, teacherId, splId) {}
 
-async function deleteAllTeamRequest(teamId) {}
+async function deleteAllTeamRequest(teamId) {
+    await models.SupervisorRequest.destroy({ where: { teamId } });
+}
 
 async function findAllSupervisorRequest(teacherId) {
     let requests = await models.SupervisorRequest.findAll({

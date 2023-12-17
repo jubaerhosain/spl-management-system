@@ -241,6 +241,37 @@ async function findAllTeamMemberEmailUnderSPL(splId) {
     });
 }
 
+async function isSupervisorExist(teamId) {
+    const team = await models.Team.findByPk(teamId, { raw: true });
+    return team.teacherId ? true : false;
+}
+
+/**
+ * Also add supervisor for individual team members
+ * @param {*} teamId
+ * @param {*} supervisorId
+ * @param {*} splId
+ * @param {Array} teamMemberIds
+ */
+async function addSupervisor(teamId, supervisorId, splId, teamMemberIds) {
+    const transaction = await sequelize.transaction();
+    try {
+        await models.Team.update({ teacherId: supervisorId }, { where: { teamId } }, { transaction });
+
+        const studentTeacher = teamMemberIds.map((studentId) => {
+            return { splId, studentId, teacherId: supervisorId };
+        });
+
+        await models.StudentTeacher_Supervisor.bulkCreate(studentTeacher, { transaction });
+
+        await transaction.commit();
+    } catch (err) {
+        await transaction.rollback();
+        console.log(err);
+        throw new Error("An error occurred while adding a supervisor");
+    }
+}
+
 export default {
     create,
     findById,
@@ -250,7 +281,9 @@ export default {
     findAllTeamOfStudent,
     findCurrentTeamOfStudent,
     // findAllTeamMemberUnderSPL,
+    addSupervisor,
 
     // utility methods
     findAllTeamMemberEmailUnderSPL,
+    isSupervisorExist,
 };

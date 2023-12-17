@@ -21,6 +21,7 @@ import User from "../models/User.js";
 import Teacher from "../models/Teacher.js";
 import Student from "../models/Student.js";
 import StudentSPL_Enrollment from "../models/StudentSPL_Enrollment.js";
+import StudentTeacher_Supervisor from "../models/StudentTeacher_Supervisor.js";
 import SPL from "../models/SPL.js";
 import Committee from "../models/Committee.js";
 import CommitteeTeacher_Member from "../models/CommitteeTeacher_Member.js";
@@ -45,6 +46,7 @@ const models = {
     Teacher: Teacher(options),
     Student: Student(options),
     StudentSPL_Enrollment: StudentSPL_Enrollment(options),
+    StudentTeacher_Supervisor: StudentTeacher_Supervisor(options),
     SPL: SPL(options),
     Committee: Committee(options),
     CommitteeTeacher_Member: CommitteeTeacher_Member(options),

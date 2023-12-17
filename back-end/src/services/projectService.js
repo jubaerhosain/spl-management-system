@@ -29,8 +29,8 @@ async function createProject(studentId, project) {
         const { teamId } = project;
         const teamMembers = await TeamRepository.findAllTeamMember(teamId);
 
-        const team = await TeamRepository.findById(teamId);
-        if(!team.teacherId) throw new CustomError("Team does not have supervisor", 400);
+        const exist = await TeamRepository.isSupervisorExist(teamId);
+        if(!exist) throw new CustomError("Team must have a supervisor", 400);
 
         const isMemberOfTeam = (studentId) => {
             for (const student of teamMembers) {

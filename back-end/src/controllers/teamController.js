@@ -128,14 +128,14 @@ async function deleteRequest(req, res) {
 async function assignSupervisor(req, res) {
     try {
         const schema = Joi.object({
-            splId: Joi.string().trim().uuid().required(),
             teacherEmail: Joi.string().trim().email().required(),
         }).required();
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         const { teamId } = req.params;
-        // await teamService.assignSupervisor(teamId, req.body);
+        const { teacherEmail } = req.body;
+        await teamService.assignSupervisor(teamId, teacherEmail);
 
         return res.json(GenericResponse.success("Supervisor assigned successfully"));
     } catch (err) {

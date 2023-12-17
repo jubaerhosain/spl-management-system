@@ -1,5 +1,6 @@
 import SPLRepository from "../repositories/SPLRepository.js";
 import TeamRepository from "../repositories/TeamRepository.js";
+import SupervisorRequestRepository from "../repositories/SupervisorRequestRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import CustomError from "../utils/CustomError.js";
 import utils from "../utils/utils.js";
@@ -97,7 +98,7 @@ async function createTeam(data) {
         temp.Members = teamMembers;
         newTeams.push(temp);
     });
-    
+
     await TeamRepository.create(newTeams);
 
     const notifications = [];
@@ -121,13 +122,36 @@ async function requestTeacher(teamId, teacherId) {
     const team = await TeamRepository.findById(teamId);
     if (!team) throw new CustomError("Team does not exist", 400);
 
-    const teacher = await TeacherRepository.findById(teacherId);
-    if (!teacher) throw new CustomError("Teacher does not exist", 400);
+    // is team member ????
 
-    await TeamRepository.createTeamRequest(teamId, teacherId, team.splId);
+    const teacher = await TeacherRepository.findById(teacherId, { available: true });
+    if (!teacher) throw new CustomError("Teacher does not exist or unavailable", 400);
+
+    await SupervisorRequestRepository.createTeamRequest(teamId, teacherId, team.splId);
+}
+
+async function assignSupervisor(teamId, teacherEmail) {
+    const team = await TeamRepository.findById(teamId);
+    if (!team) throw new CustomError("Team does not exist", 400);
+
+    if (team.teacherId) throw new CustomError("Team already have supervisor", 400);
+
+    const teacher = await TeacherRepository.findByEmail(teacherEmail, { available: true });
+    if (!teacher) throw new CustomError("Teacher does not exist or unavailable", 400);
+
+    const teamMembers = await TeamRepository.findAllTeamMember(teamId);
+    const teamMemberIds = teamMembers.map(student => student.userId);
+
+    const teacherId = teacher.userId;
+    await TeamRepository.addSupervisor(teamId, teacherId, team.splId, teamMemberIds);
+
+    await SupervisorRequestRepository.deleteAllTeamRequest(teamId);
+
+    // notifications to the team members
 }
 
 export default {
     createTeam,
     requestTeacher,
+    assignSupervisor,
 };

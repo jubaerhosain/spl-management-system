@@ -175,6 +175,16 @@ async function findAllStudentUnderSPL(splId, options) {
                 },
                 required: true,
             },
+            {
+                model: models.Teacher,
+                as: "Supervisors",
+                through: {
+                    model: models.StudentTeacher_Supervisor,
+                    where: { splId },
+                    attributes: [],
+                },
+                required: false,
+            },
         ],
         raw: true,
         nest: true,
@@ -188,8 +198,8 @@ async function findAllStudentUnderSPL(splId, options) {
     const flattened = [];
     students.forEach((student) => {
         const temp = {
-            ...student,
             ...student.User,
+            ...student,
         };
         delete temp.User;
         delete temp.SPLs;
@@ -277,12 +287,12 @@ async function isStudentUnderSPL(studentId, splId) {
     return studentSpl ? true : false;
 }
 
-async function addSupervisor(studentId, teacherId, splId) {
-    await models.StudentSPL_Enrollment.update({ teacherId }, { where: { studentId, splId } });
+async function addSupervisor(studentId, supervisorId, splId) {
+    await models.StudentTeacher_Supervisor.create({ teacherId: supervisorId, studentId, splId });
 }
 
 async function isSupervisorExist(studentId, splId) {
-    const supervisor = await models.StudentSPL_Enrollment.findOne({ where: { studentId, splId }, raw: true });
+    const supervisor = await models.StudentTeacher_Supervisor.findOne({ where: { studentId, splId }, raw: true });
     return supervisor?.teacherId ? true : false;
 }
 

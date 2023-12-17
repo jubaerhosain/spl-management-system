@@ -179,7 +179,7 @@ async function assignSupervisor(studentId, data) {
     if (!spl) throw new CustomError("SPL does not exist", 400);
 
     // assign same supervisor to team members also while assigning to team [for query simplicity]
-    if (spl.splName == "spl2") throw new CustomError("Not allowed to add student supervisor for spl2");
+    if (spl.splName == "spl2") throw new CustomError("Not allowed to assign supervisor directly for spl2 students");
 
     const underSpl = StudentRepository.isStudentUnderSPL(studentId, splId);
     if (!underSpl) throw new CustomError("Student not under spl", 400);
@@ -207,8 +207,8 @@ async function getAllProject(studentId) {
 
 async function getCurrentProgress(studentId) {
     const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
-    if(!currentSPL) throw new CustomError("Student does not belongs to any active spl", 400);
-    
+    if (!currentSPL) throw new CustomError("Student does not belongs to any active spl", 400);
+
     const project = await ProjectRepository.findCurrentProgress(studentId, currentSPL.splId);
     return project;
 }
