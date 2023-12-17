@@ -25,6 +25,15 @@ export default (options) => {
             },
             comment: "Supervisor for team members also have in the StudentSPL relationship, did intentionally",
         },
+        teamId: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            references: {
+                model: "Teams",
+                key: "teamId",
+            },
+            comment: "If project is a team project"
+        },
         projectName: {
             type: DataTypes.STRING(40),
             allowNull: false,
@@ -78,6 +87,13 @@ export default (options) => {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
             foreignKey: "teacherId",
+        });
+
+        // Team - Project [one to one] // make one to many if needed later
+        Project.belongsTo(models.Team, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teamId",
         });
 
         // Student - Project [many to many]

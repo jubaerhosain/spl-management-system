@@ -1,4 +1,5 @@
 import { sequelize, models, Op } from "../configs/mysql.js";
+import utils from "../utils/utils.js";
 
 async function create(students) {
     const transaction = await sequelize.transaction();
@@ -34,10 +35,9 @@ async function findById(studentId) {
 
     if (!student) return null;
 
-    const flattened = { ...student, ...student.User };
-    delete flattened.User;
-    delete flattened.password;
-    return flattened;
+    const user = student.User;
+    delete student.User;
+    return { ...user, ...student };
 }
 
 async function findByEmail(email) {
@@ -70,7 +70,7 @@ async function findAll(options) {
     if (options?.curriculumYear) studentOptions.curriculumYear = options.curriculumYear;
     if (options?.batch) studentOptions.batch = options.batch;
 
-    const students = await models.Student.findAll({
+    let students = await models.Student.findAll({
         include: {
             model: models.User,
             required: true,
@@ -88,13 +88,13 @@ async function findAll(options) {
         },
     });
 
-    const flattened = students.map((student) => {
-        const user = { ...student, ...student.User };
-        delete user.User;
-        return user;
+    students = students.map((student) => {
+        const user = student.User;
+        delete student.User;
+        return { ...user, ...student };
     });
 
-    return flattened || [];
+    return students || [];
 }
 
 async function isRollNoExist(rollNo) {

@@ -39,11 +39,10 @@ async function findById(teacherId, options) {
 
     if (!teacher) return null;
 
-    const flattened = { ...teacher, ...teacher.User };
-    delete flattened.User;
-    delete flattened.password;
+    const user = teacher.User;
+    delete teacher.User;
 
-    return flattened;
+    return { ...user, ...teacher };
 }
 
 async function findByEmail(email, options) {
@@ -80,55 +79,30 @@ async function findAll(options) {
     const teacherOption = {};
     if (options?.available) teacherOption.available = 1;
 
-    let teachers = await models.Teacher.findAll({
-        include: {
+    // include user table
+    const includes = [
+        {
             model: models.User,
             required: true,
             where: {
                 active: true,
             },
         },
-        raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["teacherId"],
-        },
-        where: teacherOption,
-    });
+    ];
 
-    if (teachers.length > 0) {
-        for (const i in teachers) {
-            teachers[i] = { ...teachers[i], ...teachers[i].User };
-            delete teachers[i].User;
-        }
+    if (options?.studentId || options?.teamId) {
+        const requestOptions = {};
+        if (options?.studentId) requestOptions.studentId = options.studentId;
+        else if (options?.teamId) requestOptions.teamId = options.teamId;
+        includes.push({
+            model: models.SupervisorRequest,
+            required: false,
+            where: requestOptions,
+        });
     }
-
-    return teachers;
-}
-
-async function findAllWithRequestedFlag(options) {
-    const teacherOption = {};
-    if (options?.available) teacherOption.available = 1;
-
-    const requestOptions = {};
-    if (options?.studentId) requestOptions.studentId = options.studentId;
-    if (options?.teamId) requestOptions.teamId = options.teamId;
 
     let teachers = await models.Teacher.findAll({
-        include: [
-            {
-                model: models.User,
-                required: true,
-                where: {
-                    active: true,
-                },
-            },
-            {
-                model: models.SupervisorRequest,
-                required: false,
-                where: requestOptions,
-            },
-        ],
+        include: includes,
         raw: true,
         nest: true,
         attributes: {
@@ -137,19 +111,18 @@ async function findAllWithRequestedFlag(options) {
         where: teacherOption,
     });
 
-    if (teachers.length > 0) {
-        for (const i in teachers) {
-            const request = teachers[i].SupervisorRequests;
-            delete teachers[i].SupervisorRequests;
-            if (!utils.areAllKeysNull(request)) {
-                teachers[i].requested = true;
-            }
-            teachers[i] = { ...teachers[i], ...teachers[i].User };
-            delete teachers[i].User;
+    teachers = teachers.map((teacher) => {
+        const request = teachers.SupervisorRequests;
+        delete teacher.SupervisorRequests;
+        if (!utils.areAllKeysNull(request)) {
+            teacher.requested = true;
         }
-    }
+        const user = teacher.User;
+        delete teacher.User;
+        return { ...user, ...teacher };
+    });
 
-    return teachers;
+    return teachers || [];
 }
 
 async function findAllExistedTeacherByEmail(emails) {
@@ -217,6 +190,5 @@ export default {
     findByEmail,
     update,
     findAll,
-    findAllWithRequestedFlag,
     // findAllExistedTeacherByEmail,
 };

@@ -31,23 +31,10 @@ function areAllKeysNull(obj) {
     return allNull;
 }
 
-/**
- * @param {data.User} data
- * @example data.User
- * @returns
- */
-function normalizeUserInclude(data) {
-    if (!data || !data.User) return null;
-    const user = data.User;
-    delete data.User;
-    return { ...user, ...data };
-}
-
 export default {
     isUnique,
     getCurrentDate,
     countOccurrences,
     isObjectEmpty,
     areAllKeysNull,
-    normalizeUserInclude,
 };

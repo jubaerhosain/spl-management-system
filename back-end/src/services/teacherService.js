@@ -57,7 +57,7 @@ async function createTeacher(teachers) {
 
     try {
         // handle error inside called function
-        emailUtils.sendAccountCreationEmail(credentials);
+        await emailUtils.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);
         console.log("Accounts are created successfully but failed to send email with credential");
@@ -81,11 +81,6 @@ async function getTeacher(teacherId) {
 }
 
 async function getAllTeacher(options) {
-    if (options?.studentId || options?.teamId) {
-        const teachers = await TeacherRepository.findAllWithRequestedFlag(options);
-        return teachers;
-    }
-
     const teachers = await TeacherRepository.findAll(options);
     return teachers;
 }

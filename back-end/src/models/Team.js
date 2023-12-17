@@ -36,6 +36,13 @@ export default (options) => {
     });
 
     Team.associate = (models) => {
+        // Team - Project [one to one] // make one to many if needed later
+        Team.hasOne(models.Project, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teamId",
+        });
+
         // SPL - Team [one to many]
         Team.belongsTo(models.SPL, {
             onDelete: "CASCADE",

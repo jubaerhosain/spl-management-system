@@ -78,7 +78,7 @@ async function createStudent(students) {
 
     try {
         // handle error inside called function
-        emailService.sendAccountCreationEmail(credentials);
+        await emailService.sendAccountCreationEmail(credentials);
     } catch (err) {
         console.log(err);
         console.log("Accounts are created successfully but failed to send email with credential");
