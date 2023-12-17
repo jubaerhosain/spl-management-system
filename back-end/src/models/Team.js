@@ -67,7 +67,7 @@ export default (options) => {
             foreignKey: "teamId",
         });
 
-        // Team - TeamStudent_Member [one to many] // bulk team create query simplicity
+        // Team - TeamStudent_Member [one to many] // for team bulkCreate query simplicity
         Team.hasMany(models.TeamStudent_Member, {
             as: "Members",
             onDelete: "CASCADE",

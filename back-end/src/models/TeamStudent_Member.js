@@ -23,7 +23,7 @@ export default (options) => {
     });
 
     TeamStudent_Member.associate = (models) => {
-        // Team - TeamStudent_Member [one to many] // bulk team create query simplicity
+        // Team - TeamStudent_Member [one to many] // for team bulkCreate query simplicity
         TeamStudent_Member.belongsTo(models.Team, {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
