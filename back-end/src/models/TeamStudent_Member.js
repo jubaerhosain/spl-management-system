@@ -22,5 +22,14 @@ export default (options) => {
         },
     });
 
+    TeamStudent_Member.associate = (models) => {
+        // Team - TeamStudent_Member [one to many] // bulk team create query simplicity
+        TeamStudent_Member.belongsTo(models.Team, {
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+            foreignKey: "teamId",
+        });
+    };
+
     return TeamStudent_Member;
 };

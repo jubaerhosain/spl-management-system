@@ -9,7 +9,7 @@ async function create(teams) {
     const transaction = await sequelize.transaction();
     try {
         await models.Team.bulkCreate(teams, {
-            include: [{ model: models.TeamMember, as: "Members" }],
+            include: [{ model: models.TeamStudent_Member, as: "Members" }],
             transaction: transaction,
         });
 

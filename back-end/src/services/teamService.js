@@ -17,10 +17,10 @@ async function createTeam(data) {
 
     const { teams } = data;
 
-    const assignedStudents = await StudentRepository.findAllStudentUnderSPL(splId);
-    const validateAssignedToSPL = async (teams, splId) => {
+    const enrolledStudents = await StudentRepository.findAllStudentUnderSPL(splId);
+    const validateEnrolledToSPL = async (teams, splId) => {
         const isAssignedToSPL = (email) => {
-            for (const student of assignedStudents) {
+            for (const student of enrolledStudents) {
                 if (student.email == email) return true;
             }
             return false;
@@ -41,7 +41,7 @@ async function createTeam(data) {
         if (!utils.isObjectEmpty(errors)) return errors;
         return null;
     };
-    let error = await validateAssignedToSPL(teams, splId);
+    let error = await validateEnrolledToSPL(teams, splId);
     if (error) throw new CustomError("Must be assigned to this spl", 400, error);
 
     const allTeamMemberEmails = await TeamRepository.findAllTeamMemberEmailUnderSPL(splId);
@@ -72,8 +72,8 @@ async function createTeam(data) {
     if (error) throw new CustomError("Must not be member of another team of same spl", 400, error);
 
     // normalize team data to create by a single query
-    const findStudentId = (assignedStudents, email) => {
-        for (const student of assignedStudents) {
+    const findStudentId = (enrolledStudents, email) => {
+        for (const student of enrolledStudents) {
             if (student.email == email) return student.userId;
         }
     };
@@ -87,7 +87,7 @@ async function createTeam(data) {
 
         const teamMembers = [];
         team.teamMembers.forEach((member, memberIndex) => {
-            const studentId = findStudentId(assignedStudents, member.email);
+            const studentId = findStudentId(enrolledStudents, member.email);
             // map studentId
             teams[index].teamMembers[memberIndex].studentId = studentId;
             teamMembers.push({
@@ -97,7 +97,7 @@ async function createTeam(data) {
         temp.Members = teamMembers;
         newTeams.push(temp);
     });
-
+    
     await TeamRepository.create(newTeams);
 
     const notifications = [];
