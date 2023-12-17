@@ -81,7 +81,7 @@ async function getAllSPL(req, res) {
 
 async function getActiveSPL(req, res) {}
 
-async function assignStudentToSPL(req, res) {
+async function enrollStudent(req, res) {
     try {
         const { splId } = req.params;
         const schema = Joi.object({
@@ -119,9 +119,9 @@ async function assignStudentToSPL(req, res) {
         const err = validateDuplicate(students);
         if (err) return res.status(400).json(GenericResponse.error("Validation failed", err));
 
-        await splService.assignStudentsToSPL(splId, curriculumYear, students);
+        await splService.enrollStudent(splId, curriculumYear, students);
 
-        res.json(GenericResponse.success("student are assigned successfully to the spl"));
+        res.json(GenericResponse.success("student are enrolled successfully to the spl"));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -180,7 +180,7 @@ async function getAllPresentationUnderSPL(req, res) {
     }
 }
 
-async function removeStudentFromSPL(req, res) {}
+async function unenrollStudent(req, res) {}
 
 async function randomizeSupervisor(req, res) {
     try {
@@ -205,8 +205,8 @@ export default {
     getSPL,
     getAllSPL,
     getActiveSPL,
-    assignStudentToSPL,
-    removeStudentFromSPL,
+    enrollStudent,
+    unenrollStudent,
     getAllStudentUnderSPL,
     getAllProjectUnderSPL,
     getAllPresentationUnderSPL,

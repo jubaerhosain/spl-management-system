@@ -38,7 +38,12 @@ async function findSPLByNameAndYear(splName, academicYear) {
     return spl;
 }
 
-async function assignStudentAndCreateSPLMark(splId, studentIds) {
+/**
+ * Also create mark table for each student
+ * @param {*} splId 
+ * @param {*} studentIds 
+ */
+async function enrollStudent(splId, studentIds) {
     const transaction = await sequelize.transaction();
 
     try {
@@ -47,7 +52,7 @@ async function assignStudentAndCreateSPLMark(splId, studentIds) {
             studentId,
         }));
 
-        await models.StudentSPL.bulkCreate(studentId_splId, { transaction });
+        await models.StudentSPL_Enrollment.bulkCreate(studentId_splId, { transaction });
 
         await models.SPLMark.bulkCreate(studentId_splId, { transaction });
 
@@ -95,7 +100,7 @@ async function findCurrentSPLOfStudent(studentId, options) {
                 model: models.User,
             },
             through: {
-                model: models.StudentSPL,
+                model: models.StudentSPL_Enrollment,
                 attributes: [],
             },
             attributes: {
@@ -196,7 +201,7 @@ export default {
     findById,
     findAll,
     remove,
-    assignStudentAndCreateSPLMark,
+    enrollStudent,
     findAllSPLOfStudent,
     findCurrentSPLOfStudent,
     findSPLByNameAndYear,

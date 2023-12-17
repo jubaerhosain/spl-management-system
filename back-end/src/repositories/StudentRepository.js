@@ -167,7 +167,7 @@ async function findAllStudentUnderSPL(splId, options) {
             {
                 model: models.SPL,
                 through: {
-                    model: models.StudentSPL,
+                    model: models.StudentSPL_Enrollment,
                     attributes: [],
                 },
                 where: {
@@ -212,7 +212,7 @@ async function findAllStudentNotUnderSPL(splId, curriculumYear) {
             {
                 model: models.SPL,
                 through: {
-                    model: models.StudentSPL,
+                    model: models.StudentSPL_Enrollment,
                     attributes: [],
                 },
                 where: {
@@ -252,7 +252,7 @@ async function findAllStudentNotUnderSPL(splId, curriculumYear) {
 }
 
 async function findAllStudentIdUnderSPL(splId) {
-    const students = await models.StudentSPL.findAll({
+    const students = await models.StudentSPL_Enrollment.findAll({
         where: { splId },
         attributes: ["studentId"],
     });
@@ -273,16 +273,16 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
 }
 
 async function isStudentUnderSPL(studentId, splId) {
-    const studentSpl = await models.StudentSPL.findOne({ where: { studentId, splId } });
+    const studentSpl = await models.StudentSPL_Enrollment.findOne({ where: { studentId, splId } });
     return studentSpl ? true : false;
 }
 
 async function addSupervisor(studentId, teacherId, splId) {
-    await models.StudentSPL.update({ teacherId }, { where: { studentId, splId } });
+    await models.StudentSPL_Enrollment.update({ teacherId }, { where: { studentId, splId } });
 }
 
 async function isSupervisorExist(studentId, splId) {
-    const supervisor = await models.StudentSPL.findOne({ where: { studentId, splId }, raw: true });
+    const supervisor = await models.StudentSPL_Enrollment.findOne({ where: { studentId, splId }, raw: true });
     return supervisor?.teacherId ? true : false;
 }
 

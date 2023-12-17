@@ -29,7 +29,7 @@ async function getAllSPL(options) {
     return spls;
 }
 
-async function assignStudentsToSPL(splId, curriculumYear, students) {
+async function enrollStudent(splId, curriculumYear, students) {
     const spl = await SPLRepository.findById(splId);
     if (!spl) {
         throw new CustomError("spl does not exist", 400);
@@ -64,12 +64,12 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
     if (error) throw new CustomError("Invalid student", 400, error);
 
     const assignedStudentIds = await StudentRepository.findAllStudentIdUnderSPL(splId);
-    const validateAlreadyAssigned = (students) => {
+    const validateAlreadyEnrolled = (students) => {
         const error = {};
         students.forEach((student, index) => {
             if (assignedStudentIds.includes(student.studentId)) {
                 error[`students[${index}].studentId`] = {
-                    msg: `already assigned to ${spl.splName}`,
+                    msg: `already enrolled to ${spl.splName}`,
                     value: student.studentId,
                 };
             }
@@ -77,17 +77,17 @@ async function assignStudentsToSPL(splId, curriculumYear, students) {
         if (utils.isObjectEmpty(error)) return null;
         return error;
     };
-    error = validateAlreadyAssigned(students);
-    if (error) throw new CustomError("Already assigned to spl", 400, error);
+    error = validateAlreadyEnrolled(students);
+    if (error) throw new CustomError("Already enrolled to spl", 400, error);
 
-    const unassignedStudentIds = students.map((student) => student.studentId);
-    await SPLRepository.assignStudentAndCreateSPLMark(spl.splId, unassignedStudentIds);
+    const unenrolledStudentIds = students.map((student) => student.studentId);
+    await SPLRepository.enrollStudent(spl.splId, unenrolledStudentIds);
 
     const notifications = [];
     students.map((student) => {
         const notification = {
             userId: student.studentId,
-            content: `You have assigned to ${spl.splName}, ${spl.academicYear}.`,
+            content: `You have enrolled to ${spl.splName}, ${spl.academicYear}.`,
             type: "info",
         };
         notifications.push(notification);
@@ -187,7 +187,7 @@ export default {
     createSPL,
     getSPL,
     getAllSPL,
-    assignStudentsToSPL,
+    enrollStudent,
     getAllStudentUnderSPL,
     getAllProjectUnderSPL,
     getAllPresentationUnderSPL,
