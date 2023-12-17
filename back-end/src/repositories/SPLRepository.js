@@ -140,7 +140,7 @@ async function findAllSPLOfStudent(studentId, options) {
         model: models.SPL,
         where: splOptions,
         through: {
-            model: models.StudentSPL,
+            model: models.StudentSPL_Enrollment,
             attributes: [],
         },
     };
@@ -154,7 +154,7 @@ async function findAllSPLOfStudent(studentId, options) {
                 model: models.User,
             },
             through: {
-                model: models.StudentSPL,
+                model: models.StudentSPL_Enrollment,
                 attributes: [],
             },
             attributes: {

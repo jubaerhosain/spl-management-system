@@ -89,7 +89,7 @@ async function findAllTeamMemberUnderSPL(splId) {
 async function createTeamRequest(teamId, teacherId, splId) {}
 
 async function findAllTeamOfStudent(studentId, options) {
-    const studentTeams = await models.TeamMember.findAll({ where: { studentId } });
+    const studentTeams = await models.TeamStudent_Member.findAll({ where: { studentId } });
     if (studentTeams.length == 0) return [];
     const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
 
