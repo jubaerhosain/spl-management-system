@@ -125,6 +125,29 @@ async function deleteRequest(req, res) {
     // Logic to delete a request for a team
 }
 
+async function assignSupervisor(req, res) {
+    try {
+        const schema = Joi.object({
+            splId: Joi.string().trim().uuid().required(),
+            teacherEmail: Joi.string().trim().email().required(),
+        }).required();
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const { teamId } = req.params;
+        // await teamService.assignSupervisor(teamId, req.body);
+
+        return res.json(GenericResponse.success("Supervisor assigned successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
 export default {
     createTeam,
     updateTeam,
@@ -137,4 +160,5 @@ export default {
     getAllRequest,
     deleteRequest,
     removeTeamMember,
+    assignSupervisor,
 };

@@ -22,7 +22,7 @@ teamRoutes.get("/:teamId/request", teamController.getAllRequest);
 teamRoutes.delete("/:teamId/request", teamController.deleteRequest);
 
 // supervisor routes related
-teamRoutes.put("/:teamId/supervisor");
+teamRoutes.post("/:teamId/supervisor", teamController.assignSupervisor);
 teamRoutes.delete("/:teamId/supervisor/:supervisorId");
 
 export default teamRoutes;
