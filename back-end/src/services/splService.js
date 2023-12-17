@@ -98,8 +98,8 @@ async function enrollStudent(splId, curriculumYear, students) {
     // emailService.sendSPLAssignedEmail(unassignedStudentEmails, spl.splName, spl.academicYear);
 }
 
-async function getAllStudentUnderSPL(splId) {
-    const students = await StudentRepository.findAllStudentUnderSPL(splId);
+async function getAllStudentUnderSPL(splId, options) {
+    const students = await StudentRepository.findAllStudentUnderSPL(splId, options);
     return students;
 }
 

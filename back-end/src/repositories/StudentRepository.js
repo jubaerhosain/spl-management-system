@@ -150,42 +150,53 @@ async function findAllExistedRegistrationNo(registrationNumbers) {
 }
 
 async function findAllStudentUnderSPL(splId, options) {
+    const includes = [
+        {
+            model: models.User,
+            where: {
+                active: true,
+            },
+            required: true,
+        },
+        {
+            // to identify student under spl
+            model: models.SPL,
+            through: {
+                model: models.StudentSPL_Enrollment,
+                attributes: [],
+            },
+            where: {
+                splId: splId,
+            },
+            required: true,
+            attributes: [],
+        },
+    ];
+
     if (options?.supervisor) {
-        const a = 4;
-        // supervisor id, name, designation, img url
+        includes.push({
+            model: models.Teacher,
+            as: "Supervisors",
+            include: {
+                model: models.User,
+            },
+            through: {
+                model: models.StudentTeacher_Supervisor,
+                where: { splId },
+                attributes: [],
+            },
+            required: false,
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        });
     }
 
-    const students = await models.Student.findAll({
-        include: [
-            {
-                model: models.User,
-                where: {
-                    active: true,
-                },
-                required: true,
-            },
-            {
-                model: models.SPL,
-                through: {
-                    model: models.StudentSPL_Enrollment,
-                    attributes: [],
-                },
-                where: {
-                    splId: splId,
-                },
-                required: true,
-            },
-            {
-                model: models.Teacher,
-                as: "Supervisors",
-                through: {
-                    model: models.StudentTeacher_Supervisor,
-                    where: { splId },
-                    attributes: [],
-                },
-                required: false,
-            },
-        ],
+    if (options?.project) {
+    }
+
+    let students = await models.Student.findAll({
+        include: includes,
         raw: true,
         nest: true,
         attributes: {
@@ -194,6 +205,17 @@ async function findAllStudentUnderSPL(splId, options) {
     });
 
     if (students.length == 0) return [];
+
+    students = students.map((student) => {
+        const studentUser = student.User;
+        delete student.User;
+        const teacher = student.Supervisors;
+        delete student.Supervisors;
+
+        const teacherUser = teacher.User;
+        delete teacher.User;
+        return { ...studentUser, ...student, supervisor: { ...teacherUser, ...teacher } };
+    });
 
     const flattened = [];
     students.forEach((student) => {
@@ -206,7 +228,7 @@ async function findAllStudentUnderSPL(splId, options) {
         flattened.push(temp);
     });
 
-    return flattened;
+    return students || [];
 }
 
 async function findAllStudentNotUnderSPL(splId, curriculumYear) {

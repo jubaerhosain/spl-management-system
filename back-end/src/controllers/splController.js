@@ -134,8 +134,16 @@ async function enrollStudent(req, res) {
 
 async function getAllStudentUnderSPL(req, res) {
     try {
+        const schema = Joi.object({
+            supervisor: Joi.boolean().optional(),
+            project: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
         const { splId } = req.params;
-        const students = await splService.getAllStudentUnderSPL(splId);
+        const options = req.query;
+        const students = await splService.getAllStudentUnderSPL(splId, options);
 
         res.json(GenericResponse.success("Students retrieved successfully", students));
     } catch (err) {
