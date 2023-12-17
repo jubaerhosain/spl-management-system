@@ -115,7 +115,7 @@ async function findAll(options) {
         const request = teachers.SupervisorRequests;
         delete teacher.SupervisorRequests;
         if (!utils.areAllKeysNull(request)) {
-            teacher.requested = true;
+            teacher.request = { requestId: request.requestId };
         }
         const user = teacher.User;
         delete teacher.User;

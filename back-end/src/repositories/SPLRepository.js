@@ -40,8 +40,8 @@ async function findSPLByNameAndYear(splName, academicYear) {
 
 /**
  * Also create mark table for each student
- * @param {*} splId 
- * @param {*} studentIds 
+ * @param {*} splId
+ * @param {*} studentIds
  */
 async function enrollStudent(splId, studentIds) {
     const transaction = await sequelize.transaction();
@@ -195,6 +195,11 @@ async function findAllSPLOfStudent(studentId, options) {
     });
 }
 
+async function isStudentBelongsToSPL(splId, studentId) {
+    const belongs = await models.StudentSPL_Enrollment.findOne({ where: { studentId, splId }, raw: true });
+    return belongs ? true : false;
+}
+
 export default {
     create,
     update,
@@ -207,4 +212,7 @@ export default {
     findSPLByNameAndYear,
     // isSupervisorRandomized,
     // removeStudentFromSPL,
+
+    // utility methods
+    isStudentBelongsToSPL,
 };

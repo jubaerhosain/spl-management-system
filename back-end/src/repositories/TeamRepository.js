@@ -26,6 +26,8 @@ async function findById(teamId, options) {
         const team = await models.Team.findByPk(teamId, { raw: true });
         return team;
     }
+
+    // options for teamMembers....
 }
 
 async function update(teamId, team) {
@@ -37,6 +39,38 @@ async function update(teamId, team) {
 }
 
 async function addTeamMember() {}
+
+async function findAllTeamMember(teamId) {
+    let members = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+            },
+            {
+                model: models.Team,
+                through: {
+                    model: models.TeamStudent_Member,
+                    attributes: [],
+                },
+                where: { teamId },
+                attributes: [],
+            },
+        ],
+        attributes: {
+            exclude: ["studentId"],
+        },
+        raw: true,
+        nest: true,
+    });
+
+    members = members.map((student) => {
+        const user = student.User;
+        delete student.User;
+        return { ...user, ...student };
+    });
+
+    return members || [];
+}
 
 async function removeTeamMember(teamId) {}
 
@@ -85,8 +119,6 @@ async function findAllTeamMemberUnderSPL(splId) {
 
     return flattened;
 }
-
-async function createTeamRequest(teamId, teacherId, splId) {}
 
 async function findAllTeamOfStudent(studentId, options) {
     const studentTeams = await models.TeamStudent_Member.findAll({ where: { studentId } });
@@ -213,7 +245,7 @@ export default {
     create,
     findById,
     update,
-    // createTeamRequest, // move supervisor repository
+    findAllTeamMember,
     // findAllTeamUnderSPL, // with team members
     findAllTeamOfStudent,
     findCurrentTeamOfStudent,
