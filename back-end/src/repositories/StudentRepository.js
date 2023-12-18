@@ -193,6 +193,15 @@ async function findAllStudentUnderSPL(splId, options) {
     }
 
     if (options?.project) {
+        includes.push({
+            model: models.Project,
+            through: {
+                model: models.ProjectStudent_Contributor,
+                attributes: [],
+            },
+            where: { splId },
+            required: false,
+        });
     }
 
     let students = await models.Student.findAll({
@@ -209,12 +218,23 @@ async function findAllStudentUnderSPL(splId, options) {
     students = students.map((student) => {
         const studentUser = student.User;
         delete student.User;
-        const teacher = student.Supervisors;
-        delete student.Supervisors;
 
-        const teacherUser = teacher.User;
-        delete teacher.User;
-        return { ...studentUser, ...student, supervisor: { ...teacherUser, ...teacher } };
+        const result = {};
+        if (options?.supervisor) {
+            const teacher = student.Supervisors;
+            delete student.Supervisors;
+
+            const teacherUser = teacher.User;
+            delete teacher.User;
+            result.supervisor = { ...teacherUser, ...teacher };
+        }
+        if (options?.project) {
+            const project = student.Projects;
+            delete student.Projects;
+            result.project = { ...project };
+        }
+
+        return { ...studentUser, ...student, ...result };
     });
 
     const flattened = [];
@@ -318,6 +338,11 @@ async function isSupervisorExist(studentId, splId) {
     return supervisor?.teacherId ? true : false;
 }
 
+async function findSupervisorId(studentId, splId) {
+    const supervisor = await models.StudentTeacher_Supervisor.findOne({ where: { studentId, splId }, raw: true });
+    return supervisor?.teacherId ? supervisor.teacherId : null;
+}
+
 export default {
     create,
     update,
@@ -337,4 +362,5 @@ export default {
     findAllExistedRegistrationNo,
     isStudentUnderSPL,
     isSupervisorExist,
+    findSupervisorId,
 };

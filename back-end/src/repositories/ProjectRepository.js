@@ -8,12 +8,12 @@ async function create(project, contributorIds) {
         const contributors = [];
         contributorIds.forEach((studentId) => {
             contributors.push({
-                projectId: newProject.teamId,
+                projectId: newProject.projectId,
                 studentId,
             });
         });
 
-        await models.ProjectStudent_Contributor.bulkCreate(contributors, { transaction: t });
+        await models.ProjectStudent_Contributor.bulkCreate(contributors, { transaction });
 
         await transaction.commit();
     } catch (error) {
@@ -28,7 +28,7 @@ async function findById(projectId, options) {
         const project = await models.Project.findByPk(projectId, { raw: true });
         return project;
     }
-    
+
     // options for including contributors
 }
 
@@ -88,7 +88,7 @@ async function findCurrentProgressOfStudent(studentId, splId) {
     });
 }
 
-async function hasProject(studentId, splId) {
+async function hasStudentProject(studentId, splId) {
     // add attributes constraints
     const project = await models.Project.findOne({
         include: {
@@ -111,6 +111,11 @@ async function hasProject(studentId, splId) {
     return project ? true : false;
 }
 
+async function hasTeamProject(teamId, splId) {
+    const project = await models.Project.findOne({ where: { teamId, splId }, raw: true });
+    return project ? true : false;
+}
+
 export default {
     create,
     remove,
@@ -119,5 +124,6 @@ export default {
     findCurrentProgressOfStudent,
 
     // utility methods
-    hasProject,
+    hasStudentProject,
+    hasTeamProject,
 };
