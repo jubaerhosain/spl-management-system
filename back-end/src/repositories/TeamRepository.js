@@ -256,7 +256,7 @@ async function isSupervisorExist(teamId) {
 async function addSupervisor(teamId, supervisorId, splId, teamMemberIds) {
     const transaction = await sequelize.transaction();
     try {
-        await models.Team.update({ teacherId: supervisorId }, { where: { teamId } }, { transaction });
+        await models.Team.update({ supervisorId }, { where: { teamId } }, { transaction });
 
         const studentTeacher = teamMemberIds.map((studentId) => {
             return { splId, studentId, teacherId: supervisorId };

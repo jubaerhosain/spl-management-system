@@ -134,7 +134,7 @@ async function assignSupervisor(teamId, teacherEmail) {
     const team = await TeamRepository.findById(teamId);
     if (!team) throw new CustomError("Team does not exist", 400);
 
-    if (team.teacherId) throw new CustomError("Team already have supervisor", 400);
+    if (team.supervisorId) throw new CustomError("Team already have supervisor", 400);
 
     const teacher = await TeacherRepository.findByEmail(teacherEmail, { available: true });
     if (!teacher) throw new CustomError("Teacher does not exist or unavailable", 400);

@@ -319,9 +319,9 @@ async function update(studentId, student, userType) {
 }
 
 async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
-    const students = await models.Supervisor.findAll({ where: { teacherId: supervisorId, splId } });
-    if (students.length == 0) return [];
-    return students.map((student) => student.studentId);
+    // const students = await models.Supervisor.findAll({ where: { teacherId: supervisorId, splId } });
+    // if (students.length == 0) return [];
+    // return students.map((student) => student.studentId);
 }
 
 async function isStudentUnderSPL(studentId, splId) {

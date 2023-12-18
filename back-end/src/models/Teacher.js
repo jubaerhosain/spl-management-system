@@ -68,7 +68,7 @@ export default (options) => {
             as: "SupervisedTeams",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "teacherId",
+            foreignKey: "supervisorId",
         });
 
         // Teacher - Project [one to many]
@@ -76,7 +76,7 @@ export default (options) => {
             as: "SupervisedProjects",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "teacherId",
+            foreignKey: "supervisorId",
         });
 
         // Presentation - Teacher [many to many] as Presentation Evaluator

@@ -16,7 +16,7 @@ export default (options) => {
                 key: "splId",
             },
         },
-        teacherId: {
+        supervisorId: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
@@ -32,7 +32,7 @@ export default (options) => {
                 model: "Teams",
                 key: "teamId",
             },
-            comment: "If project is a team project"
+            comment: "If project is a team project",
         },
         projectName: {
             type: DataTypes.STRING(40),
@@ -86,7 +86,7 @@ export default (options) => {
             as: "Supervisor",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-            foreignKey: "teacherId",
+            foreignKey: "supervisorId",
         });
 
         // Team - Project [one to one] // make one to many if needed later

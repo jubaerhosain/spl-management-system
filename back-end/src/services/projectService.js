@@ -26,7 +26,7 @@ async function createProject(studentId, project) {
         const has = await ProjectRepository.hasStudentProject(studentId, splId);
         if (has) throw new CustomError("Only one project is allowed in a spl", 400);
 
-        project.teacherId = supervisorId;
+        project.supervisorId = supervisorId;
         await ProjectRepository.create(project, [studentId]);
     } else if (project.projectType == "team") {
         if (student.curriculumYear != "3rd")
@@ -39,7 +39,7 @@ async function createProject(studentId, project) {
 
         if (team.splId != splId) throw new CustomError("Team does not belongs to spl", 400);
 
-        if (!team.teacherId) throw new CustomError("Team must have a supervisor", 400);
+        if (!team.supervisorId) throw new CustomError("Team must have a supervisor", 400);
 
         const hasProject = await ProjectRepository.hasTeamProject(teamId, splId);
         if (hasProject) throw new CustomError("Only one project is allowed in a spl", 400);
@@ -54,7 +54,7 @@ async function createProject(studentId, project) {
         };
         if (!isMemberOfTeam(studentId)) throw new CustomError("You are not member of that team", 401);
 
-        project.teacherId = team.teacherId; // supervisor
+        project.supervisorId = team.supervisorId;
         await ProjectRepository.create(
             project,
             teamMembers.map((student) => student.userId)
