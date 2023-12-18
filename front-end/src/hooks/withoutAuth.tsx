@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation'
 import { useAuthContext } from "@/contexts/AuthContext"
 import { useEffect } from "react";
 
-export default function withUnAuth(Component: any) {
-    return function WithUnAuth(props: any) {
+export default function withoutAuth(Component: any) {
+    return function WithoutAuth(props: any) {
         const { user } = useAuthContext();
 
         useEffect(() => {
