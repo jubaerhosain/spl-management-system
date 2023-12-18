@@ -1,5 +1,5 @@
 {
-    "name": "spl-management-system",
+    "name": "spl-management-system-back-end",
     "version": "1.0.0",
     "description": "SPL is a course of IIT, University of Dhaka. This is system will automate the SPL Management.",
     "type": "module",
