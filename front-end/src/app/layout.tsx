@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,6 +12,7 @@ import Footer from "@/components/footer/Footer";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "SPL Management System",
@@ -33,6 +35,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </AuthProvider>
         </AppRouterCacheProvider>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </body>
     </html>
   );
