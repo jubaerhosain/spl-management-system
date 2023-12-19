@@ -6,6 +6,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import NavBar from "@/components/navbar/NavBar";
+import Footer from "@/components/footer/Footer";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 
 export const metadata: Metadata = {
   title: "SPL Management System",
@@ -16,17 +21,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <nav>
-            <div>
-              <ul>
-                <li>students</li>
-                <li>teachers</li>
-              </ul>
-            </div>
-          </nav>
-          {children}
-        </AuthProvider>
+        <AppRouterCacheProvider>
+          <AuthProvider>
+            <NavBar />
+            <Container
+              maxWidth="lg"
+              sx={{ zIndex: -1, bgcolor: "#f0f0f0", minHeight: "70vh", mt: 0.5, mb: 0.5, padding: 1 }}
+            >
+              {children}
+            </Container>
+            <Footer />
+          </AuthProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
