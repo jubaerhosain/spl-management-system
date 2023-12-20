@@ -15,63 +15,59 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import withoutAuth from "@/hooks/withoutAuth";
 
 const Login = () => {
-  const [error, setError] = useState<any | boolean>(false);
-  const [email, setEmail] = useState<string | undefined>("");
-  const [password, setPassword] = useState<string | undefined>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { login } = useAuthContext();
+  const [email, setEmail] = useState<string>("");
+  const [emailError, setEmailError] = useState<any>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<any>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onEmailChange = (e: any) => {
-    setError((prevState: any) => {
-      const newState = prevState;
-      delete newState.email;
-      return newState;
-    });
+    setEmailError(null);
     setEmail(e.target.value);
   };
 
   const onPasswordChange = (e: any) => {
-    setError((prevState: any) => {
-      const newState = prevState;
-      delete newState.password;
-      return newState;
-    });
+    setPasswordError(null);
     setPassword(e.target.value);
   };
 
   const onSubmit = () => {
-    console.log(isLoading);
-    if (isLoading) return;
-    setIsLoading((prevState) => !prevState);
-
     const tempError: any = {};
+
     if (!email) {
-      tempError.email = "Email must be provided";
+      tempError.email = "email must be provided";
     }
 
     if (!password) {
-      tempError.password = "Password must be provided";
+      tempError.password = "password must be provided";
     }
 
     if (Object.keys(tempError).length != 0) {
-      setError(tempError);
-      setIsLoading((prevState) => !prevState);
-    } else {
-      axiosInstance
-        .post("login", { email, password })
-        .then((data) => {
-          if (data?.success) {
-            toast.success("Logged in successfully");
-          } else {
-            if (data?.error) setError(data.error);
-            else if (data) toast.error(data.message);
-          }
-        })
-        .finally(() => {
-          setIsLoading((prevState) => !prevState);
-        });
+      setEmailError(tempError.email);
+      setPasswordError(tempError.password);
+      return;
     }
-    setError(false);
+
+    if (isLoading) return;
+    setIsLoading((prevState) => !prevState);
+
+    axiosInstance
+      .post("/auth/login", { email, password })
+      .then((data) => {
+        if (data?.success) {
+          toast.success("Logged in successfully");
+          login(data.data);
+        } else {
+          if (data?.error) {
+            setEmailError(data.error.email?.msg);
+            setPasswordError(data.error.password?.msg);
+          } else if (data) toast.error(data.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading((prevState) => !prevState);
+      });
   };
 
   return (
@@ -79,7 +75,7 @@ const Login = () => {
       <Typography variant="h5" sx={{ mb: 4 }}>
         Login to SPL
       </Typography>
-      <FormControl error={error?.email ? true : false} variant="standard" fullWidth sx={{ mb: 2 }}>
+      <FormControl error={emailError ? true : false} variant="standard" fullWidth sx={{ mb: 2 }}>
         <InputLabel htmlFor="email">Email</InputLabel>
         <Input
           fullWidth
@@ -89,14 +85,14 @@ const Login = () => {
           onChange={onEmailChange}
           aria-describedby="email-error"
         />
-        {error?.email && (
-          <FormHelperText error={error?.email ? true : false} id="email-error">
-            {error?.email}
+        {emailError && (
+          <FormHelperText error={emailError ? true : false} id="email-error">
+            {emailError}
           </FormHelperText>
         )}
       </FormControl>
 
-      <FormControl error={error?.password ? true : false} variant="standard" fullWidth sx={{ mb: 2 }}>
+      <FormControl error={passwordError ? true : false} variant="standard" fullWidth sx={{ mb: 2 }}>
         <InputLabel htmlFor="password">Password</InputLabel>
         <Input
           fullWidth
@@ -106,17 +102,13 @@ const Login = () => {
           onChange={onPasswordChange}
           aria-describedby="password-error"
         />
-        {error?.password && (
-          <FormHelperText error={error?.password ? true : false} id="password-error">
-            {error?.password}
+        {passwordError && (
+          <FormHelperText error={passwordError ? true : false} id="password-error">
+            {passwordError}
           </FormHelperText>
         )}
       </FormControl>
-      {error?.message && (
-        <FormHelperText error={error?.message ? true : false} id="custom error">
-          Invalid Email or Password
-        </FormHelperText>
-      )}
+
       <FormControl fullWidth sx={{ mt: 2 }}>
         <Button variant="outlined" fullWidth onClick={onSubmit}>
           Login

@@ -16,10 +16,13 @@ const Axios = axios.create({
 class AxiosInstance {
   static async post(url: any, data: any, config?: any | null): Promise<ResponseType | any> {
     try {
-      const response = await Axios.post("/login", data, config);
+      const response = await Axios.post(url, data, config);
       return response.data;
     } catch (error: any) {
-      if (error?.response) {
+      if(error?.response?.status == 404) {
+        toast.error("API not found");
+      }
+      else if (error?.response) {
         return error?.response?.data;
       } else {
         console.log(error);

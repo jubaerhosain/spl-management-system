@@ -42,9 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           newestOnTop={false}
           closeOnClick
           rtl={false}
-          pauseOnFocusLoss
+          pauseOnFocusLoss={false}
           draggable
-          pauseOnHover
+          pauseOnHover={false}
           theme="light"
         />
       </body>

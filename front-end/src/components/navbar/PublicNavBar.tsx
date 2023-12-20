@@ -9,9 +9,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "next/image";
 import AdbIcon from "@mui/icons-material/Adb";
@@ -67,7 +64,7 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              sx={{ color: "black" }}
             >
               <MenuIcon />
             </IconButton>
@@ -86,17 +83,27 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: "block", md: "none", width: 300 },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.name}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{ width: 500 }}>
+                  {/* <Typography textAlign="center">{page.name}</Typography> */}
+                  <Link
+                    href={page.path}
+                    key={page.name}
+                    onClick={handleCloseNavMenu}
+                    style={{ color: "black", display: "block" }}
+                  >
+                    {page.name}
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Box sx={{ display: { xs: "flex", md: "none" }, ml: 2, mr: 1 }}>
+            <Image alt="Logo" src="/logo.png" width={60} height={40} />
+          </Box>
           <Typography
             variant="h5"
             noWrap
