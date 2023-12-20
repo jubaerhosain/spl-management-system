@@ -1,5 +1,5 @@
 import axios from "axios";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 
 type ResponseType = {
   success: boolean;
@@ -13,24 +13,4 @@ const Axios = axios.create({
   withCredentials: true,
 });
 
-class AxiosInstance {
-  static async post(url: any, data: any, config?: any | null): Promise<ResponseType | any> {
-    try {
-      const response = await Axios.post(url, data, config);
-      return response.data;
-    } catch (error: any) {
-      if(error?.response?.status == 404) {
-        toast.error("API not found");
-      }
-      else if (error?.response) {
-        return error?.response?.data;
-      } else {
-        console.log(error);
-        toast.error("Request failed");
-        return null;
-      }
-    }
-  }
-}
-
-export default AxiosInstance;
+export default Axios;

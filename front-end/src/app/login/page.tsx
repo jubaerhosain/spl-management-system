@@ -20,15 +20,18 @@ const Login = () => {
   const [emailError, setEmailError] = useState<any>("");
   const [password, setPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<any>("");
+  const [commonError, setCommonError] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onEmailChange = (e: any) => {
     setEmailError(null);
+    setCommonError(null);
     setEmail(e.target.value);
   };
 
   const onPasswordChange = (e: any) => {
     setPasswordError(null);
+    setCommonError(null);
     setPassword(e.target.value);
   };
 
@@ -54,16 +57,23 @@ const Login = () => {
 
     axiosInstance
       .post("/auth/login", { email, password })
-      .then((data) => {
+      .then((response) => {
+        const data = response.data;
         if (data?.success) {
           toast.success("Logged in successfully");
           login(data.data);
-        } else {
-          if (data?.error) {
-            setEmailError(data.error.email?.msg);
-            setPasswordError(data.error.password?.msg);
-          } else if (data) toast.error(data.message);
         }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          toast.error(error.message);
+          return;
+        }
+        const data = error.response?.data;
+        if (data?.error) {
+          setEmailError(data.error.email?.msg);
+          setPasswordError(data.error.password?.msg);
+        } else if (data) setCommonError(data.message);
       })
       .finally(() => {
         setIsLoading((prevState) => !prevState);
@@ -108,6 +118,12 @@ const Login = () => {
           </FormHelperText>
         )}
       </FormControl>
+
+      {commonError && (
+        <FormHelperText error={commonError ? true : false} id="custom error">
+          Invalid Email or Password
+        </FormHelperText>
+      )}
 
       <FormControl fullWidth sx={{ mt: 2 }}>
         <Button variant="outlined" fullWidth onClick={onSubmit}>
