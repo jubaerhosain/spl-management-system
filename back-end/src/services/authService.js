@@ -6,24 +6,31 @@ import OTPRepository from "../repositories/OTPRepository.js";
 import CustomError from "../utils/CustomError.js";
 
 async function login(email, password) {
-    const user = await UserRepository.findLoginInfo(email);
+    const info = await UserRepository.findLoginInfo(email);
 
-    if (!user) {
+    if (!info) {
         throw new CustomError("Email not found", 400);
     }
 
-    const matches = await passwordUtils.verifyPassword(password, user.password);
+    const matches = await passwordUtils.verifyPassword(password, info.password);
     if (!matches) {
         throw new CustomError("Password did not matched", 400);
     }
 
     const token = jwtUtils.generateToken({
-        userId: user.userId,
-        email: user.email,
-        userType: user.userType,
+        userId: info.userId,
+        email: info.email,
+        userType: info.userType,
     });
 
-    return token;
+    const user = await UserRepository.findById(info.userId, info.userType);
+
+    return { token, user };
+}
+
+async function getAuthenticatedUser(userId, userType) {
+    const user = await UserRepository.findById(userId, userType);
+    return user;
 }
 
 async function logout(email, password) {}
@@ -77,4 +84,4 @@ async function resetPassword(email, otp, password) {
     await UserRepository.updatePasswordByEmail(email, hashedPassword);
 }
 
-export default { login, logout, changePassword, generateOTP, verifyOTP, resetPassword };
+export default { login, logout, changePassword, generateOTP, verifyOTP, resetPassword, getAuthenticatedUser };

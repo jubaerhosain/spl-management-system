@@ -16,7 +16,7 @@ async function login(req, res) {
         if (error) return res.status(400).json(GenericResponse.error("Invalid data", error));
 
         const { email, password, checked } = req.body;
-        const token = await authService.login(email, password);
+        const { token, user } = await authService.login(email, password);
 
         res.cookie(process.env.AUTH_COOKIE_NAME, token, {
             httpOnly: true,
@@ -24,7 +24,24 @@ async function login(req, res) {
             signed: true,
         });
 
-        return res.json(GenericResponse.success("Login successful"));
+        return res.json(GenericResponse.success("Login successful", user));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error("Invalid email or password", err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred while logging in"));
+        }
+    }
+}
+
+async function getAuthenticatedUser(req, res) {
+    try {
+        const { userId, userType } = req.user;
+
+        const user = await authService.getAuthenticatedUser(userId, userType);
+
+        return res.json(GenericResponse.success("Success", user));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error("Invalid email or password", err.data));
@@ -141,4 +158,4 @@ async function resetPassword(req, res) {
     }
 }
 
-export default { login, logout, changePassword, generateOTP, verifyOTP, resetPassword };
+export default { login, logout, changePassword, generateOTP, verifyOTP, resetPassword, getAuthenticatedUser };

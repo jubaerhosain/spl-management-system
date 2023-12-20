@@ -5,7 +5,7 @@ import { checkAuthentication } from "../middlewares/authMiddleware.js";
 import authController from "../controllers/authController.js";
 
 authRoutes.post("/login", authController.login);
-authRoutes.get("/");
+authRoutes.get("/user", checkAuthentication, authController.getAuthenticatedUser);
 authRoutes.delete("/logout", authController.logout);
 
 authRoutes.put("/change-password", checkAuthentication, authController.changePassword);

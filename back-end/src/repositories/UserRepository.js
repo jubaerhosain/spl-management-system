@@ -5,11 +5,41 @@ async function create(user) {
 }
 
 async function findById(userId, userType) {
+    const includes = [];
+
+    if (userType == "student") {
+        includes.push({
+            model: models.Student,
+            attributes: {
+                exclude: ["studentId"],
+            },
+        });
+    } else if (userType == "teacher") {
+        includes.push({
+            model: models.Teacher,
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        });
+    }
+
     const user = await models.User.findByPk(userId, {
+        include: includes,
         raw: true,
+        nest: true,
     });
 
     delete user?.password;
+
+    if (userType == "student") {
+        const student = user.Student;
+        delete user.Student;
+        return { ...user, ...student };
+    } else if (userType == "teacher") {
+        const teacher = user.Teacher;
+        delete user.Teacher;
+        return { ...user, ...teacher };
+    }
 
     return user;
 }
