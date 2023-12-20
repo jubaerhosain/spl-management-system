@@ -6,13 +6,15 @@ import { useEffect } from "react";
 
 export default function withoutAuth(Component: any) {
     return function WithoutAuth(props: any) {
-        const { user } = useAuthContext();
+        const { user, isLoading } = useAuthContext();
 
         useEffect(() => {
             if (user) {
                 redirect("/");
             }
         }, [user]);
+
+        if(isLoading) return null;
 
         if (user) return null;
 

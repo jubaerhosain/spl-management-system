@@ -81,7 +81,7 @@ const Login = () => {
   };
 
   return (
-    <Paper component="form" noValidate={false} elevation={3} sx={{ p: 5, maxWidth: 500, m: "auto", mt: 5 }}>
+    <Paper component="form" noValidate={false} elevation={3} sx={{ p: 5, maxWidth: 500, m: "auto", mt: "20vh" }}>
       <Typography variant="h5" sx={{ mb: 4 }}>
         Login to SPL
       </Typography>

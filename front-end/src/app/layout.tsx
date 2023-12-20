@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <NavBar />
             <Container
               maxWidth="lg"
-              sx={{ zIndex: -1, bgcolor: "#f0f0f0", minHeight: "70vh", mt: 0.5, mb: 0.5, padding: 1 }}
+              sx={{ zIndex: -1, bgcolor: "#f0f0f0", minHeight: "100vh", mt: 0.5, mb: 0.5, padding: 1 }}
             >
               {children}
             </Container>

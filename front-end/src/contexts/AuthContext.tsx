@@ -1,39 +1,51 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import fetcher from "@/api/fetcher";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import useSWR from "swr";
 
 type AuthContextValue = {
-    user: any;
-    login: (userData: any) => void;
-    logout: () => void;
+  user: any;
+  isLoading: boolean;
+  login: (userData: any) => void;
+  logout: () => void;
 };
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<any | null>(null);
 
-    const login = (userData: any) => {
-        setUser(userData);
-    };
+  const { data, error, isLoading } = useSWR("/auth/user", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+    refreshInterval: 0,
+    shouldRetryOnError: false,
+  });
 
-    const logout = () => {
-        setUser(null);
-    };
+  useEffect(() => {
+    if (data) {
+      setUser(data);
+    }
+  }, [data]);
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const login = (userData: any) => {
+    setUser(userData);
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout, isLoading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = (): AuthContextValue => {
-    const context = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
 
-    return context;
+  return context;
 };

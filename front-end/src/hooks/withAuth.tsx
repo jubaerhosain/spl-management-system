@@ -1,21 +1,23 @@
-"use client"
+"use client";
 
-import { redirect } from 'next/navigation'
-import { useAuthContext } from "@/contexts/AuthContext"
 import { useEffect } from "react";
+import { redirect } from "next/navigation";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function withAuth(Component: any) {
-    return function WithAuth(props: any) {
-        const { user } = useAuthContext();
+  return function WithAuth(props: any) {
+    const { user, isLoading } = useAuthContext();
 
-        useEffect(() => {
-            if (!user) {
-                redirect("/login");
-            }
-        }, [user]);
+    useEffect(() => {
+      if (!user) {
+        redirect("/login");
+      }
+    }, [user]);
 
-        if (!user) return null;
+    if (isLoading) return <h1>Loading...</h1>;
 
-        return <Component {...props} />
-    }
+    if (!user) return null;
+
+    return <Component {...props} />;
+  };
 }

@@ -11,7 +11,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "next/image";
-import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
 
 const pages = [
@@ -20,7 +19,7 @@ const pages = [
   { name: "Contact", path: "/contact" },
 ];
 
-function ResponsiveAppBar() {
+function PublicNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event: any) => {
@@ -33,7 +32,7 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar
-      position="sticky"
+      position="relative"
       sx={{ borderBottom: "1px solid grey", zIndex: 5, backgroundColor: "#ecf0f3", height: "10vh" }}
     >
       <Container maxWidth="xl">
@@ -145,4 +144,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default PublicNavBar;

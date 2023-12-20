@@ -1,21 +1,12 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axiosInstance from "./axiosInstance";
 
-type FetcherOptions = {
-  method?: string;
-  params?: Record<string, any>;
-  data?: Record<string, any>;
-};
-
-const fetcher = async (url: string, options?: FetcherOptions): Promise<any> => {
+const fetcher = async (url: string, params?: object): Promise<any> => {
   try {
-    const response = await axios({
-      url: `${process.env.SERVER_URL}/${url}`,
-      method: options?.method || "get",
-      params: options?.params || {},
-      data: options?.data || {},
+    const response = await axiosInstance.get(url, {
+      params: params || {},
       withCredentials: true,
-    } as AxiosRequestConfig);
-    return response.data;
+    });
+    return response.data?.data;
   } catch (error: any) {
     throw error.response?.data || error.message || "Error fetching data";
   }
