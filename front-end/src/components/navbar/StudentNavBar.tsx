@@ -112,12 +112,19 @@ function StudentNavBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{p: 0}}>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{ p: 0 }}>
                   <Link
                     href={page.path}
                     key={page.name}
                     onClick={handleCloseNavMenu}
-                    style={{ color: "black", display: "block", textDecoration: "none", width: 250, padding: 10 }}
+                    style={{
+                      color: "black",
+                      display: "block",
+                      textDecoration: "none",
+                      width: 250,
+                      padding: 5,
+                      paddingLeft: 15,
+                    }}
                   >
                     {page.name}
                   </Link>
@@ -184,7 +191,14 @@ function StudentNavBar() {
               <MenuItem key="userName" onClick={handleCloseUserMenu} sx={{ p: 0 }}>
                 <Link
                   href={"/student/" + user.userId}
-                  style={{ textDecoration: "none", color: "black", padding: 10, width: 250, fontWeight: 600 }}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    padding: 5,
+                    paddingLeft: 15,
+                    width: 250,
+                    fontWeight: 600,
+                  }}
                 >
                   {user.name}
                 </Link>
@@ -193,7 +207,7 @@ function StudentNavBar() {
               <MenuItem onClick={handleCloseUserMenu} sx={{ p: 0 }}>
                 <Link
                   href={"/student/" + user.userId + "/account"}
-                  style={{ textDecoration: "none", color: "black", width: 250, padding: 10 }}
+                  style={{ textDecoration: "none", color: "black", width: 250, padding: 5, paddingLeft: 15 }}
                 >
                   Account
                 </Link>
@@ -201,13 +215,13 @@ function StudentNavBar() {
               <MenuItem onClick={handleCloseUserMenu} sx={{ p: 0 }}>
                 <Link
                   href={"/student/" + user.userId + "/settings"}
-                  style={{ textDecoration: "none", color: "black", padding: 10, width: 250 }}
+                  style={{ textDecoration: "none", color: "black", padding: 5, paddingLeft: 15, width: 250 }}
                 >
                   Settings
                 </Link>
               </MenuItem>
               <MenuItem onClick={(e) => handleCloseUserMenu(e, "logout")} sx={{ p: 0 }}>
-                <Typography style={{ textDecoration: "none", color: "black", padding: 10, width: 250 }}>
+                <Typography style={{ textDecoration: "none", color: "black", padding: 5, paddingLeft: 15, width: 250 }}>
                   Logout
                 </Typography>
               </MenuItem>

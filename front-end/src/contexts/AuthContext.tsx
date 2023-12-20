@@ -2,7 +2,7 @@
 
 import fetcher from "@/api/fetcher";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 type AuthContextValue = {
   user: any;
@@ -13,9 +13,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any | null>(null);
-
-  const { data, error, isLoading } = useSWR("/auth/user", fetcher, {
+  const { data: user, isLoading } = useSWR("/auth/user", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     revalidateIfStale: false,
@@ -23,18 +21,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     shouldRetryOnError: false,
   });
 
-  useEffect(() => {
-    if (data) {
-      setUser(data);
-    }
-  }, [data]);
-
   const login = (userData: any) => {
-    setUser(userData);
+    mutate("/auth/login", userData, false);
   };
 
   const logout = () => {
-    setUser(null);
+    mutate("http://localhost:3000/api/auth/login", null, false);
+    
   };
 
   return <AuthContext.Provider value={{ user, login, logout, isLoading }}>{children}</AuthContext.Provider>;

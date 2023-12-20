@@ -9,10 +9,10 @@ export default function withAuth(Component: any) {
     const { user, isLoading } = useAuthContext();
 
     useEffect(() => {
-      if (!user) {
+      if (!isLoading && !user) {
         redirect("/login");
       }
-    }, [user]);
+    }, [isLoading, user]);
 
     if (isLoading) return <h1>Loading...</h1>;
 
