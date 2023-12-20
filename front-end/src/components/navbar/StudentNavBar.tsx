@@ -17,6 +17,7 @@ import * as React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -27,13 +28,8 @@ const pages = [
   { name: "Contact", path: "/contact" },
 ];
 
-const settings = [
-  { name: "Profile", path: "/" },
-  { name: "Account", path: "/" },
-  { name: "Logout", path: "auth/logout" },
-];
-
 function StudentNavBar() {
+  const { user, logout } = useAuthContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -49,19 +45,26 @@ function StudentNavBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (event: any, option?: string) => {
+    if (option == "logout") {
+      logout();
+    }
     setAnchorElUser(null);
   };
 
   return (
     <AppBar
-      position="relative"
-      sx={{ borderBottom: "1px solid grey", zIndex: 5, backgroundColor: "#ecf0f3", height: "10vh" }}
+      position="sticky"
+      sx={{
+        borderBottom: "1px solid grey",
+        zIndex: 5,
+        backgroundColor: "#ecf0f3",
+      }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "none", md: "flex" }, ml: 2, mr: 1 }}>
-            <Image alt="Logo" src="/logo.png" width={60} height={40} />
+            <Image alt="Logo" src="/logo.png" width={50} height={30} />
           </Box>
           <Typography
             variant="h6"
@@ -105,17 +108,16 @@ function StudentNavBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none", width: 300 },
+                display: { xs: "block", md: "none", width: 250 },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{ width: 500 }}>
-                  {/* <Typography textAlign="center">{page.name}</Typography> */}
+                <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{p: 0}}>
                   <Link
                     href={page.path}
                     key={page.name}
                     onClick={handleCloseNavMenu}
-                    style={{ color: "black", display: "block" }}
+                    style={{ color: "black", display: "block", textDecoration: "none", width: 250, padding: 10 }}
                   >
                     {page.name}
                   </Link>
@@ -150,21 +152,21 @@ function StudentNavBar() {
                 href={page.path}
                 key={page.name}
                 onClick={handleCloseNavMenu}
-                style={{ padding: 8, color: "black", display: "block" }}
+                style={{ paddingLeft: 8, paddingRight: 8, color: "black", display: "block" }}
               >
                 {page.name}
               </Link>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ mr: 2, flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, border: 1, borderColor: "blue" }}>
+                <Avatar alt={user.name} src={user.avatar} />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: "40px", width: 250 }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -179,11 +181,36 @@ function StudentNavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting.name}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key="userName" onClick={handleCloseUserMenu} sx={{ p: 0 }}>
+                <Link
+                  href={"/student/" + user.userId}
+                  style={{ textDecoration: "none", color: "black", padding: 10, width: 250, fontWeight: 600 }}
+                >
+                  {user.name}
+                </Link>
+              </MenuItem>
+              <hr style={{ width: 250 }} />
+              <MenuItem onClick={handleCloseUserMenu} sx={{ p: 0 }}>
+                <Link
+                  href={"/student/" + user.userId + "/account"}
+                  style={{ textDecoration: "none", color: "black", width: 250, padding: 10 }}
+                >
+                  Account
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu} sx={{ p: 0 }}>
+                <Link
+                  href={"/student/" + user.userId + "/settings"}
+                  style={{ textDecoration: "none", color: "black", padding: 10, width: 250 }}
+                >
+                  Settings
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={(e) => handleCloseUserMenu(e, "logout")} sx={{ p: 0 }}>
+                <Typography style={{ textDecoration: "none", color: "black", padding: 10, width: 250 }}>
+                  Logout
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
