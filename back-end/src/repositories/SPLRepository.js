@@ -159,7 +159,7 @@ async function findAllSPLOfStudent(studentId, options) {
                 model: models.User,
             },
             through: {
-                model: models.StudentSPL_Enrollment,
+                model: models.StudentTeacher_Supervisor,
                 attributes: [],
             },
             attributes: {
@@ -190,7 +190,7 @@ async function findAllSPLOfStudent(studentId, options) {
         };
         return {
             ...tmpSpl,
-            Supervisor: user,
+            supervisor: user,
         };
     });
 }
