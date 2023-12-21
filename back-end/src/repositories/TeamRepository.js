@@ -129,11 +129,12 @@ async function findAllTeamOfStudent(studentId, options) {
     const includes = [
         {
             model: models.Student,
+            as: "TeamMembers",
             include: {
                 model: models.User,
             },
             through: {
-                model: models.TeamMember,
+                model: models.TeamStudent_Member,
                 attributes: [],
             },
             attributes: {
@@ -174,6 +175,19 @@ async function findAllTeamOfStudent(studentId, options) {
         nest: true,
     });
 
+    // console.log(teams);
+    // return teams;
+
+    /**
+     *
+     * @param {*} data.User
+     */
+    const normalizeUserInclude = (data) => {
+        const user = data.User;
+        delete data.User;
+        return { ...user, ...data };
+    };
+
     // merge teams
     let index = 1;
     const processed = {};
@@ -181,17 +195,22 @@ async function findAllTeamOfStudent(studentId, options) {
     teams.forEach((team) => {
         if (processed[team.teamId]) {
             const inx = processed[team.teamId];
-            const student = utils.normalizeUserInclude(team.Students);
-            delete team.Students;
-            mergedTeams[inx - 1].teamMembers.push(student);
+            const teamMembers = normalizeUserInclude(team.TeamMembers);
+            delete team.TeamMembers;
+            mergedTeams[inx - 1].teamMembers.push(teamMembers);
         } else {
             processed[team.teamId] = index++;
-            const student = utils.normalizeUserInclude(team.Students);
-            delete team.Students;
+            const student = normalizeUserInclude(team.TeamMembers);
+            delete team.TeamMembers;
             team.teamMembers = [student];
             if (team.Supervisor) {
-                team.Supervisor = utils.normalizeUserInclude(team.Supervisor);
-                if (utils.areAllKeysNull(team.Supervisor)) delete team.Supervisor;
+                team.supervisor = normalizeUserInclude(team.Supervisor);
+                delete team.Supervisor;
+                if (utils.areAllKeysNull(team.supervisor)) delete team.supervisor;
+            }
+            if(team.SPL) {
+                team.spl = team.SPL;
+                delete team.SPL;
             }
 
             mergedTeams.push(team);
