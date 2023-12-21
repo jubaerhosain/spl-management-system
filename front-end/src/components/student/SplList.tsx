@@ -21,9 +21,9 @@ const SplList = () => {
       <Table>
         <TableHead sx={{ backgroundColor: "#dddd" }}>
           <TableRow>
-            <TableCell>SPL</TableCell>
-            <TableCell>Supervisor</TableCell>
-            <TableCell>Project</TableCell>
+            <TableCell><strong>SPL</strong></TableCell>
+            <TableCell><strong>Supervisor</strong></TableCell>
+            <TableCell><strong>Project</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
