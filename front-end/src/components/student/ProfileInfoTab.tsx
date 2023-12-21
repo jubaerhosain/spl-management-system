@@ -1,40 +1,10 @@
-// import { Tabs, Tab, Container } from "@mui/material";
-// import { useState } from "react";
-
-// const ProfileInfoTab = () => {
-//   const [value, setValue] = useState(0);
-
-//   const handleChange = (e: any, newValue: number) => {
-//     setValue(newValue);
-//   };
-
-//   return (
-//     <Container>
-//       <Tabs value={value} onChange={handleChange} centered>
-//         <Tab label="Tab 1" />
-//         <Tab label="Tab 2" />
-//         <Tab label="Tab 3" />
-//       </Tabs>
-
-//       {/* Content for Tab 1 */}
-//       {value === 0 && <div>Content for Tab 1</div>}
-
-//       {/* Content for Tab 2 */}
-//       {value === 1 && <div>Content for Tab 2</div>}
-
-//       {/* Content for Tab 3 */}
-//       {value === 2 && <div>Content for Tab 3</div>}
-//     </Container>
-//   );
-// };
-
-// export default ProfileInfoTab;
-
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+
+import SplList from "@/components/student/SplList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -54,7 +24,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 0 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -77,9 +47,20 @@ export default function BasicTabs() {
   };
 
   return (
-    <Box maxWidth="xs">
-      <Box maxWidth="xs" sx={{ borderBottom: 1, borderColor: "divider", backgroundColor: "white" }}>
+    <Box sx={{ width: "100%", margin: "auto" }}>
+      <Box
+        sx={{
+          margin: "auto",
+          width: "100%",
+          xs: { width: "100%" },
+          boxShadow: "0px 1px grey",
+          borderBottom: 1,
+          borderColor: "divider",
+          backgroundColor: "white",
+        }}
+      >
         <Tabs
+          sx={{ width: "100%" }}
           value={value}
           variant="scrollable"
           scrollButtons="auto"
@@ -91,15 +72,17 @@ export default function BasicTabs() {
           <Tab sx={{ color: "black" }} label="Projects" {...a11yProps(2)} />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        Item One
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel>
+      <Box minHeight={300} mt={1}>
+        <CustomTabPanel value={value} index={0}>
+          <SplList />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          Item Two
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          Item Three
+        </CustomTabPanel>
+      </Box>
     </Box>
   );
 }

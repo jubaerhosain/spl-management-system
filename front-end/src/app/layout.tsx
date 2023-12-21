@@ -6,6 +6,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000000', 
+    },
+    text: {
+      primary: '#333', 
+      secondary: '#666', 
+    },
+  },
   typography: {
     fontFamily: "mono sans-serif",
   },
@@ -26,7 +35,7 @@ const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{overflowX: "hidden"}}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <AuthProvider>

@@ -4,7 +4,7 @@ import { Card, CardContent, Typography, Avatar, Container, Box, Divider } from "
 
 const StudentProfile = ({ data }: { data: any }) => {
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{padding:0}}>
       <Card>
         <CardContent>
           <Box sx={{ display: "flex", justifyContent: "left", mb: 2 }}>
@@ -26,7 +26,7 @@ const StudentProfile = ({ data }: { data: any }) => {
               <Typography variant="h6" gutterBottom>
                 Details
               </Typography>
-              <Typography>
+              <Typography style={{ textAlign: "justify" }}>
                 {data.details +
                   "lorem ipsum dolor lorem ipsum dolorlorem ipsum dolorlorem ipsum dolorlorem ipsum dolorlorem ipsum dolorlorem ipsum dolorlorem ipsum dolor"}
               </Typography>
