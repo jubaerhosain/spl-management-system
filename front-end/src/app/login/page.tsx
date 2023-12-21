@@ -134,7 +134,7 @@ const Login = () => {
         <Link
           href="forgot-password"
           onClick={() => console.log("Forgot Password clicked")}
-          style={{ display: "block", textAlign: "center", color: "black" }}
+          style={{ display: "block", textAlign: "center", color: "black", fontSize: 14 }}
         >
           Forgot Password?
         </Link>

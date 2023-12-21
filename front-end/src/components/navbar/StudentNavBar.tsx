@@ -125,6 +125,7 @@ function StudentNavBar() {
                       padding: 5,
                       paddingLeft: 15,
                     }}
+                    
                   >
                     {page.name}
                   </Link>
