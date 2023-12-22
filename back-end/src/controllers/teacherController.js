@@ -85,6 +85,12 @@ async function getAllTeacher(req, res) {
             studentId: Joi.string().trim().uuid().optional(), // for student, find teacher with requested flag
             teamId: Joi.string().trim().uuid().optional(), // for student, find teacher with requested flag
         });
+
+        if (req.query.studentId && req.query.teamId)
+            return res
+                .status(400)
+                .json(GenericResponse.error("studentId and teamId both are not allowed at the same time"));
+
         const { error } = schema.validate(req.query);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
@@ -160,8 +166,8 @@ async function acceptSupervisorRequest(req, res) {
         const schema = Joi.object({
             accept: Joi.boolean().valid(true).required(),
         }).required();
-        const {error} = schema.validate(req.body);
-        if(error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         const { teacherId, requestId } = req.params;
         const requests = await teacherService.acceptSupervisorRequest(teacherId, requestId);

@@ -112,7 +112,7 @@ async function findAll(options) {
     });
 
     teachers = teachers.map((teacher) => {
-        const request = teachers.SupervisorRequests;
+        const request = teacher.SupervisorRequests;
         delete teacher.SupervisorRequests;
         if (!utils.areAllKeysNull(request)) {
             teacher.request = { requestId: request.requestId };

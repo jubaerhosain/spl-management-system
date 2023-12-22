@@ -9,8 +9,7 @@ const sequelize = new Sequelize(config.mysql.db_name, config.mysql.username, con
     define: {
         freezeTableName: true,
         defaultScope: {
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-            raw: true,
+            attributes: { exclude: ["createdAt", "updatedAt", "password"] },
         },
     },
     logging: false,
