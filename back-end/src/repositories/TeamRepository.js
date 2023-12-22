@@ -164,6 +164,13 @@ async function findAllTeamOfStudent(studentId, options) {
         includes.push(includeSPL);
     }
 
+    if (options?.project) {
+        const includeProject = {
+            model: models.Project,
+        };
+        includes.push(includeProject);
+    }
+
     const teams = await models.Team.findAll({
         include: includes,
         where: {
@@ -174,9 +181,6 @@ async function findAllTeamOfStudent(studentId, options) {
         raw: true,
         nest: true,
     });
-
-    // console.log(teams);
-    // return teams;
 
     /**
      *
@@ -208,9 +212,13 @@ async function findAllTeamOfStudent(studentId, options) {
                 delete team.Supervisor;
                 if (utils.areAllKeysNull(team.supervisor)) delete team.supervisor;
             }
-            if(team.SPL) {
+            if (team.SPL) {
                 team.spl = team.SPL;
                 delete team.SPL;
+            }
+            if (team.Project) {
+                team.project = team.Project;
+                delete team.Project;
             }
 
             mergedTeams.push(team);

@@ -263,6 +263,7 @@ async function getAllTeam(req, res) {
         const schema = Joi.object({
             spl: Joi.boolean().optional(),
             supervisor: Joi.boolean().optional(),
+            project: Joi.boolean().optional(),
         });
         const { error } = schema.validate(req.query);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
