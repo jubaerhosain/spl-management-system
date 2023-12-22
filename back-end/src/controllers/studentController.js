@@ -215,6 +215,7 @@ async function getAllSPL(req, res) {
             active: Joi.boolean().optional(),
             splName: Joi.string().trim().custom(validateSPLName).optional(),
             supervisor: Joi.boolean().optional(),
+            project: Joi.boolean().optional(),
         });
         const { error } = schema.validate(req.query);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));

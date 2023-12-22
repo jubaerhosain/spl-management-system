@@ -1,4 +1,4 @@
-import { models, Op, sequelize } from "../configs/mysql.js";
+import { models, Op, sequelize, Sequelize } from "../configs/mysql.js";
 
 async function create(spl) {
     await models.SPL.create(spl);
@@ -141,18 +141,19 @@ async function findAllSPLOfStudent(studentId, options) {
     if (options?.active) splOptions.active = 1;
     if (options?.splName) splOptions.splName = options.splName;
 
-    const includeSPL = {
-        model: models.SPL,
-        where: splOptions,
-        through: {
-            model: models.StudentSPL_Enrollment,
-            attributes: [],
+    const includes = [
+        {
+            model: models.SPL,
+            where: splOptions,
+            through: {
+                model: models.StudentSPL_Enrollment,
+                attributes: [],
+            },
         },
-    };
+    ];
 
-    let includeSupervisor = null;
     if (options?.supervisor) {
-        includeSupervisor = {
+        const includeSupervisor = {
             model: models.Teacher,
             as: "Supervisors",
             include: {
@@ -166,33 +167,58 @@ async function findAllSPLOfStudent(studentId, options) {
                 exclude: ["teacherId"],
             },
         };
+        includes.push(includeSupervisor);
+    }
+
+    if (options?.project) {
+        const includeProject = {
+            model: models.Project,
+            through: {
+                model: models.ProjectStudent_Contributor,
+                attributes: [],
+            },
+            where: {
+                splId: {
+                    [Op.eq]: Sequelize.literal("SPLs.splId"),
+                },
+            },
+            required: false,
+        };
+        includes.push(includeProject);
     }
 
     const spls = await models.Student.findAll({
-        include: includeSupervisor ? [includeSPL, includeSupervisor] : includeSPL,
+        include: includes,
         raw: true,
         nest: true,
         attributes: [],
         where: { studentId },
     });
 
-    if (!spls || spls.length == 0) return [];
+    const result = [];
+    spls.forEach((spl) => {
+        if (options?.supervisor) {
+            const teacher = spl.Supervisors;
+            delete spl.Supervisors;
+            let user = teacher.User;
+            delete teacher.User;
+            spl.supervisor = {
+                ...user,
+                ...teacher,
+            };
+        }
+        if (options?.project) {
+            spl.project = spl.Projects;
+            delete spl.Projects;
+        }
 
-    return spls.map((spl) => {
-        if (!includeSupervisor) return spl.SPLs;
-        const tmpSpl = spl.SPLs;
-        const supervisor = spl.Supervisors;
-        let user = supervisor.User;
-        delete supervisor.User;
-        user = {
-            ...user,
-            ...supervisor,
-        };
-        return {
-            ...tmpSpl,
-            supervisor: user,
-        };
+        const tempSPL = spl.SPLs;
+        delete spl.SPLs;
+        spl = { ...tempSPL, ...spl };
+        result.push(spl);
     });
+
+    return result;
 }
 
 async function isStudentBelongsToSPL(splId, studentId) {

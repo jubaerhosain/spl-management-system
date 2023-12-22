@@ -200,8 +200,8 @@ async function getAllTeam(studentId, options) {
     return teams;
 }
 
-async function getAllProject(studentId) {
-    const projects = await ProjectRepository.findAllProjectOfStudent(studentId);
+async function getAllProject(studentId, options) {
+    const projects = await ProjectRepository.findAllProjectOfStudent(studentId, options);
     return projects;
 }
 
