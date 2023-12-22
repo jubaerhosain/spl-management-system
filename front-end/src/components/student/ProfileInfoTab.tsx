@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import SplList from "@/components/student/SplList";
+import TeamList from "./TeamList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -77,7 +78,7 @@ export default function BasicTabs() {
           <SplList />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Item Two
+          <TeamList/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           Item Three

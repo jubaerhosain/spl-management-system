@@ -6,10 +6,12 @@ import { useParams } from "next/navigation";
 import useSWR from "swr";
 import fetcher from "@/api/fetcher";
 
-const SplList = () => {
+const TeamList = () => {
   const { studentId } = useParams();
 
-  const { data } = useSWR(`/student/${studentId}/spl`, (url) => fetcher(url, { supervisor: true }));
+  const { data } = useSWR(`/student/${studentId}/team`, (url) =>
+    fetcher(url, { supervisor: true, spl: true, project: true })
+  );
 
   if (!data) return <p>Loading....</p>;
 
@@ -20,6 +22,12 @@ const SplList = () => {
       <Table>
         <TableHead sx={{ backgroundColor: "#dddd" }}>
           <TableRow>
+            <TableCell>
+              <strong>Team Name</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Team Members</strong>
+            </TableCell>
             <TableCell>
               <strong>SPL</strong>
             </TableCell>
@@ -33,10 +41,26 @@ const SplList = () => {
         </TableHead>
         <TableBody>
           {data.map((item: any) => (
-            <TableRow key={item.splId}>
+            <TableRow key={item.teamId} sx={{ direction: "colum" }}>
+              <TableCell>
+                <Link style={{ textDecoration: "none", color: "black" }} href={`/team/${item.teamId}`}>
+                  {item.teamName}
+                </Link>
+              </TableCell>
+              <TableCell>
+                {item.teamMembers.map((member: any) => (
+                  <Link
+                    key={member.userId}
+                    style={{ textDecoration: "none", color: "black", display: "block", padding: "1px" }}
+                    href={`/student/${member.userId}`}
+                  >
+                    {member.name}
+                  </Link>
+                ))}
+              </TableCell>
               <TableCell>
                 <Link style={{ textDecoration: "none", color: "black" }} href={`/spl/${item.splId}`}>
-                  {item.splName.toUpperCase() + ", " + item.academicYear}
+                  {item?.spl ? item.spl?.splName.toUpperCase() + ", " + item.spl?.academicYear : ""}
                 </Link>
               </TableCell>
               <TableCell>
@@ -57,4 +81,4 @@ const SplList = () => {
   );
 };
 
-export default SplList;
+export default TeamList;
