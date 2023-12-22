@@ -26,12 +26,11 @@ studentRoutes.get("/:studentId/team", studentController.getAllTeam);
 
 // routes related to project
 studentRoutes.get("/:studentId/project", studentController.getAllProject);
-studentRoutes.get("/:studentId/project/current-progress", studentController.getCurrentProgress);
-
+studentRoutes.get("/:studentId/project/current", studentController.getCurrentProject);
 
 // route related to request
 studentRoutes.post("/:studentId/request", studentController.requestTeacher);
-studentRoutes.delete("/:studentId/request", studentController.deleteStudentRequest);
+studentRoutes.delete("/:studentId/request/:requestId", studentController.deleteStudentRequest);
 
 // routes related to supervisor
 studentRoutes.post("/:studentId/supervisor", studentController.assignSupervisor);

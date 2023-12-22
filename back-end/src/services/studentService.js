@@ -141,27 +141,36 @@ async function updateStudent(studentId, student, userType) {
 
 async function requestTeacher(studentId, teacherId) {
     const student = await StudentRepository.findById(studentId);
+    if (!student) throw new CustomError("Student does not exist", 400);
     if (student.curriculumYear != "4th") throw new CustomError("Only 4th year student can request for supervisor", 400);
 
-    const sent = await SupervisorRepository.isStudentRequestSent(studentId, teacherId);
+    const sent = await SupervisorRequestRepository.isStudentRequestSent(studentId, teacherId);
     if (sent) throw new CustomError("Request already sent", 400);
 
     const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
     if (!currentSPL || currentSPL.splName != "spl3") throw new CustomError("You are not assigned to spl3", 400);
 
-    const exist = await SupervisorRepository.isStudentSupervisorExist(studentId, currentSPL.splId);
+    const exist = await StudentRepository.isSupervisorExist(studentId, currentSPL.splId);
     if (exist)
         throw new CustomError(`Already have supervisor for ${currentSPL.splName}, ${currentSPL.academicYear}`, 400);
 
     const availableTeacher = await TeacherRepository.findById(teacherId, { available: true });
     if (!availableTeacher) throw new CustomError("Teacher is not available to be supervisor", 400);
 
-    await SupervisorRepository.createStudentRequest(studentId, teacherId, currentSPL.splId);
+    await SupervisorRequestRepository.createStudentRequest(studentId, teacherId, currentSPL.splId);
 
     // send email to teacher???
 }
 
-async function deleteStudentRequest() {}
+async function deleteStudentRequest(studentId, requestId) {
+    const request = await SupervisorRequestRepository.findById(requestId);
+
+    if (!request) throw new CustomError("Request not found", 400);
+
+    if (request.studentId != studentId) throw new CustomError("Invalid request", 400);
+
+    await SupervisorRequestRepository.deleteRequest(requestId);
+}
 
 async function getAllSPL(studentId, options) {
     const spls = await SPLRepository.findAllSPLOfStudent(studentId, options);
@@ -193,7 +202,18 @@ async function assignSupervisor(studentId, data) {
     await SupervisorRequestRepository.deleteAllStudentRequest(studentId);
 }
 
-async function removeSupervisor(studentId, supervisorId) {}
+async function removeSupervisor(studentId, supervisorId) {
+    const student = await StudentRepository.findById(studentId);
+    if (!student) throw new CustomError("Student not found", 400);
+
+    // remove team supervisor
+    if (student.curriculumYear == "3rd")
+        throw new CustomError("Not allowed for 3rd year students. Remove supervisor from team.", 400);
+
+    // don't remove if project is created (update supervisor in that case)
+
+    // remove from student
+}
 
 async function getAllTeam(studentId, options) {
     const teams = await TeamRepository.findAllTeamOfStudent(studentId, options);
@@ -205,11 +225,11 @@ async function getAllProject(studentId, options) {
     return projects;
 }
 
-async function getCurrentProgress(studentId) {
+async function getCurrentProject(studentId, options) {
     const currentSPL = await SPLRepository.findCurrentSPLOfStudent(studentId);
     if (!currentSPL) throw new CustomError("Student does not belongs to any active spl", 400);
 
-    const project = await ProjectRepository.findCurrentProgress(studentId, currentSPL.splId);
+    const project = await ProjectRepository.findCurrentProjectOfStudent(studentId, currentSPL.splId, options);
     return project;
 }
 
@@ -225,5 +245,5 @@ export default {
     removeSupervisor,
     getAllTeam,
     getAllProject,
-    getCurrentProgress,
+    getCurrentProject,
 };

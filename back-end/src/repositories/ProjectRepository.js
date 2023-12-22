@@ -94,6 +94,9 @@ async function findAllProjectOfStudent(studentId, options) {
         },
         raw: true,
         nest: true,
+        attributes: {
+            exclude: ["documentationProgress", "codeProgress", "weeklyProgress"],
+        },
     });
 
     /**
@@ -106,79 +109,139 @@ async function findAllProjectOfStudent(studentId, options) {
         return { ...user, ...data };
     };
 
-     // merge projects
-     let index = 1;
-     const processed = {};
-     const mergedProjects = [];
-     projects.forEach((project) => {
-         if (processed[project.projectId]) {
-             const inx = processed[project.projectId];
-             const projectContributors = normalizeUserInclude(project.ProjectContributors);
-             delete project.ProjectContributors;
-             mergedProjects[inx - 1].projectContributors.push(projectContributors);
-         } else {
-             processed[project.projectId] = index++;
-             const student = normalizeUserInclude(project.ProjectContributors);
-             delete project.ProjectContributors;
-             project.projectContributors = [student];
-             if (project.Supervisor) {
-                 project.supervisor = normalizeUserInclude(project.Supervisor);
-                 delete project.Supervisor;
-                 if (utils.areAllKeysNull(project.supervisor)) delete project.supervisor;
-             }
-             if (project.SPL) {
-                 project.spl = project.SPL;
-                 delete project.SPL;
-             }
- 
-             mergedProjects.push(project);
-         }
-     });
- 
-     return mergedProjects;
+    // merge projects
+    let index = 1;
+    const processed = {};
+    const mergedProjects = [];
+    projects.forEach((project) => {
+        if (processed[project.projectId]) {
+            const inx = processed[project.projectId];
+            const projectContributors = normalizeUserInclude(project.ProjectContributors);
+            delete project.ProjectContributors;
+            mergedProjects[inx - 1].projectContributors.push(projectContributors);
+        } else {
+            processed[project.projectId] = index++;
+            const student = normalizeUserInclude(project.ProjectContributors);
+            delete project.ProjectContributors;
+            project.projectContributors = [student];
+            if (project.Supervisor) {
+                project.supervisor = normalizeUserInclude(project.Supervisor);
+                delete project.Supervisor;
+                if (utils.areAllKeysNull(project.supervisor)) delete project.supervisor;
+            }
+            if (project.SPL) {
+                project.spl = project.SPL;
+                delete project.SPL;
+            }
 
+            mergedProjects.push(project);
+        }
+    });
+
+    return mergedProjects;
 }
 
-async function findCurrentProgressOfStudent(studentId, splId) {
-    // include project contributors
-    const project = await models.Project.findOne({
-        include: [
-            {
-                model: models.Student,
-                through: {
-                    model: models.ProjectContributor,
-                },
-                required: true,
-            },
-            {
-                model: models.SPL,
-            },
-        ],
-        where: { splId },
-        raw: true,
-        nest: true,
-    });
+async function findCurrentProjectOfStudent(studentId, splId, options) {
+    // include contributors
+    const studentProjects = await models.ProjectStudent_Contributor.findAll({ where: { studentId }, raw: true });
+    if (studentProjects.length == 0) return [];
+    const projectIds = studentProjects.map((project) => project.projectId);
 
-    if (!project) return null;
-
-    const students = await models.Student.findAll({
-        include: [
-            {
+    // include all contributors
+    const includes = [
+        {
+            model: models.Student,
+            as: "ProjectContributors",
+            include: {
                 model: models.User,
             },
-            {
-                model: models.Project,
-                through: {
-                    model: models.ProjectContributor,
-                    attributes: [],
-                },
-                where: { projectId: project.projectId },
+            through: {
+                model: models.ProjectStudent_Contributor,
+                attributes: [],
             },
-        ],
+            attributes: {
+                exclude: ["studentId"],
+            },
+        },
+    ];
+
+    if (options?.supervisor) {
+        const includeSupervisor = {
+            model: models.Teacher,
+            include: {
+                model: models.User,
+            },
+            as: "Supervisor",
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        };
+        includes.push(includeSupervisor);
+    }
+
+    if (options?.spl) {
+        const includeSPL = {
+            model: models.SPL,
+        };
+        includes.push(includeSPL);
+    }
+
+    const projects = await models.Project.findAll({
+        include: includes,
+        where: {
+            projectId: {
+                [Op.in]: projectIds,
+            },
+            splId,
+        },
+        raw: true,
+        nest: true,
         attributes: {
-            exclude: ["studentId"],
+            exclude: options?.progress ? [] : ["documentationProgress", "codeProgress", "weeklyProgress"],
         },
     });
+
+    if (projects.length == 0) return null;
+
+    /**
+     * @param {*} data.User
+     */
+    const normalizeUserInclude = (data) => {
+        const user = data.User;
+        delete data.User;
+        return { ...user, ...data };
+    };
+
+    // merge projects
+    let index = 1;
+    const processed = {};
+    const mergedProjects = [];
+    projects.forEach((project) => {
+        if (processed[project.projectId]) {
+            const inx = processed[project.projectId];
+            const projectContributors = normalizeUserInclude(project.ProjectContributors);
+            delete project.ProjectContributors;
+            mergedProjects[inx - 1].projectContributors.push(projectContributors);
+        } else {
+            processed[project.projectId] = index++;
+            const student = normalizeUserInclude(project.ProjectContributors);
+            delete project.ProjectContributors;
+            project.projectContributors = [student];
+            if (project.Supervisor) {
+                project.supervisor = normalizeUserInclude(project.Supervisor);
+                delete project.Supervisor;
+                if (utils.areAllKeysNull(project.supervisor)) delete project.supervisor;
+            }
+            if (project.SPL) {
+                project.spl = project.SPL;
+                delete project.SPL;
+            }
+
+            mergedProjects.push(project);
+        }
+    });
+
+    return mergedProjects[0];
 }
 
 async function hasStudentProject(studentId, splId) {
@@ -214,7 +277,7 @@ export default {
     remove,
     update,
     findAllProjectOfStudent,
-    findCurrentProgressOfStudent,
+    findCurrentProjectOfStudent,
 
     // utility methods
     hasStudentProject,

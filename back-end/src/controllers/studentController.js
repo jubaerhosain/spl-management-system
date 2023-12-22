@@ -207,7 +207,21 @@ async function requestTeacher(req, res) {
     }
 }
 
-async function deleteStudentRequest(req, res) {}
+async function deleteStudentRequest(req, res) {
+    try {
+        const { studentId, requestId } = req.params;
+        await studentService.deleteStudentRequest(studentId, requestId);
+
+        res.json(GenericResponse.success("Request deleted successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function getAllSPL(req, res) {
     try {
@@ -257,7 +271,20 @@ async function assignSupervisor(req, res) {
     }
 }
 
-async function removeSupervisor(req, res) {}
+async function removeSupervisor(req, res) {
+    try {
+        const { studentId, supervisorId } = req.params;
+        const project = await studentService.removeSupervisor(studentId, supervisorId);
+        res.json(GenericResponse.success("Project retrieved successfully", project));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function getAllTeam(req, res) {
     try {
@@ -306,11 +333,20 @@ async function getAllProject(req, res) {
     }
 }
 
-async function getCurrentProgress(req, res) {
+async function getCurrentProject(req, res) {
     try {
+        const schema = Joi.object({
+            progress: Joi.boolean().optional(),
+            spl: Joi.boolean().optional(),
+            supervisor: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
         const { studentId } = req.params;
-        const project = await studentService.getCurrentProgress(studentId);
-        res.json(GenericResponse.success("Progress retrieved successfully", project));
+        const options = req.query;
+        const project = await studentService.getCurrentProject(studentId, options);
+        res.json(GenericResponse.success("Project retrieved successfully", project));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -334,5 +370,5 @@ export default {
     removeSupervisor,
     getAllTeam,
     getAllProject,
-    getCurrentProgress,
+    getCurrentProject,
 };

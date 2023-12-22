@@ -1,6 +1,17 @@
 import { sequelize, models, Op } from "../configs/mysql.js";
 import utils from "../utils/utils.js";
 
+async function findById(requestId) {
+    const request = await models.SupervisorRequest.findByPk(requestId, {
+        raw: true,
+    });
+    return request;
+}
+
+async function deleteRequest(requestId) {
+    await models.SupervisorRequest.destroy({ where: { requestId } });
+}
+
 async function findAllSupervisor(studentId) {
     // with spl data
 }
@@ -81,11 +92,13 @@ async function isTeamRequestSent(teamId, teacherId) {
 
 export default {
     // request related
+    findById,
     createStudentRequest,
     deleteAllStudentRequest,
     createTeamRequest,
     deleteAllTeamRequest,
     findAllSupervisorRequest,
+    deleteRequest,
 
     // utility methods
     isStudentRequestSent,
