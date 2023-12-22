@@ -35,6 +35,9 @@ const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <title>Software Project Lab, IIT, University of Dhaka</title>
+      </head>
       <body style={{overflowX: "hidden"}}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>

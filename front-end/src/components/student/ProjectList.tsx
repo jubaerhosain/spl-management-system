@@ -56,8 +56,7 @@ const TeamList = () => {
                       textDecoration: "none",
                       color: "black",
                       display: "block",
-                      paddingTop: "2px",
-                      paddingBottom: "2px",
+                      lineHeight: "30px"
                     }}
                     href={`/student/${member.userId}`}
                   >
