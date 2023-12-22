@@ -9,7 +9,9 @@ import fetcher from "@/api/fetcher";
 const SplList = () => {
   const { studentId } = useParams();
 
-  const { data } = useSWR(`/student/${studentId}/spl`, (url) => fetcher(url, { supervisor: true }));
+  const { data, error } = useSWR(`/student/${studentId}/spl`, (url) => fetcher(url, { supervisor: true }));
+
+  if(error) return <p>An error occurred</p>
 
   if (!data) return <p>Loading....</p>;
 

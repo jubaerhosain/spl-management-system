@@ -9,11 +9,13 @@ import fetcher from "@/api/fetcher";
 const TeamList = () => {
   const { studentId } = useParams();
 
-  const { data, error } = useSWR(`/student/${studentId}/team`, (url) =>
-    fetcher(url, { supervisor: true, spl: true, project: true })
+  const { data, error } = useSWR(`/student/${studentId}/project`, (url) =>
+    fetcher(url, { supervisor: true, spl: true })
   );
 
-  if (error) return <p>An error occurred</p>;
+  if(error) return <p>An error occurred</p>
+
+  console.log(error);
 
   if (!data) return <p>Loading....</p>;
 
@@ -25,10 +27,10 @@ const TeamList = () => {
         <TableHead sx={{ backgroundColor: "#dddd" }}>
           <TableRow>
             <TableCell>
-              <strong>Team Name</strong>
+              <strong>Project Name</strong>
             </TableCell>
             <TableCell>
-              <strong>Team Members</strong>
+              <strong>Project Contributors</strong>
             </TableCell>
             <TableCell>
               <strong>SPL</strong>
@@ -36,21 +38,18 @@ const TeamList = () => {
             <TableCell>
               <strong>Supervisor</strong>
             </TableCell>
-            <TableCell>
-              <strong>Project</strong>
-            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((item: any) => (
             <TableRow key={item.teamId} sx={{ direction: "colum" }}>
               <TableCell>
-                <Link style={{ textDecoration: "none", color: "black" }} href={`/team/${item.teamId}`}>
-                  {item.teamName}
+                <Link style={{ textDecoration: "none", color: "black" }} href={`/project/${item.project?.projectId}`}>
+                  {item.projectName}
                 </Link>
               </TableCell>
               <TableCell>
-                {item.teamMembers?.map((member: any) => (
+                {item.projectContributors?.map((member: any) => (
                   <Link
                     key={member.userId}
                     style={{
@@ -74,11 +73,6 @@ const TeamList = () => {
               <TableCell>
                 <Link style={{ textDecoration: "none", color: "black" }} href={`/teacher/${item.supervisor?.userId}`}>
                   {item.supervisor?.name}
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Link style={{ textDecoration: "none", color: "black" }} href={`/project/${item.project?.projectId}`}>
-                  {item.project?.projectName}
                 </Link>
               </TableCell>
             </TableRow>
