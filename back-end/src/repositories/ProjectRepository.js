@@ -92,53 +92,40 @@ async function findAllProjectOfStudent(studentId, options) {
                 [Op.in]: projectIds,
             },
         },
-        raw: true,
-        nest: true,
-        attributes: {
-            exclude: ["documentationProgress", "codeProgress", "weeklyProgress"],
-        },
     });
 
-    /**
-     *
-     * @param {*} data.User
-     */
-    const normalizeUserInclude = (data) => {
-        const user = data.User;
-        delete data.User;
-        return { ...user, ...data };
-    };
+    if (projects.length == 0) return [];
 
-    // merge projects
-    let index = 1;
-    const processed = {};
-    const mergedProjects = [];
+    const result = [];
     projects.forEach((project) => {
-        if (processed[project.projectId]) {
-            const inx = processed[project.projectId];
-            const projectContributors = normalizeUserInclude(project.ProjectContributors);
-            delete project.ProjectContributors;
-            mergedProjects[inx - 1].projectContributors.push(projectContributors);
-        } else {
-            processed[project.projectId] = index++;
-            const student = normalizeUserInclude(project.ProjectContributors);
-            delete project.ProjectContributors;
-            project.projectContributors = [student];
-            if (project.Supervisor) {
-                project.supervisor = normalizeUserInclude(project.Supervisor);
-                delete project.Supervisor;
-                if (utils.areAllKeysNull(project.supervisor)) delete project.supervisor;
-            }
-            if (project.SPL) {
-                project.spl = project.SPL;
-                delete project.SPL;
-            }
+        let newProject = {};
+        const ProjectContributors = project.ProjectContributors.map((student) => {
+            const user = student.User.dataValues;
+            delete student.dataValues.User;
+            return { ...user, ...student.dataValues };
+        });
+        delete project.dataValues.ProjectContributors;
+        newProject.ProjectContributors = ProjectContributors;
 
-            mergedProjects.push(project);
+        if (project.Supervisor) {
+            const teacher = project.Supervisor.dataValues;
+            const user = teacher.User.dataValues;
+            delete delete teacher.User;
+            newProject.Supervisor = { ...user, ...teacher };
+            delete project.dataValues.Supervisor;
         }
+
+        if (project.SPL) {
+            newProject.SPL = project.SPL;
+            delete project.dataValues.SPL;
+        }
+
+        newProject = { ...project.dataValues, ...newProject };
+
+        result.push(newProject);
     });
 
-    return mergedProjects;
+    return result;
 }
 
 async function findCurrentProjectOfStudent(studentId, splId, options) {

@@ -324,6 +324,63 @@ async function findAllStudentIdUnderSupervisor(splId, supervisorId) {
     // return students.map((student) => student.studentId);
 }
 
+async function findAllStudentUnderSupervisor(supervisorId, options) {
+    // always include spl
+    const includeSPL = {
+        model: models.SPL,
+        through: {
+            model: models.StudentSPL_Enrollment,
+            attributes: [],
+        },
+        required: true,
+        where: {},
+    };
+
+    if (options?.splName) includeSPL.where.splName = options.splName;
+    if (options?.active) includeSPL.where.active = true;
+
+    // console.log(includeSPL)
+
+    const students = await models.Student.findAll({
+        include: [
+            {
+                model: models.User,
+            },
+            {
+                model: models.Teacher,
+                as: "Supervisors",
+                through: {
+                    model: models.StudentTeacher_Supervisor,
+                    where: {
+                        teacherId: supervisorId,
+                    },
+                    attributes: [],
+                },
+                required: true,
+                attributes: [],
+            },
+            includeSPL,
+        ],
+        attributes: {
+            exclude: ["studentId"],
+        },
+        order: [["rollNo", "DESC"]],
+    });
+
+    const result = [];
+    students.forEach((student) => {
+        const newStudent = student.dataValues;
+        const user = newStudent.User.dataValues;
+        delete newStudent.User;
+
+        const SPL = newStudent.SPLs[0].dataValues;
+        delete newStudent.SPLs;
+        result.push({...user, ...newStudent, SPL});
+    });
+
+    return result;
+}
+
 async function isStudentUnderSPL(studentId, splId) {
     const studentSpl = await models.StudentSPL_Enrollment.findOne({ where: { studentId, splId } });
     return studentSpl ? true : false;
@@ -351,6 +408,7 @@ export default {
     findAll,
     findAllStudentUnderSPL,
     findAllStudentNotUnderSPL,
+    findAllStudentUnderSupervisor,
     addSupervisor,
 
     // utility methods

@@ -178,55 +178,154 @@ async function findAllTeamOfStudent(studentId, options) {
                 [Op.in]: teamIds,
             },
         },
-        raw: true,
-        nest: true,
     });
 
-    /**
-     *
-     * @param {*} data.User
-     */
-    const normalizeUserInclude = (data) => {
-        const user = data.User;
-        delete data.User;
-        return { ...user, ...data };
-    };
+    if (teams.length == 0) return [];
 
-    // merge teams
-    let index = 1;
-    const processed = {};
-    const mergedTeams = [];
+    const result = [];
     teams.forEach((team) => {
-        if (processed[team.teamId]) {
-            const inx = processed[team.teamId];
-            const teamMembers = normalizeUserInclude(team.TeamMembers);
-            delete team.TeamMembers;
-            mergedTeams[inx - 1].teamMembers.push(teamMembers);
-        } else {
-            processed[team.teamId] = index++;
-            const student = normalizeUserInclude(team.TeamMembers);
-            delete team.TeamMembers;
-            team.teamMembers = [student];
-            if (team.Supervisor) {
-                team.supervisor = normalizeUserInclude(team.Supervisor);
-                delete team.Supervisor;
-                if (utils.areAllKeysNull(team.supervisor)) delete team.supervisor;
-            }
-            if (team.SPL) {
-                team.spl = team.SPL;
-                delete team.SPL;
-            }
-            if (team.Project) {
-                team.project = team.Project;
-                delete team.Project;
-            }
+        let newTeam = {};
+        const TeamMembers = team.TeamMembers.map((student) => {
+            const user = student.User.dataValues;
+            delete student.dataValues.User;
+            return { ...user, ...student.dataValues };
+        });
+        delete team.dataValues.TeamMembers;
+        newTeam.TeamMembers = TeamMembers;
 
-            mergedTeams.push(team);
+        if (team.Supervisor) {
+            const teacher = team.Supervisor.dataValues;
+            const user = teacher.User.dataValues;
+            delete delete teacher.User;
+            newTeam.Supervisor = { ...user, ...teacher };
+            delete team.dataValues.Supervisor;
         }
+
+        if (team.SPL) {
+            newTeam.SPL = team.SPL;
+            delete team.dataValues.SPL;
+        }
+
+        if (team.Project) {
+            newTeam.Project = team.Project;
+            delete team.dataValues.Project;
+        }
+
+        newTeam = { ...team.dataValues, ...newTeam };
+
+        result.push(newTeam);
     });
 
-    return mergedTeams;
+    return result;
 }
+
+// async function findAllTeamOfStudent(studentId, options) {
+//     const studentTeams = await models.TeamStudent_Member.findAll({ where: { studentId } });
+//     if (studentTeams.length == 0) return [];
+//     const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
+
+//     // include all team members
+//     const includes = [
+//         {
+//             model: models.Student,
+//             as: "TeamMembers",
+//             include: {
+//                 model: models.User,
+//             },
+//             through: {
+//                 model: models.TeamStudent_Member,
+//                 attributes: [],
+//             },
+//             attributes: {
+//                 exclude: ["studentId"],
+//             },
+//         },
+//     ];
+
+//     if (options?.supervisor) {
+//         const includeSupervisor = {
+//             model: models.Teacher,
+//             include: {
+//                 model: models.User,
+//             },
+//             as: "Supervisor",
+//             attributes: {
+//                 exclude: ["teacherId"],
+//             },
+//         };
+//         includes.push(includeSupervisor);
+//     }
+
+//     if (options?.spl) {
+//         const includeSPL = {
+//             model: models.SPL,
+//         };
+//         includes.push(includeSPL);
+//     }
+
+//     if (options?.project) {
+//         const includeProject = {
+//             model: models.Project,
+//         };
+//         includes.push(includeProject);
+//     }
+
+//     const teams = await models.Team.findAll({
+//         include: includes,
+//         where: {
+//             teamId: {
+//                 [Op.in]: teamIds,
+//             },
+//         },
+//         raw: true,
+//         nest: true,
+//     });
+
+//     /**
+//      *
+//      * @param {*} data.User
+//      */
+//     const normalizeUserInclude = (data) => {
+//         const user = data.User;
+//         delete data.User;
+//         return { ...user, ...data };
+//     };
+
+//     // merge teams
+//     let index = 1;
+//     const processed = {};
+//     const mergedTeams = [];
+//     teams.forEach((team) => {
+//         if (processed[team.teamId]) {
+//             const inx = processed[team.teamId];
+//             const teamMembers = normalizeUserInclude(team.TeamMembers);
+//             delete team.TeamMembers;
+//             mergedTeams[inx - 1].teamMembers.push(teamMembers);
+//         } else {
+//             processed[team.teamId] = index++;
+//             const student = normalizeUserInclude(team.TeamMembers);
+//             delete team.TeamMembers;
+//             team.teamMembers = [student];
+//             if (team.Supervisor) {
+//                 team.supervisor = normalizeUserInclude(team.Supervisor);
+//                 delete team.Supervisor;
+//                 if (utils.areAllKeysNull(team.supervisor)) delete team.supervisor;
+//             }
+//             if (team.SPL) {
+//                 team.spl = team.SPL;
+//                 delete team.SPL;
+//             }
+//             if (team.Project) {
+//                 team.project = team.Project;
+//                 delete team.Project;
+//             }
+
+//             mergedTeams.push(team);
+//         }
+//     });
+
+//     return mergedTeams;
+// }
 
 async function findCurrentTeamOfStudent(studentId, splId) {
     // including team members

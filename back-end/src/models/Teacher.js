@@ -54,7 +54,6 @@ export default (options) => {
         });
 
         // Student - Teacher [many to many] as Supervisor
-        // Not able to add duplicate teacherId due to this relationship
         Teacher.belongsToMany(models.Student, {
             as: "SupervisedStudents",
             through: models.StudentTeacher_Supervisor,

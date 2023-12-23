@@ -9,6 +9,7 @@ import {
     validateDesignation,
     validateGender,
     validatePhoneNumber,
+    validateSPLName,
 } from "../utils/validator/JoiValidationFunction.js";
 
 async function createTeacher(req, res) {
@@ -107,8 +108,29 @@ async function getAllTeacher(req, res) {
     }
 }
 
-// flag current
-async function getAllStudentUnderSupervision(req, res) {}
+async function getAllStudentUnderSupervision(req, res) {
+    try {
+        const schema = Joi.object({
+            splName: Joi.string().trim().custom(validateSPLName).optional(),
+            active: Joi.boolean().optional(),
+        });
+
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const options = req.query;
+        const { teacherId } = req.params;
+        const teachers = await teacherService.getAllStudentUnderSupervision(teacherId, options);
+        res.json(GenericResponse.success("Students are retrieved successfully", teachers));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 // flag current
 async function getAllTeamUnderSupervision(req, res) {}

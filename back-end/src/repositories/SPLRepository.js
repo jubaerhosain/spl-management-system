@@ -202,13 +202,13 @@ async function findAllSPLOfStudent(studentId, options) {
             delete spl.Supervisors;
             let user = teacher.User;
             delete teacher.User;
-            spl.supervisor = {
+            spl.Supervisor = {
                 ...user,
                 ...teacher,
             };
         }
         if (options?.project) {
-            spl.project = spl.Projects;
+            spl.Project = spl.Projects;
             delete spl.Projects;
         }
 
