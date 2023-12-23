@@ -120,8 +120,8 @@ async function getAllStudentUnderSupervision(req, res) {
 
         const options = req.query;
         const { teacherId } = req.params;
-        const teachers = await teacherService.getAllStudentUnderSupervision(teacherId, options);
-        res.json(GenericResponse.success("Students are retrieved successfully", teachers));
+        const students = await teacherService.getAllStudentUnderSupervision(teacherId, options);
+        res.json(GenericResponse.success("Students are retrieved successfully", students));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -132,8 +132,29 @@ async function getAllStudentUnderSupervision(req, res) {
     }
 }
 
-// flag current
-async function getAllTeamUnderSupervision(req, res) {}
+async function getAllTeamUnderSupervision(req, res) {
+    try {
+        const schema = Joi.object({
+            splName: Joi.string().trim().custom(validateSPLName).optional(),
+            active: Joi.boolean().optional(),
+        });
+
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const options = req.query;
+        const { teacherId } = req.params;
+        const teams = await teacherService.getAllTeamUnderSupervision(teacherId, options);
+        res.json(GenericResponse.success("Teams are retrieved successfully", teams));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 async function updateTeacher(req, res) {
     try {

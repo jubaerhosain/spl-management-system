@@ -78,48 +78,6 @@ async function findAllTeamUnderSPL(splId) {
     // with team members also
 }
 
-async function findAllTeamMemberUnderSPL(splId) {
-    const students = await models.Student.findAll({
-        include: [
-            {
-                model: models.User,
-                where: {
-                    active: true,
-                },
-                required: true,
-            },
-            {
-                model: models.Team,
-                through: {
-                    model: models.TeamMember,
-                    attributes: [],
-                },
-                where: {
-                    splId: splId,
-                },
-                required: true,
-            },
-        ],
-        raw: true,
-        nest: true,
-    });
-
-    if (students.length == 0) return [];
-
-    const flattened = [];
-    students.forEach((student) => {
-        const temp = {
-            ...student,
-            ...student.User,
-        };
-        delete temp.User;
-        delete temp.Teams;
-        flattened.push(temp);
-    });
-
-    return flattened;
-}
-
 async function findAllTeamOfStudent(studentId, options) {
     const studentTeams = await models.TeamStudent_Member.findAll({ where: { studentId } });
     if (studentTeams.length == 0) return [];
@@ -219,116 +177,63 @@ async function findAllTeamOfStudent(studentId, options) {
     return result;
 }
 
-// async function findAllTeamOfStudent(studentId, options) {
-//     const studentTeams = await models.TeamStudent_Member.findAll({ where: { studentId } });
-//     if (studentTeams.length == 0) return [];
-//     const teamIds = studentTeams.map((studentTeam) => studentTeam.teamId);
-
-//     // include all team members
-//     const includes = [
-//         {
-//             model: models.Student,
-//             as: "TeamMembers",
-//             include: {
-//                 model: models.User,
-//             },
-//             through: {
-//                 model: models.TeamStudent_Member,
-//                 attributes: [],
-//             },
-//             attributes: {
-//                 exclude: ["studentId"],
-//             },
-//         },
-//     ];
-
-//     if (options?.supervisor) {
-//         const includeSupervisor = {
-//             model: models.Teacher,
-//             include: {
-//                 model: models.User,
-//             },
-//             as: "Supervisor",
-//             attributes: {
-//                 exclude: ["teacherId"],
-//             },
-//         };
-//         includes.push(includeSupervisor);
-//     }
-
-//     if (options?.spl) {
-//         const includeSPL = {
-//             model: models.SPL,
-//         };
-//         includes.push(includeSPL);
-//     }
-
-//     if (options?.project) {
-//         const includeProject = {
-//             model: models.Project,
-//         };
-//         includes.push(includeProject);
-//     }
-
-//     const teams = await models.Team.findAll({
-//         include: includes,
-//         where: {
-//             teamId: {
-//                 [Op.in]: teamIds,
-//             },
-//         },
-//         raw: true,
-//         nest: true,
-//     });
-
-//     /**
-//      *
-//      * @param {*} data.User
-//      */
-//     const normalizeUserInclude = (data) => {
-//         const user = data.User;
-//         delete data.User;
-//         return { ...user, ...data };
-//     };
-
-//     // merge teams
-//     let index = 1;
-//     const processed = {};
-//     const mergedTeams = [];
-//     teams.forEach((team) => {
-//         if (processed[team.teamId]) {
-//             const inx = processed[team.teamId];
-//             const teamMembers = normalizeUserInclude(team.TeamMembers);
-//             delete team.TeamMembers;
-//             mergedTeams[inx - 1].teamMembers.push(teamMembers);
-//         } else {
-//             processed[team.teamId] = index++;
-//             const student = normalizeUserInclude(team.TeamMembers);
-//             delete team.TeamMembers;
-//             team.teamMembers = [student];
-//             if (team.Supervisor) {
-//                 team.supervisor = normalizeUserInclude(team.Supervisor);
-//                 delete team.Supervisor;
-//                 if (utils.areAllKeysNull(team.supervisor)) delete team.supervisor;
-//             }
-//             if (team.SPL) {
-//                 team.spl = team.SPL;
-//                 delete team.SPL;
-//             }
-//             if (team.Project) {
-//                 team.project = team.Project;
-//                 delete team.Project;
-//             }
-
-//             mergedTeams.push(team);
-//         }
-//     });
-
-//     return mergedTeams;
-// }
-
 async function findCurrentTeamOfStudent(studentId, splId) {
     // including team members
+}
+
+async function findAllTeamUnderSupervisor(supervisorId, options) {
+    // always include spl
+    const includeSPL = {
+        model: models.SPL,
+        required: true,
+        where: {},
+    };
+
+    if (options?.splName) includeSPL.where.splName = options.splName;
+    if (options?.active) includeSPL.where.active = true;
+
+    const teams = await models.Team.findAll({
+        include: [
+            {
+                model: models.Student,
+                as: "TeamMembers",
+                include: { model: models.User },
+                through: {
+                    model: models.TeamStudent_Member,
+                    attributes: [],
+                },
+            },
+            {
+                model: models.Teacher,
+                as: "Supervisor",
+                required: true,
+                where: {
+                    teacherId: supervisorId,
+                },
+                attributes: [],
+            },
+            includeSPL,
+        ],
+    });
+
+    const result = [];
+    teams.forEach((team) => {
+        const newTeam = team.dataValues;
+
+        const TeamMembers = newTeam.TeamMembers.map((student) => {
+            const newStudent = student.dataValues;
+            const user = newStudent.User.dataValues;
+            delete newStudent.User;
+            return { ...user, ...newStudent };
+        });
+        newTeam.TeamMembers = TeamMembers;
+
+        const SPL = newTeam.SPL.dataValues;
+        delete newTeam.SPLs;
+        result.push({ ...newTeam, SPL });
+    });
+
+    return result;
 }
 
 async function findAllTeamMemberEmailUnderSPL(splId) {
@@ -406,7 +311,7 @@ export default {
     // findAllTeamUnderSPL, // with team members
     findAllTeamOfStudent,
     findCurrentTeamOfStudent,
-    // findAllTeamMemberUnderSPL,
+    findAllTeamUnderSupervisor,
     addSupervisor,
 
     // utility methods

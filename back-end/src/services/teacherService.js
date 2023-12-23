@@ -1,6 +1,7 @@
 import passwordUtils from "../utils/passwordUtils.js";
 import UserRepository from "../repositories/UserRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
+import TeamRepository from "../repositories/TeamRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import SupervisorRequestRepository from "../repositories/SupervisorRequestRepository.js";
 import emailUtils from "../utils/email/emailUtils.js";
@@ -91,6 +92,11 @@ async function getAllStudentUnderSupervision(teacherId, options) {
     return students;
 }
 
+async function getAllTeamUnderSupervision(teacherId, options) {
+    const teams = await TeamRepository.findAllTeamUnderSupervisor(teacherId, options);
+    return teams;
+}
+
 async function getAllSupervisorRequest(teacherId) {
     const requests = await SupervisorRequestRepository.findAllSupervisorRequest(teacherId);
     return requests;
@@ -107,6 +113,7 @@ export default {
     getTeacher,
     getAllTeacher,
     getAllStudentUnderSupervision,
+    getAllTeamUnderSupervision,
     getAllSupervisorRequest,
     acceptSupervisorRequest,
 };
