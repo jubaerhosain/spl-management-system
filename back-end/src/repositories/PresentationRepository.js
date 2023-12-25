@@ -16,6 +16,11 @@ async function findPresentation(splId, presentationNo) {
     return presentation;
 }
 
+async function findAllPresentationUnderSPL(splId) {
+    const presentations = await models.Presentation.findAll({ where: splId, raw: true });
+    return presentations;
+}
+
 async function findAllEvaluatorId(presentationId) {
     const evaluators = await models.PresentationEvaluator.findAll({ where: { presentationId } });
     if (evaluators.length == 0) return [];
@@ -55,6 +60,7 @@ export default {
     update,
     findById,
     findPresentation,
+    findAllPresentationUnderSPL,
     findAllEvaluatorId,
     isPresentationMarkCreated,
     createPresentationMark,

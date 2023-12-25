@@ -189,9 +189,9 @@ async function getAllProjectUnderSPL(req, res) {
 async function getAllPresentationUnderSPL(req, res) {
     try {
         const { splId } = req.params;
-        const students = await splService.getAllPresentationUnderSPL(splId);
+        const presentations = await splService.getAllPresentationUnderSPL(splId);
 
-        res.json(GenericResponse.success("Presentations retrieved successfully", students));
+        res.json(GenericResponse.success("Presentations retrieved successfully", presentations));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
