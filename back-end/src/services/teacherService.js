@@ -122,6 +122,14 @@ async function acceptSupervisorRequest(teacherId, requestId) {
 
         await SupervisorRequestRepository.deleteAllStudentRequest(request.studentId);
     } else if (request.teamId) {
+        const isSupervisorExist = await TeamRepository.isSupervisorExist(request.teamId);
+        if (isSupervisorExist) throw new CustomError("Supervisor already assigned for that team", 400);
+
+        const teamMembers = await TeamRepository.findAllTeamMember(request.teamId);
+        const teamMemberIds = teamMembers.map((student) => student.userId);
+        await TeamRepository.addSupervisor(request.teamId, teacherId, request.splId, teamMemberIds);
+
+        await SupervisorRequestRepository.deleteAllStudentRequest(request.studentId);
     }
 }
 
