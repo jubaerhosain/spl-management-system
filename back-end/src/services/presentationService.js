@@ -5,7 +5,7 @@ import StudentRepository from "../repositories/StudentRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import utils from "../utils/utils.js";
 
-async function createPresentationEvent(data) {
+async function createPresentation(data) {
     const { splId, presentationNo } = data;
     const spl = await SPLRepository.findById(splId);
     if (!spl) throw new CustomError("SPL does not exist", 400);
@@ -131,7 +131,7 @@ async function removePresentationEvaluator(presentationId, evaluatorId) {
 }
 
 export default {
-    createPresentationEvent,
+    createPresentation,
     addPresentationMark,
     updatePresentationMark,
     addPresentationEvaluator,

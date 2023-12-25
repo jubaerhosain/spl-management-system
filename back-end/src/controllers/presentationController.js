@@ -4,7 +4,7 @@ import CustomError from "../utils/CustomError.js";
 import Joi from "../utils/validator/Joi.js";
 import utils from "../utils/utils.js";
 
-async function createPresentationEvent(req, res) {
+async function createPresentation(req, res) {
     try {
         const schema = Joi.object({
             splId: Joi.string().trim().uuid().required(),
@@ -15,7 +15,7 @@ async function createPresentationEvent(req, res) {
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-        await presentationService.createPresentationEvent(req.body);
+        await presentationService.createPresentation(req.body);
 
         res.json(GenericResponse.success("Presentation event created successfully"));
     } catch (err) {
@@ -26,6 +26,10 @@ async function createPresentationEvent(req, res) {
             res.status(500).json(GenericResponse.error("An error occurred"));
         }
     }
+}
+
+async function getPresentation(req, res) {
+
 }
 
 async function updatePresentation(req, res) {}
@@ -149,7 +153,8 @@ async function removePresentationEvaluator(req, res) {
 }
 
 export default {
-    createPresentationEvent,
+    createPresentation,
+    getPresentation,
     addPresentationMark,
     updatePresentationMark,
     addPresentationEvaluator,
