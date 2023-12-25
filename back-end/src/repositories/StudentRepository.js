@@ -211,6 +211,7 @@ async function findAllStudentUnderSPL(splId, options) {
         attributes: {
             exclude: ["studentId"],
         },
+        order: [["rollNo", "ASC"]],
     });
 
     if (students.length == 0) return [];
@@ -226,12 +227,12 @@ async function findAllStudentUnderSPL(splId, options) {
 
             const teacherUser = teacher.User;
             delete teacher.User;
-            result.supervisor = { ...teacherUser, ...teacher };
+            result.Supervisor = { ...teacherUser, ...teacher };
         }
         if (options?.project) {
             const project = student.Projects;
             delete student.Projects;
-            result.project = { ...project };
+            result.Project = { ...project };
         }
 
         return { ...studentUser, ...student, ...result };
@@ -376,7 +377,7 @@ async function findAllStudentUnderSupervisor(supervisorId, options) {
 
         const SPL = newStudent.SPLs[0].dataValues;
         delete newStudent.SPLs;
-        result.push({...user, ...newStudent, SPL});
+        result.push({ ...user, ...newStudent, SPL });
     });
 
     return result;

@@ -9,10 +9,35 @@ async function isSupervisorRandomized(splId) {
     return studentSupervisor.length > 0;
 }
 
-async function findById(splId) {
+async function findById(splId, options) {
+    let includeManager = {};
+    if (options?.splManager) {
+        includeManager = {
+            include: {
+                model: models.Teacher,
+                as: "SPLManager",
+                include: {
+                    model: models.User,
+                },
+                attributes: {
+                    exclude: ["teacherId"],
+                },
+            },
+        };
+    }
+
     const spl = await models.SPL.findByPk(splId, {
+        ...includeManager,
         raw: true,
+        nest: true,
     });
+
+    if (options?.splManager) {
+        const user = spl.SPLManager.User;
+        delete spl.SPLManager.User;
+        spl.SPLManager = { ...user, ...spl.SPLManager };
+    }
+
     return spl;
 }
 

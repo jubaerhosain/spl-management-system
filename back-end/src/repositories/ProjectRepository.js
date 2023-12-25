@@ -290,6 +290,67 @@ async function findAllProjectUnderSupervisor(supervisorId, options) {
     return result;
 }
 
+async function findAllProjectUnderSPL(splId, options) {
+    const includes = [
+        {
+            model: models.Student,
+            as: "ProjectContributors",
+            include: { model: models.User },
+            through: {
+                model: models.ProjectStudent_Contributor,
+                attributes: [],
+            },
+            attributes: {
+                exclude: ["studentId"],
+            },
+        },
+    ];
+
+    if (options?.supervisor) {
+        const includeSupervisor = {
+            model: models.Teacher,
+            as: "Supervisor",
+            include: {
+                model: models.User,
+            },
+            required: false,
+            attributes: {
+                exclude: ["teacherId"],
+            },
+        };
+        includes.push(includeSupervisor);
+    }
+
+    const projects = await models.Project.findAll({
+        include: includes,
+        where: { splId },
+    });
+
+    const result = [];
+    projects.forEach((project) => {
+        const newProject = project.dataValues;
+
+        const ProjectContributors = newProject.ProjectContributors.map((student) => {
+            const newStudent = student.dataValues;
+            const user = newStudent.User.dataValues;
+            delete newStudent.User;
+            return { ...user, ...newStudent };
+        });
+        newProject.ProjectContributors = ProjectContributors;
+
+        if (options?.supervisor) {
+            const teacher = newProject.Supervisor.dataValues;
+            delete newProject.Supervisor;
+            const user = teacher.User.dataValues;
+            delete teacher.User;
+            newProject.Supervisor = { ...user, ...teacher };
+        }
+        result.push(newProject);
+    });
+
+    return result;
+}
+
 async function hasStudentProject(studentId, splId) {
     // add attributes constraints
     const project = await models.Project.findOne({
@@ -325,6 +386,7 @@ export default {
     findAllProjectOfStudent,
     findCurrentProjectOfStudent,
     findAllProjectUnderSupervisor,
+    findAllProjectUnderSPL,
 
     // utility methods
     hasStudentProject,

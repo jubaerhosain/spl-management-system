@@ -3,6 +3,7 @@ import SPLRepository from "../repositories/SPLRepository.js";
 import StudentRepository from "../repositories/StudentRepository.js";
 import UserRepository from "../repositories/UserRepository.js";
 import SPLMarkRepository from "../repositories/SPLMarkRepository.js";
+import ProjectRepository from "../repositories/ProjectRepository.js";
 import TeacherRepository from "../repositories/TeacherRepository.js";
 import CustomError from "../utils/CustomError.js";
 import splUtils from "../utils/splUtils.js";
@@ -19,8 +20,8 @@ async function createSPL(data) {
     await SPLRepository.create(data);
 }
 
-async function getSPL(splId) {
-    const spl = await SPLRepository.findById(splId);
+async function getSPL(splId, options) {
+    const spl = await SPLRepository.findById(splId, options);
     return spl;
 }
 
@@ -103,9 +104,9 @@ async function getAllStudentUnderSPL(splId, options) {
     return students;
 }
 
-async function getAllProjectUnderSPL(splId) {
-    // with project contributors
-    return "Projects with project contributors";
+async function getAllProjectUnderSPL(splId, options) {
+    const projects = await ProjectRepository.findAllProjectUnderSPL(splId, options);
+    return projects;
 }
 
 async function getAllPresentationUnderSPL(splId) {

@@ -37,9 +37,16 @@ async function deleteSPL(req, res) {}
 
 async function getSPL(req, res) {
     try {
-        const { splId } = req.params;
+        const schema = Joi.object({
+            splManager: Joi.boolean().optional(),
+        });
 
-        const spl = await splService.getSPL(splId);
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const { splId } = req.params;
+        const options = req.query;
+        const spl = await splService.getSPL(splId, options);
 
         if (!spl) return res.status(400).json(GenericResponse.error("SPL does not exist"));
 
@@ -158,10 +165,17 @@ async function getAllStudentUnderSPL(req, res) {
 
 async function getAllProjectUnderSPL(req, res) {
     try {
-        const { splId } = req.params;
-        const students = await splService.getAllProjectUnderSPL(splId);
+        const schema = Joi.object({
+            supervisor: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
-        res.json(GenericResponse.success("Projects retrieved successfully", students));
+        const { splId } = req.params;
+        const options = req.query;
+        const projects = await splService.getAllProjectUnderSPL(splId, options);
+
+        res.json(GenericResponse.success("Projects retrieved successfully", projects));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
