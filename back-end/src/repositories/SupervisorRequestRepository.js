@@ -12,12 +12,6 @@ async function deleteRequest(requestId) {
     await models.SupervisorRequest.destroy({ where: { requestId } });
 }
 
-async function findAllSupervisor(studentId) {
-    // with spl data
-}
-
-async function findCurrentSupervisor(studentId, splId) {}
-
 async function createStudentRequest(studentId, teacherId, splId) {
     await models.SupervisorRequest.create({ studentId, teacherId, splId });
 }

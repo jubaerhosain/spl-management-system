@@ -133,6 +133,15 @@ async function acceptSupervisorRequest(teacherId, requestId) {
     }
 }
 
+async function rejectSupervisorRequest(teacherId, requestId) {
+    const request = await SupervisorRequestRepository.findById(requestId);
+    if (!request) throw new CustomError("Invalid request", 400);
+
+    if (request.teacherId != teacherId) throw new CustomError("Unauthorized request", 401);
+
+    await SupervisorRequestRepository.deleteRequest(requestId);
+}
+
 export default {
     createTeacher,
     updateTeacher,
@@ -143,4 +152,5 @@ export default {
     getAllProjectUnderSupervision,
     getAllSupervisorRequest,
     acceptSupervisorRequest,
+    rejectSupervisorRequest,
 };

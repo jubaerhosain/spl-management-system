@@ -240,8 +240,8 @@ async function acceptSupervisorRequest(req, res) {
         if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
         const { teacherId, requestId } = req.params;
-        const requests = await teacherService.acceptSupervisorRequest(teacherId, requestId);
-        res.json(GenericResponse.success("Request accepted", requests));
+        await teacherService.acceptSupervisorRequest(teacherId, requestId);
+        res.json(GenericResponse.success("Request accepted"));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -252,7 +252,20 @@ async function acceptSupervisorRequest(req, res) {
     }
 }
 
-async function rejectSupervisorRequest(req, res) {}
+async function rejectSupervisorRequest(req, res) {
+    try {
+        const { teacherId, requestId } = req.params;
+        const requests = await teacherService.rejectSupervisorRequest(teacherId, requestId);
+        res.json(GenericResponse.success("Request rejected", requests));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
 
 export default {
     createTeacher,
