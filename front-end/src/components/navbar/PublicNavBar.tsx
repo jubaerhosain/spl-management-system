@@ -38,22 +38,22 @@ function PublicNavBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "none", md: "flex" }, ml: 2, mr: 1 }}>
-            <Image alt="Logo" src="/logo.png" width={60} height={40} />
+            <Image alt="Logo" src="/logo.png" width={50} height={40} />
           </Box>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontWeight: 600,
-              color: "black",
+              fontWeight: 900,
+              color: "#5b4ba4",
               textDecoration: "none",
             }}
           >
-            Software Project Lab
+            SPL
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -87,7 +87,6 @@ function PublicNavBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu} sx={{ width: 500 }}>
-                  {/* <Typography textAlign="center">{page.name}</Typography> */}
                   <Link
                     href={page.path}
                     key={page.name}
@@ -127,7 +126,7 @@ function PublicNavBar() {
                 href={page.path}
                 key={page.name}
                 onClick={handleCloseNavMenu}
-                style={{ padding: 8, color: "black", display: "block" }}
+                style={{ padding: 8, color: "var(--primary-color)", display: "block" }}
               >
                 {page.name}
               </Link>
@@ -135,7 +134,7 @@ function PublicNavBar() {
           </Box>
 
           <Box sx={{ mr: 2, color: "white", display: "block" }}>
-            <Link href="login" style={{ color: "black", fontSize: 18, fontWeight: "500", textDecoration: "none" }}>
+            <Link href="login" style={{ color: "var(--primary-color)", fontSize: 18, fontWeight: "500", textDecoration: "none" }}>
               Login
             </Link>
           </Box>

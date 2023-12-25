@@ -8,10 +8,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#000000', 
+      main: '#5b4ba4', 
     },
     text: {
-      primary: '#333', 
+      primary: '#5b4ba4', 
       secondary: '#666', 
     },
   },
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   display: "flex",
                   zIndex: -1,
-                  bgcolor: "#f0f0f0",
+                  bgcolor: "#f1f1f1",
                   minHeight: "100vh",
                   mt: 0.5,
                   mb: 0.5,
