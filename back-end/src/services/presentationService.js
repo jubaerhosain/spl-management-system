@@ -19,9 +19,19 @@ async function createPresentation(data) {
     // notify corresponding users(committeeMembers, students under spl)
 }
 
+async function getPresentation(presentationId, options) {
+    const presentation = await PresentationRepository.findById(presentationId, options);
+    return presentation;
+}
+
 async function addPresentationMark(teacherId, presentationId) {
+    const isPresentationEvaluator = await PresentationRepository.isPresentationEvaluator(teacherId, presentationId);
+    if (!isPresentationEvaluator) throw new CustomError("You are not the evaluator of that presentation", 403);
+
     const presentation = await PresentationRepository.findById(presentationId);
     if (!presentation) throw new CustomError("Presentation does not exist", 400);
+
+    // add a logic for eventDate is correct or not to add marks
 
     const created = await PresentationRepository.isPresentationMarkCreated(teacherId, presentationId);
     if (created) throw new CustomError("Mark is already added for that presentation");
@@ -35,9 +45,25 @@ async function addPresentationMark(teacherId, presentationId) {
     await PresentationRepository.createPresentationMark(marks);
 }
 
+async function getAllPresentationMark(teacherId, presentationId, options) {
+    let marks = [];
+    if (options?.forEvaluator) {
+        // validate evaluator
+        
+        marks = await PresentationRepository.findAllPresentationMarkGivenByEvaluator(teacherId, presentationId);
+    } else {
+        // is manager | committeeHead, member....
+        marks = await PresentationRepository.findAllPresentationMark(presentationId);
+    }
+
+    return marks;
+}
+
 async function updatePresentationMark(teacherId, presentationId, marks) {
     const presentation = await PresentationRepository.findById(presentationId);
     if (!presentation) throw new CustomError("Presentation does not exist", 400);
+
+    // add a logic for eventDate is correct or not to add marks
 
     const studentIds = await StudentRepository.findAllStudentIdUnderSPL(presentation.splId);
     for (const mark of marks) {
@@ -65,7 +91,7 @@ async function addPresentationEvaluator(presentationId, evaluators) {
 
     const findTeacherId = (email) => {
         for (const teacher of teachers) {
-            if (teacher.email == email) return teacher.teacherId;
+            if (teacher.email == email) return teacher.userId;
         }
         return null;
     };
@@ -118,7 +144,7 @@ async function addPresentationEvaluator(presentationId, evaluators) {
     const evaluatorsWithId = [];
     teachers.forEach((teacher) => {
         evaluatorsWithId.push({
-            teacherId: teacher.teacherId,
+            teacherId: teacher.userId,
             presentationId,
         });
     });
@@ -132,8 +158,10 @@ async function removePresentationEvaluator(presentationId, evaluatorId) {
 
 export default {
     createPresentation,
+    getPresentation,
     addPresentationMark,
+    getAllPresentationMark,
     updatePresentationMark,
     addPresentationEvaluator,
-    removePresentationEvaluator
+    removePresentationEvaluator,
 };

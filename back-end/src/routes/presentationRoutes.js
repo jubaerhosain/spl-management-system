@@ -6,7 +6,7 @@ import { checkAuthentication, isAdmin } from "../middlewares/authMiddleware.js";
 
 presentationRoutes.post("/", presentationController.createPresentation); 
 presentationRoutes.get("/");
-presentationRoutes.get("/:presentationId", presentationController.getPresentation); // getPresentation
+presentationRoutes.get("/:presentationId", presentationController.getPresentation); 
 presentationRoutes.delete("/:presentationId");
 
 presentationRoutes.post("/:presentationId/evaluator", presentationController.addPresentationEvaluator);
@@ -14,7 +14,7 @@ presentationRoutes.get("/:presentationId/evaluator", presentationController.remo
 presentationRoutes.delete("/:presentationId/evaluator/:evaluatorId");
 
 presentationRoutes.post("/:presentationId/mark", presentationController.addPresentationMark);
-presentationRoutes.get("/:presentationId/mark");
+presentationRoutes.get("/:presentationId/mark", presentationController.getAllPresentationMark);
 presentationRoutes.put("/:presentationId/mark", presentationController.updatePresentationMark);
 
 

@@ -190,5 +190,5 @@ export default {
     findByEmail,
     update,
     findAll,
-    // findAllExistedTeacherByEmail,
+    findAllExistedTeacherByEmail,
 };

@@ -29,7 +29,27 @@ async function createPresentation(req, res) {
 }
 
 async function getPresentation(req, res) {
+    try {
+        const schema = Joi.object({
+            spl: Joi.boolean().optional(),
+            evaluator: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
 
+        const { presentationId } = req.params;
+        const options = req.query;
+        const presentation = await presentationService.getPresentation(presentationId, options);
+
+        res.json(GenericResponse.success("Presentation retrieved successfully", presentation));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
 }
 
 async function updatePresentation(req, res) {}
@@ -38,9 +58,37 @@ async function addPresentationMark(req, res) {
     try {
         const userId = req.user?.userId;
         const { presentationId } = req.params;
-        await presentationService.addPresentationMark("0175f873-25c0-4fe0-9969-c7737c6bb7b3", presentationId);
+        await presentationService.addPresentationMark("bddd43e6-3dee-44f2-81ca-fedaaa17b477", presentationId);
 
         res.json(GenericResponse.success("Presentation mark added successfully"));
+    } catch (err) {
+        if (err instanceof CustomError) {
+            res.status(err.status).json(GenericResponse.error(err.message, err.data));
+        } else {
+            console.log(err);
+            res.status(500).json(GenericResponse.error("An error occurred"));
+        }
+    }
+}
+
+async function getAllPresentationMark(req, res) {
+    try {
+        const schema = Joi.object({
+            forEvaluator: Joi.boolean().optional(),
+        });
+        const { error } = schema.validate(req.query);
+        if (error) return res.status(400).json(GenericResponse.error("Validation failed", error));
+
+        const userId = req.user?.userId;
+        const { presentationId } = req.params;
+        const options = req.query;
+        const marks = await presentationService.getAllPresentationMark(
+            "bddd43e6-3dee-44f2-81ca-fedaaa17b477",
+            presentationId,
+            options
+        );
+
+        res.json(GenericResponse.success("Presentation mark retrieved successfully", marks));
     } catch (err) {
         if (err instanceof CustomError) {
             res.status(err.status).json(GenericResponse.error(err.message, err.data));
@@ -156,6 +204,7 @@ export default {
     createPresentation,
     getPresentation,
     addPresentationMark,
+    getAllPresentationMark,
     updatePresentationMark,
     addPresentationEvaluator,
     removePresentationEvaluator,

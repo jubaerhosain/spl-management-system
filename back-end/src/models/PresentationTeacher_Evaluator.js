@@ -13,12 +13,11 @@ export default (options) => {
         },
         teacherId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            primaryKey: true,
             references: {
                 model: "Teachers",
                 key: "teacherId",
             },
-            comment: "Supervisor",
         },
     });
 
