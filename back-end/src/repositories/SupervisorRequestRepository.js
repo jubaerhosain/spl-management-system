@@ -39,7 +39,6 @@ async function findAllSupervisorRequest(teacherId) {
                 model: models.Student,
                 include: {
                     model: models.User,
-                    attributes: ["userId", "name", "avatar", "details"],
                 },
                 required: false,
                 attributes: {
@@ -67,8 +66,8 @@ async function findAllSupervisorRequest(teacherId) {
         const User = request.Student.User;
         delete request.Student.User;
         request.Student = {
-            ...request.Student,
             ...User,
+            ...request.Student,
         };
 
         if (utils.areAllKeysNull(request.Student)) delete request.Student;

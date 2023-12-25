@@ -109,8 +109,20 @@ async function getAllSupervisorRequest(teacherId) {
 }
 
 async function acceptSupervisorRequest(teacherId, requestId) {
-    // is valid request
-    //
+    const request = await SupervisorRequestRepository.findById(requestId);
+    if (!request) throw new CustomError("Invalid request", 400);
+
+    if (request.teacherId != teacherId) throw new CustomError("Unauthorized request", 401);
+
+    if (request.studentId) {
+        const isSupervisorExist = await StudentRepository.isSupervisorExist(request.studentId, request.splId);
+        if (isSupervisorExist) throw new CustomError("Supervisor already assigned for that student", 400);
+
+        await StudentRepository.addSupervisor(request.studentId, teacherId, request.splId);
+
+        await SupervisorRequestRepository.deleteAllStudentRequest(request.studentId);
+    } else if (request.teamId) {
+    }
 }
 
 export default {
