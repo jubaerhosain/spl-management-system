@@ -231,6 +231,64 @@ async function findCurrentProjectOfStudent(studentId, splId, options) {
     return mergedProjects[0];
 }
 
+async function findAllProjectUnderSupervisor(supervisorId, options) {
+    // always include spl
+    const includeSPL = {
+        model: models.SPL,
+        required: true,
+        where: {},
+    };
+
+    if (options?.splName) includeSPL.where.splName = options.splName;
+    if (options?.active) includeSPL.where.active = true;
+
+    const projects = await models.Project.findAll({
+        include: [
+            {
+                model: models.Student,
+                as: "ProjectContributors",
+                include: { model: models.User },
+                through: {
+                    model: models.ProjectStudent_Contributor,
+                    attributes: [],
+                },
+                attributes: {
+                    exclude: ["studentId"],
+                },
+            },
+            {
+                model: models.Teacher,
+                as: "Supervisor",
+                required: true,
+                where: {
+                    teacherId: supervisorId,
+                },
+                attributes: [],
+            },
+            includeSPL,
+        ],
+    });
+
+    const result = [];
+    projects.forEach((project) => {
+        const newProject = project.dataValues;
+
+        const ProjectContributors = newProject.ProjectContributors.map((student) => {
+            const newStudent = student.dataValues;
+            const user = newStudent.User.dataValues;
+            delete newStudent.User;
+            return { ...user, ...newStudent };
+        });
+        newProject.ProjectContributors = ProjectContributors;
+
+        const SPL = newProject.SPL.dataValues;
+        delete newProject.SPLs;
+        result.push({ ...newProject, SPL });
+    });
+
+    return result;
+}
+
 async function hasStudentProject(studentId, splId) {
     // add attributes constraints
     const project = await models.Project.findOne({
@@ -265,6 +323,7 @@ export default {
     update,
     findAllProjectOfStudent,
     findCurrentProjectOfStudent,
+    findAllProjectUnderSupervisor,
 
     // utility methods
     hasStudentProject,

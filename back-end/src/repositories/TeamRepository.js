@@ -191,6 +191,7 @@ async function findAllTeamUnderSupervisor(supervisorId, options) {
 
     if (options?.splName) includeSPL.where.splName = options.splName;
     if (options?.active) includeSPL.where.active = true;
+    if (options?.academicYear) includeSPL.where.academicYear = options.academicYear;
 
     const teams = await models.Team.findAll({
         include: [
@@ -201,6 +202,9 @@ async function findAllTeamUnderSupervisor(supervisorId, options) {
                 through: {
                     model: models.TeamStudent_Member,
                     attributes: [],
+                },
+                attributes: {
+                    exclude: ["studentId"],
                 },
             },
             {

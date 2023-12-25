@@ -17,6 +17,9 @@ teacherRoutes.get("/:teacherId/student", teacherController.getAllStudentUnderSup
 // routes related to team supervision
 teacherRoutes.get("/:teacherId/team", teacherController.getAllTeamUnderSupervision);
 
+// routes related to project
+teacherRoutes.get("/:teacherId/project", teacherController.getAllProjectUnderSupervision);
+
 // routes related to team request
 teacherRoutes.get("/:teacherId/request", teacherController.getAllSupervisorRequest);
 teacherRoutes.put("/:teacherId/request/:requestId", teacherController.acceptSupervisorRequest);

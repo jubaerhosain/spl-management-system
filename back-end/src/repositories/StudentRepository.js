@@ -338,6 +338,7 @@ async function findAllStudentUnderSupervisor(supervisorId, options) {
 
     if (options?.splName) includeSPL.where.splName = options.splName;
     if (options?.active) includeSPL.where.active = true;
+    if (options?.academicYear) includeSPL.where.academicYear = options.academicYear;
 
     // console.log(includeSPL)
 
