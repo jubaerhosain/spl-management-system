@@ -17,7 +17,11 @@ async function findPresentation(splId, presentationNo) {
 }
 
 async function findAllPresentationUnderSPL(splId) {
-    const presentations = await models.Presentation.findAll({ where: splId, raw: true });
+    const presentations = await models.Presentation.findAll({
+        where: splId,
+        raw: true,
+        order: [["presentationNo", "ASC"]],
+    });
     return presentations;
 }
 

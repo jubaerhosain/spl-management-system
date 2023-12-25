@@ -49,6 +49,7 @@ async function findAll(options) {
 
     const spls = await models.SPL.findAll({
         where: splOptions,
+        order: [["splName", "ASC"]],
     });
     return spls;
 }
@@ -174,6 +175,7 @@ async function findAllSPLOfStudent(studentId, options) {
                 model: models.StudentSPL_Enrollment,
                 attributes: [],
             },
+            order: [["splName", "ASC"]],
         },
     ];
 

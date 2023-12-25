@@ -9,6 +9,7 @@ async function createPresentationEvent(req, res) {
         const schema = Joi.object({
             splId: Joi.string().trim().uuid().required(),
             presentationNo: Joi.number().required(),
+            eventDate: Joi.date().iso().required(),
             details: Joi.string().trim().optional(),
         }).required();
         const { error } = schema.validate(req.body);
