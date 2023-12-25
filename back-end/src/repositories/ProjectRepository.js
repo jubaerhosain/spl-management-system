@@ -241,6 +241,7 @@ async function findAllProjectUnderSupervisor(supervisorId, options) {
 
     if (options?.splName) includeSPL.where.splName = options.splName;
     if (options?.active) includeSPL.where.active = true;
+    if (options?.academicYear) includeSPL.where.academicYear = options.academicYear;
 
     const projects = await models.Project.findAll({
         include: [
