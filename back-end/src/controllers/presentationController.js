@@ -118,7 +118,7 @@ async function updatePresentationMark(req, res) {
         const userId = req.user?.userId;
         const { presentationId } = req.params;
         const { marks } = req.body;
-        await presentationService.updatePresentationMark("0175f873-25c0-4fe0-9969-c7737c6bb7b3", presentationId, marks);
+        await presentationService.updatePresentationMark("bddd43e6-3dee-44f2-81ca-fedaaa17b477", presentationId, marks);
 
         res.json(GenericResponse.success("Presentation mark updated successfully"));
     } catch (err) {

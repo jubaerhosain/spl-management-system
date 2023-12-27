@@ -1,5 +1,4 @@
-import { models } from "../configs/mysql.js";
-import Student from "../models/Student.js";
+import { models, Op } from "../configs/mysql.js";
 
 async function create(presentation) {
     await models.Presentation.create(presentation);
@@ -139,7 +138,7 @@ async function isPresentationEvaluator(teacherId, presentationId) {
 async function findAllExistedPresentationMark(markIds) {
     const marks = await models.PresentationMark.findAll({
         where: {
-            PresentationMarkId: {
+            presentationMarkId: {
                 [Op.in]: markIds,
             },
         },

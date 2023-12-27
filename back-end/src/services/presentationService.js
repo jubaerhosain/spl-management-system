@@ -65,16 +65,45 @@ async function updatePresentationMark(teacherId, presentationId, marks) {
 
     // add a logic for eventDate is correct or not to add marks
 
-    const existedPresentationMarks = PresentationRepository.findAllExistedPresentationMark(
+    const existedPresentationMarks = await PresentationRepository.findAllExistedPresentationMark(
         marks.map((mark) => mark.presentationMarkId)
     );
 
-    // is given by teacher, is student ids are correct
-    const validatePresentationMark = () => {};
-
     const presentationMarks = [];
+    const validatePresentationMark = () => {
+        const error = {};
 
-    await PresentationRepository.updatePresentationMark(marks);
+        const isValidMarkId = (markId, updatedMark) => {
+            for (const mark of existedPresentationMarks) {
+                if (
+                    mark.presentationMarkId == markId &&
+                    mark.teacherId == teacherId &&
+                    mark.presentationId == presentationId
+                ) {
+                    const newMark = { ...mark };
+                    newMark.mark = updatedMark;
+                    presentationMarks.push(newMark);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        marks.forEach((mark, index) => {
+            if (!isValidMarkId(mark.presentationMarkId, mark.mark)) {
+                error[`marks[${index}]`] = {
+                    msg: "Invalid markId",
+                };
+            }
+        });
+
+        if (Object.keys(error).length > 0) return error;
+    };
+
+    const error = validatePresentationMark();
+    if (error) throw new CustomError("Invalid data", 400, error);
+
+    await PresentationRepository.updatePresentationMark(presentationMarks);
 }
 
 async function addPresentationEvaluator(presentationId, evaluators) {
