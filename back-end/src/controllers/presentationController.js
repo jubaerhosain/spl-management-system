@@ -107,9 +107,6 @@ async function updatePresentationMark(req, res) {
                 .items(
                     Joi.object({
                         presentationMarkId: Joi.string().trim().uuid().required(),
-                        presentationId: Joi.string().trim().uuid().required(),
-                        studentId: Joi.string().trim().uuid().required(),
-                        teacherId: Joi.string().trim().uuid().required(),
                         mark: Joi.number().required(),
                     })
                 )
