@@ -136,6 +136,18 @@ async function isPresentationEvaluator(teacherId, presentationId) {
     return evaluator ? true : false;
 }
 
+async function findAllExistedPresentationMark(markIds) {
+    const marks = await models.PresentationMark.findAll({
+        where: {
+            PresentationMarkId: {
+                [Op.in]: markIds,
+            },
+        },
+        raw: true,
+    });
+    return marks;
+}
+
 export default {
     create,
     update,
@@ -153,4 +165,5 @@ export default {
     // utility methods
     isPresentationMarkCreated,
     isPresentationEvaluator,
+    findAllExistedPresentationMark,
 };

@@ -49,7 +49,7 @@ async function getAllPresentationMark(teacherId, presentationId, options) {
     let marks = [];
     if (options?.forEvaluator) {
         // validate evaluator
-        
+
         marks = await PresentationRepository.findAllPresentationMarkGivenByEvaluator(teacherId, presentationId);
     } else {
         // is manager | committeeHead, member....
@@ -65,21 +65,14 @@ async function updatePresentationMark(teacherId, presentationId, marks) {
 
     // add a logic for eventDate is correct or not to add marks
 
-    // is mark given by teacher 
-    const presentationMarks = [];
+    const existedPresentationMarks = PresentationRepository.findAllExistedPresentationMark(
+        marks.map((mark) => mark.presentationMarkId)
+    );
 
-    // const studentIds = await StudentRepository.findAllStudentIdUnderSPL(presentation.splId);
-    // for (const mark of marks) {
-    //     if (mark.presentationId !== presentationId)
-    //         throw new CustomError(
-    //             `PresentationMarkId '${mark.presentationMarkId}' does not belongs to this presentation`,
-    //             400
-    //         );
-    //     if (mark.teacherId !== teacherId)
-    //         throw new CustomError(`PresentationMarkId '${mark.presentationMarkId}' does not belongs to you`, 400);
-    //     if (!studentIds.includes(mark.studentId))
-    //         throw new CustomError(`Student '${mark.studentId}' does not belong to this spl`, 400);
-    // }
+    // is given by teacher, is student ids are correct
+    const validatePresentationMark = () => {};
+
+    const presentationMarks = [];
 
     await PresentationRepository.updatePresentationMark(marks);
 }
